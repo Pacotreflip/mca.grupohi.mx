@@ -19,7 +19,7 @@ class PagesController extends Controller
     }
     
     public function proyectos() {
-        $proyectos = Auth::user()->proyectos;
+        $proyectos = Auth::user()->proyectos()->paginate(15);
         return view('pages.proyectos')->withProyectos($proyectos);
     }
 }

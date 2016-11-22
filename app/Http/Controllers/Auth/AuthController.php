@@ -25,7 +25,7 @@ class AuthController extends Controller
 
     use AuthenticatesIntranetUsers, ThrottlesLogins;
     
-    protected $redirectPath = '/home';
+    protected $redirectPath = 'proyectos';
 
 
     /**

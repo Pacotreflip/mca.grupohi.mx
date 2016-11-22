@@ -11,7 +11,7 @@
 |
 */
 // Rutas de Paginas
-Route::get('home', 'PagesController@home')->name('home');
+Route::get('/', 'PagesController@home')->name('home');
 Route::get('proyectos', 'PagesController@proyectos')->name('proyectos');
 
 // Rutas de Autenticación
