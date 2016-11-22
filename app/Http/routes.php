@@ -29,3 +29,8 @@ Route::get('auth/login', [
         'as' => 'auth.logout',
         'uses' => 'Auth\AuthController@getLogout'
     ]);
+
+// Rutas de contexto...
+Route::get('/context/{databaseName}', 'ContextController@set')
+    ->name('context.set')
+    ->where(['databaseName' => '[aA-zZ0-9_-]+']);
