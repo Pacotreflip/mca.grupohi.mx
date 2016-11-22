@@ -10,7 +10,22 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+// Rutas de Paginas
+Route::get('home', 'PagesController@home')->name('home');
+Route::get('proyectos', 'PagesController@proyectos')->name('proyectos');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rutas de Autenticación
+Route::get('auth/login', [
+        'as' => 'auth.login',
+        'uses' => 'Auth\AuthController@getLogin'
+    ]);
+
+    Route::post('auth/login', [
+        'as' => 'auth.login',
+        'uses' => 'Auth\AuthController@postLogin'
+    ]);
+
+    Route::get('auth/logout', [
+        'as' => 'auth.logout',
+        'uses' => 'Auth\AuthController@getLogout'
+    ]);

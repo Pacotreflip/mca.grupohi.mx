@@ -7,6 +7,8 @@ use Validator;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Foundation\Auth\AuthenticatesAndRegistersUsers;
+use Ghi\IntranetAuth\AuthenticatesIntranetUsers;
+
 
 class AuthController extends Controller
 {
@@ -21,7 +23,10 @@ class AuthController extends Controller
     |
     */
 
-    use AuthenticatesAndRegistersUsers, ThrottlesLogins;
+    use AuthenticatesIntranetUsers, ThrottlesLogins;
+    
+    protected $redirectPath = '/home';
+
 
     /**
      * Create a new authentication controller instance.
