@@ -31,6 +31,10 @@ Route::get('auth/login', [
     ]);
 
 // Rutas de contexto...
-Route::get('/context/{databaseName}', 'ContextController@set')
+Route::get('/context/{databaseName}/{id}', 'ContextController@set')
     ->name('context.set')
-    ->where(['databaseName' => '[aA-zZ0-9_-]+']);
+    ->where(['databaseName' => '[aA-zZ0-9_-]+', 'id' => '[0-9]+']);
+
+Route::get('index', function () {
+    return view('index');
+})->name('index');
