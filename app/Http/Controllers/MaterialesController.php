@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Material;
+use Laracasts\Flash\Flash;
 
 class MaterialesController extends Controller
 {
@@ -35,7 +36,7 @@ class MaterialesController extends Controller
      */
     public function create()
     {
-        //
+        return view('materiales.create');
     }
 
     /**
@@ -44,9 +45,13 @@ class MaterialesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateMaterialRequest $request)
     {
-        //
+        $request->request->add(['IdProyecto' => 1]);
+        Material::create($request->all());
+        
+        Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
+        return redirect()->route('materiales.index');
     }
 
     /**
@@ -57,7 +62,8 @@ class MaterialesController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('materiales.show')
+                ->withMaterial(Material::findOrFail($id));
     }
 
     /**
@@ -68,7 +74,8 @@ class MaterialesController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('materiales.edit')
+                ->withMaterial(Material::findOrFail($id));
     }
 
     /**
@@ -78,9 +85,13 @@ class MaterialesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditMaterialRequest $request, $id)
     {
-        //
+        $material = Material::findOrFail($id);
+        $material->update($request->all());
+        
+        Flash::success('¡MATERIAL ACTUALIZADO CORRECTAMENTE!');
+        return redirect()->route('materiales.show', $material);
     }
 
     /**

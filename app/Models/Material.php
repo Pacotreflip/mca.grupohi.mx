@@ -14,8 +14,11 @@ class Material extends Model
     protected $fillable = ['IdTipoMaterial', 'IdProyecto', 'Descripcion', 'Estatus'];
     public $timestamps = false;
     
-        public function proyectoLocal() {
+    public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
     
+    public function estatus() {
+        return $this->Estatus == 1 ? 'ACTIVO' : 'INACTIVO';
+    }
 }

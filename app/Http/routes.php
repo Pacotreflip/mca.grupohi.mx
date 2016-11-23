@@ -40,4 +40,4 @@ Route::get('index', function () {
 })->name('index');
 
 // Rutas de Materiales
-Route::resource('material', 'MaterialesController');
+Route::resource('materiales', 'MaterialesController');
