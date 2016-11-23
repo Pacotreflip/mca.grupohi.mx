@@ -12,7 +12,7 @@
           <figure class="nav-company pull-left">
             <img src="{{ asset('img/company-icon.png') }}" alt="Grupo Hermes Infraestructura"/>
           </figure>
-          Acarreos
+          {{ trans('strings.app_name') }}
       </a>
     </div>
 
