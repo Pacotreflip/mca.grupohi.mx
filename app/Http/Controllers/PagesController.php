@@ -11,7 +11,10 @@ use Illuminate\Support\Facades\Auth;
 class PagesController extends Controller
 {
     function __construct() {
+        
         $this->middleware('auth');
+        
+        parent::__construct();
     }
     
     public function home() {
