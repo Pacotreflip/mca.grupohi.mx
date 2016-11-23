@@ -13,4 +13,8 @@ class Proyecto extends Model
     public function users() {
         return $this->belongsToMany(\App\User::class, 'sca.configuracion.usuarios_proyectos', 'id_proyecto', 'id_usuario_intranet');
     }
+    
+    public function proyectoLocal() {
+        return $this->hasOne(ProyectoLocal::class, 'IdProyectoGlobal');
+    }
 }

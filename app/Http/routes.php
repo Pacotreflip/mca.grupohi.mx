@@ -38,3 +38,6 @@ Route::get('/context/{databaseName}/{id}', 'ContextController@set')
 Route::get('index', function () {
     return view('index');
 })->name('index');
+
+// Rutas de Materiales
+Route::resource('materiales', 'MaterialesController');
