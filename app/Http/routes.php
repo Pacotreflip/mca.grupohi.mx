@@ -10,7 +10,31 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+// Rutas de Paginas
+Route::get('/', 'PagesController@home')->name('home');
+Route::get('proyectos', 'PagesController@proyectos')->name('proyectos');
 
-Route::get('/', function () {
-    return view('welcome');
-});
+// Rutas de Autenticación
+Route::get('auth/login', [
+        'as' => 'auth.login',
+        'uses' => 'Auth\AuthController@getLogin'
+    ]);
+
+    Route::post('auth/login', [
+        'as' => 'auth.login',
+        'uses' => 'Auth\AuthController@postLogin'
+    ]);
+
+    Route::get('auth/logout', [
+        'as' => 'auth.logout',
+        'uses' => 'Auth\AuthController@getLogout'
+    ]);
+
+// Rutas de contexto...
+Route::get('/context/{databaseName}/{id}', 'ContextController@set')
+    ->name('context.set')
+    ->where(['databaseName' => '[aA-zZ0-9_-]+', 'id' => '[0-9]+']);
+
+Route::get('index', function () {
+    return view('index');
+})->name('index');

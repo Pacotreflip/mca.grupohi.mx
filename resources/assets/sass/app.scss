@@ -1,2 +1,14 @@
-// @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+// Font Awesome overrides
+$fa-font-path: "../fonts/font-awesome";
 
+// Roboto Font overrides
+$roboto-font-path: "../fonts/roboto";
+
+@import "partials/variables";
+@import "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface";
+@import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/font-awesome/scss/font-awesome";
+@import "partials/nav";
+body {
+  margin-top: 70px;
+}
