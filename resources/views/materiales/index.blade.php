@@ -25,10 +25,8 @@
           <td>{{ $material->Descripcion }}</td>
           <td>{{ $material->estatus() }}</td>
           <td>
-              {!! Form::open(['route' => ['materiales.destroy', $material], 'method' => 'delete']) !!}
               {!! link_to_route('materiales.edit', 'EDITAR', [$material], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! Form::submit('ELIMINAR', ['class' => 'btn btn-danger btn-sm']) !!}
-              {!! Form::close() !!}          
+              {!! link_to_route('materiales.destroy', 'ELIMINAR', [$material], ['class' => 'btn btn-danger btn-sm materiales_destroy']) !!}
           </td>
         </tr>
       @endforeach

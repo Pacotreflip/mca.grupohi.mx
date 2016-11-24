@@ -104,9 +104,8 @@ class MaterialesController extends Controller
      */
     public function destroy($id)
     {
+        Material::findOrFail($id);
         Material::destroy($id);
-        
-        Flash::success('¡MATERIAL ELIMINADO CORRECTAMENTE!');
-        return redirect()->back();
+        return response()->json(['success' => true]);
     }
 }

@@ -7,6 +7,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}" />
     <title>{{ trans('strings.app_name') }}</title>
     <link rel="stylesheet" href="{{ asset(elixir('css/app.css')) }}">
+    @include('scripts.globals')
+
 @yield('styles')
   </head>
   <body>
