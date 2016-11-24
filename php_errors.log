@@ -1,0 +1,1 @@
+[23-Nov-2016 15:28:12 America/Mexico_City] PHP Fatal error:  Class 'DaveJamesMiller\Breadcrumbs\ServiceProvider' not found in C:\httpd\www\php56.loc\mca.grupohi.mx\vendor\laravel\framework\src\Illuminate\Foundation\ProviderRepository.php on line 146
