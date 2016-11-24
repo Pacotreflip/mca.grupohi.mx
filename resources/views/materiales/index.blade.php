@@ -10,10 +10,10 @@
   <table class="table table-striped">
     <thead>
       <tr>
-        <th>ID</th>
-        <th>DESCRIPCION</th>
-        <th>ESTATUS</th>
-        <th>ACCIONES</th>
+        <th>ID Material</th>
+        <th>Descripción</th>
+        <th>Estatus</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -25,7 +25,10 @@
           <td>{{ $material->Descripcion }}</td>
           <td>{{ $material->estatus() }}</td>
           <td>
-              {!! link_to_route('materiales.edit', 'EDITAR', [$material]) !!}
+              {!! Form::open(['route' => ['materiales.destroy', $material], 'method' => 'delete']) !!}
+              {!! link_to_route('materiales.edit', 'EDITAR', [$material], ['class' => 'btn btn-warning btn-sm']) !!}
+              {!! Form::submit('ELIMINAR', ['class' => 'btn btn-danger btn-sm']) !!}
+              {!! Form::close() !!}          
           </td>
         </tr>
       @endforeach

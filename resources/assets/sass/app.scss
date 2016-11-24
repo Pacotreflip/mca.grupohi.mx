@@ -12,3 +12,8 @@ $roboto-font-path: "../fonts/roboto";
 body {
   margin-top: 70px;
 }
+.rcorners {
+    border-radius: 10px 30px;
+    border: 1px solid gray;
+    padding: 20px; 
+} 
