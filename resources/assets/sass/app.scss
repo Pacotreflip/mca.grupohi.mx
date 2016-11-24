@@ -8,6 +8,7 @@ $roboto-font-path: "../fonts/roboto";
 @import "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface";
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "node_modules/font-awesome/scss/font-awesome";
+@import "node_modules/sweetalert/dev/sweetalert";
 @import "partials/nav";
 body {
   margin-top: 70px;

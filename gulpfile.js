@@ -4,7 +4,8 @@ var paths = {
     'jquery': './node_modules/jquery/dist/',
     'bootstrap': './node_modules/bootstrap-sass/assets/',
     'fontawesome': './node_modules/font-awesome/',
-    'roboto': './node_modules/roboto-fontface/'
+    'roboto': './node_modules/roboto-fontface/',
+    'sweetalert': './node_modules/sweetalert/dist/'
 };
     
 /*
@@ -25,9 +26,11 @@ elixir(function(mix) {
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
             .copy(paths.bootstrap + 'javascripts/bootstrap.min.js', './resources/assets/js')
             .copy(paths.jquery + 'jquery.min.js', './resources/assets/js')
+            .copy(paths.sweetalert + 'sweetalert.min.js', './resources/assets/js')
             .scripts([
                 'jquery.min.js',
-                'bootstrap.min.js'
+                'bootstrap.min.js',
+                'sweetalert.min.js'
             ])
             .version([
                 'public/css/app.css',
