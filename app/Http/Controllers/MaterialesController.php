@@ -106,6 +106,9 @@ class MaterialesController extends Controller
     {
         Material::findOrFail($id);
         Material::destroy($id);
-        return response()->json(['success' => true]);
+        return response()->json([
+            'success' => true,
+            'url' => route('materiales.index')
+            ]);
     }
 }

@@ -1,6 +1,5 @@
 $(".materiales_destroy").off().on("click", function(event) {
-    var btn = $(this);
-    var tr = btn.closest('tr');
+    var btn = $(this);    
     event.preventDefault();
     swal({   
         title: "¿Estás seguro?",   
@@ -17,8 +16,14 @@ $(".materiales_destroy").off().on("click", function(event) {
            data: {_method: 'delete', _token : App.csrfToken },
            success: function(response) {
                if(response.success) {
-                   tr.remove();
-                   swal("¡Material Eliminado!", ".", "success");
+                   swal({   
+                       title: "¡Material Eliminado!",
+                       type: "success",   
+                       confirmButtonText: "OK",   
+                       closeOnConfirm: false }, 
+                   function(){   
+                       window.location.href = response.url;
+                   });
                } else {
                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
                }

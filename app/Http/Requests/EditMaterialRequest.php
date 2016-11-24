@@ -24,8 +24,8 @@ class EditMaterialRequest extends Request
     public function rules()
     {
         return [
-            'Estatus' => 'numeric',
-            'Descripcion' => 'unique:sca.materiales,Descripcion,'.$this->route('materiales').',IdMaterial'
+            'Estatus' => 'required|numeric',
+            'Descripcion' => 'required|unique:sca.materiales,Descripcion,'.$this->route('materiales').',IdMaterial'
         ];
     }
     
@@ -33,7 +33,9 @@ class EditMaterialRequest extends Request
     {
         $messages = [
             'Descripcion.unique'    => 'Ya existe un material con la siguiente descripción :' . $this->Descripcion,
+            'Descripcion.required'  => 'El campo :attribute es obligatorio.',
             'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
+            'Estatus.required'      => 'El campo :attribute es obligatorio.',
         ];
 
         return $messages;

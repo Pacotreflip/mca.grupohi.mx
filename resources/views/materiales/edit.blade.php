@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.new_material')) }}</h1>
+<h1>{{ strtoupper(trans('strings.edit_material')) }}</h1>
 {!! Breadcrumbs::render('materiales.edit', $material) !!}
 <hr>
 @include('partials.errors')

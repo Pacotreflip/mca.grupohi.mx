@@ -11,5 +11,6 @@ return [
     'materials' => 'Materiales',
     'edit' => 'Editar',
     'new_material' => 'Nuevo Material',
-    'edit_material' => 'Editar Material'
+    'edit_material' => 'Editar Material',
+    'delete_material' => 'Eliminar Material'
 ];
