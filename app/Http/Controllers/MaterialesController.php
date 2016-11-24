@@ -8,6 +8,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Material;
 use Laracasts\Flash\Flash;
+use App\Models\ProyectoLocal;
 
 class MaterialesController extends Controller
 {
@@ -47,7 +48,8 @@ class MaterialesController extends Controller
      */
     public function store(Requests\CreateMaterialRequest $request)
     {
-        $request->request->add(['IdProyecto' => 1]);
+        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+        $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
         Material::create($request->all());
         
         Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');

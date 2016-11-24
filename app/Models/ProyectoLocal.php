@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProyectoLocal extends Model
 {
+    protected $connection = 'sca';
     protected $table = 'proyectos';
     protected $primaryKey = 'IdProyecto';
     public $timestapms = false;
