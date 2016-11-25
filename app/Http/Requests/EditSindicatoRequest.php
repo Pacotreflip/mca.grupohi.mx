@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class EditMarcaRequest extends Request
+class EditSindicatoRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,16 +24,19 @@ class EditMarcaRequest extends Request
     public function rules()
     {
         return [
-            'Estatus' => 'required|numeric',
-            'Descripcion' => 'required|unique:sca.marcas,Descripcion,'.$this->route('marcas').',IdMarca'
+            'Descripcion' => 'required|unique:sca.sindicatos,Descripcion,'.$this->route('sindicatos').',IdSindicato',
+            'NombreCorto' => 'required|unique:sca.sindicatos,NombreCorto,'.$this->route('sindicatos').',IdSIndicato',
+            'Estatus' => 'required|numeric'
         ];
     }
     
     public function messages()
     {
         $messages = [
-            'Descripcion.unique'    => 'Ya existe una marca con la siguiente descripción: ' . $this->Descripcion,
+            'Descripcion.unique'    => 'Ya existe un sindicato con la siguiente descripción: ' . $this->Descripcion,
             'Descripcion.required'  => 'El campo :attribute es obligatorio.',
+            'NombreCorto.required'  => 'El campo :attribute es obligatorio.',
+            'NombreCorto.unique'    => 'Ya existe un sindicato con el siguiente nombre corto: ' . $this->NombreCorto,
             'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
             'Estatus.required'      => 'El campo :attribute es obligatorio.',
         ];

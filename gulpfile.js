@@ -32,7 +32,8 @@ elixir(function(mix) {
                 'bootstrap.min.js',
                 'sweetalert.min.js',
                 'materiales.js',
-                'marcas.js'
+                'marcas.js',
+                'sindicatos.js'
             ])
             .version([
                 'public/css/app.css',

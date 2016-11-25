@@ -41,3 +41,24 @@ Breadcrumbs::register('marcas.edit', function($breadcrumbs, $marca){
     $breadcrumbs->parent('marcas.show', $marca);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('marcas.edit', $marca));
 });
+
+//Catalogos->Sindicatos
+
+Breadcrumbs::register('sindicatos.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.sindicatos')), route('sindicatos.index'));
+});
+
+Breadcrumbs::register('sindicatos.show', function($breadcrumbs, $sindicato){
+    $breadcrumbs->parent('sindicatos.index');
+    $breadcrumbs->push(strtoupper($sindicato->NombreCorto), route('sindicatos.show', $sindicato));
+});
+
+Breadcrumbs::register('sindicatos.create', function($breadcrumbs){
+    $breadcrumbs->parent('sindicatos.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_sindicato')), route('sindicatos.create'));
+});
+
+Breadcrumbs::register('sindicatos.edit', function($breadcrumbs, $sindicato){
+    $breadcrumbs->parent('sindicatos.show', $sindicato);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('sindicatos.edit', $sindicato));
+});

@@ -13,8 +13,10 @@
         {{ trans('strings.catalogs') }} <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li><a href="{{ route('materiales.index') }}">{{ trans('strings.materials') }}</a></li>
         <li><a href="{{ route('marcas.index') }}">{{ trans('strings.brands') }}</a></li>
+        <li><a href="{{ route('materiales.index') }}">{{ trans('strings.materials') }}</a></li>
+        <li><a href="{{ route('sindicatos.index') }}">{{ trans('strings.sindicatos') }}</a></li>
+
     </ul>
   </li>
 @else

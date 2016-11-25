@@ -33,7 +33,7 @@ class CreateMaterialRequest extends Request
     {
         $messages = [
             'Descripcion.required'  => 'El campo :attribute es obligatorio.',
-            'Descripcion.unique'    => 'Ya existe un material con la siguiente descripción :' . $this->Descripcion,
+            'Descripcion.unique'    => 'Ya existe un material con la siguiente descripción: ' . $this->Descripcion,
             'Estatus.required'      => 'El campo :attribute es obligatorio.',
             'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
         ];

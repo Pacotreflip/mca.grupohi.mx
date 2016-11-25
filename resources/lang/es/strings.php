@@ -20,5 +20,11 @@ return [
     'brands' => 'Marcas',
     'new_brand' => 'Nueva Marca',
     'edit_brand' => 'Editar Marca',
-    'delete_brand' => 'Eliminar Marca'
+    'delete_brand' => 'Eliminar Marca',
+    
+    //Sindicatos
+    'sindicatos' => 'Sindicatos',
+    'new_sindicato' => 'Nuevo Sindicato',
+    'edit_sindicato' => 'Editar Sindicato',
+    'delete_sindicato' => 'Eliminar Sindicato'
     ];
