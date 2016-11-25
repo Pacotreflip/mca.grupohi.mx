@@ -28,6 +28,7 @@
         </div>
     </div>
     <div class="form-group " style="text-align: center">
+        <a class="btn btn-info" href="{{ URL::previous() }}">Regresar</a>        
         {!! Form::submit('Actualizar', ['class' => 'btn btn-primary']) !!}
     </div>
 </div>

@@ -43,3 +43,4 @@ Route::get('index', function () {
 Route::resource('materiales', 'MaterialesController');
 Route::resource('marcas', 'MarcasController');
 Route::resource('sindicatos', 'SindicatosController');
+Route::resource('origenes', 'OrigenesController');

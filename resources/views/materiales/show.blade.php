@@ -20,5 +20,8 @@
             {!! Form::text('Estatus', $material->present()->estatus, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
+    <div class="form-group " style="text-align: center">
+        {!! link_to_route('materiales.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
+    </div>
 </div>
 @stop

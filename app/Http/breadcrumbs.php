@@ -62,3 +62,24 @@ Breadcrumbs::register('sindicatos.edit', function($breadcrumbs, $sindicato){
     $breadcrumbs->parent('sindicatos.show', $sindicato);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('sindicatos.edit', $sindicato));
 });
+
+//Catalogos->Origenes
+
+Breadcrumbs::register('origenes.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.origins')), route('origenes.index'));
+});
+
+Breadcrumbs::register('origenes.show', function($breadcrumbs, $origen){
+    $breadcrumbs->parent('origenes.index');
+    $breadcrumbs->push(strtoupper($origen->Descripcion), route('origenes.show', $origen));
+});
+
+Breadcrumbs::register('origenes.create', function($breadcrumbs){
+    $breadcrumbs->parent('origenes.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_origin')), route('origenes.create'));
+});
+
+Breadcrumbs::register('origenes.edit', function($breadcrumbs, $origen){
+    $breadcrumbs->parent('origenes.show', $origen);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('origenes.edit', $origen));
+});

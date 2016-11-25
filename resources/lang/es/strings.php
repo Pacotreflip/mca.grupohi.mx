@@ -26,5 +26,11 @@ return [
     'sindicatos' => 'Sindicatos',
     'new_sindicato' => 'Nuevo Sindicato',
     'edit_sindicato' => 'Editar Sindicato',
-    'delete_sindicato' => 'Eliminar Sindicato'
+    'delete_sindicato' => 'Eliminar Sindicato',
+    
+    //Origenes
+    'origins' => 'Origenes',
+    'new_origin' => 'Nuevo Origen',
+    'edit_origin' => 'Editar Origen',
+    'delete_origin' => 'Eliminar Origen',  
     ];

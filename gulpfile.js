@@ -33,7 +33,8 @@ elixir(function(mix) {
                 'sweetalert.min.js',
                 'materiales.js',
                 'marcas.js',
-                'sindicatos.js'
+                'sindicatos.js',
+                'origenes.js'
             ])
             .version([
                 'public/css/app.css',
