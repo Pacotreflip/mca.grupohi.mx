@@ -23,7 +23,7 @@
     <div class="form-group">
         {!! Form::label('Estatus', 'Estatus', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::text('Estatus', $material->estatus(), ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::text('Estatus', $material->present()->estatus, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
 </div>

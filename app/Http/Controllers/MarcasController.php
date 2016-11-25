@@ -6,11 +6,10 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Material;
+use App\Models\Marca;
 use Laracasts\Flash\Flash;
-use App\Models\ProyectoLocal;
 
-class MaterialesController extends Controller
+class MarcasController extends Controller
 {
     
     function __construct() {
@@ -19,7 +18,7 @@ class MaterialesController extends Controller
        
         parent::__construct();
     }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -27,8 +26,8 @@ class MaterialesController extends Controller
      */
     public function index()
     {
-        return view('materiales.index')
-                ->withMateriales(Material::all());
+        return view('marcas.index')
+                ->withMarcas(Marca::all());
     }
 
     /**
@@ -38,7 +37,7 @@ class MaterialesController extends Controller
      */
     public function create()
     {
-        return view('materiales.create');
+        return view('marcas.create');
     }
 
     /**
@@ -47,14 +46,12 @@ class MaterialesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Requests\CreateMaterialRequest $request)
+    public function store(Requests\CreateMarcaRequest $request)
     {
-        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
-        $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
-        Material::create($request->all());
+        Marca::create($request->all());
         
-        Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('materiales.index');
+        Flash::success('¡MARCA REGISTRADA CORRECTAMENTE!');
+        return redirect()->route('marcas.index');
     }
 
     /**
@@ -65,8 +62,8 @@ class MaterialesController extends Controller
      */
     public function show($id)
     {
-        return view('materiales.show')
-                ->withMaterial(Material::findOrFail($id));
+        return view('marcas.show')
+                ->withMarca(Marca::findOrFail($id));
     }
 
     /**
@@ -77,8 +74,8 @@ class MaterialesController extends Controller
      */
     public function edit($id)
     {
-        return view('materiales.edit')
-                ->withMaterial(Material::findOrFail($id));
+        return view('marcas.edit')
+                ->withMarca(Marca::findOrFail($id));
     }
 
     /**
@@ -88,13 +85,13 @@ class MaterialesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\EditMaterialRequest $request, $id)
+    public function update(Requests\EditMarcaRequest $request, $id)
     {
-        $material = Material::findOrFail($id);
-        $material->update($request->all());
+        $marca = Marca::findOrFail($id);
+        $marca->update($request->all());    
         
-        Flash::success('¡MATERIAL ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
+        Flash::success('¡MARCA ACTUALIZADA CORRECTAMENTE!');
+        return redirect()->route('marcas.show', $marca);
     }
 
     /**
@@ -105,11 +102,11 @@ class MaterialesController extends Controller
      */
     public function destroy($id)
     {
-        Material::findOrFail($id);
-        Material::destroy($id);
+        Marca::findOrFail($id);
+        Marca::destroy($id);
         return response()->json([
             'success' => true,
-            'url' => route('materiales.index')
+            'url' => route('marcas.index')
             ]);
     }
 }

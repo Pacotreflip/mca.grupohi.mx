@@ -23,7 +23,7 @@
             <a href="{{ route('materiales.show', $material) }}">#{{ $material->IdMaterial }}</a>
           </td>
           <td>{{ $material->Descripcion }}</td>
-          <td>{{ $material->estatus() }}</td>
+          <td>{{ $material->present()->estatus }}</td>
           <td>
               {!! link_to_route('materiales.edit', 'EDITAR', [$material], ['class' => 'btn btn-warning btn-sm']) !!}
               {!! link_to_route('materiales.destroy', 'ELIMINAR', [$material], ['class' => 'btn btn-danger btn-sm materiales_destroy']) !!}

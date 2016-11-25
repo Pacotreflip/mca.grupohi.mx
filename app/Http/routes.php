@@ -39,5 +39,6 @@ Route::get('index', function () {
     return view('index');
 })->name('index');
 
-// Rutas de Materiales
+// Rutas de Catalogos
 Route::resource('materiales', 'MaterialesController');
+Route::resource('marcas', 'MarcasController');

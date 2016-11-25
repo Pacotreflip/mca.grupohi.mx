@@ -1,9 +1,9 @@
-$(".materiales_destroy").off().on("click", function(event) {
+$(".marcas_destroy").off().on("click", function(event) {
     var btn = $(this);    
     event.preventDefault();
     swal({   
         title: "¿Estás seguro?",   
-        text: "¡Se eliminará el material y no podra recuperarlo!",   
+        text: "¡Se eliminará la marca y no podra recuperarla!",   
         type: "warning",   
         showCancelButton: true,   
         confirmButtonColor: "#DD6B55",   
@@ -17,7 +17,7 @@ $(".materiales_destroy").off().on("click", function(event) {
            success: function(response) {
                if(response.success) {
                    swal({   
-                       title: "¡Material Eliminado!",
+                       title: "¡Marca Eliminada!",
                        type: "success",   
                        confirmButtonText: "OK",   
                        closeOnConfirm: false }, 
