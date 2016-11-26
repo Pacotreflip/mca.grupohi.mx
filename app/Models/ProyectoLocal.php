@@ -18,4 +18,12 @@ class ProyectoLocal extends Model
     public function proyectoGlobal() {
         return $this->belongsTo(Proyecto::class, 'IdProyectoGlobal');
     }
+    
+    public function origenes() {
+        return $this->hasMany(Origen::class, 'IdProyecto');
+    }
+    
+    public function destinos() {
+        return $this->hasMany(Destino::class, 'IdProyecto');
+    }
 }

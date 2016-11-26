@@ -33,4 +33,10 @@ return [
     'new_origin' => 'Nuevo Origen',
     'edit_origin' => 'Editar Origen',
     'delete_origin' => 'Eliminar Origen',  
+    
+    //Destinos
+    'destinos' => 'Destinos',
+    'new_destino' => 'Nuevo Destino',
+    'edit_destino' => 'Editar Destino',
+    'delete_destino' => 'Eliminar Destino',  
     ];

@@ -83,3 +83,24 @@ Breadcrumbs::register('origenes.edit', function($breadcrumbs, $origen){
     $breadcrumbs->parent('origenes.show', $origen);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('origenes.edit', $origen));
 });
+
+//Catalogos->Destinos
+
+Breadcrumbs::register('destinos.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.destinos')), route('destinos.index'));
+});
+
+Breadcrumbs::register('destinos.show', function($breadcrumbs, $destino){
+    $breadcrumbs->parent('destinos.index');
+    $breadcrumbs->push(strtoupper($destino->Descripcion), route('destinos.show', $destino));
+});
+
+Breadcrumbs::register('destinos.create', function($breadcrumbs){
+    $breadcrumbs->parent('destinos.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_destino')), route('destinos.create'));
+});
+
+Breadcrumbs::register('destinos.edit', function($breadcrumbs, $destino){
+    $breadcrumbs->parent('destinos.show', $destino);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('destinos.edit', $destino));
+});

@@ -18,7 +18,7 @@ $(".sindicatos_destroy").off().on("click", function(event) {
            success: function(response) {
                if(response.success) {
                    swal({   
-                       title: "¡SIndicato Eliminada!",
+                       title: "¡SIndicato Eliminado!",
                        type: "success",   
                        confirmButtonText: "OK",   
                        closeOnConfirm: false }, 

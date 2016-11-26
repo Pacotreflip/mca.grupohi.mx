@@ -34,7 +34,8 @@ elixir(function(mix) {
                 'materiales.js',
                 'marcas.js',
                 'sindicatos.js',
-                'origenes.js'
+                'origenes.js',
+                'destinos.js'
             ])
             .version([
                 'public/css/app.css',
