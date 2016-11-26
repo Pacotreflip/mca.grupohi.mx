@@ -20,4 +20,8 @@ class Destino extends Model
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
+    
+    public function rutas() {
+        return $this->hasMany(Ruta::class, 'IdTiro');
+    }
 }

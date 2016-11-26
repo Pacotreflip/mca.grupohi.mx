@@ -11,12 +11,12 @@ class ProyectoLocal extends Model
     protected $primaryKey = 'IdProyecto';
     public $timestapms = false;
     
-    public function materiales() {
-        return $this->hasMany(Material::class, 'IdProyecto');
-    }
-    
     public function proyectoGlobal() {
         return $this->belongsTo(Proyecto::class, 'IdProyectoGlobal');
+    }
+    
+    public function materiales() {
+        return $this->hasMany(Material::class, 'IdProyecto');
     }
     
     public function origenes() {
@@ -25,5 +25,9 @@ class ProyectoLocal extends Model
     
     public function destinos() {
         return $this->hasMany(Destino::class, 'IdProyecto');
+    }
+    
+    public function rutas() {
+        return $this->hasMany(Ruta::class, 'IdProyecto');
     }
 }

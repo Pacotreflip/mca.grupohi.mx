@@ -25,4 +25,8 @@ class Origen extends Model
     public function tipoOrigen() {
         return $this->belongsTo(TipoOrigen::class, 'IdTipoOrigen');
     }
+    
+    public function rutas() {
+        return $this->hasMany(Ruta::class, 'IdOrigen');
+    }
 }
