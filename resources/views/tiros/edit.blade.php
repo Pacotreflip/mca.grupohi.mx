@@ -1,18 +1,18 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.edit_destino')) }}</h1>
-{!! Breadcrumbs::render('destinos.edit', $destino) !!}
+<h1>{{ strtoupper(trans('strings.edit_tiro')) }}</h1>
+{!! Breadcrumbs::render('tiros.edit', $tiro) !!}
 <hr>
 @include('partials.errors')
 
-{!! Form::model($destino, ['method' => 'PATCH', 'route' => ['destinos.update', $destino]]) !!}
+{!! Form::model($tiro, ['method' => 'PATCH', 'route' => ['tiros.update', $tiro]]) !!}
 
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <div class="form-group">
         {!! Form::label('Clave', 'Clave', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::text('Clave', $destino->present()->clave, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::text('Clave', $tiro->present()->clave, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
      <div class="form-group">

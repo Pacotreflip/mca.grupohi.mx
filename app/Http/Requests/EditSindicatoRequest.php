@@ -34,11 +34,7 @@ class EditSindicatoRequest extends Request
     {
         $messages = [
             'Descripcion.unique'    => 'Ya existe un sindicato con la siguiente descripción: ' . $this->Descripcion,
-            'Descripcion.required'  => 'El campo :attribute es obligatorio.',
-            'NombreCorto.required'  => 'El campo :attribute es obligatorio.',
             'NombreCorto.unique'    => 'Ya existe un sindicato con el siguiente nombre corto: ' . $this->NombreCorto,
-            'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
-            'Estatus.required'      => 'El campo :attribute es obligatorio.',
         ];
 
         return $messages;

@@ -10,7 +10,7 @@
 
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <div class="form-group">
-        {!! Form::label('Tipo', 'Tipo', ['class' => 'control-label col-sm-3']) !!}
+        {!! Form::label('Tipo', 'Tipo de Origen', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
             {!! Form::select('IdTipoOrigen', $tipos, null, ['placeholder' => 'Seleccione un Tipo...', 'class' => 'form-control']) !!}
         </div>

@@ -34,11 +34,11 @@ return [
     'edit_origin' => 'Editar Origen',
     'delete_origin' => 'Eliminar Origen',  
     
-    //Destinos
-    'destinos' => 'Destinos',
-    'new_destino' => 'Nuevo Destino',
-    'edit_destino' => 'Editar Destino',
-    'delete_destino' => 'Eliminar Destino',  
+    //Tiros
+    'tiros' => 'Tiros',
+    'new_tiro' => 'Nuevo Tiro',
+    'edit_tiro' => 'Editar Tiro',
+    'delete_tiro' => 'Eliminar Tiro',  
     
     //Rutas
     'rutas' => 'Rutas',

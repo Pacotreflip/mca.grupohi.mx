@@ -1,9 +1,9 @@
-$(".destinos_destroy").off().on("click", function(event) {
+$(".tiros_destroy").off().on("click", function(event) {
     var btn = $(this);    
     event.preventDefault();
     swal({   
         title: "¿Estás seguro?",   
-        text: "¡Se eliminará el destino y no podra recuperarlo!",   
+        text: "¡Se eliminará el tiro y no podra recuperarlo!",   
         type: "warning",   
         showCancelButton: true,   
         confirmButtonColor: "#DD6B55",   
@@ -17,7 +17,7 @@ $(".destinos_destroy").off().on("click", function(event) {
            success: function(response) {
                if(response.success) {
                    swal({   
-                       title: "¡Destino Eliminado!",
+                       title: "¡Tiro Eliminado!",
                        type: "success",   
                        confirmButtonText: "OK",   
                        closeOnConfirm: false }, 

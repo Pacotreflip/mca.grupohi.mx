@@ -10,6 +10,9 @@ use Laracasts\Flash\Flash;
 use Carbon\Carbon;
 use App\Models\Ruta;
 use App\Models\ProyectoLocal;
+use App\Models\Origen;
+use App\Models\Tiro;
+use App\Models\TipoRuta;
 
 class RutasController extends Controller
 {
@@ -39,7 +42,10 @@ class RutasController extends Controller
      */
     public function create()
     {
-        //
+        return view('rutas.create')
+                ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
+                ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
+                ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));
     }
 
     /**
@@ -48,9 +54,9 @@ class RutasController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateRutaRequest $request)
     {
-        //
+        dd($request->all());
     }
 
     /**

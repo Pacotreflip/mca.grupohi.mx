@@ -144,6 +144,10 @@ return [
         'time'                  => 'hora',
         'subject'               => 'asunto',
         'message'               => 'mensaje',
+        'IdOrigen'              => 'Origen',
+        'IdTiro'                => 'Tiro',
+        'IdTipoRuta'            => 'Tipo de Ruta',
+        'IdTipoOrigen'          => 'Tipo de Origen'
     ],
 
 ];

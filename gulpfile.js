@@ -5,7 +5,8 @@ var paths = {
     'bootstrap': './node_modules/bootstrap-sass/assets/',
     'fontawesome': './node_modules/font-awesome/',
     'roboto': './node_modules/roboto-fontface/',
-    'sweetalert': './node_modules/sweetalert/dist/'
+    'sweetalert': './node_modules/sweetalert/dist/',
+    'fileinput': './node_modules/bootstrap-fileinput/'
 };
     
 /*
@@ -24,18 +25,24 @@ elixir(function(mix) {
             .copy(paths.roboto + 'fonts', 'public/build/fonts/roboto')
             .copy(paths.bootstrap + 'fonts/bootstrap', 'public/build/fonts/bootstrap')
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
-            .copy(paths.bootstrap + 'javascripts/bootstrap.min.js', './resources/assets/js')
-            .copy(paths.jquery + 'jquery.min.js', './resources/assets/js')
-            .copy(paths.sweetalert + 'sweetalert.min.js', './resources/assets/js')
+            .copy(paths.fileinput + 'img', 'public/build/img')
+            .copy(paths.bootstrap + 'javascripts/bootstrap.js', './resources/assets/js')
+            .copy(paths.jquery + 'jquery.js', './resources/assets/js')
+            .copy(paths.fileinput + 'js/fileinput.js', './resources/assets/js')
+            .copy(paths.fileinput + 'js/locales/es.js', './resources/assets/js/fileinput-es.js')
+            .copy(paths.sweetalert + 'sweetalert-dev.js', './resources/assets/js')
             .scripts([
-                'jquery.min.js',
-                'bootstrap.min.js',
+                'jquery.js',
+                'bootstrap.js',
+                'fileinput.js',
+                'fileinput-es.js',
                 'sweetalert.min.js',
                 'materiales.js',
                 'marcas.js',
                 'sindicatos.js',
                 'origenes.js',
-                'destinos.js'
+                'tiros.js',
+                'rutas.js'
             ])
             .version([
                 'public/css/app.css',

@@ -4,9 +4,13 @@ $fa-font-path: "../fonts/font-awesome";
 // Roboto Font overrides
 $roboto-font-path: "../fonts/roboto";
 
+// File Input overrides
+$image-path: "../img";
+
 @import "partials/variables";
 @import "node_modules/roboto-fontface/css/roboto/sass/roboto-fontface";
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
+@import "node_modules/bootstrap-fileinput/sass/fileinput";
 @import "node_modules/font-awesome/scss/font-awesome";
 @import "node_modules/sweetalert/dev/sweetalert";
 @import "partials/nav";

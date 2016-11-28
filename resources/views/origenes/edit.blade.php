@@ -16,7 +16,7 @@
         </div>
     </div>
     <div class="form-group">
-        {!! Form::label('IdTipoOrigen', 'Tipo', ['class' => 'control-label col-sm-3']) !!}
+        {!! Form::label('IdTipoOrigen', 'Tipo de Origen', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
             {!! Form::select('IdTipoOrigen', $tipos, null, ['placeholder' => 'Seleccione un Tipo...', 'class' => 'form-control']) !!}
         </div>

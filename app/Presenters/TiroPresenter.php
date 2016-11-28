@@ -4,7 +4,7 @@ namespace App\Presenters;
 
 use Laracasts\Presenter\Presenter;
 
-class DestinoPresenter   extends Presenter
+class TiroPresenter   extends Presenter
 {
     /**
      * Regresa el estatus de la marca

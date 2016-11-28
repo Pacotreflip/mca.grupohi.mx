@@ -33,9 +33,6 @@ class EditMaterialRequest extends Request
     {
         $messages = [
             'Descripcion.unique'    => 'Ya existe un material con la siguiente descripción: ' . $this->Descripcion,
-            'Descripcion.required'  => 'El campo :attribute es obligatorio.',
-            'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
-            'Estatus.required'      => 'El campo :attribute es obligatorio.',
         ];
 
         return $messages;

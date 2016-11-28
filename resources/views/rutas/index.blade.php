@@ -36,7 +36,7 @@
             <a href="{{ route('rutas.show', $ruta) }}">{{ $ruta->present()->clave }}</a>
           </td>
           <td>{{ $ruta->origen->Descripcion }}</td>
-          <td>{{ $ruta->destino->Descripcion }}</td>
+          <td>{{ $ruta->tiro->Descripcion }}</td>
           <td>{{ $ruta->tipoRuta->Descripcion }}</td>
           <td>{{ $ruta->PrimerKm . ' km' }}</td>
           <td>{{ $ruta->KmSubsecuentes . ' km' }}</td>

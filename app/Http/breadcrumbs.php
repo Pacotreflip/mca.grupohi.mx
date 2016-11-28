@@ -84,25 +84,25 @@ Breadcrumbs::register('origenes.edit', function($breadcrumbs, $origen){
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('origenes.edit', $origen));
 });
 
-//Catalogos->Destinos
+//Catalogos->Tiros
 
-Breadcrumbs::register('destinos.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.destinos')), route('destinos.index'));
+Breadcrumbs::register('tiros.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.tiros')), route('tiros.index'));
 });
 
-Breadcrumbs::register('destinos.show', function($breadcrumbs, $destino){
-    $breadcrumbs->parent('destinos.index');
-    $breadcrumbs->push(strtoupper($destino->Descripcion), route('destinos.show', $destino));
+Breadcrumbs::register('tiros.show', function($breadcrumbs, $tiro){
+    $breadcrumbs->parent('tiros.index');
+    $breadcrumbs->push(strtoupper($tiro->Descripcion), route('tiros.show', $tiro));
 });
 
-Breadcrumbs::register('destinos.create', function($breadcrumbs){
-    $breadcrumbs->parent('destinos.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_destino')), route('destinos.create'));
+Breadcrumbs::register('tiros.create', function($breadcrumbs){
+    $breadcrumbs->parent('tiros.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_tiro')), route('tiros.create'));
 });
 
-Breadcrumbs::register('destinos.edit', function($breadcrumbs, $destino){
-    $breadcrumbs->parent('destinos.show', $destino);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('destinos.edit', $destino));
+Breadcrumbs::register('tiros.edit', function($breadcrumbs, $tiro){
+    $breadcrumbs->parent('tiros.show', $tiro);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('tiros.edit', $tiro));
 });
 
 //Catalogos->Rutas

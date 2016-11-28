@@ -43,8 +43,8 @@ class Ruta extends Model
         return $this->belongsTo(Origen::class, 'IdOrigen');
     }
     
-    public function destino() {
-        return $this->belongsTo(Destino::class, 'IdTiro');
+    public function tiro() {
+        return $this->belongsTo(Tiro::class, 'IdTiro');
     }
     
     public function user() {

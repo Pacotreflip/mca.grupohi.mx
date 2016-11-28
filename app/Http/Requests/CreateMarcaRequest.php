@@ -32,10 +32,7 @@ class CreateMarcaRequest extends Request
     public function messages()
     {
         $messages = [
-            'Descripcion.required'  => 'El campo :attribute es obligatorio.',
             'Descripcion.unique'    => 'Ya existe una marca con la siguiente descripción: ' . $this->Descripcion,
-            'Estatus.required'      => 'El campo :attribute es obligatorio.',
-            'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
         ];
 
         return $messages;

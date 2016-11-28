@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\DestinoPresenter;
+use App\Presenters\TiroPresenter;
 
-class Destino extends Model
+class Tiro extends Model
 {
     use PresentableTrait;
     
@@ -14,7 +14,7 @@ class Destino extends Model
     protected $table = 'tiros';
     protected $primaryKey = 'IdTiro';
     protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta', 'Estatus'];
-    protected $presenter = DestinoPresenter::class;
+    protected $presenter = TiroPresenter::class;
     
     public $timestamps = false;
     

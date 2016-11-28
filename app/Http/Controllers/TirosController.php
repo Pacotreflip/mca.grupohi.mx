@@ -8,10 +8,10 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 use Carbon\Carbon;
-use App\Models\Destino;
+use App\Models\Tiro;
 use App\Models\ProyectoLocal;
 
-class DestinosController extends Controller
+class TirosController extends Controller
 {
     
     function __construct() {
@@ -28,8 +28,8 @@ class DestinosController extends Controller
      */
     public function index()
     {
-        return view('destinos.index')
-                ->withDestinos(Destino::all());
+        return view('tiros.index')
+                ->withTiros(Tiro::all());
     }
 
     /**
@@ -39,7 +39,7 @@ class DestinosController extends Controller
      */
     public function create()
     {
-        return view('destinos.create');
+        return view('tiros.create');
     }
 
     /**
@@ -48,7 +48,7 @@ class DestinosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Requests\CreateDestinoRequest $request)
+    public function store(Requests\CreateTiroRequest $request)
     {
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
         
@@ -56,10 +56,10 @@ class DestinosController extends Controller
         $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
         $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
         
-        Destino::create($request->all());
+        Tiro::create($request->all());
         
-        Flash::success('¡DESTINO REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('destinos.index');
+        Flash::success('¡TIRO REGISTRADO CORRECTAMENTE!');
+        return redirect()->route('tiros.index');
     }
 
     /**
@@ -70,8 +70,8 @@ class DestinosController extends Controller
      */
     public function show($id)
     {
-        return view('destinos.show')
-                ->withDestino(Destino::findOrFail($id));
+        return view('tiros.show')
+                ->withTiro(Tiro::findOrFail($id));
     }
 
     /**
@@ -82,8 +82,8 @@ class DestinosController extends Controller
      */
     public function edit($id)
     {
-        return view('destinos.edit')
-                ->withDestino(Destino::findOrFail($id));
+        return view('tiros.edit')
+                ->withTiro(Tiro::findOrFail($id));
     }
 
     /**
@@ -93,13 +93,13 @@ class DestinosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\EditDestinoRequest $request, $id)
+    public function update(Requests\EditTiroRequest $request, $id)
     {
-        $destino = Destino::findOrFail($id);
-        $destino->update($request->all());
+        $tiro = Tiro::findOrFail($id);
+        $tiro->update($request->all());
         
-        Flash::success('¡DESTINO ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('destinos.show', $destino);
+        Flash::success('¡TIRO ACTUALIZADO CORRECTAMENTE!');
+        return redirect()->route('tiros.show', $tiro);
     }
 
     /**
@@ -110,11 +110,11 @@ class DestinosController extends Controller
      */
     public function destroy($id)
     {
-        Destino::findOrFail($id);
-        Destino::destroy($id);
+        Tiro::findOrFail($id);
+        Tiro::destroy($id);
         return response()->json([
             'success' => true,
-            'url' => route('destinos.index')
+            'url' => route('tiros.index')
             ]);
     }
 }

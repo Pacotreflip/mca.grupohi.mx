@@ -1,12 +1,12 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.new_destino')) }}</h1>
-{!! Breadcrumbs::render('destinos.create') !!}
+<h1>{{ strtoupper(trans('strings.new_tiro')) }}</h1>
+{!! Breadcrumbs::render('tiros.create') !!}
 <hr>
 @include('partials.errors')
 
-{!! Form::open(['route' => 'destinos.store']) !!}
+{!! Form::open(['route' => 'tiros.store']) !!}
 
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <div class="form-group">

@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class CreateDestinoRequest extends Request
+class EditTiroRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class CreateDestinoRequest extends Request
     public function rules()
     {
         return [
-            'Descripcion' => 'required|unique:sca.tiros,Descripcion',
+            'Descripcion' => 'required|unique:sca.tiros,Descripcion,'.$this->route('tiros').',IdTiro',
             'Estatus' => 'required|numeric'
         ];
     }
@@ -32,10 +32,7 @@ class CreateDestinoRequest extends Request
     public function messages()
     {
         $messages = [
-            'Descripcion.required'  => 'El campo :attribute es obligatorio.',
-            'Descripcion.unique'    => 'Ya existe un destino con la siguiente descripción: ' . $this->Descripcion,
-            'Estatus.required'      => 'El campo :attribute es obligatorio.',
-            'Estatus.numeric'       => 'EL campo :attribute debe ser numérico.',
+            'Descripcion.unique'    => 'Ya existe un tiro con la siguiente descripción: ' . $this->Descripcion,
         ];
 
         return $messages;
