@@ -50,4 +50,8 @@ class Ruta extends Model
     public function user() {
         return $this->belongsTo(\App\User::class, 'Registra');
     }
+    
+    public function cronometria() {
+        return $this->hasOne(Cronometria::class, 'IdRuta');
+    }
 }

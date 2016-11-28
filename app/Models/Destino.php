@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Laracasts\Presenter\PresentableTrait;
 use App\Presenters\DestinoPresenter;
+
 class Destino extends Model
 {
     use PresentableTrait;

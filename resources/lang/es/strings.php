@@ -39,4 +39,10 @@ return [
     'new_destino' => 'Nuevo Destino',
     'edit_destino' => 'Editar Destino',
     'delete_destino' => 'Eliminar Destino',  
+    
+    //Rutas
+    'rutas' => 'Rutas',
+    'new_ruta' => 'Nueva Ruta',
+    'edit_ruta' => 'Editar Ruta',
+    'delete_ruta' => 'Eliminar Ruta',  
     ];

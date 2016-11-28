@@ -45,3 +45,4 @@ Route::resource('marcas', 'MarcasController');
 Route::resource('sindicatos', 'SindicatosController');
 Route::resource('origenes', 'OrigenesController');
 Route::resource('destinos', 'DestinosController');
+Route::resource('rutas', 'RutasController');

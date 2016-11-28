@@ -104,3 +104,24 @@ Breadcrumbs::register('destinos.edit', function($breadcrumbs, $destino){
     $breadcrumbs->parent('destinos.show', $destino);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('destinos.edit', $destino));
 });
+
+//Catalogos->Rutas
+
+Breadcrumbs::register('rutas.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.rutas')), route('rutas.index'));
+});
+
+Breadcrumbs::register('rutas.show', function($breadcrumbs, $ruta){
+    $breadcrumbs->parent('rutas.index');
+    $breadcrumbs->push(strtoupper($ruta->Descripcion), route('rutas.show', $ruta));
+});
+
+Breadcrumbs::register('rutas.create', function($breadcrumbs){
+    $breadcrumbs->parent('rutas.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_ruta')), route('rutas.create'));
+});
+
+Breadcrumbs::register('rutas.edit', function($breadcrumbs, $ruta){
+    $breadcrumbs->parent('rutas.show', $ruta);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('rutas.edit', $ruta));
+});
