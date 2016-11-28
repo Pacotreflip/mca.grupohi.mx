@@ -1,39 +1,35 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ $origen->Descripcion }}
-    <a href="{{ route('origenes.edit', $origen) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit_origin') }}</a>
-    <a href="{{ route('origenes.destroy', $origen) }}" class="btn btn-danger pull-right origenes_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete_origin') }}</a>
+<h1>{{ $ruta->present()->clave }}
+    <a href="{{ route('rutas.edit', $ruta) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit_ruta') }}</a>
+    <a href="{{ route('rutas.destroy', $ruta) }}" class="btn btn-danger pull-right rutas_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete_ruta') }}</a>
 </h1>
-{!! Breadcrumbs::render('origenes.show', $origen) !!}
+{!! Breadcrumbs::render('rutas.show', $ruta) !!}
 <hr>
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
-    <div class="form-group">
-        {!! Form::label('Clave', 'Clave', ['class' => 'control-label col-sm-3']) !!}
-        <div class="col-sm-9">
-            {!! Form::text('Clave', $origen->present()->clave, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+    <fieldset>
+        <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
+        <div class="form-group">
+            {!! Form::label('IdOrigen', 'Origen', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                {!! Form::text('IdOrigen', $ruta->origen->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
+            {!! Form::label('IdTiro', 'Tiro', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                {!! Form::text('IdTiro', $ruta->tiro->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
         </div>
-    </div>
-    <div class="form-group">
-        {!! Form::label('IdTipoOrigen', 'Tipo', ['class' => 'control-label col-sm-3']) !!}
-        <div class="col-sm-9">
-            {!! Form::text('IdTipoOrigen', $origen->tipoOrigen->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+        <div class="form-group">
+            {!! Form::label('IdTipoRuta','Tipo de Ruta', ['class' => 'control-label col-sm-2'])!!}
+            <div class="col-sm-4">
+                {!! Form::text('IdTipoRuta', $ruta->tipoRuta->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>            
         </div>
-    </div>
-    <div class="form-group">
-        {!! Form::label('Descripcion', 'Descripción', ['class' => 'control-label col-sm-3']) !!}
-        <div class="col-sm-9">
-            {!! Form::text('Descripcion', $origen->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
-        </div>
-    </div>
-    <div class="form-group">
-        {!! Form::label('Estatus', 'Estatus', ['class' => 'control-label col-sm-3']) !!}
-        <div class="col-sm-9">
-            {!! Form::text('Estatus', $origen->present()->estatus, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
-        </div>
-    </div>
-    <div class="form-group " style="text-align: center">
-        {!! link_to_route('origenes.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
-    </div>
+    </fieldset>
+</div>
+
+<div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
+    {!! link_to_route('origenes.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
 </div>
 @stop

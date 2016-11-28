@@ -47,6 +47,7 @@
           <td>{{ $ruta->present()->fechaYHora }}</td>
           <td>
               {!! link_to_route('rutas.edit', 'EDITAR', [$ruta], ['class' => 'btn btn-warning btn-sm']) !!}
+              {!! link_to_route('rutas.destroy', 'ELIMINAR', [$ruta], ['class' => 'btn btn-danger btn-sm rutas_destroy']) !!}
           </td>
         </tr>
       @endforeach

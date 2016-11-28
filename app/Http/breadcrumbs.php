@@ -113,7 +113,7 @@ Breadcrumbs::register('rutas.index', function($breadcrumbs){
 
 Breadcrumbs::register('rutas.show', function($breadcrumbs, $ruta){
     $breadcrumbs->parent('rutas.index');
-    $breadcrumbs->push(strtoupper($ruta->Descripcion), route('rutas.show', $ruta));
+    $breadcrumbs->push(strtoupper($ruta->present()->clave), route('rutas.show', $ruta));
 });
 
 Breadcrumbs::register('rutas.create', function($breadcrumbs){

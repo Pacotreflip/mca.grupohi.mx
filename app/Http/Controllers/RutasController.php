@@ -13,6 +13,7 @@ use App\Models\ProyectoLocal;
 use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\TipoRuta;
+use App\Models\Cronometria;
 
 class RutasController extends Controller
 {
@@ -56,7 +57,25 @@ class RutasController extends Controller
      */
     public function store(Requests\CreateRutaRequest $request)
     {
-        dd($request->all());
+        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+        $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
+        $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
+        $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
+        $request->request->add(['Registra' => auth()->user()->idusuario]);
+
+        $ruta = Ruta::create($request->all());
+        
+        $cronometria = new Cronometria();
+        $cronometria->IdRuta = $ruta->IdRuta;
+        $cronometria->TiempoMinimo = $request->get('TiempoMinimo');
+        $cronometria->Tolerancia = $request->get('Tolerancia');
+        $cronometria->FechaAlta = Carbon::now()->toDateString();
+        $cronometria->HoraAlta = Carbon::now()->toTimeString();
+        $cronometria->Registra = auth()->user()->idusuario;
+        $cronometria->save();
+        
+        Flash::success('¡RUTA REGISTRADA CORRECTAMENTE!');
+        return redirect()->route('rutas.index');
     }
 
     /**
@@ -67,7 +86,8 @@ class RutasController extends Controller
      */
     public function show($id)
     {
-        //
+        return view('rutas.show')
+                ->withRuta(Ruta::findOrFail($id));
     }
 
     /**
