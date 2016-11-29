@@ -109,7 +109,11 @@ class RutasController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('rutas.edit')
+                ->withRuta(Ruta::findOrFail($id))
+                ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
+                ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
+                ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));    
     }
 
     /**
