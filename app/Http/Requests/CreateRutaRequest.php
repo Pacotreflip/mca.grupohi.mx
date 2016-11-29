@@ -32,8 +32,7 @@ class CreateRutaRequest extends Request
             'KmAdicionales'     => 'numeric|min:0',
             'TotalKM'           => 'required|numeric',
             'TiempoMinimo'      => 'required|numeric|min:0',
-            'Tolerancia'        => 'required|numeric|min:0',
-            'Croquis'           => 'mimes:jpeg,bmp,png,jpg,pdf,gif'
+            'Tolerancia'        => 'required|numeric|min:0'
         ];
     }
     

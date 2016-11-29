@@ -204,7 +204,7 @@ return [
         'Flash'     => Laracasts\Flash\Flash::class,
         'Context'   => App\Facades\Context::class,
         'Breadcrumbs'=> DaveJamesMiller\Breadcrumbs\Facade::class,
-        'Image' => Intervention\Image\Facades\Image::class,
+        'Image'     => Intervention\Image\Facades\Image::class,
 
     ],
 
