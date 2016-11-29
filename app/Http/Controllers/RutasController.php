@@ -57,6 +57,7 @@ class RutasController extends Controller
      */
     public function store(Requests\CreateRutaRequest $request)
     {
+        dd($request->all());
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
         $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
         $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);

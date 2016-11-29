@@ -37,12 +37,7 @@ elixir(function(mix) {
                 'fileinput.js',
                 'fileinput-es.js',
                 'sweetalert.min.js',
-                'materiales.js',
-                'marcas.js',
-                'sindicatos.js',
-                'origenes.js',
-                'tiros.js',
-                'rutas.js'
+                'app/*.js'
             ])
             .version([
                 'public/css/app.css',

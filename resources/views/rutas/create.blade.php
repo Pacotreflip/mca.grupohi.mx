@@ -11,23 +11,19 @@
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
         <div class="form-group">
-            {!! Form::label('IdOrigen', 'Origen', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('IdOrigen', 'Origen', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
                 {!! Form::select('IdOrigen', $origenes, null, ['placeholder' => 'Seleccione un Origen...', 'class' => 'form-control']) !!}
             </div>
-            {!! Form::label('IdTiro', 'Tiro', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('IdTiro', 'Tiro', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
                 {!! Form::select('IdTiro', $tiros, null, ['placeholder' => 'Seleccione un Tiro...', 'class' => 'form-control']) !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('IdTipoRuta','Tipo de Ruta', ['class' => 'control-label col-sm-2'])!!}
-            <div class="col-sm-4">
+            <div class="col-sm-10">
                 {!! Form::select('IdTipoRuta', $tipos, null, ['placeholder' => 'Seleccione un Tipo...', 'class' => 'form-control']) !!}
-            </div>            
-            {!! Form::label('Croquis','Croquis', ['class' => 'control-label col-sm-2'])!!}
-            <div class="col-sm-4">
-                <input id="croquis" name="Croquis" type="file">
             </div>
         </div>
     </fieldset>
@@ -70,10 +66,19 @@
                 {!! Form::number('Tolerancia', null, ['class' => 'form-control']) !!}
             </div>
         </div>
-            
         </legend>
     </fieldset>
 </div>
+<div style="margin-top: 20px" class="form-horizontal col-md-6 col-md-offset-3 rcorners">
+    <fieldset>
+        <legend class="scheduler-border"><i class="fa fa-map-o"></i> Croquis</legend>
+        <div class="form-group" style="text-align: center">         
+            <div class="col-sm-12" style="text-align: center">
+                <input id="croquis" name="Croquis" type="file" class="file-loading">
+            </div>
+        </div>
+    </fieldset>
+</div>    
 <div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
     <a class="btn btn-info" href="{{ URL::previous() }}">Regresar</a>        
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}

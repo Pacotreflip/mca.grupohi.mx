@@ -28,11 +28,11 @@ class CreateRutaRequest extends Request
             'IdTiro'            => 'required|exists:sca.tiros,IdTiro',
             'IdTipoRuta'        => 'required|exists:sca.tipo_ruta,IdTipoRuta',
             'PrimerKm'          => 'required|numeric|max:1',
-            'KmSubsecuentes'    => 'required|numeric',
-            'KmAdicionales'     => 'required|numeric',
+            'KmSubsecuentes'    => 'numeric|min:0',
+            'KmAdicionales'     => 'numeric|min:0',
             'TotalKM'           => 'required|numeric',
-            'TiempoMinimo'      => 'required|numeric',
-            'Tolerancia'        => 'required|numeric',
+            'TiempoMinimo'      => 'required|numeric|min:0',
+            'Tolerancia'        => 'required|numeric|min:0',
             'Croquis'           => 'mimes:jpeg,bmp,png,jpg,pdf,gif'
         ];
     }

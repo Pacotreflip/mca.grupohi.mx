@@ -1,4 +1,3 @@
-$
 $(".sindicatos_destroy").off().on("click", function(event) {
     var btn = $(this);    
     event.preventDefault();
