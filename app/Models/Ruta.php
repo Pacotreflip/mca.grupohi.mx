@@ -54,4 +54,8 @@ class Ruta extends Model
     public function cronometria() {
         return $this->hasOne(Cronometria::class, 'IdRuta');
     }
+    
+    public function archivo() {
+        return $this->hasOne(ArchivoRuta::class, 'IdRuta');
+    }
 }
