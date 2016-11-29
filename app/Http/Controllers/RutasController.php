@@ -74,7 +74,7 @@ class RutasController extends Controller
         $cronometria->Registra = auth()->user()->idusuario;
         $cronometria->save();
                 
-        if($request->hasFIle('Croquis')) {
+        if($request->hasFile('Croquis')) {
             $croquis = $request->file('Croquis');
             $archivo = new ArchivoRuta();
             $nombre = $archivo->creaNombre($croquis, $ruta);

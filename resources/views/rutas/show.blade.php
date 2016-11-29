@@ -21,15 +21,21 @@
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('IdTipoRuta','Tipo de Ruta', ['class' => 'control-label col-sm-2'])!!}
+            {!! Form::label('IdTipoRuta','Tipo de Ruta', ['class' => 'control-label col-sm-2'])  !!}
             <div class="col-sm-4">
                 {!! Form::text('IdTipoRuta', $ruta->tipoRuta->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
-            </div>            
+            </div>     
+            {!! Form::label('Croquis', 'Archivo de Croquis', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                <a class="btn btn-info col-md-12" href="{{ URL::to('/').'/'.$ruta->archivo->Ruta }}">
+                    <i class="fa fa-file-{{$ruta->archivo->Tipo == 'application/pdf' ? 'pdf' : 'image'}}-o"></i> VER ARCHIVO                  
+                </a>  
+            </div>
         </div>
     </fieldset>
 </div>
 
 <div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
-    {!! link_to_route('origenes.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
+    {!! link_to_route('rutas.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
 </div>
 @stop
