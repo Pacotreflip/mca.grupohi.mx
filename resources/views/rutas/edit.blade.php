@@ -6,7 +6,7 @@
 <hr>
 @include('partials.errors')
 
-{!! Form::model($ruta, ['method' => 'PATCH', 'route' => ['rutas.update', $ruta]]) !!}
+{!! Form::model($ruta, ['method' => 'PATCH', 'route' => ['rutas.update', $ruta], 'files' => true]) !!}
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
@@ -87,32 +87,43 @@
 @stop
 @section('scripts')
 <script>
-    $(document).ready(function(){    
-        $("#croquis-edit").fileinput({
-            language: 'es',
-            theme: 'fa',
-            showPreview: true,
-            showUpload: false,
-            browseOnZoneClick: true,
-            uploadUrl: false,
-            uploadAsync: true,
-            maxFileCount: 1,
-            dropZoneTitle: '<p style="font-size: 25px"><small><strong>Selecciona ó arrastra</strong> un archivo de croquis</small></p>',
-            dropZoneClickTitle: '',
-            autoReplace: true,
-            allowedFileExtensions: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'pdf'],
-            initialPreviewConfig: getFile(),
-            layoutTemplates: {
-                actionUpload: '',
-                actionDelete: ''
+    $(document).ready(function() {
+        $.ajax({
+            type: 'get',
+            url: '{{ route("ruta.archivos.index", $ruta)}}',
+            success: function(response) {
+                if (response.type == 'application/pdf') {
+                    preview = '<div class="kv-file-content"><embed class="kv-preview-data" src="'+response.url+'" width="160px" height="160px" type="application/pdf"></div>';          
+                } else {
+                    preview = response.url;
+                }
+                $("#croquis-edit").fileinput({
+                    language: 'es',
+                    theme: 'fa',
+                    showPreview: true,
+                    showUpload: false,
+                    browseOnZoneClick: true,
+                    uploadUrl: false,
+                    uploadAsync: true,
+                    maxFileCount: 1,
+                    dropZoneTitle: '<p style="font-size: 25px"><small><strong>Selecciona ó arrastra</strong> un archivo de croquis</small></p>',
+                    dropZoneClickTitle: '',
+                    autoReplace: true,
+                    //initialPreview: ["<embed src='"+response.url+"' width='160px' height='160px' type='application/pdf'>"],
+                    initialPreview: ["<img src='"+response.url+"' class='file-preview-image' alt='Desert' title='Desert' style='width: 100%; height: 160px;'>"],                
+                    initialPreviewAsData: false,
+                    initialPreviewConfig: [response.data],
+                    allowedFileExtensions: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'pdf'],
+                    overwriteInitial: true,
+                    initialCaption: [response.data.caption],
+                    layoutTemplates: {
+                        actionDelete: '',
+                        actionUpload: ''
+                    },
+                });
             }
         });
-        
-        function getFile() {
-            $.ajax({
-               url: '' 
-            });
-            return JSON;
-    });
+     }); 
+
 </script>
 @stop
