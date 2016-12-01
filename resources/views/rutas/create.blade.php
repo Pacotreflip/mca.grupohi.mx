@@ -38,13 +38,13 @@
             </div>
             {!! Form::label('KmSubsecuentes', 'KM Subsecuentes', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
-                {!! Form::number('KmSubsecuentes', null, ['class' => 'form-control km']) !!}
+                {!! Form::text('KmSubsecuentes', '0', ['class' => 'form-control km']) !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('KmAdicionales', 'KM Adicionales', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
-                {!! Form::number('KmAdicionales', null, ['class' => 'form-control km']) !!}
+                {!! Form::text('KmAdicionales', '0', ['class' => 'form-control km']) !!}
             </div>
             {!! Form::label('TotalKM', 'KM Total', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
@@ -59,11 +59,11 @@
         <div class="form-group">
             {!! Form::label('TiempoMinimo', 'Tiempo Mínimo (min)', ['class' => 'control-label col-sm-2']) !!}
             <div class="col-sm-4">
-                {!! Form::number('TiempoMinimo', null, ['class' => 'form-control']) !!}
+                {!! Form::text('TiempoMinimo', '0', ['class' => 'form-control']) !!}
             </div>
             {!! Form::label('Tolerancia', 'Tolerancia (min)', ['class' => 'control-label col-sm-2']) !!}
             <div class="col-sm-4">
-                {!! Form::number('Tolerancia', null, ['class' => 'form-control']) !!}
+                {!! Form::text('Tolerancia', '0', ['class' => 'form-control']) !!}
             </div>
         </div>
         </legend>

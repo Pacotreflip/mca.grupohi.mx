@@ -13,36 +13,37 @@ return [
     //Materiales
     'materials' => 'Materiales',
     'new_material' => 'Nuevo Material',
-    'edit_material' => 'Editar Material',
-    'delete_material' => 'Eliminar Material',
+    'edit_material' => 'EDITAR',
+    'delete_material' => 'ELIMINAR',
     
     //Marcas
     'brands' => 'Marcas',
     'new_brand' => 'Nueva Marca',
-    'edit_brand' => 'Editar Marca',
-    'delete_brand' => 'Eliminar Marca',
+    'edit_brand' => 'EDITAR',
+    'delete_brand' => 'ELIMINAR',
     
     //Sindicatos
     'sindicatos' => 'Sindicatos',
     'new_sindicato' => 'Nuevo Sindicato',
-    'edit_sindicato' => 'Editar Sindicato',
-    'delete_sindicato' => 'Eliminar Sindicato',
+    'edit_sindicato' => 'EDITAR',
+    'delete_sindicato' => 'ELIMINAR',
     
     //Origenes
     'origins' => 'Origenes',
     'new_origin' => 'Nuevo Origen',
-    'edit_origin' => 'Editar Origen',
-    'delete_origin' => 'Eliminar Origen',  
+    'edit_origin' => 'EDITAR',
+    'delete_origin' => 'ELIMINAR',  
     
     //Tiros
     'tiros' => 'Tiros',
     'new_tiro' => 'Nuevo Tiro',
-    'edit_tiro' => 'Editar Tiro',
-    'delete_tiro' => 'Eliminar Tiro',  
+    'edit_tiro' => 'EDITAR',
+    'delete_tiro' => 'ELIMINAR',  
     
     //Rutas
     'rutas' => 'Rutas',
     'new_ruta' => 'Nueva Ruta',
-    'edit_ruta' => 'Editar Ruta',
-    'delete_ruta' => 'Eliminar Ruta',  
+    'edit_ruta' => 'EDITAR',
+    'delete_ruta' => 'ELIMINAR',  
+    'activate_ruta' => 'ACTIVAR',  
     ];

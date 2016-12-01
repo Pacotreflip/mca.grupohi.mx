@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ $ruta->present()->clave }}
     <a href="{{ route('rutas.edit', $ruta) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit_ruta') }}</a>
-    <a href="{{ route('rutas.destroy', $ruta) }}" class="btn btn-danger pull-right rutas_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete_ruta') }}</a>
+    <a href="{{ route('rutas.destroy', $ruta) }}" class="btn pull-right rutas_destroy {{ $ruta->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $ruta->Estatus == 1 ? 'fa-close' : 'fa-plus' }}"></i> {{ $ruta->Estatus == 1 ? trans('strings.delete_ruta') : trans('strings.activate_ruta') }}</a>
 </h1>
 {!! Breadcrumbs::render('rutas.show', $ruta) !!}
 <hr>

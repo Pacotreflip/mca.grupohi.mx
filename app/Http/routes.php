@@ -35,10 +35,6 @@ Route::get('/context/{databaseName}/{id}', 'ContextController@set')
     ->name('context.set')
     ->where(['databaseName' => '[aA-zZ0-9_-]+', 'id' => '[0-9]+']);
 
-Route::get('index', function () {
-    return view('index');
-})->name('index');
-
 // Rutas de Catalogos
 Route::resource('materiales', 'MaterialesController');
 Route::resource('marcas', 'MarcasController');
@@ -46,4 +42,4 @@ Route::resource('sindicatos', 'SindicatosController');
 Route::resource('origenes', 'OrigenesController');
 Route::resource('tiros', 'TirosController');
 Route::resource('rutas', 'RutasController');
-Route::resource('archivos', 'RutaArchivosController');
+Route::resource('ruta.archivos', 'RutaArchivosController');

@@ -29,22 +29,27 @@ class RutaArchivosController extends Controller
     {
         if($request->ajax()){
             $archivo = ArchivoRuta::where('IdRuta', '=', $id_ruta)->first();
-            $nombre = explode('/', $archivo->Ruta)[count(explode('/', $archivo->Ruta)) - 1];
-            $size = Storage::disk('uploads')->size($archivo->Ruta);
-            $type = $archivo->Tipo == 'application/pdf' ? 'pdf' : 'image';
-            return response()->json([
-                'type' => $archivo->Tipo,
-                'url' => URL::to('/').'/'.$archivo->Ruta,
-                'url_delete' => route('archivos.destroy', $id_ruta),
-                'data' => ['caption' => $nombre,
-                    'size' => $size,
-                    'url' => route('archivos.destroy', $id_ruta),
-                    'width' => '120px',
-                    'type' => $type,
-                    'filetype' => $archivo->Tipo,
-                    'key' => $archivo->IdRuta
+            
+            if($archivo) {
+                $nombre = explode('/', $archivo->Ruta)[count(explode('/', $archivo->Ruta)) - 1];
+                $size = Storage::disk('uploads')->size($archivo->Ruta);
+                $type = $archivo->Tipo == 'application/pdf' ? 'pdf' : 'image';
+                return response()->json([
+                    'hasCroquis' => true,
+                    'type' => $archivo->Tipo,
+                    'url' => URL::to('/').'/'.$archivo->Ruta,
+                    'data' => ['caption' => $nombre,
+                        'size' => $size,
+                        'url' => route('ruta.archivos.destroy', [$id_ruta, $archivo->IdRuta]),
+                        'width' => '120px',
+                        'type' => $type,
+                        'filetype' => $archivo->Tipo,
+                        'key' => $archivo->IdRuta
                     ]
                 ]);
+            } else {
+                return response()->json(['hasCroquis' => false]);
+            }
         }
     }
 
@@ -100,7 +105,6 @@ class RutaArchivosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        
     }
 
     /**
@@ -109,8 +113,13 @@ class RutaArchivosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id_ruta, $id_archivo)
     {
-        dd('delete :)');
+        $archivo = ArchivoRuta::findOrFail($id_archivo);
+        $ruta = $archivo->Ruta;
+        $archivo->delete();        
+        Storage::disk('uploads')->delete($ruta);
+        
+        return response()->json(['success' => true]);
     }
 }

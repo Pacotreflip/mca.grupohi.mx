@@ -123,9 +123,29 @@ class RutasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditRutaRequest $request, $id)
     {
-        dd($request->input(), $request->hasFile('Croquis'), $request->file('Croquis'));
+        $ruta = Ruta::findOrFail($id);
+        $ruta->update($request->all());
+        
+        $cronometria = $ruta->cronometria;
+        $cronometria->TiempoMinimo = $request->get('TiempoMinimo');
+        $cronometria->Tolerancia = $request->get('Tolerancia');
+        $cronometria->save();
+        
+        if($request->hasFile('Croquis')) {
+            $croquis = $request->file('Croquis');
+            $archivo = new ArchivoRuta();
+            $nombre = $archivo->creaNombre($croquis, $ruta);
+            $croquis->move($archivo->baseDir(), $nombre);
+            $archivo->IdRuta = $ruta->IdRuta;
+            $archivo->Tipo = $croquis->getClientMimeType();
+            $archivo->Ruta = $archivo->baseDir().'/'.$nombre;
+            $archivo->save();
+        }
+        
+        Flash::success('¡RUTA ACTUALIZADA CORRECTAMENTE!');
+        return redirect()->route('rutas.show', $ruta);
     }
 
     /**
@@ -136,6 +156,18 @@ class RutasController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $ruta = Ruta::findOrFail($id);
+        if($ruta->Estatus == 1) {
+            $ruta->Estatus = 0;
+            $ruta->Elimina = auth()->user()->idusuario;
+            $ruta->FechaHoraElimina = Carbon::now()->toDateTimeString();
+            $text = '¡Ruta Deshabilitada!';
+        } else {
+            $ruta->Estatus = 1;
+            $text = '¡Ruta Habilitada!';
+        }
+        $ruta->save();
+                
+        return response()->json(['text' => $text]);
     }
 }
