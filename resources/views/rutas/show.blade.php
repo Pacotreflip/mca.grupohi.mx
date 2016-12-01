@@ -28,7 +28,7 @@
             @if($ruta->archivo)
             {!! Form::label('Croquis', 'Archivo de Croquis', ['class' => 'control-label col-sm-2']) !!}
             <div class="col-sm-4">
-                <a class="btn btn-info col-md-12" href="{{ URL::to('/').'/'.$ruta->archivo->Ruta }}">
+                <a class="btn btn-info col-md-12" href="{{ URL::to('/').'/'.$ruta->archivo->Ruta }}" target="blank">
                     <i class="fa fa-file-{{$ruta->archivo->Tipo == 'application/pdf' ? 'pdf' : 'image'}}-o"></i> VER ARCHIVO                  
                 </a>  
             </div>

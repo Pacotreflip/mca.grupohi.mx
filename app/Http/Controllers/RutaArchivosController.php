@@ -31,17 +31,18 @@ class RutaArchivosController extends Controller
             $archivo = ArchivoRuta::where('IdRuta', '=', $id_ruta)->first();
             $nombre = explode('/', $archivo->Ruta)[count(explode('/', $archivo->Ruta)) - 1];
             $size = Storage::disk('uploads')->size($archivo->Ruta);
-            
+            $type = $archivo->Tipo == 'application/pdf' ? 'pdf' : 'image';
             return response()->json([
                 'type' => $archivo->Tipo,
                 'url' => URL::to('/').'/'.$archivo->Ruta,
+                'url_delete' => route('archivos.destroy', $id_ruta),
                 'data' => ['caption' => $nombre,
                     'size' => $size,
-                    'url' => false,
+                    'url' => route('archivos.destroy', $id_ruta),
                     'width' => '120px',
-                    'key' => '1',
-                    'type' => 'image',
+                    'type' => $type,
                     'filetype' => $archivo->Tipo,
+                    'key' => $archivo->IdRuta
                     ]
                 ]);
         }
@@ -110,6 +111,6 @@ class RutaArchivosController extends Controller
      */
     public function destroy($id)
     {
-        return 1;
+        dd('delete :)');
     }
 }

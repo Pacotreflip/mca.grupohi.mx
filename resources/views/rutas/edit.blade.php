@@ -7,6 +7,7 @@
 @include('partials.errors')
 
 {!! Form::model($ruta, ['method' => 'PATCH', 'route' => ['rutas.update', $ruta], 'files' => true]) !!}
+<div class="id_ruta" id='{{$ruta->IdRuta}}'></div>
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
@@ -88,14 +89,17 @@
 @section('scripts')
 <script>
     $(document).ready(function() {
+        div = $('div.id_ruta');
+        id_ruta = div.attr('id');
+        console.log(id_ruta);
         $.ajax({
-            type: 'get',
-            url: '{{ route("ruta.archivos.index", $ruta)}}',
+            type: 'GET',
+            url: App.host + '/archivos/' + id_ruta,
             success: function(response) {
-                if (response.type == 'application/pdf') {
-                    preview = '<div class="kv-file-content"><embed class="kv-preview-data" src="'+response.url+'" width="160px" height="160px" type="application/pdf"></div>';          
+                if (response.type === 'application/pdf') {
+                    preview = "<embed src='"+response.url+"' type='application/pdf' width='100%' height='100%'>";
                 } else {
-                    preview = response.url;
+                    preview = "<img src='"+response.url+"' class='file-preview-image' style='width:100%;height:auto; max-width: 100%; max-height: 100%;'>";
                 }
                 $("#croquis-edit").fileinput({
                     language: 'es',
@@ -109,21 +113,58 @@
                     dropZoneTitle: '<p style="font-size: 25px"><small><strong>Selecciona ó arrastra</strong> un archivo de croquis</small></p>',
                     dropZoneClickTitle: '',
                     autoReplace: true,
-                    //initialPreview: ["<embed src='"+response.url+"' width='160px' height='160px' type='application/pdf'>"],
-                    initialPreview: ["<img src='"+response.url+"' class='file-preview-image' alt='Desert' title='Desert' style='width: 100%; height: 160px;'>"],                
+                    initialPreview: [preview],                
                     initialPreviewAsData: false,
                     initialPreviewConfig: [response.data],
                     allowedFileExtensions: ['jpg', 'jpeg', 'png', 'bmp', 'gif', 'pdf'],
                     overwriteInitial: true,
                     initialCaption: [response.data.caption],
                     layoutTemplates: {
-                        actionDelete: '',
-                        actionUpload: ''
+                        actionUpload: '',
                     },
+                    previewZoomSettings: {
+                        image: {width: "auto", height: "auto", 'max-width': "100%",'max-height': "100%"},
+                        pdf: {width: "100%", height: "100%", 'min-height': "480px"},
+                    }
+                });
+                
+                $("#croquis-edit").on("filepredelete", function(jqXHR) {
+                    swal({   
+                        title: "¿Estás seguro?",   
+                        text: "¡Se eliminará el croquis y no podra recuperarlo!",   
+                        type: "warning",   
+                        showCancelButton: true,   
+                        confirmButtonColor: "#DD6B55",   
+                        confirmButtonText: "Si, ¡Eliminar!",   
+                        closeOnConfirm: false 
+                    }, function(){   
+                        $.ajax({
+                           url: response.url_delete,
+                           type: 'POST',
+                           data: {_method: 'delete', _token : App.csrfToken },
+                           success: function(response) {
+                               if(response.success) {
+                                   swal({   
+                                       title: "¡Croquis Eliminado!",
+                                       type: "success",   
+                                       confirmButtonText: "OK",   
+                                       closeOnConfirm: false }, 
+                                   function(){   
+                                       $('div.fileinput-remove').click();
+                                   });
+                               } else {
+                                   sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
+                               }
+                           },
+                           error: function() {
+                                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
+                           }
+                        });
+                    });
+                    return true;
                 });
             }
         });
      }); 
-
 </script>
 @stop
