@@ -2,8 +2,8 @@
 
 @section('content')
 <h1>{{ $tiro->Descripcion }}
-    <a href="{{ route('tiros.edit', $tiro) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit_tiro') }}</a>
-    <a href="{{ route('tiros.destroy', $tiro) }}" class="btn btn-danger pull-right tiros_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete_tiro') }}</a>
+    <a href="{{ route('tiros.edit', $tiro) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
+    <a href="{{ route('tiros.destroy', $tiro) }}" class="btn btn-danger pull-right tiros_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete') }}</a>
 </h1>
 {!! Breadcrumbs::render('tiros.show', $tiro) !!}
 <hr>

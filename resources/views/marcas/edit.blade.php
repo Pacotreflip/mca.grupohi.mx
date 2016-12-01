@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.edit_brand')) }}</h1>
+<h1>{{ strtoupper(trans('strings.edit')) }}</h1>
 {!! Breadcrumbs::render('marcas.edit', $marca) !!}
 <hr>
 @include('partials.errors')

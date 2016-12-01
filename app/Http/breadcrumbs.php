@@ -125,3 +125,24 @@ Breadcrumbs::register('rutas.edit', function($breadcrumbs, $ruta){
     $breadcrumbs->parent('rutas.show', $ruta);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('rutas.edit', $ruta));
 });
+
+//Catalogos->Camiones
+
+Breadcrumbs::register('camiones.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.camiones')), route('camiones.index'));
+});
+
+Breadcrumbs::register('camiones.show', function($breadcrumbs, $camion){
+    $breadcrumbs->parent('camiones.index');
+    $breadcrumbs->push($camion->present()->datos, route('camiones.show', $camion));
+});
+
+Breadcrumbs::register('camiones.create', function($breadcrumbs){
+    $breadcrumbs->parent('camiones.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_camion')), route('camiones.create'));
+});
+
+Breadcrumbs::register('camiones.edit', function($breadcrumbs, $camion){
+    $breadcrumbs->parent('camiones.show', $camion);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('camiones.edit', $camion));
+});

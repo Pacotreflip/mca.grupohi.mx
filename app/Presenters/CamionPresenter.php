@@ -15,4 +15,8 @@ class CamionPresenter extends Presenter
     {
         return $this->entity->Estatus == 1 ? 'ACTIVO' : 'INACTIVO';
     }
+    
+    public function datos() {
+        return $this->entity->Economico . ' [' . $this->entity->Placas . ']';
+    }
 }

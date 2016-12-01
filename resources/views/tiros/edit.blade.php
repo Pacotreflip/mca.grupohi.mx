@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.edit_tiro')) }}</h1>
+<h1>{{ strtoupper(trans('strings.edit')) }}</h1>
 {!! Breadcrumbs::render('tiros.edit', $tiro) !!}
 <hr>
 @include('partials.errors')

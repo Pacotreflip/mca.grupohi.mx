@@ -2,8 +2,8 @@
 
 @section('content')
 <h1>{{ $origen->Descripcion }}
-    <a href="{{ route('origenes.edit', $origen) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit_origin') }}</a>
-    <a href="{{ route('origenes.destroy', $origen) }}" class="btn btn-danger pull-right origenes_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete_origin') }}</a>
+    <a href="{{ route('origenes.edit', $origen) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
+    <a href="{{ route('origenes.destroy', $origen) }}" class="btn btn-danger pull-right origenes_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete') }}</a>
 </h1>
 {!! Breadcrumbs::render('origenes.show', $origen) !!}
 <hr>

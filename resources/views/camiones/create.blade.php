@@ -1,13 +1,12 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.edit')) }}</h1>
-{!! Breadcrumbs::render('rutas.edit', $ruta) !!}
+<h1>{{ strtoupper(trans('strings.new_ruta')) }}</h1>
+{!! Breadcrumbs::render('rutas.create') !!}
 <hr>
 @include('partials.errors')
 
-{!! Form::model($ruta, ['method' => 'PATCH', 'route' => ['rutas.update', $ruta], 'files' => true]) !!}
-<div class="id_ruta" id='{{$ruta->IdRuta}}'></div>
+{!! Form::open(['route' => 'rutas.store', 'files' => true]) !!}
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
@@ -39,13 +38,13 @@
             </div>
             {!! Form::label('KmSubsecuentes', 'KM Subsecuentes', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
-                {!! Form::text('KmSubsecuentes', null, ['class' => 'form-control km']) !!}
+                {!! Form::text('KmSubsecuentes', '0', ['class' => 'form-control km']) !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('KmAdicionales', 'KM Adicionales', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
-                {!! Form::text('KmAdicionales', null, ['class' => 'form-control km']) !!}
+                {!! Form::text('KmAdicionales', '0', ['class' => 'form-control km']) !!}
             </div>
             {!! Form::label('TotalKM', 'KM Total', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
@@ -60,11 +59,11 @@
         <div class="form-group">
             {!! Form::label('TiempoMinimo', 'Tiempo Mínimo (min)', ['class' => 'control-label col-sm-2']) !!}
             <div class="col-sm-4">
-                {!! Form::text('TiempoMinimo', $ruta->cronometria->TiempoMinimo, ['class' => 'form-control']) !!}
+                {!! Form::text('TiempoMinimo', '0', ['class' => 'form-control']) !!}
             </div>
             {!! Form::label('Tolerancia', 'Tolerancia (min)', ['class' => 'control-label col-sm-2']) !!}
             <div class="col-sm-4">
-                {!! Form::text('Tolerancia', $ruta->cronometria->Tolerancia, ['class' => 'form-control']) !!}
+                {!! Form::text('Tolerancia', '0', ['class' => 'form-control']) !!}
             </div>
         </div>
         </legend>
@@ -75,7 +74,7 @@
         <legend class="scheduler-border"><i class="fa fa-map-o"></i> Croquis</legend>
         <div class="form-group" style="text-align: center">         
             <div class="col-sm-12" style="text-align: center">
-                <input id="croquis-edit" name="Croquis" type="file" class="file-loading">
+                <input id="croquis" name="Croquis" type="file" class="file-loading">
             </div>
         </div>
     </fieldset>
