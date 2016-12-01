@@ -7,7 +7,7 @@ use Laracasts\Presenter\Presenter;
 class TipoOrigenPresenter extends Presenter
 {
     /**
-     * Regresa el estatus de la marca
+     * Regresa el estatus del tipo de Origen
      *
      * @return string
      */

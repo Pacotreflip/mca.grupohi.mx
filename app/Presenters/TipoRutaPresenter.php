@@ -7,7 +7,7 @@ use Laracasts\Presenter\Presenter;
 class TipoRutaPresenter extends Presenter
 {
     /**
-     * Regresa el estatus de la marca
+     * Regresa el estatus del tipo de ruta
      *
      * @return string
      */

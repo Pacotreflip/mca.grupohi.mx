@@ -17,4 +17,8 @@ class Marca extends Model
     protected $presenter = MarcaPresenter::class;
     
     public $timestamps = false;
+    
+    public function camiones() {
+        return $this->hasMany(Camion::class, 'IdMarca');
+    }
 }

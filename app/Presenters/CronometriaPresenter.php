@@ -7,7 +7,7 @@ use Laracasts\Presenter\Presenter;
 class CronometriaPresenter extends Presenter
 {
     /**
-     * Regresa el estatus de la marca
+     * Regresa el estatus de la cronometría
      *
      * @return string
      */

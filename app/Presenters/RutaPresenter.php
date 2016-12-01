@@ -5,10 +5,10 @@ namespace App\Presenters;
 use Laracasts\Presenter\Presenter;
 use Carbon\Carbon;
 
-class RutaPresenter   extends Presenter
+class RutaPresenter extends Presenter
 {
     /**
-     * Regresa el estatus de la marca
+     * Regresa el estatus de la ruta
      *
      * @return string
      */

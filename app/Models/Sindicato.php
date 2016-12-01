@@ -17,4 +17,8 @@ class Sindicato extends Model
     protected $presenter = SindicatoPresenter::class;
     
     public $timestamps = false;
+    
+    public function camiones() {
+        return $this->hasMany(Camion::class, 'IdSindicato');
+    }
 }

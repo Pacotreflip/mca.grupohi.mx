@@ -7,7 +7,7 @@ use Laracasts\Presenter\Presenter;
 class SindicatoPresenter extends Presenter
 {
     /**
-     * Regresa el estatus de la marca
+     * Regresa el estatus del sindicato
      *
      * @return string
      */
