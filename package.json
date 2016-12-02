@@ -4,6 +4,7 @@
     "gulp": "^3.8.8"
   },
   "dependencies": {
+    "bootstrap-datepicker": "^1.6.4",
     "bootstrap-fileinput": "^4.3.4",
     "bootstrap-sass": "^3.0.0",
     "font-awesome": "^4.7.0",

@@ -1,80 +1,120 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.new_ruta')) }}</h1>
-{!! Breadcrumbs::render('rutas.create') !!}
+<h1>{{ strtoupper(trans('strings.new_camion')) }}</h1>
+{!! Breadcrumbs::render('camiones.create') !!}
 <hr>
 @include('partials.errors')
 
-{!! Form::open(['route' => 'rutas.store', 'files' => true]) !!}
-<div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
+{!! Form::open(['route' => 'camiones.store', 'files' => true]) !!}
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
         <div class="form-group">
-            {!! Form::label('IdOrigen', 'Origen', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-5">
-                {!! Form::select('IdOrigen', $origenes, null, ['placeholder' => 'Seleccione un Origen...', 'class' => 'form-control']) !!}
+            {!! Form::label('IdSindicato', 'Sindicato', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::select('IdSindicato', $sindicatos, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione un Sindicato...']) !!}
             </div>
-            {!! Form::label('IdTiro', 'Tiro', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-5">
-                {!! Form::select('IdTiro', $tiros, null, ['placeholder' => 'Seleccione un Tiro...', 'class' => 'form-control']) !!}
+            {!! Form::label('Propietario', 'Propietario', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Propietario', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('IdOperador','Operador', ['class' => 'control-label col-sm-1'])  !!}
+            <div class="col-sm-3">
+                {!! Form::select('IdOperador', $operadores, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione un Operador...']) !!}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('IdTipoRuta','Tipo de Ruta', ['class' => 'control-label col-sm-2'])!!}
-            <div class="col-sm-10">
-                {!! Form::select('IdTipoRuta', $tipos, null, ['placeholder' => 'Seleccione un Tipo...', 'class' => 'form-control']) !!}
+            {!! Form::label('Economico','Económico', ['class' => 'control-label col-sm-1'])  !!}
+            <div class="col-sm-3">
+                {!! Form::text('Economico',null, ['class' => 'form-control']) !!}
+            </div>     
+            {!! Form::label('Placas', 'Placas Camión', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Placas', null, ['class' => 'form-control']) !!}  
+            </div>
+            {!! Form::label('PlacasCaja', 'Placas Caja', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('PlacasCaja', null, ['class' => 'form-control']) !!}  
+            </div>
+        </div>
+        <div class="form-group">
+            {!! Form::label('IdMarca', 'Marca', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::select('IdMarca', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Marca...']) !!}  
+            </div>
+            {!! Form::label('Modelo', 'Modelo', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Modelo', null, ['class' => 'form-control']) !!}  
+            </div>
+            {!! Form::label('IdBoton', 'Dispositivo', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::select('IdBoton', $botones, null, ['class' => 'form-control' , 'placeholder' => 'Seleccione un Dispositivo...']) !!}  
             </div>
         </div>
     </fieldset>
 </div>
-<div style="margin-top: 20px" class="form-horizontal col-md-6 col-md-offset-3 rcorners">
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px"> 
     <fieldset>
-        <legend class="scheduler-border"><i class="fa fa-tachometer"></i> Kilometraje</legend>
+        <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
         <div class="form-group">
-            {!! Form::label('PrimerKm', 'Primer KM', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
-                {!! Form::number('PrimerKm', 1, ['class' => 'form-control km', 'readonly' => 'readonly']) !!}
-            </div>
-            {!! Form::label('KmSubsecuentes', 'KM Subsecuentes', ['class' => 'control-label col-sm-3']) !!}
-            <div class="col-sm-3">
-                {!! Form::text('KmSubsecuentes', '0', ['class' => 'form-control km']) !!}
             </div>
         </div>
-        <div class="form-group">
-            {!! Form::label('KmAdicionales', 'KM Adicionales', ['class' => 'control-label col-sm-3']) !!}
-            <div class="col-sm-3">
-                {!! Form::text('KmAdicionales', '0', ['class' => 'form-control km']) !!}
-            </div>
-            {!! Form::label('TotalKM', 'KM Total', ['class' => 'control-label col-sm-3']) !!}
-            <div class="col-sm-3">
-                {!! Form::number('TotalKM', null, ['class' => 'form-control', 'readonly' => 'readonly']) !!}
-            </div>
-        </div>
-    </fieldset>    
-</div>
-<div style="margin-top: 20px" class="form-horizontal col-md-6 col-md-offset-3 rcorners">
-    <fieldset>
-        <legend class="scheduler-border"><i class="fa fa-clock-o"></i> Cronometría</legend>
-        <div class="form-group">
-            {!! Form::label('TiempoMinimo', 'Tiempo Mínimo (min)', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
-                {!! Form::text('TiempoMinimo', '0', ['class' => 'form-control']) !!}
-            </div>
-            {!! Form::label('Tolerancia', 'Tolerancia (min)', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
-                {!! Form::text('Tolerancia', '0', ['class' => 'form-control']) !!}
-            </div>
-        </div>
-        </legend>
     </fieldset>
 </div>
-<div style="margin-top: 20px" class="form-horizontal col-md-6 col-md-offset-3 rcorners">
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px">
     <fieldset>
-        <legend class="scheduler-border"><i class="fa fa-map-o"></i> Croquis</legend>
-        <div class="form-group" style="text-align: center">         
-            <div class="col-sm-12" style="text-align: center">
-                <input id="croquis" name="Croquis" type="file" class="file-loading">
+        <legend class="scheduler-border"><i class="fa fa-lock"></i> Información de Seguro</legend>
+        <div class="form-group">
+            {!! Form::label('Aseguradora', 'Aseguradora', ['class' => 'control-label col-sm-1']) !!} 
+            <div class="col-sm-3">
+                {!! Form::text('Aseguradora', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('PolizaSeguro', 'Poliza', ['class' => 'control-label col-sm-1']) !!} 
+            <div class="col-sm-3">
+                {!! Form::text('PolizaSeguro', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('VigenciaPolizaSeguro', 'Vigencia', ['class' => 'control-label col-sm-1']) !!} 
+            <div class="col-sm-3">
+                {!! Form::text('VigenciaPolizaSeguro', null, ['class' => 'form-control vigencia']) !!}
+            </div>
+        </div>
+    </fieldset>
+</div>
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px">
+    <fieldset>
+        <legend class="scheduler-border"><i class="fa fa-arrows"></i> Información de Cubicación</legend>
+        <div class="form-group">
+            {!! Form::label('Ancho', 'Ancho', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('Ancho', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('Largo', 'Largo', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('Largo', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('Alto', 'Alto', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('Alto', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('EspacioDeGato', 'Gato', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('EspacioDeGato', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+        <div class="form-group">
+            {!! Form::label('AlturaExtension', 'Extensión', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('AlturaExtension', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('CubicacionReal', 'Cubicación Real', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('CubicacionReal', null, ['class' => 'form-control']) !!}
+            </div>
+            {!! Form::label('CubicacionParaPago', 'Cubicación para Pago', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('CubicacionParaPago', null, ['class' => 'form-control']) !!}
             </div>
         </div>
     </fieldset>
@@ -84,4 +124,15 @@
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
 </div>
 {!! Form::close() !!}
+@stop
+@section('scripts')
+<script>
+    $('.vigencia').datepicker({
+    format: 'yyyy-mm-dd',
+    language: 'es',
+    autoclose: true,
+    clearBtn: true,
+    todayHighlight: true
+    });
+</script>
 @stop

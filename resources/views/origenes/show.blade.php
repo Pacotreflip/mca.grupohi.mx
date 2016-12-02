@@ -7,6 +7,7 @@
 </h1>
 {!! Breadcrumbs::render('origenes.show', $origen) !!}
 <hr>
+{!! Form::model($origen) !!}
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <div class="form-group">
         {!! Form::label('Clave', 'Clave', ['class' => 'control-label col-sm-3']) !!}
@@ -15,15 +16,15 @@
         </div>
     </div>
     <div class="form-group">
-        {!! Form::label('IdTipoOrigen', 'Tipo de Origen', ['class' => 'control-label col-sm-3']) !!}
+        {!! Form::label('TipoOrigen', 'Tipo de Origen', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::text('IdTipoOrigen', $origen->tipoOrigen->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::text('TipoOrigen', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
     <div class="form-group">
         {!! Form::label('Descripcion', 'Descripción', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::text('Descripcion', $origen->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::text('Descripcion', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -32,8 +33,9 @@
             {!! Form::text('Estatus', $origen->present()->estatus, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
-    <div class="form-group " style="text-align: center">
-        {!! link_to_route('origenes.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
-    </div>
 </div>
+<div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
+    {!! link_to_route('origenes.index', 'Regresar', [],  ['class' => 'btn btn-info'])!!}
+</div>
+{!! Form::close() !!}
 @stop

@@ -29,4 +29,8 @@ class Origen extends Model
     public function rutas() {
         return $this->hasMany(Ruta::class, 'IdOrigen');
     }
+    
+    public function __toString() {
+        return $this->Descripcion;
+    }
 }

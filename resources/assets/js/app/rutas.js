@@ -131,7 +131,7 @@ function calcularTotal() {
             sum += val;
         }
     });
-    $('input[name=TotalKM]').val(sum.toFixed(2));
+    $('.totalKm').val(sum.toFixed(2));
 }
 
 $(".rutas_destroy").off().on("click", function(event) {

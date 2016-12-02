@@ -21,4 +21,8 @@ class TipoRuta extends Model
     public function rutas() {
         return $this->hasMany(Ruta::class, 'IdTipoRuta');
     }
+    
+    public function __toString() {
+        return $this->Descripcion;
+    }
 }

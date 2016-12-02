@@ -7,6 +7,10 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Camion;
+use App\Models\Sindicato;
+use App\Models\Operador;
+use App\Models\Marca;
+use App\Models\Boton;
 
 class CamionesController extends Controller
 {
@@ -36,7 +40,11 @@ class CamionesController extends Controller
      */
     public function create()
     {
-        //
+        return view('camiones.create')
+                ->withSindicatos(Sindicato::all()->lists('Descripcion', 'IdSindicato'))
+                ->withOperadores(Operador::all()->lists('Nombre', 'IdOperador'))
+                ->withMarcas(Marca::all()->lists('Descripcion', 'IdMarca'))
+                ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'));
     }
 
     /**

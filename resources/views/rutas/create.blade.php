@@ -48,7 +48,7 @@
             </div>
             {!! Form::label('TotalKM', 'KM Total', ['class' => 'control-label col-sm-3']) !!}
             <div class="col-sm-3">
-                {!! Form::number('TotalKM', null, ['class' => 'form-control', 'readonly' => 'readonly']) !!}
+                {!! Form::number('TotalKM', null, ['class' => 'form-control totalKm', 'readonly' => 'readonly']) !!}
             </div>
         </div>
     </fieldset>    

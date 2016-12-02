@@ -21,4 +21,10 @@ class TipoOrigen extends Model
     public function origenes() {
         return $this->hasMany(Origen::class, 'IdTipoOrigen');
     }
+    
+    public function __toString() {
+        return $this->Descripcion;
+    }
 }
+
+

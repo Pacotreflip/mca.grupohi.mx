@@ -27,11 +27,10 @@
             {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], null, ['placeholder' => 'Seleccione un Estatus...', 'class' => 'form-control']) !!}
         </div>
     </div>
-    <div class="form-group " style="text-align: center">
-        <a class="btn btn-info" href="{{ URL::previous() }}">Regresar</a>        
-        {!! Form::submit('Actualizar', ['class' => 'btn btn-primary']) !!}
-    </div>
 </div>
-
+<div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
+    <a class="btn btn-info" href="{{ URL::previous() }}">Regresar</a>        
+    {!! Form::submit('Actualizar', ['class' => 'btn btn-primary']) !!}
+</div>
 {!! Form::close() !!}
 @stop
