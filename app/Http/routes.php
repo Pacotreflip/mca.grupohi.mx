@@ -48,3 +48,4 @@ Route::resource('tiros', 'TirosController');
 Route::resource('rutas', 'RutasController');
 Route::resource('ruta.archivos', 'RutaArchivosController');
 Route::resource('camiones', 'CamionesController');
+Route::resource('camion.imagenes', 'CamionImagenesController');

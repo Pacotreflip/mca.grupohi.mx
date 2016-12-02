@@ -102,7 +102,12 @@ class CamionesController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('camiones.edit')
+                ->withCamion(Camion::findOrFail($id))
+                ->withSindicatos(Sindicato::all()->lists('Descripcion', 'IdSindicato'))
+                ->withOperadores(Operador::all()->lists('Nombre', 'IdOperador'))
+                ->withMarcas(Marca::all()->lists('Descripcion', 'IdMarca'))
+                ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'));
     }
 
     /**
@@ -112,9 +117,9 @@ class CamionesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditCamionRequest $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**
