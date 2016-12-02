@@ -8,28 +8,95 @@
 {!! Breadcrumbs::render('camiones.show', $camion) !!}
 <hr>
 {!! Form::model($camion) !!}
-<div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
         <div class="form-group">
-            {!! Form::label('IdSindicato', 'Sindicato', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
-                {!! Form::text('IdSindicato', $camion->sindicato->Descripcion, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::label('Sindicato', 'Sindicato', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Sindicato', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
-            {!! Form::label('Propietario', 'Propietario', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('Propietario', 'Propietario', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
                 {!! Form::text('Propietario', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
+            {!! Form::label('Operador','Operador', ['class' => 'control-label col-sm-1'])  !!}
+            <div class="col-sm-3">
+                {!! Form::text('Operador', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('IdOperador','Operador', ['class' => 'control-label col-sm-2'])  !!}
-            <div class="col-sm-4">
-                {!! Form::text('IdOperador',$camion->operador->Nombre, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::label('Economico','Económico', ['class' => 'control-label col-sm-1'])  !!}
+            <div class="col-sm-3">
+                {!! Form::text('Economico',null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>     
-            {!! Form::label('Economico', 'Económico', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
-                {!! Form::text('Economico', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
+            {!! Form::label('Placas', 'Placas Camión', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Placas', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
             </div>
+            {!! Form::label('PlacasCaja', 'Placas Caja', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('PlacasCaja', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
+            </div>
+        </div>
+        <div class="form-group">
+            {!! Form::label('Marca', 'Marca', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Marca', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
+            </div>
+            {!! Form::label('Modelo', 'Modelo', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Modelo', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
+            </div>
+            {!! Form::label('Boton', 'Dispositivo', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::text('Boton', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
+            </div>
+        </div>
+    </fieldset>
+</div>
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px"> 
+    <fieldset>
+        <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
+        <div class="form-group">
+            @if($camion->imagenes)
+            @foreach($camion->imagenes as $imagen)
+            {!! Form::label($imagen->TipoC, $imagen->TipoC, ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-3">
+                <a class="btn btn-info col-md-12"  href="{{ URL::to('/').'/'.$camion->archivo->Ruta }}" target="blank">
+                    <i class="fa fa-file-image-o"></i> VER FOTO                  
+                </a> 
+            </div>
+            @endforeach
+            @else
+            <h2 style="text-align: center">No hay imagenes...</h2>
+            @endif
+        </div>
+    </fieldset>
+</div>
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px">
+    <fieldset>
+        <legend class="scheduler-border"><i class="fa fa-lock"></i> Información de Seguro</legend>
+        <div class="form-group">
+            {!! Form::label('Aseguradora', 'Aseguradora', ['class' => 'control-label col-sm-1']) !!} 
+            <div class="col-sm-3">
+                {!! Form::text('Aseguradora', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
+            {!! Form::label('PolizaSeguro', 'Poliza', ['class' => 'control-label col-sm-1']) !!} 
+            <div class="col-sm-3">
+                {!! Form::text('PolizaSeguro', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
+            {!! Form::label('VigenciaPolizaSeguro', 'Vigencia', ['class' => 'control-label col-sm-1']) !!} 
+            <div class="col-sm-3">
+                {!! Form::text('VigenciaPolizaSeguro', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
+        </div>
+    </fieldset>
+</div>
+<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px">
+    <fieldset>
+        <legend class="scheduler-border"><i class="fa fa-arrows"></i> Información de Cubicación</legend>
+        <div class="form-group">
         </div>
     </fieldset>
 </div>

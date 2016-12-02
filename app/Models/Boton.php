@@ -17,4 +17,8 @@ class Boton extends Model
     protected $presenter = BotonPresenter::class;
     
     public $timestamps = false;
+    
+    public function __toString() {
+        return $this->Identificador;
+    }
 }

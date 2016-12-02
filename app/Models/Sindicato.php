@@ -21,4 +21,8 @@ class Sindicato extends Model
     public function camiones() {
         return $this->hasMany(Camion::class, 'IdSindicato');
     }
+    
+    public function __toString() {
+        return $this->Descripcion;
+    }
 }

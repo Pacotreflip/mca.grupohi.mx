@@ -21,4 +21,8 @@ class Marca extends Model
     public function camiones() {
         return $this->hasMany(Camion::class, 'IdMarca');
     }
+    
+    public function __toString() {
+        return $this->Descripcion;
+    }
 }

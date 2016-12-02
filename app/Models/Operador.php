@@ -27,4 +27,9 @@ class Operador extends Model
     public function camiones() {
         return $this->hasMany(Camion::class, 'IdOperador');
     }
+    
+    public function __toString() {
+        return $this->Nombre;
+    }
+
 }
