@@ -86,7 +86,7 @@ class RutasController extends Controller
         }
 
         Flash::success('¡RUTA REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('rutas.index');
+        return redirect()->route('rutas.show', $ruta);
     }
 
     /**

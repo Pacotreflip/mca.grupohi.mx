@@ -60,4 +60,8 @@ class Camion extends Model
     public function marca() {
         return $this->belongsTo(Marca::class, 'IdMarca');
     }
+    
+    public function imagenes() {
+        return $this->hasMany(ImagenCamion::class, 'IdCamion');
+    }
 }

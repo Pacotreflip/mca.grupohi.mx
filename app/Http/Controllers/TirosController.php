@@ -56,10 +56,10 @@ class TirosController extends Controller
         $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
         $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
         
-        Tiro::create($request->all());
+        $tiro = Tiro::create($request->all());
         
         Flash::success('¡TIRO REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('tiros.index');
+        return redirect()->route('tiros.show', $tiro);
     }
 
     /**

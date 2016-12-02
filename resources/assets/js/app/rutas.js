@@ -115,14 +115,14 @@ $(document).ready(function(){
         }
     });
     
-    calcularTotal();
+    calcularKmTotal();
     
     $('input.km').keyup(function(){   
-        calcularTotal(this);
+        calcularKmTotal();
     });
 });
 
-function calcularTotal() {
+function calcularKmTotal() {
     var sum = 0;
     var form = $('form');
     form.find('input.km').each(function(i, e) {

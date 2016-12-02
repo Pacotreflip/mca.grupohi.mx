@@ -58,10 +58,10 @@ class OrigenesController extends Controller
         $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
         $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
       
-        Origen::create($request->all());
+        $origen = Origen::create($request->all());
 
         Flash::success('¡ORIGEN REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('origenes.index');
+        return redirect()->route('origenes.show', $origen);
     }
 
     /**

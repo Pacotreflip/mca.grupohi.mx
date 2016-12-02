@@ -48,10 +48,10 @@ class SindicatosController extends Controller
      */
     public function store(Requests\CreateSindicatoRequest $request)
     {
-        Sindicato::create($request->all());
+        $sindicato = Sindicato::create($request->all());
         
         Flash::success('¡SINDICATO REGISTRADO CORRECTAMENTE');
-        return redirect()->route('sindicatos.index');
+        return redirect()->route('sindicatos.show', $sindicato);
     }
 
     /**

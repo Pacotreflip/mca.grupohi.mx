@@ -147,7 +147,10 @@ return [
         'IdOrigen'              => 'Origen',
         'IdTiro'                => 'Tiro',
         'IdTipoRuta'            => 'Tipo de Ruta',
-        'IdTipoOrigen'          => 'Tipo de Origen'
+        'IdTipoOrigen'          => 'Tipo de Origen',
+        'IdSindicato'           => 'Sindicato',
+        'IdOperador'            => 'Operador',
+        'IdMarca'               => 'Marca'
     ],
 
 ];

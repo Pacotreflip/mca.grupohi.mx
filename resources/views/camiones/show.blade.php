@@ -61,10 +61,10 @@
         <div class="form-group">
             @if($camion->imagenes)
             @foreach($camion->imagenes as $imagen)
-            {!! Form::label($imagen->TipoC, $imagen->TipoC, ['class' => 'control-label col-sm-1']) !!}
+            {!! Form::label($imagen->present()->tipo, $imagen->present()->tipo, ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-3">
-                <a class="btn btn-info col-md-12"  href="{{ URL::to('/').'/'.$camion->archivo->Ruta }}" target="blank">
-                    <i class="fa fa-file-image-o"></i> VER FOTO                  
+                <a class="btn btn-info col-md-12"  href="{{ URL::to('/').'/'.$imagen->Ruta }}" target="blank">
+                    <i class="fa fa-file-image-o"></i> VER IMAGEN                  
                 </a> 
             </div>
             @endforeach

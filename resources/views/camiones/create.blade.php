@@ -6,7 +6,7 @@
 <hr>
 @include('partials.errors')
 
-{!! Form::open(['route' => 'camiones.store', 'files' => true]) !!}
+{!! Form::open(['route' => 'camiones.store', 'files' => true, 'id' => 'create_camion']) !!}
 <div class="form-horizontal col-md-10 col-md-offset-1 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
@@ -58,7 +58,23 @@
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
         <div class="form-group">
-            <div class="col-sm-3">
+            {!! Form::label('Frente', 'Frente', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                <input name="Frente" type="file" class="file-loading imagen">
+            </div>
+            {!! Form::label('Derecha', 'Derecha', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                <input name="Derecha" type="file" class="file-loading imagen">
+            </div>
+        </div>
+        <div class="form-group">
+            {!! Form::label('Atras', 'Atras', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                <input name="Atras" type="file" class="file-loading imagen">
+            </div>
+            {!! Form::label('Izquierda', 'Izquierda', ['class' => 'control-label col-sm-2']) !!}
+            <div class="col-sm-4">
+                <input name="Izquierda" type="file" class="file-loading imagen">
             </div>
         </div>
     </fieldset>
@@ -88,33 +104,33 @@
         <div class="form-group">
             {!! Form::label('Ancho', 'Ancho', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                {!! Form::text('Ancho', null, ['class' => 'form-control']) !!}
+                {!! Form::number('Ancho', null, ['class' => 'form-control ancho cubicacion', 'step' => 'any']) !!}
             </div>
             {!! Form::label('Largo', 'Largo', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                {!! Form::text('Largo', null, ['class' => 'form-control']) !!}
+                {!! Form::number('Largo', null, ['class' => 'form-control largo cubicacion', 'step' => 'any']) !!}
             </div>
             {!! Form::label('Alto', 'Alto', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                {!! Form::text('Alto', null, ['class' => 'form-control']) !!}
+                {!! Form::number('Alto', null, ['class' => 'form-control alto cubicacion', 'step' => 'any']) !!}
             </div>
             {!! Form::label('EspacioDeGato', 'Gato', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                {!! Form::text('EspacioDeGato', null, ['class' => 'form-control']) !!}
+                {!! Form::number('EspacioDeGato', null, ['class' => 'form-control gato cubicacion', 'step' => 'any']) !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('AlturaExtension', 'Extensión', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                {!! Form::text('AlturaExtension', null, ['class' => 'form-control']) !!}
+                {!! Form::number('AlturaExtension', null, ['class' => 'form-control extension cubicacion', 'step' => 'any']) !!}
             </div>
-            {!! Form::label('CubicacionReal', 'Cubicación Real', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-2">
-                {!! Form::text('CubicacionReal', null, ['class' => 'form-control']) !!}
+            {!! Form::label('CubicacionReal', 'Cubicación Real', ['class' => 'control-label col-sm-1 col-sm-offset-1']) !!}
+            <div class="col-sm-3">
+                {!! Form::number('CubicacionReal', null, ['class' => 'form-control real', 'readonly' => 'readonly', 'step' => 'any']) !!}
             </div>
             {!! Form::label('CubicacionParaPago', 'Cubicación para Pago', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-2">
-                {!! Form::text('CubicacionParaPago', null, ['class' => 'form-control']) !!}
+            <div class="col-sm-3">
+                {!! Form::number('CubicacionParaPago', null, ['class' => 'form-control pago', 'readonly' => 'readonly', 'step' => 'any']) !!}
             </div>
         </div>
     </fieldset>
@@ -124,15 +140,4 @@
     {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
 </div>
 {!! Form::close() !!}
-@stop
-@section('scripts')
-<script>
-    $('.vigencia').datepicker({
-    format: 'yyyy-mm-dd',
-    language: 'es',
-    autoclose: true,
-    clearBtn: true,
-    todayHighlight: true
-    });
-</script>
 @stop

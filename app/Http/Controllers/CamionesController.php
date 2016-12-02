@@ -11,6 +11,10 @@ use App\Models\Sindicato;
 use App\Models\Operador;
 use App\Models\Marca;
 use App\Models\Boton;
+use App\Models\ProyectoLocal;
+use Carbon\Carbon;
+use App\Models\ImagenCamion;
+use Laracasts\Flash\Flash;
 
 class CamionesController extends Controller
 {
@@ -53,9 +57,29 @@ class CamionesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateCamionRequest $request)
     {
-        //
+        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+        $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
+        $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
+        $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
+        
+        $camion = Camion::create($request->all());
+        
+        foreach($request->file() as $key => $file) {
+            $tipo = $key == 'Frente' ? 'f' : ($key == 'Derecha' ? 'd' : ($key == 'Atras' ? 't' : ($key == 'Izquierda' ? 'i' : '')));
+            $imagen = new ImagenCamion();
+            $nombre = $imagen->creaNombre($file, $camion, $key);
+            $file->move($imagen->baseDir(), $nombre);
+            $imagen->IdCamion = $camion->IdCamion;
+            $imagen->TipoC = $tipo;
+            $imagen->Tipo = $file->getClientMimeType();
+            $imagen->Ruta = $imagen->baseDir().'/'.$nombre;
+            $imagen->save();
+        }
+        
+        Flash::success('¡CAMIÓN REGISTRADO CORRECTAMENTE!');
+        return redirect()->route('camiones.show', $camion);
     }
 
     /**

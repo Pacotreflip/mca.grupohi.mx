@@ -48,10 +48,10 @@ class MarcasController extends Controller
      */
     public function store(Requests\CreateMarcaRequest $request)
     {
-        Marca::create($request->all());
+        $marca = Marca::create($request->all());
         
         Flash::success('¡MARCA REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('marcas.index');
+        return redirect()->route('marcas.show', $marca);
     }
 
     /**
