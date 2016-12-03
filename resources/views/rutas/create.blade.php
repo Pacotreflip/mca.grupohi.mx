@@ -6,7 +6,7 @@
 <hr>
 @include('partials.errors')
 
-{!! Form::open(['route' => 'rutas.store', 'files' => true]) !!}
+{!! Form::open(['route' => 'rutas.store', 'files' => true, 'id' => 'create_ruta']) !!}
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>

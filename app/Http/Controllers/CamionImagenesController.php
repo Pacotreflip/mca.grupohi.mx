@@ -40,10 +40,10 @@ class CamionImagenesController extends Controller
                         'url' => URL::to('/').'/'.$imagen->Ruta,
                         'data' => [
                             'size' => $size,
-                            'url' => route('camion.imagenes.destroy', [$id_camion, $imagen->Ruta]),
-                            'width' => '120px',
-                            'filetype' => $imagen->Tipo,
-                            'key' => $imagen->Ruta
+                            'url' => route('camion.imagenes.destroy', [$id_camion, $imagen->TipoC]),
+                            'width' => '50px',
+                            'key' => $imagen->TipoC,
+                            'caption' => $nombre
                         ]
                     ];
                 }
@@ -113,8 +113,12 @@ class CamionImagenesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($id_camion, $tipoC)
     {
-        //
-    }
+        $imagen = ImagenCamion::where('IdCamion', '=', $id_camion)->where('TipoC', '=', $tipoC)->first();
+        $ruta = $imagen->Ruta;
+        $imagen->delete();        
+        Storage::disk('uploads')->delete($ruta);
+        
+        return response()->json(['success' => true]);    }
 }

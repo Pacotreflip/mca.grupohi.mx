@@ -119,7 +119,23 @@ class CamionesController extends Controller
      */
     public function update(Requests\EditCamionRequest $request, $id)
     {
-        dd($request->all());
+        $camion = Camion::findOrFail($id);
+        $camion->update($request->all());    
+        
+        foreach($request->file() as $key => $file) {
+            $tipo = $key == 'Frente' ? 'f' : ($key == 'Derecha' ? 'd' : ($key == 'Atras' ? 't' : ($key == 'Izquierda' ? 'i' : '')));
+            $imagen = new ImagenCamion();
+            $nombre = $imagen->creaNombre($file, $camion, $key);
+            $file->move($imagen->baseDir(), $nombre);
+            $imagen->IdCamion = $camion->IdCamion;
+            $imagen->TipoC = $tipo;
+            $imagen->Tipo = $file->getClientMimeType();
+            $imagen->Ruta = $imagen->baseDir().'/'.$nombre;
+            $imagen->save();
+        }
+        
+        Flash::success('¡CAMIÓN ACTUALIZADO CORRECTAMENTE!');
+        return redirect()->route('camiones.show', $camion);
     }
 
     /**
@@ -130,6 +146,16 @@ class CamionesController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $camion = Camion::findOrFail($id);
+        if($camion->Estatus == 1) {
+            $camion->Estatus = 0;
+            $text = '¡Camión Deshabilitado!';
+        } else {
+            $camion->Estatus = 1;
+            $text = '¡Camión Habilitado!';
+        }
+        $camion->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

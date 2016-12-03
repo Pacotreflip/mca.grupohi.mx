@@ -6,7 +6,7 @@
 <hr>
 @include('partials.errors')
 
-{!! Form::model($ruta, ['method' => 'PATCH', 'route' => ['rutas.update', $ruta], 'files' => true]) !!}
+{!! Form::model($ruta, ['method' => 'PATCH', 'route' => ['rutas.update', $ruta], 'files' => true, 'id' => 'edit_ruta']) !!}
 <div class="id_ruta" id='{{$ruta->IdRuta}}'></div>
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <fieldset>

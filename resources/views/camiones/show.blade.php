@@ -59,7 +59,7 @@
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
         <div class="form-group">
-            @if($camion->imagenes)
+            @if($camion->imagenes->count() > 0)
             @foreach($camion->imagenes as $imagen)
             {!! Form::label($imagen->present()->tipo, $imagen->present()->tipo, ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-3">
