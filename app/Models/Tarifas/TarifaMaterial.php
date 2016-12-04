@@ -19,7 +19,7 @@ class TarifaMaterial extends Model
         'Fecha_Hora_Registra', 
         'Registra'
     ];
-    protected $presenter = TarifaPresenter::class;
+    protected $presenter = TarifaMaterialPresenter::class;
     public $timestamps = false;
     public function material() {
         return $this->belongsTo(\App\Models\Material::class, 'IdMaterial');

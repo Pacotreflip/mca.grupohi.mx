@@ -25,7 +25,8 @@ class TarifasMaterialController extends Controller
      */
     public function index()
     {
-        return view('tarifas.material.index')->withTarifas(TarifaMaterial::all());
+        return view('tarifas.material.index')
+                ->withMateriales(Material::all());
     }
 
     /**
@@ -47,7 +48,7 @@ class TarifasMaterialController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        dd('CREATE',$request->all());
     }
 
     /**
@@ -84,7 +85,7 @@ class TarifasMaterialController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd('UPDATE',$request->all());
     }
 
     /**
