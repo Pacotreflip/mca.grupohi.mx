@@ -12,6 +12,7 @@
 */
 // Rutas de Paginas
 Route::get('/', 'PagesController@home')->name('home');
+Route::get('index', 'PagesController@index')->name('index');
 Route::get('proyectos', 'PagesController@proyectos')->name('proyectos');
 
 // Rutas de Autenticación
@@ -35,9 +36,6 @@ Route::get('/context/{databaseName}/{id}', 'ContextController@set')
     ->name('context.set')
     ->where(['databaseName' => '[aA-zZ0-9_-]+', 'id' => '[0-9]+']);
 
-Route::get('index', function () {
-    return view('index');
-})->name('index');
 
 // Rutas de Catalogos
 Route::resource('materiales', 'MaterialesController');
@@ -49,3 +47,6 @@ Route::resource('rutas', 'RutasController');
 Route::resource('ruta.archivos', 'RutaArchivosController');
 Route::resource('camiones', 'CamionesController');
 Route::resource('camion.imagenes', 'CamionImagenesController');
+Route::resource('tarifas_material', 'TarifasMaterialController');
+Route::resource('tarifas_peso', 'TarifasPesoController');
+Route::resource('tarifas_tiporuta', 'TarifasTipoRutaController');

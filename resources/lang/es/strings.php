@@ -39,4 +39,11 @@ return [
     //Camiones
     'camiones' => 'Camiones',
     'new_camion' => 'Nuevo Camión',
+    
+    //Tarifas
+    'tarifas' => 'Tarifas',
+    'tarifas_material' => 'Tarifas por Material',
+    'tarifas_peso' => 'Tarifas por Peso',
+    'tarifas_tiporuta' => 'Tarifas por Tipo de Ruta',
+    
     ];

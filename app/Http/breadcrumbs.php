@@ -146,3 +146,21 @@ Breadcrumbs::register('camiones.edit', function($breadcrumbs, $camion){
     $breadcrumbs->parent('camiones.show', $camion);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('camiones.edit', $camion));
 });
+
+//Catalogos->Tarifas por Material
+
+Breadcrumbs::register('tarifas_material.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.tarifas_material')), route('tarifas_material.index'));
+});
+
+//Catalogos->Tarifas por Peso
+
+Breadcrumbs::register('tarifas_peso.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.tarifas_peso')), route('tarifas_peso.index'));
+});
+
+//Catalogos->Tarifas por Tipo de Ruta
+
+Breadcrumbs::register('tarifas_tiporuta.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.tarifas_tiporuta')), route('tarifas_tiporuta.index'));
+});

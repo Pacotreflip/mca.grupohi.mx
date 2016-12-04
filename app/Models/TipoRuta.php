@@ -22,6 +22,11 @@ class TipoRuta extends Model
         return $this->hasMany(Ruta::class, 'IdTipoRuta');
     }
     
+    public function tarifa() {
+        return $this->hasOne(Tarifas\TarifaTipoRuta::class, 'IdTipoRuta')
+                ->where('tarifas_tipo_ruta.Estatus', '=', 1);
+    }
+    
     public function __toString() {
         return $this->Descripcion;
     }

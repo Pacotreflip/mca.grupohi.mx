@@ -21,6 +21,10 @@ class PagesController extends Controller
         return view('pages.home');
     }
     
+    public function index() {
+        return view('index');
+    }
+    
     public function proyectos() {
         $proyectos = Auth::user()->proyectos()->paginate(15);
         return view('pages.proyectos')->withProyectos($proyectos);

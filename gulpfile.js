@@ -7,7 +7,8 @@ var paths = {
     'roboto': './node_modules/roboto-fontface/',
     'sweetalert': './node_modules/sweetalert/dist/',
     'fileinput': './node_modules/bootstrap-fileinput/',
-    'datepicker': './node_modules/bootstrap-datepicker/'
+    'datepicker': './node_modules/bootstrap-datepicker/',
+    'submenu': './node_modules/bootstrap-submenu/'
 };
     
 /*
@@ -23,8 +24,9 @@ var paths = {
 
 elixir(function(mix) {
     mix.sass('app.scss', './resources/assets/css/sass.css')
+            .copy(paths.submenu + 'dist/css/bootstrap-submenu.css', './resources/assets/css')
             .less('app.less', './resources/assets/css/less.css')
-            .styles(['sass.css', 'less.css'], 'public/css/app.css')
+            .styles(['*.css'], 'public/css/app.css')
             .copy(paths.roboto + 'fonts', 'public/build/fonts/roboto')
             .copy(paths.bootstrap + 'fonts/bootstrap', 'public/build/fonts/bootstrap')
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
@@ -36,6 +38,7 @@ elixir(function(mix) {
             .copy(paths.sweetalert + 'sweetalert-dev.js', './resources/assets/js')
             .copy(paths.datepicker + 'dist/js/bootstrap-datepicker.js', './resources/assets/js')
             .copy(paths.datepicker + 'dist/locales/bootstrap-datepicker.es.min.js', './resources/assets/js/datepicker-es.js')
+            .copy(paths.submenu + 'js/bootstrap-submenu.js', './resources/assets/js')
             .scripts([
                 'jquery.js',
                 'bootstrap.js',
@@ -44,6 +47,7 @@ elixir(function(mix) {
                 'sweetalert.min.js',
                 'bootstrap-datepicker.js',
                 'datepicker-es.js',
+                'bootstrap-submenu.js',
                 'app/*.js'
             ])
             .version([
