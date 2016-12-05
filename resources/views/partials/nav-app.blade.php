@@ -33,8 +33,3 @@
 @else
   <li><a href="{{ route('proyectos') }}">{{ trans('strings.projects') }}</a></li>
 @endif
-@section('scripts')
-<script>
-    $('[data-submenu]').submenupicker();
-</script>
-@stop

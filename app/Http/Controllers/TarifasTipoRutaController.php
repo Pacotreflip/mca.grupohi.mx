@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Tarifas\TarifaTipoRuta;
+use Carbon\Carbon;
+use App\Models\TipoRuta;
 
 class TarifasTipoRutaController extends Controller
 {
@@ -25,17 +27,7 @@ class TarifasTipoRutaController extends Controller
     public function index()
     {
         return view('tarifas.tiporuta.index')
-                ->withTarifas(TarifaTipoRuta::all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+                ->withTipos(TipoRuta::all());
     }
 
     /**
@@ -44,32 +36,18 @@ class TarifasTipoRutaController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateTarifaTipoRutaRequest $request)
     {
-        dd($request->all());
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing all the resources.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function edit()
-    {
-        return view('tarifas.tiporuta.edit')
-                ->withTarifas(TarifaTipoRuta::all());
+        $request->request->add([
+            'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
+            'Registra' => auth()->user()->idusuario,
+        ]);
         
+        $tarifa = TarifaTipoRuta::create($request->all());
+        
+        return response()->json(['success' => true,
+            'updateUrl' => route('tarifas_material.update', $tarifa),
+            'message' => '¡TARIFA REGISTRADA CORRECTAMENTE!']);
     }
 
     /**
@@ -79,11 +57,26 @@ class TarifasTipoRutaController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditTarifaTipoRutaRequest $request, $id)
     {
-        //
+        $request->request->add([
+            'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
+            'Registra' => auth()->user()->idusuario,
+        ]);
+        
+        $tarifas = TarifaTipoRuta::where('IdTipoRuta', '=', $request->get('IdTipoRuta'))->get();
+        foreach($tarifas as $tarifa_old) {
+            $tarifa_old->Estatus = 0;
+            $tarifa_old->save();
+        }
+      
+        $tarifa = TarifaTipoRuta::create($request->all());
+        
+        return response()->json(['success' => true,
+            'updateUrl' => route('tarifas_tiporuta.update', $tarifa),
+            'message' => '¡TARIFA ACTUALIZADA CORRECTAMENTE!']);
     }
-
+    
     /**
      * Remove the specified resource from storage.
      *

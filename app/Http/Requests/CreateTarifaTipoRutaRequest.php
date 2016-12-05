@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
-class EditTarifaPesoRequest extends Request
+class CreateTarifaTipoRutaRequest extends Request
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -24,7 +24,7 @@ class EditTarifaPesoRequest extends Request
     public function rules()
     {
         return [
-            'IdMaterial' => 'required|numeric|exists:sca.materiales,IdMaterial',
+            'IdTipoRuta' => 'required|numeric|exists:sca.tipo_ruta,IdTipoRuta',
             'PrimerKM' => 'required|numeric|min:0',
             'KMSubsecuente' => 'required|numeric|min:0',
             'KMAdicional' => 'required|numeric|min:0'
@@ -34,7 +34,7 @@ class EditTarifaPesoRequest extends Request
     public function messages()
     {
         $messages = [
-            'IdMaterial.exists'   => 'No existe un Material con el Id: '. $this->IdMaterial,
+            'IdTipoRuta.exists'   => 'No existe un Tipo de Ruta con el Id: '. $this->IdTipoRuta,
         ];
 
         return $messages;

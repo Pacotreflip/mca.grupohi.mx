@@ -1,10 +1,11 @@
 @extends('layout')
 
 @section('content')
+<div class='success'></div>
 <h2>{{ strtoupper(trans('strings.tarifas_peso')) }}</h2>
 {!! Breadcrumbs::render('tarifas_peso.index') !!}
 <hr>
-@include('partials.errors')
+<div class="errores"></div>
 <div class="table-responsive col-md-6 col-md-offset-3">
     <table class="table table-hover table-bordered">
         <thead>
@@ -19,9 +20,9 @@
         <tbody>
             @foreach($materiales as $material)
             @if($material->tarifaPeso()->count())
-            {!! Form::model($material->tarifaPeso, ['method' => 'PATCH', 'route' => ['tarifas_peso.update', $material->tarifaPeso]]) !!}
+            {!! Form::model($material->tarifaPeso, ['class' => 'tarifa_create', 'method' => 'PATCH', 'route' => ['tarifas_peso.update', $material->tarifaPeso]]) !!}
             @else
-            {!! Form::open(['route' => 'tarifas_peso.store']) !!}
+            {!! Form::open(['class' => 'tarifa_create', 'route' => 'tarifas_peso.store']) !!}
             @endif
             {!! Form::hidden('IdMaterial', $material->IdMaterial) !!}
             <tr>

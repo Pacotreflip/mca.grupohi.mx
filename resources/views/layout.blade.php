@@ -28,6 +28,7 @@
           }
         });    
       });
+      $('[data-submenu]').submenupicker();
     </script>
     @yield('scripts')
   </body>

@@ -24,10 +24,20 @@ class EditTarifaMaterialRequest extends Request
     public function rules()
     {
         return [
-            'PrimerKM' => 'required|numeric',
-            'KMSubsecuente' => 'required|numeric',
-            'KMAdicional' => 'required|numeric'
+            'IdMaterial' => 'required|numeric|exists:sca.materiales,IdMaterial',
+            'PrimerKM' => 'required|numeric|min:0',
+            'KMSubsecuente' => 'required|numeric|min:0',
+            'KMAdicional' => 'required|numeric|min:0'
         ];
+    }
+    
+    public function messages()
+    {
+        $messages = [
+            'IdMaterial.exists'   => 'No existe un Material con el Id: '. $this->IdMaterial,
+        ];
+
+        return $messages;
     }
 }
 

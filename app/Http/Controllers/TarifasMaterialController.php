@@ -44,22 +44,11 @@ class TarifasMaterialController extends Controller
             'Registra' => auth()->user()->idusuario,
         ]);
         
-        TarifaMaterial::create($request->all());
+        $tarifa = TarifaMaterial::create($request->all());
         
-        Flash::success('¡TARIFA REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('tarifas_material.index');
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return view('tarifas.material.show')
-                ->withTarifa(TarifaMaterial::with('material')->findOrFail($id));
+        return response()->json(['success' => true,
+            'updateUrl' => route('tarifas_material.update', $tarifa),
+            'message' => '¡TARIFA REGISTRADA CORRECTAMENTE!']);
     }
 
     /**
@@ -76,11 +65,17 @@ class TarifasMaterialController extends Controller
             'Registra' => auth()->user()->idusuario,
         ]);
         
-        $tarifa = TarifaMaterial::findOrFail($id);
-        $tarifa->update($request->all());
+        $tarifas = TarifaMaterial::where('IdMaterial', '=', $request->get('IdMaterial'))->get();
+        foreach($tarifas as $tarifa_old) {
+            $tarifa_old->Estatus = 0;
+            $tarifa_old->save();
+        }
         
-        Flash::success('¡TARIFA ACTUALIZADA CORRECTAMENTE!');
-        return redirect()->route('tarifas_material.index');
+        $tarifa = TarifaMaterial::create($request->all());
+        
+        return response()->json(['success' => true,
+            'updateUrl' => route('tarifas_material.update', $tarifa),
+            'message' => '¡TARIFA ACTUALIZADA CORRECTAMENTE!']);
     }
 
     /**

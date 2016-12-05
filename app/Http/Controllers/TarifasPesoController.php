@@ -44,10 +44,11 @@ class TarifasPesoController extends Controller
             'Registra' => auth()->user()->idusuario,
         ]);
         
-        TarifaPeso::create($request->all());
+        $tarifa = TarifaPeso::create($request->all());
         
-        Flash::success('¡TARIFA REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('tarifas_peso.index');    
+        return response()->json(['success' => true,
+            'updateUrl' => route('tarifas_peso.update', $tarifa),
+            'message' => '¡TARIFA REGISTRADA CORRECTAMENTE!']);
     }
 
     /**
@@ -64,11 +65,17 @@ class TarifasPesoController extends Controller
             'Registra' => auth()->user()->idusuario,
         ]);
         
-        $tarifa = TarifaPeso::findOrFail($id);
-        $tarifa->update($request->all());
+        $tarifas = TarifaPeso::where('IdMaterial', '=', $request->get('IdMaterial'))->get();
+        foreach($tarifas as $tarifa_old) {
+            $tarifa_old->Estatus = 0;
+            $tarifa_old->save();
+        }
+                
+        $tarifa = TarifaPeso::create($request->all());
         
-        Flash::success('¡TARIFA ACTUALIZADA CORRECTAMENTE!');
-        return redirect()->route('tarifas_peso.index');
+        return response()->json(['success' => true,
+            'updateUrl' => route('tarifas_peso.update', $tarifa),
+            'message' => '¡TARIFA ACTUALIZADA CORRECTAMENTE!']);           
     }
 
     /**
