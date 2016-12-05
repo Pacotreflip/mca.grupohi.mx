@@ -8,6 +8,8 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Material;
 use App\Models\Tarifas\TarifaMaterial;
+use Carbon\Carbon;
+use Laracasts\Flash\Flash;
 
 class TarifasMaterialController extends Controller
 {
@@ -46,9 +48,17 @@ class TarifasMaterialController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateTarifaMaterialRequest $request)
     {
-        dd('CREATE',$request->all());
+        $request->request->add([
+            'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
+            'Registra' => auth()->user()->idusuario,
+        ]);
+        
+        TarifaMaterial::create($request->all());
+        
+        Flash::success('¡TARIFA REGISTRADA CORRECTAMENTE!');
+        return redirect()->route('tarifas_material.index');
     }
 
     /**
@@ -83,9 +93,18 @@ class TarifasMaterialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditTarifaMaterialRequest $request, $id)
     {
-        dd('UPDATE',$request->all());
+        $request->request->add([
+            'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
+            'Registra' => auth()->user()->idusuario,
+        ]);
+        
+        $tarifa = TarifaMaterial::findOrFail($id);
+        $tarifa->update($request->all());
+        
+        Flash::success('¡TARIFA ACTUALIZADA CORRECTAMENTE!');
+        return redirect()->route('tarifas_material.index');
     }
 
     /**

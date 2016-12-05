@@ -1,9 +1,10 @@
 @extends('layout')
 
 @section('content')
-<h2>{{ strtoupper(trans('strings.tarifas_material')) }}</h2>
-<hr>
+<h1>{{ strtoupper(trans('strings.tarifas_material')) }}</h1>
 {!! Breadcrumbs::render('tarifas_material.index') !!}
+<hr>
+@include('partials.errors')
 <div class="table-responsive col-md-8 col-md-offset-2">
     <table class="table table-hover table-bordered">
         <thead>
@@ -23,6 +24,7 @@
             @else
             {!! Form::open(['route' => 'tarifas_material.store']) !!}
             @endif
+            {!! Form::hidden('IdMaterial', $material->IdMaterial) !!}
             <tr>
                 <td>{{ $material->Descripcion }}</td>
                 <td>{!! Form::number('PrimerKM', null, ['step' => 'any', 'class' => 'form-control'])!!}</td>
@@ -31,7 +33,7 @@
                 @if($material->tarifaMaterial()->count())
                 <td>{{ $material->tarifaMaterial->present()->estatus }}</td>
                 @else
-                <td>SIN REGISTRAR</td>
+                <td></td>
                 @endif
                 <td>{!! Form::submit('GUARDAR', ['class' => 'btn btn-success form-control'])!!}</td>
             </tr>
