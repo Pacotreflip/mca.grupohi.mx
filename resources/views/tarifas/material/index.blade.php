@@ -5,7 +5,7 @@
 {!! Breadcrumbs::render('tarifas_material.index') !!}
 <hr>
 @include('partials.errors')
-<div class="table-responsive col-md-8 col-md-offset-2">
+<div class="table-responsive col-md-6 col-md-offset-3">
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
@@ -13,7 +13,6 @@
                 <th>Tarifa 1er. KM</th>
                 <th>Tarifa KM Subsecuentes</th>
                 <th>Tarifa KM Adicionales</th>
-                <th>Estatus</th>
                 <th>Acciones</th>
             </tr>
         </thead>
@@ -30,11 +29,6 @@
                 <td>{!! Form::number('PrimerKM', null, ['step' => 'any', 'class' => 'form-control'])!!}</td>
                 <td>{!! Form::number('KMSubsecuente', null, ['step' => 'any', 'class' => 'form-control']) !!}</td>
                 <td>{!! Form::number('KMAdicional', null, ['step' => 'any', 'class' => 'form-control']) !!}</td>
-                @if($material->tarifaMaterial()->count())
-                <td>{{ $material->tarifaMaterial->present()->estatus }}</td>
-                @else
-                <td></td>
-                @endif
                 <td>{!! Form::submit('GUARDAR', ['class' => 'btn btn-success form-control'])!!}</td>
             </tr>
             {!! Form::close() !!}

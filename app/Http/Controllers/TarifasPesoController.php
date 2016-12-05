@@ -7,6 +7,9 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\Tarifas\TarifaPeso;
+use App\Models\Material;
+use Carbon\Carbon;
+use Laracasts\Flash\Flash;
 
 class TarifasPesoController extends Controller
 {
@@ -24,17 +27,8 @@ class TarifasPesoController extends Controller
      */
     public function index()
     {
-        return view('tarifas.peso.index')->withTarifas(TarifaPeso::all());
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return view('tarifas.peso.index')
+                ->withMateriales(Material::all());
     }
 
     /**
@@ -43,32 +37,17 @@ class TarifasPesoController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateTarifaPesoRequest $request)
     {
-        dd($request->all());
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('tarifas.peso.edit')
-                ->withTarifa(TarifaPeso::findOrFail($id));
+        $request->request->add([
+            'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
+            'Registra' => auth()->user()->idusuario,
+        ]);
+        
+        TarifaPeso::create($request->all());
+        
+        Flash::success('¡TARIFA REGISTRADA CORRECTAMENTE!');
+        return redirect()->route('tarifas_peso.index');    
     }
 
     /**
@@ -78,9 +57,18 @@ class TarifasPesoController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditTarifaPesoRequest $request, $id)
     {
-        dd($request->all());
+        $request->request->add([
+            'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
+            'Registra' => auth()->user()->idusuario,
+        ]);
+        
+        $tarifa = TarifaPeso::findOrFail($id);
+        $tarifa->update($request->all());
+        
+        Flash::success('¡TARIFA ACTUALIZADA CORRECTAMENTE!');
+        return redirect()->route('tarifas_peso.index');
     }
 
     /**
