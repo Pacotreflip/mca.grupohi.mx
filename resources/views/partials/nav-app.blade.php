@@ -16,6 +16,7 @@
         <li><a href="{{ route('camiones.index') }}">{{ trans('strings.camiones') }}</a></li>
         <li><a href="{{ route('marcas.index') }}">{{ trans('strings.brands') }}</a></li>
         <li><a href="{{ route('materiales.index') }}">{{ trans('strings.materials') }}</a></li>
+        <li><a href="{{ route('operadores.index') }}">{{ trans('strings.operadores') }}</a></li>
         <li><a href="{{ route('origenes.index') }}">{{ trans('strings.origins') }}</a></li>
         <li><a href="{{ route('rutas.index') }}">{{ trans('strings.rutas') }}</a></li>
         <li><a href="{{ route('sindicatos.index') }}">{{ trans('strings.sindicatos') }}</a></li>

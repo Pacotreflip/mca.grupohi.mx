@@ -150,7 +150,9 @@ return [
         'IdTipoOrigen'          => 'Tipo de Origen',
         'IdSindicato'           => 'Sindicato',
         'IdOperador'            => 'Operador',
-        'IdMarca'               => 'Marca'
+        'IdMarca'               => 'Marca',
+        'NoLicencia'            => 'Número de Licencia',
+        'VigenciaLicencia'      => 'Vigencia de Licencia'
     ],
 
 ];

@@ -110,14 +110,6 @@ $(document).ready(function(){
     }
     
     //GENERALES
-    $('.vigencia').datepicker({
-        format: 'yyyy-mm-dd',
-        language: 'es',
-        autoclose: true,
-        clearBtn: true,
-        todayHighlight: true
-    });
-
     $('input.cubicacion').keyup(function(){   
         calcularCubicaciones();
     });

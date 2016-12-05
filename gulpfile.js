@@ -36,15 +36,15 @@ elixir(function(mix) {
             .copy(paths.fileinput + 'js/fileinput.js', './resources/assets/js')
             .copy(paths.fileinput + 'js/locales/es.js', './resources/assets/js/fileinput-es.js')
             .copy(paths.sweetalert + 'sweetalert-dev.js', './resources/assets/js')
-            .copy(paths.datepicker + 'dist/js/bootstrap-datepicker.js', './resources/assets/js')
-            .copy(paths.datepicker + 'dist/locales/bootstrap-datepicker.es.min.js', './resources/assets/js/datepicker-es.js')
+            .copy(paths.datepicker + 'js/bootstrap-datepicker.js', './resources/assets/js')
+            .copy(paths.datepicker + 'js/locales/bootstrap-datepicker.es.js', './resources/assets/js/datepicker-es.js')
             .copy(paths.submenu + 'js/bootstrap-submenu.js', './resources/assets/js')
             .scripts([
                 'jquery.js',
                 'bootstrap.js',
                 'fileinput.js',
                 'fileinput-es.js',
-                'sweetalert.min.js',
+                'sweetalert-dev.js',
                 'bootstrap-datepicker.js',
                 'datepicker-es.js',
                 'bootstrap-submenu.js',

@@ -38,7 +38,7 @@ return [
     
     //Camiones
     'camiones' => 'Camiones',
-    'new_camion' => 'Nuevo Camión',
+    'new_camion' => 'NUEVO CAMIÓN',
     
     //Tarifas
     'tarifas' => 'Tarifas',
@@ -46,4 +46,7 @@ return [
     'tarifas_peso' => 'Tarifas por Peso',
     'tarifas_tiporuta' => 'Tarifas por Tipo de Ruta',
     
+    //Operadores
+    'operadores' => 'Operadores',
+    'new_operador' => 'Nuevo Operador'
     ];

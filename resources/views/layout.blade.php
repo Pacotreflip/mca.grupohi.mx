@@ -20,16 +20,6 @@
     </div>
     <br>
     <script src="{{ asset(elixir("js/all.js")) }}"></script>
-    <script>
-      $(function () {
-        $.ajaxSetup({
-          headers: {
-            'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-          }
-        });    
-      });
-      $('[data-submenu]').submenupicker();
-    </script>
     @yield('scripts')
   </body>
 </html>

@@ -164,3 +164,24 @@ Breadcrumbs::register('tarifas_peso.index', function($breadcrumbs){
 Breadcrumbs::register('tarifas_tiporuta.index', function($breadcrumbs){
     $breadcrumbs->push(strtoupper(trans('strings.tarifas_tiporuta')), route('tarifas_tiporuta.index'));
 });
+
+//Catalogos->Materiales
+
+Breadcrumbs::register('operadores.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.operadores')), route('operadores.index'));
+});
+
+Breadcrumbs::register('operadores.show', function($breadcrumbs, $operador){
+    $breadcrumbs->parent('operadores.index');
+    $breadcrumbs->push(strtoupper($operador->Nombre), route('operadores.show', $operador));
+});
+
+Breadcrumbs::register('operadores.create', function($breadcrumbs){
+    $breadcrumbs->parent('operadores.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_operador')), route('operadores.create'));
+});
+
+Breadcrumbs::register('operadores.edit', function($breadcrumbs, $operador){
+    $breadcrumbs->parent('operadores.show', $operador);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('operadores.edit', $operador));
+});
