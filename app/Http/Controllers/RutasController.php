@@ -15,6 +15,7 @@ use App\Models\Tiro;
 use App\Models\TipoRuta;
 use App\Models\Cronometria;
 use App\Models\ArchivoRuta;
+use Illuminate\Support\Facades\Storage;
 
 class RutasController extends Controller
 {
@@ -135,7 +136,10 @@ class RutasController extends Controller
         
         if($request->hasFile('Croquis')) {
             $croquis = $request->file('Croquis');
-            $archivo = new ArchivoRuta();
+            $archivo = ArchivoRuta::firstOrCreate(['IdRuta' => $ruta->IdRuta]);
+            if(Storage::disk('uploads')->has($archivo->Ruta)) {
+                Storage::disk('uploads')->delete($archivo->Ruta);
+            }
             $nombre = $archivo->creaNombre($croquis, $ruta);
             $croquis->move($archivo->baseDir(), $nombre);
             $archivo->IdRuta = $ruta->IdRuta;

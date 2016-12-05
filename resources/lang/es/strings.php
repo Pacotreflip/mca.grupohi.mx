@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'app_name' => 'Módulo de Control de Acarreos',
+    'app_name' => 'CONTROL DE ACARREOS',
     'projects' => 'Proyectos',
     'login' => 'Iniciar Sesión',
     'logout' => 'Cerrar Sesión',

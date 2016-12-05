@@ -62,7 +62,7 @@
             @if($camion->imagenes->count() > 0)
             @foreach($camion->imagenes as $imagen)
             {!! Form::label($imagen->present()->tipo, $imagen->present()->tipo, ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 <a class="btn btn-info col-md-12"  href="{{ URL::to('/').'/'.$imagen->Ruta }}" target="blank">
                     <i class="fa fa-file-image-o"></i> VER IMAGEN                  
                 </a> 

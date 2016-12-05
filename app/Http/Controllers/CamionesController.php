@@ -15,6 +15,7 @@ use App\Models\ProyectoLocal;
 use Carbon\Carbon;
 use App\Models\ImagenCamion;
 use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\Storage;
 
 class CamionesController extends Controller
 {
@@ -124,7 +125,12 @@ class CamionesController extends Controller
         
         foreach($request->file() as $key => $file) {
             $tipo = $key == 'Frente' ? 'f' : ($key == 'Derecha' ? 'd' : ($key == 'Atras' ? 't' : ($key == 'Izquierda' ? 'i' : '')));
-            $imagen = new ImagenCamion();
+            $imagen = ImagenCamion::firstOrCreate([
+                'IdCamion' => $camion->IdCamion,
+                'TipoC' => $tipo]);
+            if(Storage::disk('uploads')->has($imagen->Ruta)) {
+                Storage::disk('uploads')->delete($imagen->Ruta);
+            }
             $nombre = $imagen->creaNombre($file, $camion, $key);
             $file->move($imagen->baseDir(), $nombre);
             $imagen->IdCamion = $camion->IdCamion;

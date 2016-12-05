@@ -24,7 +24,7 @@ class ImagenCamion extends Model
     }
     
     public function baseDir() {
-        return 'uploads/archivos_rutas';
+        return 'uploads/imagenes_camiones';
     }
     
     public function creaNombre(UploadedFile $file, Camion $camion, $tipo) {
