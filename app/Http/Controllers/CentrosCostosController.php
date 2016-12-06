@@ -24,7 +24,7 @@ class CentrosCostosController extends Controller
      */
     public function index()
     {
-        return view('centroscostos.index')->with(CentroCosto::all());
+        return view('centroscostos.index')->withCentros(CentroCosto::orderBy('Nivel', 'ASC')->get());
     }
 
     /**

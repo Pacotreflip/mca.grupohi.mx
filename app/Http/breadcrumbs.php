@@ -185,3 +185,9 @@ Breadcrumbs::register('operadores.edit', function($breadcrumbs, $operador){
     $breadcrumbs->parent('operadores.show', $operador);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('operadores.edit', $operador));
 });
+
+//Catálogos->centros_costo
+
+Breadcrumbs::register('centroscostos.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.centroscostos')), route('centroscostos.index'));
+});

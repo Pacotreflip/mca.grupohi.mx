@@ -48,5 +48,8 @@ return [
     
     //Operadores
     'operadores' => 'Operadores',
-    'new_operador' => 'Nuevo Operador'
+    'new_operador' => 'Nuevo Operador',
+    
+    //Centros de Costo
+    'centroscostos' => 'Centros de Costo'
     ];

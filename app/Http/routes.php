@@ -51,3 +51,4 @@ Route::resource('tarifas_material', 'TarifasMaterialController');
 Route::resource('tarifas_peso', 'TarifasPesoController');
 Route::resource('tarifas_tiporuta', 'TarifasTipoRutaController');
 Route::resource('operadores', 'OperadoresController');
+Route::resource('centroscostos', 'CentrosCostosController');
