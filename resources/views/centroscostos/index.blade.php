@@ -20,24 +20,22 @@
         <tbody>
             @foreach($centros as $centro)
             @if($centro->IdPadre == 0)
-            <tr class="treegrid-{{$centro->IdCentroCosto}}">
+            <tr id="{{$centro->IdCentroCosto}}" class="treegrid-{{$centro->IdCentroCosto}}">
             @else
-            <tr class="treegrid-{{$centro->IdCentroCosto}} treegrid-parent-{{$centro->IdPadre}}">
+            <tr id="{{$centro->IdCentroCosto}}" class="treegrid-{{$centro->IdCentroCosto}} treegrid-parent-{{$centro->IdPadre}}">
             @endif
                 <td>{{$centro->Descripcion}}</td>
                 <td>{{$centro->Cuenta}}</td>
-                <td>Acciones</td>
+                <td>
+                    <a href="{{ route('centroscostos.create', $centro) }}" class="btn btn-success btn-xs centrocosto_create" type="button">
+                        <i class="fa fa-plus-circle"></i>
+                    </a>
+                </td>
                 <td>{{$centro->Estatus}}</td>
             </tr>
             @endforeach
         </tbody>             
     </table>
 </div>
-@stop
-@section('scripts')
-
-<script type="text/javascript" src="http://maxazan.github.io/jquery-treegrid/js/jquery.treegrid.min.js"></script>
-<script type="text/javascript">
-  $('#centros_costos_table').treegrid();
-</script>
+<div id="div_modal"></div>
 @stop

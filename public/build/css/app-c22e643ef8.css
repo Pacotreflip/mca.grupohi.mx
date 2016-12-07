@@ -123,35 +123,22 @@
   }
 }
 /*# sourceMappingURL=bootstrap-submenu.css.map */
-table.treetable span.indenter {
-  display: inline-block;
-  margin: 0;
-  padding: 0;
-  text-align: right;
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : 7/12/2016, 01:02:16 PM
+    Author     : jfesquivel
+*/
 
-  /* Disable text selection of nodes (for better D&D UX) */
-  user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -o-user-select: none;
-  -webkit-user-select: none;
+.treegrid-indent {width:16px; height: 16px; display: inline-block; position: relative;}
 
-  /* Force content-box box model for indenter (Bootstrap compatibility) */
-  -webkit-box-sizing: content-box;
-  -moz-box-sizing: content-box;
-  box-sizing: content-box;
+.treegrid-expander {width:16px; height: 16px; display: inline-block; position: relative; cursor: pointer;}
 
-  width: 19px;
-}
-
-table.treetable span.indenter a {
-  background-position: left center;
-  background-repeat: no-repeat;
-  display: inline-block;
-  text-decoration: none;
-  width: 19px;
-}
-
+.treegrid-expander-expanded{background-image: url(../img/collapse.png); }
+.treegrid-expander-collapsed{background-image: url(../img/expand.png);}
 /*
 To change this license header, choose License Headers in Project Properties.
 To change this template file, choose Tools | Templates

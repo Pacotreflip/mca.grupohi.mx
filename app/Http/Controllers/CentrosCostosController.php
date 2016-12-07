@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\CentroCosto;
+use App\Models\ProyectoLocal;
 
 class CentrosCostosController extends Controller
 {
@@ -32,20 +33,44 @@ class CentrosCostosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        //
+        if($id != 0){
+            return view('centroscostos.create')->withCentro(CentroCosto::findOrFail($id));
+        } else {
+            return view('centroscostos.create');
+        }
     }
-
+    
     /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateCentroCostoRequest $request)
     {
-        //
+        if($request->get('IdPadre') != 0) {
+            $padre = CentroCosto::findOrFail($request->get('IdPadre'));
+            $nivel = $padre->Nivel.str_pad(($padre->hijos()->count() + 1), 3, '0', STR_PAD_LEFT).'.';
+            $ultimo = $padre->getUltimoDescendiente()->IdCentroCosto; 
+        } else {
+            $nivel = str_pad((CentroCosto::raices()->count + 1), 3, '0', STR_PAD_LEFT);
+            
+        }
+
+        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+        
+        $request->request->add([
+            'IdProyecto' => $proyecto_local->IdProyecto,
+            'Nivel' => $nivel            
+        ]);
+        
+        $centrocosto = CentroCosto::create($request->all());
+        return response()->json([
+            'ultimo' => $ultimo,
+            'message' => '¡CENTRO DE COSTO REGISTRADO CORRECTAMENTE!',
+            'view' => view('centroscostos.show')->withCentro($centrocosto)->render()]);
     }
 
     /**
@@ -67,7 +92,8 @@ class CentrosCostosController extends Controller
      */
     public function edit($id)
     {
-        //
+        return view('centroscostos.edit')
+                ->withCentro(CentroCosto::findOrFail($id));
     }
 
     /**
@@ -77,9 +103,9 @@ class CentrosCostosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Requests\EditCentroCostoRequest $request, $id)
     {
-        //
+        dd($request->all());
     }
 
     /**

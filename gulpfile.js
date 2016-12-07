@@ -48,6 +48,7 @@ elixir(function(mix) {
                 'bootstrap-datepicker.js',
                 'datepicker-es.js',
                 'bootstrap-submenu.js',
+                'jquery.treegrid.min.js',
                 'app/*.js'
             ])
             .version([
