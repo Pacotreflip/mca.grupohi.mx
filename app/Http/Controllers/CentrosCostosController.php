@@ -56,7 +56,12 @@ class CentrosCostosController extends Controller
             $ultimo = $padre->getUltimoDescendiente()->IdCentroCosto; 
         } else {
             $nivel = str_pad((CentroCosto::raices()->count() + 1), 3, '0', STR_PAD_LEFT).'.';
-            $ultimo = CentroCosto::orderBy('nivel', 'DESC')->get()->first()->IdCentroCosto;
+            $ultimo_centro = CentroCosto::orderBy('nivel', 'DESC')->get()->first();
+            if($ultimo_centro) {
+                $ultimo = $ultimo_centro->IdCentroCosto;
+            } else {
+                $ultimo = null;
+            }
         }
 
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
