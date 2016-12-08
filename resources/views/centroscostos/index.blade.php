@@ -11,6 +11,11 @@
     <table id='centros_costos_table' class="table table-hover">
         <thead>
             <tr>
+        <a style="margin-bottom: 5px" href="{{ route('centroscostos.create', 0) }}" class="pull-right btn btn-success btn-sm centrocosto_create" type="button">
+                    <i class="fa fa-plus-circle"></i> NUEVO CENTRO DE COSTO
+                </a>                
+            </tr>
+            <tr>
                 <th>Centro de Costo</th>
                 <th>Cuenta</th>
                 <th>Acciones</th>

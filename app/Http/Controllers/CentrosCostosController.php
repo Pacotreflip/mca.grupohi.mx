@@ -55,8 +55,8 @@ class CentrosCostosController extends Controller
             $nivel = $padre->Nivel.str_pad(($padre->hijos()->count() + 1), 3, '0', STR_PAD_LEFT).'.';
             $ultimo = $padre->getUltimoDescendiente()->IdCentroCosto; 
         } else {
-            $nivel = str_pad((CentroCosto::raices()->count + 1), 3, '0', STR_PAD_LEFT);
-            
+            $nivel = str_pad((CentroCosto::raices()->count() + 1), 3, '0', STR_PAD_LEFT);
+            $ultimo = CentroCosto::orderBy('nivel', 'DESC')->get()->first()->IdCentroCosto;
         }
 
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
@@ -67,7 +67,9 @@ class CentrosCostosController extends Controller
         ]);
         
         $centrocosto = CentroCosto::create($request->all());
+        
         return response()->json([
+            'raiz' => ($centrocosto->IdPadre == 0),
             'id' => $centrocosto->IdCentroCosto,
             'ultimo' => $ultimo,
             'message' => '¡CENTRO DE COSTO REGISTRADO CORRECTAMENTE!',

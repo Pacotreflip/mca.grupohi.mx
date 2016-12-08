@@ -20402,9 +20402,12 @@ function storeCentroCosto() {
                 closeOnConfirm: true 
             },
             function(){
-                $(response.view).insertAfter('#'+response.ultimo);
-                $('#centros_costos_table').treegrid();
-                $('#'+response.id).focus();
+                if(response.raiz) {
+                    location.reload();
+                } else {
+                    $(response.view).insertAfter('#'+response.ultimo);
+                    $('#centros_costos_table').treegrid();
+                }
             });
         },
         error: function(xhr, responseText, thrownError) {
@@ -20452,7 +20455,6 @@ function updateCentroCosto() {
             function(){
                 $('#'+response.id).replaceWith(response.view);
                 $('#centros_costos_table').treegrid();
-                $('#'+response.id).focus();
             });
         },
         error: function(xhr, responseText, thrownError) {
