@@ -54,3 +54,7 @@ Route::resource('operadores', 'OperadoresController');
 Route::get('centroscostos', 'CentrosCostosController@index')->name('centroscostos.index');
 Route::post('centroscostos', 'CentrosCostosController@store')->name('centroscostos.store');
 Route::get('centroscostos/create/{IdPadre}', 'CentrosCostosController@create')->name('centroscostos.create');
+Route::get('centroscostos/{centroscostos}/edit', 'CentrosCostosController@edit')->name('centroscostos.edit');
+Route::patch('centroscostos/{centroscostos}', 'CentrosCostosController@update')->name('centroscostos.update');
+Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy')->name('centroscostos.destroy');
+

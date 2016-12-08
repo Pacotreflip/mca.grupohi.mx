@@ -68,9 +68,10 @@ class CentrosCostosController extends Controller
         
         $centrocosto = CentroCosto::create($request->all());
         return response()->json([
+            'id' => $centrocosto->IdCentroCosto,
             'ultimo' => $ultimo,
             'message' => '¡CENTRO DE COSTO REGISTRADO CORRECTAMENTE!',
-            'view' => view('centroscostos.show')->withCentro(CentroCosto::findOrFail($centrocosto->IdCentroCosto))->render()]);
+            'view' => view('centroscostos.show')->withCentro(CentroCosto::findOrFail($centrocosto->IdCentroCosto))->withType('#86F784')->render()]);
     }
 
     /**
@@ -105,7 +106,14 @@ class CentrosCostosController extends Controller
      */
     public function update(Requests\EditCentroCostoRequest $request, $id)
     {
-        dd($request->all());
+        $centrocosto = CentroCosto::findOrFail($id);
+        $centrocosto->update($request->all());
+        
+        return response()->json([
+            'id' => $centrocosto->IdCentroCosto,
+            'message' => '¡CENTRO DE COSTO ACTUALIZADO CORRECTAMENTE!',
+            'view' => view('centroscostos.show')->withCentro($centrocosto)->withType('#6CDBFF')->render()            
+        ]);
     }
 
     /**
@@ -116,6 +124,12 @@ class CentrosCostosController extends Controller
      */
     public function destroy($id)
     {
-        //
+        CentroCosto::findOrFail($id);
+        CentroCosto::destroy($id);
+        return response()->json([
+            'id' => $id,
+            'success' => true,
+            'message' => '¡CENTRO DE COSTO ELIMINADO CORRECTAMENTE!',
+        ]);
     }
 }
