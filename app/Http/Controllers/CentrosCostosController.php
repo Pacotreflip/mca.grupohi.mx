@@ -55,7 +55,7 @@ class CentrosCostosController extends Controller
             $nivel = $padre->Nivel.str_pad(($padre->hijos()->count() + 1), 3, '0', STR_PAD_LEFT).'.';
             $ultimo = $padre->getUltimoDescendiente()->IdCentroCosto; 
         } else {
-            $nivel = str_pad((CentroCosto::raices()->count() + 1), 3, '0', STR_PAD_LEFT);
+            $nivel = str_pad((CentroCosto::raices()->count() + 1), 3, '0', STR_PAD_LEFT).'.';
             $ultimo = CentroCosto::orderBy('nivel', 'DESC')->get()->first()->IdCentroCosto;
         }
 
@@ -126,8 +126,9 @@ class CentrosCostosController extends Controller
      */
     public function destroy(Request $request, $id)
     {
+        $centro = CentroCosto::findOrFail($id);
+
         if($request->get('_toggle')) {
-            $centro = CentroCosto::findOrFail($id);
             if($centro->Estatus == 1) {
                 $centro->Estatus = 0;
                 $text = '¡Centro de Costo Deshabilitado!';
@@ -139,13 +140,20 @@ class CentrosCostosController extends Controller
                 
             return response()->json(['text' => $text]);
         } else {
-            CentroCosto::findOrFail($id);
-            CentroCosto::destroy($id);
-            return response()->json([
-                'id' => $id,
-                'success' => true,
-                'message' => '¡CENTRO DE COSTO ELIMINADO CORRECTAMENTE!',
-            ]);
+            if($centro->hijos()->count() != 0) {
+                return response()->json([
+                    'success' => false,
+                    'message' => '¡NO SE PUEDE ELIMINAR UN CENTRO DE COSTO QUE CONTENGA SUBCUENTAS!'
+                ]);
+            } else {
+                CentroCosto::findOrFail($id);
+                CentroCosto::destroy($id);
+                return response()->json([
+                    'id' => $id,
+                    'success' => true,
+                    'message' => '¡CENTRO DE COSTO ELIMINADO CORRECTAMENTE!',
+                ]);
+            }
         }
     }
 }

@@ -20515,7 +20515,7 @@ function deleteCentroCosto(url) {
             success: function(response) {
                 if(response.success) {
                     swal({   
-                        title: "¡Marca Eliminada!",
+                        title: "¡Centro de Costo Eliminado!",
                         type: "success",   
                         confirmButtonText: "OK",   
                         closeOnConfirm: true }, 
@@ -20524,7 +20524,7 @@ function deleteCentroCosto(url) {
                         $('#centros_costos_table').treegrid();
                     });
                 } else {
-                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
+                    sweetAlert("", response.message, "error");
                 }
             },
             error: function() {
