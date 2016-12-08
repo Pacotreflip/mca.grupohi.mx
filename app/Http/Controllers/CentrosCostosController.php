@@ -70,7 +70,7 @@ class CentrosCostosController extends Controller
         return response()->json([
             'ultimo' => $ultimo,
             'message' => '¡CENTRO DE COSTO REGISTRADO CORRECTAMENTE!',
-            'view' => view('centroscostos.show')->withCentro($centrocosto)->render()]);
+            'view' => view('centroscostos.show')->withCentro(CentroCosto::findOrFail($centrocosto->IdCentroCosto))->render()]);
     }
 
     /**

@@ -1,7 +1,7 @@
 $(document).ready(function(){   
     if($('#centros_costos_table').length) {
         $('#centros_costos_table').treegrid();
-        $('.centrocosto_create').off().on('click', function(event){
+        $(document).on('click', '.centrocosto_create', function(event){
             event.preventDefault();
             showModal($(this).attr('href'));  
         });
@@ -23,10 +23,8 @@ function storeCentroCosto() {
                 closeOnConfirm: true 
             },
             function(){
-                alert(response.ultimo);
-                console.log($('#'+response.ultimo).length);
                 $(response.view).insertAfter('#'+response.ultimo);
-                //$('tr.treegrid-'+ response.ultimo).after(response.view);  
+                $('#centros_costos_table').treegrid();
             });
         },
         error: function(xhr, responseText, thrownError) {

@@ -31,7 +31,7 @@
                         <i class="fa fa-plus-circle"></i>
                     </a>
                 </td>
-                <td>{{$centro->Estatus}}</td>
+                <td>{{$centro->present()->Estatus}}</td>
             </tr>
             @endforeach
         </tbody>             
