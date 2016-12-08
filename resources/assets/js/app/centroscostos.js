@@ -13,6 +13,10 @@ $(document).ready(function(){
             event.preventDefault();
             deleteCentroCosto($(this).attr('href'));
         });
+        $(document).on('click', '.centrocosto_toggle', function(event){
+            event.preventDefault();
+            toggleCentroCosto(this, $(this).attr('href'));
+        });
     }
 });
 
@@ -127,37 +131,59 @@ function showModal(url) {
 }
 
 function deleteCentroCosto(url) {
-        swal({   
-            title: "¿Estás seguro?",   
-            text: "¡Se eliminará el Centro de Costo y no podra recuperarlo!",   
-            type: "warning",   
-            showCancelButton: true,   
-            confirmButtonColor: "#DD6B55",   
-            confirmButtonText: "Si, ¡Eliminar!",   
-            closeOnConfirm: false 
-        }, function(){   
-            $.ajax({
-                url: url,
-                type: 'POST',
-                data: {_method: 'delete', _token : App.csrfToken },
-                success: function(response) {
-                    if(response.success) {
-                        swal({   
-                            title: "¡Marca Eliminada!",
-                            type: "success",   
-                            confirmButtonText: "OK",   
-                            closeOnConfirm: true }, 
-                        function(){   
-                            $('#'+response.id).remove();
-                            $('#centros_costos_table').treegrid();
-                        });
-                    } else {
-                        sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
-                    }
-                },
-                error: function() {
-                     sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
+    swal({   
+        title: "¿Estás seguro?",   
+        text: "¡Se eliminará el Centro de Costo y no podra recuperarlo!",   
+        type: "warning",   
+        showCancelButton: true,   
+        confirmButtonColor: "#DD6B55",   
+        confirmButtonText: "Si, ¡Eliminar!",   
+        closeOnConfirm: false 
+    }, function(){   
+        $.ajax({
+            url: url,
+            type: 'POST',
+            data: {_method: 'delete', _token : App.csrfToken },
+            success: function(response) {
+                if(response.success) {
+                    swal({   
+                        title: "¡Marca Eliminada!",
+                        type: "success",   
+                        confirmButtonText: "OK",   
+                        closeOnConfirm: true }, 
+                    function(){   
+                        $('#'+response.id).remove();
+                        $('#centros_costos_table').treegrid();
+                    });
+                } else {
+                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
                 }
-            });
+            },
+            error: function() {
+                 sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
+            }
         });
-    }     
+    });
+}    
+
+function toggleCentroCosto(e, url) {
+    var element = $(e);
+    $.ajax({
+        url: url,
+        type: 'POST',
+        data: {_method: 'delete', _token: App.csrfToken, _toggle: true},
+        success: function(response) {
+            if(element.hasClass('activo')) {
+                element.removeClass('btn-danger activo').addClass('btn-success inactivo');
+                element.text('ACTIVAR');  
+            } else {
+                element.removeClass('btn-success inactivo').addClass('btn-danger activo');
+                element.text('DESACTIVAR');
+            }
+            swal(response.text, "", "success");
+        },
+        error: function() {
+            sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
+        }
+    });
+}

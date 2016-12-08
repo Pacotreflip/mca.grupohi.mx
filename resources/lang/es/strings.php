@@ -11,6 +11,7 @@ return [
     'edit' => 'EDITAR',
     'delete' => 'ELIMINAR',
     'activate' => 'ACTIVAR',
+    'deactivate' => 'DESACTIVAR',
 
     //Materiales
     'materials' => 'Materiales',

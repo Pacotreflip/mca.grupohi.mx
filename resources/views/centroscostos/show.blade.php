@@ -12,5 +12,9 @@
             <i class="fa fa-minus-circle"></i>
         </a>
     </td>
-    <td>{{$centro->present()->estatus}}</td>
+    <td>
+        <a href="{{ route('centroscostos.destroy', $centro) }}" class="btn btn-xs centrocosto_toggle {{ $centro->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}">
+            {{ $centro->Estatus == 1 ? trans('strings.delete') : trans('strings.activate') }}
+        </a>
+    </td>
 </tr>

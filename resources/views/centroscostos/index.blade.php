@@ -37,7 +37,11 @@
                         <i class="fa fa-minus-circle"></i>
                     </a>
                 </td>
-                <td>{{$centro->present()->Estatus}}</td>
+                <td>
+                    <a href="{{ route('centroscostos.destroy', $centro) }}" class="btn btn-xs centrocosto_toggle {{ $centro->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}">
+                        {{ $centro->Estatus == 1 ? trans('strings.deactivate') : trans('strings.activate') }}
+                    </a>
+                </td>
             </tr>
             @endforeach
         </tbody>             
@@ -45,3 +49,4 @@
 </div>
 <div id="div_modal"></div>
 @stop
+

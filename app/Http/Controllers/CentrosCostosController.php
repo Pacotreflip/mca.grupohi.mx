@@ -122,14 +122,28 @@ class CentrosCostosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        CentroCosto::findOrFail($id);
-        CentroCosto::destroy($id);
-        return response()->json([
-            'id' => $id,
-            'success' => true,
-            'message' => '¡CENTRO DE COSTO ELIMINADO CORRECTAMENTE!',
-        ]);
+        if($request->get('_toggle')) {
+            $centro = CentroCosto::findOrFail($id);
+            if($centro->Estatus == 1) {
+                $centro->Estatus = 0;
+                $text = '¡Centro de Costo Deshabilitado!';
+            } else {
+                $centro->Estatus = 1;
+                $text = '¡Centro de Costo Habilitado!';
+            }
+            $centro->save();
+                
+            return response()->json(['text' => $text]);
+        } else {
+            CentroCosto::findOrFail($id);
+            CentroCosto::destroy($id);
+            return response()->json([
+                'id' => $id,
+                'success' => true,
+                'message' => '¡CENTRO DE COSTO ELIMINADO CORRECTAMENTE!',
+            ]);
+        }
     }
 }
