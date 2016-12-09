@@ -51,6 +51,8 @@ Route::resource('tarifas_material', 'TarifasMaterialController');
 Route::resource('tarifas_peso', 'TarifasPesoController');
 Route::resource('tarifas_tiporuta', 'TarifasTipoRutaController');
 Route::resource('operadores', 'OperadoresController');
+Route::get('origenes_usuarios', 'OrigenesUsuariosController@index')->name('origenes_usuarios.index');
+//Rutas de centros de costo
 Route::get('centroscostos', 'CentrosCostosController@index')->name('centroscostos.index');
 Route::post('centroscostos', 'CentrosCostosController@store')->name('centroscostos.store');
 Route::get('centroscostos/create/{IdPadre}', 'CentrosCostosController@create')->name('centroscostos.create');
@@ -58,3 +60,4 @@ Route::get('centroscostos/{centroscostos}/edit', 'CentrosCostosController@edit')
 Route::patch('centroscostos/{centroscostos}', 'CentrosCostosController@update')->name('centroscostos.update');
 Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy')->name('centroscostos.destroy');
 
+Route::resource('usuarios', 'UserController');

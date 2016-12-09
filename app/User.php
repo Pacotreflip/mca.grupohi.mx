@@ -12,6 +12,7 @@ use Illuminate\Contracts\Auth\CanResetPassword as CanResetPasswordContract;
 use Ghi\Core\App\Auth\AuthenticatableIntranetUser;
 use Laracasts\Presenter\PresentableTrait;
 use App\Presenters\UserPresenter;
+use Illuminate\Support\Facades\DB;
 
 
 class User extends Model implements AuthenticatableContract,
@@ -34,5 +35,12 @@ class User extends Model implements AuthenticatableContract,
     
     public function rutas() {
         return $this->hasMany(Models\Ruta::class, 'Registra');
+    }
+    
+    public function Scopelist_proyecto($query, $id_proyecto) {
+        return $query->select(DB::raw('CONCAT(nombre, " ", apaterno, " ", amaterno) AS nombre_completo, idusuario'))
+                ->join('sca_configuracion.usuarios_proyectos', 'usuario.idusuario', '=', 'sca_configuracion.usuarios_proyectos.id_usuario_intranet')
+                ->where('sca_configuracion.usuarios_proyectos.id_proyecto', '=', $id_proyecto)
+                ->lists('nombre_completo', 'idusuario');
     }
 }

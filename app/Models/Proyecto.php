@@ -11,8 +11,8 @@ class Proyecto extends Model
     protected $primaryKey = 'id_proyecto';
     public $timestamps = false;
     
-    public function users() {
-        return $this->belongsToMany(\App\User::class, 'sca.configuracion.usuarios_proyectos', 'id_proyecto', 'id_usuario_intranet');
+    public function usuarios() {
+        return $this->belongsToMany(\App\User::class, 'sca_configuracion.usuarios_proyectos', 'id_proyecto', 'id_usuario_intranet');
     }
     
     public function proyectoLocal() {

@@ -191,3 +191,8 @@ Breadcrumbs::register('operadores.edit', function($breadcrumbs, $operador){
 Breadcrumbs::register('centroscostos.index', function($breadcrumbs){
     $breadcrumbs->push(strtoupper(trans('strings.centroscostos')), route('centroscostos.index'));
 });
+
+//Origenes por Usuario
+Breadcrumbs::register('origenes_usuarios.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.origenes_usuarios')), route('origenes_usuarios.index'));
+});

@@ -52,5 +52,8 @@ return [
     'new_operador' => 'Nuevo Operador',
     
     //Centros de Costo
-    'centroscostos' => 'Centros de Costo'
+    'centroscostos' => 'Centros de Costo',
+    
+    //Origenes por Usuario
+    'origenes_usuarios' => 'Origenes por Usuario'
     ];
