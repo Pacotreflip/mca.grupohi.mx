@@ -20402,12 +20402,12 @@ function storeCentroCosto() {
                 closeOnConfirm: true 
             },
             function(){
-                //if(response.raiz) {
-                //    location.reload();
-                //} else {
+                if(response.raiz) {
+                    location.reload();
+                } else {
                     $(response.view).insertAfter('#'+response.ultimo);
                     $('#centros_costos_table').treegrid();
-                //}
+                }
             });
         },
         error: function(xhr, responseText, thrownError) {

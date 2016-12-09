@@ -74,7 +74,7 @@ class CentrosCostosController extends Controller
         $centrocosto = CentroCosto::create($request->all());
         
         return response()->json([
-            //'raiz' => ($centrocosto->IdPadre == 0),
+            'raiz' => ($centrocosto->IdPadre == 0),
             'id' => $centrocosto->IdCentroCosto,
             'ultimo' => $ultimo,
             'message' => '¡CENTRO DE COSTO REGISTRADO CORRECTAMENTE!',

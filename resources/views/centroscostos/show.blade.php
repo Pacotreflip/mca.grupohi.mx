@@ -1,8 +1,4 @@
-@if($centro->IdPadre == 0)
-<tr bgcolor="{{$type}}" id="{{$centro->IdCentroCosto}}" class="treegrid-{{$centro->IdCentroCosto}}">
-@else
 <tr bgcolor="{{$type}}" id="{{$centro->IdCentroCosto}}" class="treegrid-{{$centro->IdCentroCosto}} treegrid-parent-{{$centro->IdPadre}}">
-@endif 
     <td>{{$centro->Descripcion}}</td>
     <td>{{$centro->Cuenta}}</td>
     <td>
