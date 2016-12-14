@@ -6,3 +6,4 @@ require('bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js');
 require('bootstrap-fileinput');
 require('bootstrap-fileinput/js/locales/es.js');
 require('sweetalert');
+require('jquery-treegrid/js/jquery.treegrid.js');
