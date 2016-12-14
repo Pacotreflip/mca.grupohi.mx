@@ -13,15 +13,21 @@
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
         <div class="form-group">
             {!! Form::label('IdSindicato', 'Sindicato', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 {!! Form::select('IdSindicato', $sindicatos, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione un Sindicato...']) !!}
             </div>
+            {!! Form::label('IdEmpresa', 'Empresa', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
+                {!! Form::select('IdEmpresa', $empresas, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione una Empresa...']) !!}
+            </div>
+        </div>
+        <div class="form-group">
             {!! Form::label('Propietario', 'Propietario', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 {!! Form::text('Propietario', null, ['class' => 'form-control']) !!}
             </div>
             {!! Form::label('IdOperador','Operador', ['class' => 'control-label col-sm-1'])  !!}
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 {!! Form::select('IdOperador', $operadores, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione un Operador...']) !!}
             </div>
         </div>

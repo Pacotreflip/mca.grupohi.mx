@@ -13,15 +13,21 @@
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
         <div class="form-group">
             {!! Form::label('Sindicato', 'Sindicato', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 {!! Form::text('Sindicato', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
+            {!! Form::label('Empresa', 'Empresa', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
+                    {!! Form::text('Empresa', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
+        </div>
+        <div class="form-group">
             {!! Form::label('Propietario', 'Propietario', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 {!! Form::text('Propietario', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
             {!! Form::label('Operador','Operador', ['class' => 'control-label col-sm-1'])  !!}
-            <div class="col-sm-3">
+            <div class="col-sm-5">
                 {!! Form::text('Operador', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
         </div>

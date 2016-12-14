@@ -24,4 +24,9 @@ class Empresa extends Model
     public function camiones() {
         return $this->hasMany(Camion::class, 'IdEmpresa');
     }
+    
+    public function __toString() {
+        return $this->razonSocial;
+    }
+
 }

@@ -16,6 +16,7 @@ use Carbon\Carbon;
 use App\Models\ImagenCamion;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\Storage;
+use App\Models\Empresa;
 
 class CamionesController extends Controller
 {
@@ -49,7 +50,8 @@ class CamionesController extends Controller
                 ->withSindicatos(Sindicato::all()->lists('Descripcion', 'IdSindicato'))
                 ->withOperadores(Operador::all()->lists('Nombre', 'IdOperador'))
                 ->withMarcas(Marca::all()->lists('Descripcion', 'IdMarca'))
-                ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'));
+                ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'))
+                ->withEmpresas(Empresa::all()->lists('razonSocial', 'idEmpresa'));
     }
 
     /**
@@ -108,7 +110,8 @@ class CamionesController extends Controller
                 ->withSindicatos(Sindicato::all()->lists('Descripcion', 'IdSindicato'))
                 ->withOperadores(Operador::all()->lists('Nombre', 'IdOperador'))
                 ->withMarcas(Marca::all()->lists('Descripcion', 'IdMarca'))
-                ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'));
+                ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'))
+                ->withEmpresas(Empresa::all()->lists('razonSocial', 'idEmpresa'));
     }
 
     /**
