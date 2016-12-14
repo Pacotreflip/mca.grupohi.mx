@@ -37,7 +37,8 @@ class Camion extends Model
         'FechaAlta',
         'HoraAlta',
         'Estatus',
-        'IdEmpresa'
+        'IdEmpresa',
+        'Disminucion'
     ];
     protected $presenter = CamionPresenter::class;
     
@@ -69,5 +70,9 @@ class Camion extends Model
     
     public function empresa() {
         return $this->belongsTo(Empresa::class, 'IdEmpresa');
+    }
+
+    public function getVigenciaPolizaSeguroAttribute() {        
+        return $this->attributes['VigenciaPolizaSeguro'] != '0000-00-00' ? $this->attributes['VigenciaPolizaSeguro'] : '';    
     }
 }
