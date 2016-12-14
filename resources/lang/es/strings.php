@@ -55,5 +55,9 @@ return [
     'centroscostos' => 'Centros de Costo',
     
     //Origenes por Usuario
-    'origenes_usuarios' => 'Origenes por Usuario'
+    'origenes_usuarios' => 'Origenes por Usuario',
+    
+    //Empresas
+    'empresas' => 'Empresas',
+    'new_empresa' => 'Nueva Empresa'
     ];

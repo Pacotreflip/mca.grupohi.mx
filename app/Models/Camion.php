@@ -17,7 +17,7 @@ class Camion extends Model
         'IdProyecto', 
         'IdSindicato', 
         'Propietario', 
-        'IdOperador', 
+        'IdOperador',
         'IdBoton', 
         'Placas',
         'PlacasCaja',
@@ -36,7 +36,8 @@ class Camion extends Model
         'CubicacionParaPago',
         'FechaAlta',
         'HoraAlta',
-        'Estatus'
+        'Estatus',
+        'IdEmpresa'
     ];
     protected $presenter = CamionPresenter::class;
     
@@ -64,5 +65,9 @@ class Camion extends Model
     
     public function imagenes() {
         return $this->hasMany(ImagenCamion::class, 'IdCamion');
+    }
+    
+    public function empresa() {
+        return $this->belongsTo(Empresa::class, 'IdEmpresa');
     }
 }

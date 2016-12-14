@@ -152,7 +152,9 @@ return [
         'IdOperador'            => 'Operador',
         'IdMarca'               => 'Marca',
         'NoLicencia'            => 'Número de Licencia',
-        'VigenciaLicencia'      => 'Vigencia de Licencia'
+        'VigenciaLicencia'      => 'Vigencia de Licencia',
+        'RFC'                   => 'RFC',
+        'razonSocial'           => 'Razón Social',
     ],
 
 ];

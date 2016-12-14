@@ -1,9 +1,9 @@
-$(".sindicatos_destroy").off().on("click", function(event) {
+$(".empresas_destroy").off().on("click", function(event) {
     var btn = $(this);    
     event.preventDefault();
     swal({   
         title: "¿Estás seguro?",   
-        text: "¡Se eliminará el sindicato y no podra recuperarlo!",   
+        text: "¡Se eliminará la empresa y no podra recuperarla!",   
         type: "warning",   
         showCancelButton: true,   
         confirmButtonColor: "#DD6B55",   
@@ -17,7 +17,7 @@ $(".sindicatos_destroy").off().on("click", function(event) {
            success: function(response) {
                if(response.success) {
                    swal({   
-                       title: "¡Sindicato Eliminado!",
+                       title: "¡Empresa Eliminada!",
                        type: "success",   
                        confirmButtonText: "OK",   
                        closeOnConfirm: false }, 

@@ -63,3 +63,5 @@ Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy'
 
 Route::get('usuarios/{usuarios}/origenes', 'OrigenesUsuariosController@index');
 Route::post('usuarios/{usuarios}/origenes/{origenes}', 'OrigenesUsuariosController@store');
+
+Route::resource('empresas', 'EmpresasController');

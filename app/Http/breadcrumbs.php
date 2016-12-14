@@ -196,3 +196,23 @@ Breadcrumbs::register('centroscostos.index', function($breadcrumbs){
 Breadcrumbs::register('origenes_usuarios.index', function($breadcrumbs){
     $breadcrumbs->push(strtoupper(trans('strings.origenes_usuarios')), route('origenes_usuarios.index'));
 });
+
+//Empresas
+Breadcrumbs::register('empresas.index', function($breadcrumbs){
+    $breadcrumbs->push(strtoupper(trans('strings.empresas')), route('empresas.index'));
+});
+
+Breadcrumbs::register('empresas.show', function($breadcrumbs, $empresa){
+    $breadcrumbs->parent('empresas.index');
+    $breadcrumbs->push(strtoupper($empresa->razonSocial), route('empresas.show', $empresa));
+});
+
+Breadcrumbs::register('empresas.create', function($breadcrumbs){
+    $breadcrumbs->parent('empresas.index');
+    $breadcrumbs->push(strtoupper(trans('strings.new_empresa')), route('empresas.create'));
+});
+
+Breadcrumbs::register('empresas.edit', function($breadcrumbs, $empresa){
+    $breadcrumbs->parent('empresas.show', $empresa);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('empresas.edit', $empresa));
+});
