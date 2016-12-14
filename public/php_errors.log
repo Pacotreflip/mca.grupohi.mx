@@ -1,2 +1,0 @@
-[17-Nov-2016 11:41:24 America/Mexico_City] PHP Warning:  require(C:\httpd\www\php56.loc\mca.grupohi.mx\bootstrap/../vendor/autoload.php): failed to open stream: No such file or directory in C:\httpd\www\php56.loc\mca.grupohi.mx\bootstrap\autoload.php on line 17
-[17-Nov-2016 11:41:24 America/Mexico_City] PHP Fatal error:  require(): Failed opening required 'C:\httpd\www\php56.loc\mca.grupohi.mx\bootstrap/../vendor/autoload.php' (include_path='.;C:\php\pear') in C:\httpd\www\php56.loc\mca.grupohi.mx\bootstrap\autoload.php on line 17

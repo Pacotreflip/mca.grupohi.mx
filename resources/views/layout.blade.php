@@ -19,7 +19,7 @@
         @yield('content')
     </div>
     <br>
-    <script src="{{ asset(elixir("js/all.js")) }}"></script>
+    <script src="{{ asset(elixir("js/app.js")) }}"></script>
     @yield('scripts')
   </body>
 </html>
