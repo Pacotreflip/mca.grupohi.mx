@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
+use App\User;
 
 class PagesController extends Controller
 {
@@ -28,5 +29,10 @@ class PagesController extends Controller
     public function proyectos() {
         $proyectos = Auth::user()->proyectos()->paginate(15);
         return view('pages.proyectos')->withProyectos($proyectos);
+    }
+    
+    public function origenes_usuarios(Request $request) {
+        return view('origenes_usuarios.index')
+                ->withUsuarios(User::list_proyecto($request->session()->get('id')));
     }
 }

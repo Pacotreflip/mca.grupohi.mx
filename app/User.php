@@ -43,4 +43,8 @@ class User extends Model implements AuthenticatableContract,
                 ->where('sca_configuracion.usuarios_proyectos.id_proyecto', '=', $id_proyecto)
                 ->lists('nombre_completo', 'idusuario');
     }
+    
+    public function origenes() {
+        return $this->belongsToMany(Models\Origen::class, 'origen_x_usuario', 'idusuario_intranet', 'idorigen');
+    }
 }

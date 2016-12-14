@@ -33,4 +33,8 @@ class Origen extends Model
     public function __toString() {
         return $this->Descripcion;
     }
+    
+    public function usuario() {
+        return $this->belongsToMany(\App\User::class, \App\Facades\Context::getDatabaseName().'.origen_x_usuario', 'idorigen', 'idusuario_intranet');
+    }
 }
