@@ -20302,6 +20302,7 @@ $(document).ready(function(){
         var largo = parseFloat($('input.largo').val());
         var alto = parseFloat($('input.alto').val());
         var gato = parseFloat($('input.gato').val());
+        var dism = parseFloat($('input.disminucion').val());
         var ext = parseFloat($('input.extension').val());
 
         if(!isNaN(ancho) && !isNaN(largo) && !isNaN(alto)) {
@@ -20311,6 +20312,9 @@ $(document).ready(function(){
             }
             if(!isNaN(ext)) {
                 dim += (ancho*largo*ext);
+            }
+            if(!isNaN(dism)) {
+                dim -= dism;
             }
         }
         $('input.real').val(dim.toFixed(2));

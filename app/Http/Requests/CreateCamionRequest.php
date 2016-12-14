@@ -40,6 +40,7 @@ class CreateCamionRequest extends Request
             'Largo'         => 'required|numeric',
             'Alto'          => 'required|numeric',
             'EspacioDeGato' => 'numeric',
+            'Disminucion' => 'numeric',
             'AlturaExtension'   => 'numeric',
             'CubicacionReal'    => 'required|numeric',
             'CubicacionParaPago'    => 'required|numeric',

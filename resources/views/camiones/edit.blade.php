@@ -65,22 +65,22 @@
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
         <div class="form-group">
-            {!! Form::label('Frente', 'Frente', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('Frente', 'Frente', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
                 <input id="f" name="Frente" type="file" class="file-loading imagen">
             </div>
-            {!! Form::label('Derecha', 'Derecha', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('Derecha', 'Derecha', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
                 <input id="d" name="Derecha" type="file" class="file-loading imagen">
             </div>
         </div>
         <div class="form-group">
-            {!! Form::label('Atras', 'Atras', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('Atras', 'Atras', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
                 <input id="t" name="Atras" type="file" class="file-loading imagen">
             </div>
-            {!! Form::label('Izquierda', 'Izquierda', ['class' => 'control-label col-sm-2']) !!}
-            <div class="col-sm-4">
+            {!! Form::label('Izquierda', 'Izquierda', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-5">
                 <input id="i" name="Izquierda" type="file" class="file-loading imagen">
             </div>
         </div>
@@ -127,16 +127,20 @@
             </div>
         </div>
         <div class="form-group">
+            {!! Form::label('Disminucion', 'Disminución', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::number('Disminucion', null, ['class' => 'form-control disminucion cubicacion', 'step' => 'any']) !!}
+            </div>
             {!! Form::label('AlturaExtension', 'Extensión', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
                 {!! Form::number('AlturaExtension', null, ['class' => 'form-control extension cubicacion', 'step' => 'any']) !!}
             </div>
-            {!! Form::label('CubicacionReal', 'Cubicación Real', ['class' => 'control-label col-sm-1 col-sm-offset-1']) !!}
-            <div class="col-sm-3">
+            {!! Form::label('CubicacionReal', 'Cubicación Real', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
                 {!! Form::number('CubicacionReal', null, ['class' => 'form-control real', 'readonly' => 'readonly', 'step' => 'any']) !!}
             </div>
             {!! Form::label('CubicacionParaPago', 'Cubicación para Pago', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 {!! Form::number('CubicacionParaPago', null, ['class' => 'form-control pago', 'readonly' => 'readonly', 'step' => 'any']) !!}
             </div>
         </div>

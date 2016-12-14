@@ -121,6 +121,10 @@
             </div>
         </div>
         <div class="form-group">
+            {!! Form::label('Disminucion', 'Disminución', ['class' => 'control-label col-sm-1']) !!}
+            <div class="col-sm-2">
+                {!! Form::text('Disminucion', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            </div>
             {!! Form::label('AlturaExtension', 'Extensión', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
                 {!! Form::text('AlturaExtension', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
