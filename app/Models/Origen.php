@@ -37,4 +37,8 @@ class Origen extends Model
     public function usuario() {
         return $this->belongsToMany(\App\User::class, \App\Facades\Context::getDatabaseName().'.origen_x_usuario', 'idorigen', 'idusuario_intranet');
     }
+    
+    public function factoresDeAbundamientoBancoMaterial() {
+        return $this->hasMany(FactoresAbundamiento\FactorAbundamientoBancoMaterial::class, 'IdBanco', 'IdOrigen');
+    }
 }

@@ -6,11 +6,9 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Material;
-use Laracasts\Flash\Flash;
-use App\Models\ProyectoLocal;
+use App\Models\FactoresAbundamiento\FactorAbundamientoBancoMaterial;
 
-class MaterialesController extends Controller
+class FactoresAbundamientoBancoMaterialController extends Controller
 {
     
     function __construct() {
@@ -19,7 +17,7 @@ class MaterialesController extends Controller
        
         parent::__construct();
     }
-
+    
     /**
      * Display a listing of the resource.
      *
@@ -27,20 +25,19 @@ class MaterialesController extends Controller
      */
     public function index(Request $request)
     {
-        $materiales = Material::all();
+        $factores = FactorAbundamientoBancoMaterial::all();
         if($request->ajax()) {
             $data = [];
-            foreach($materiales as $material) {
+            foreach($factores as $factor) {
                 $data[] = [
-                    'id' => $material->IdMaterial,
-                    'descripcion' => $material->Descripcion
+                    'banco' => $factor->origen->Descripcion,
+                    'material' => $factor->material->Descripcion,
+                    'factor' => $factor->FactorAbundamiento
                 ];
             }
             return response()->json($data);
         }
-        
-        return view('materiales.index')
-                ->withMateriales($materiales);
+        return view('factores_abundamiento.banco_material.index');
     }
 
     /**
@@ -50,7 +47,7 @@ class MaterialesController extends Controller
      */
     public function create()
     {
-        return view('materiales.create');
+        //
     }
 
     /**
@@ -59,14 +56,9 @@ class MaterialesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Requests\CreateMaterialRequest $request)
+    public function store(Request $request)
     {
-        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
-        $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
-        $material = Material::create($request->all());
-        
-        Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
+        //
     }
 
     /**
@@ -77,8 +69,7 @@ class MaterialesController extends Controller
      */
     public function show($id)
     {
-        return view('materiales.show')
-                ->withMaterial(Material::findOrFail($id));
+        //
     }
 
     /**
@@ -89,8 +80,7 @@ class MaterialesController extends Controller
      */
     public function edit($id)
     {
-        return view('materiales.edit')
-                ->withMaterial(Material::findOrFail($id));
+        //
     }
 
     /**
@@ -100,13 +90,9 @@ class MaterialesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\EditMaterialRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $material = Material::findOrFail($id);
-        $material->update($request->all());
-        
-        Flash::success('¡MATERIAL ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
+        //
     }
 
     /**
@@ -117,11 +103,6 @@ class MaterialesController extends Controller
      */
     public function destroy($id)
     {
-        Material::findOrFail($id);
-        Material::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('materiales.index')
-            ]);
+        //
     }
 }

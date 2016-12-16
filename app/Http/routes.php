@@ -53,6 +53,10 @@ Route::resource('tarifas_material', 'TarifasMaterialController');
 Route::resource('tarifas_peso', 'TarifasPesoController');
 Route::resource('tarifas_tiporuta', 'TarifasTipoRutaController');
 Route::resource('operadores', 'OperadoresController');
+Route::resource('empresas', 'EmpresasController');
+Route::resource('factores_abundamiento_material', 'FactoresAbundamientoMaterialController');
+Route::resource('factores_abundamiento_banco_material', 'FactoresAbundamientoBancoMaterialController');
+
 //Rutas de centros de costo
 Route::get('centroscostos', 'CentrosCostosController@index')->name('centroscostos.index');
 Route::post('centroscostos', 'CentrosCostosController@store')->name('centroscostos.store');
@@ -64,4 +68,3 @@ Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy'
 Route::get('usuarios/{usuarios}/origenes', 'OrigenesUsuariosController@index');
 Route::post('usuarios/{usuarios}/origenes/{origenes}', 'OrigenesUsuariosController@store');
 Route::get('usuarios', 'UserController@index');
-Route::resource('empresas', 'EmpresasController');

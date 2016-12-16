@@ -27,10 +27,21 @@ class OrigenesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $origenes = Origen::all();
+        if($request->ajax()) {
+            $data = [];
+            foreach($origenes as $origen) {
+                $data[] = [
+                    'id' => $origen->IdOrigen,
+                    'descripcion' => $origen->Descripcion
+                ];
+            }
+            return response()->json($data);
+        }
         return view('origenes.index')
-                ->withOrigenes(Origen::all());
+                ->withOrigenes($origenes);
     }
 
     /**

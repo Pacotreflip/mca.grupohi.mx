@@ -216,3 +216,8 @@ Breadcrumbs::register('empresas.edit', function($breadcrumbs, $empresa){
     $breadcrumbs->parent('empresas.show', $empresa);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('empresas.edit', $empresa));
 });
+
+//Factores de Abundamiento
+Breadcrumbs::register('factores_abundamiento_banco_material.index', function($breadcrumbs) {
+    $breadcrumbs->push('BANCO - MATERIAL', route('factores_abundamiento_banco_material.index'));
+});

@@ -33,4 +33,8 @@ class Material extends Model
         return $this->hasOne(Tarifas\TarifaPeso::class, 'IdMaterial')
                 ->where('tarifas_peso.Estatus', '=', 1);
     }
+    
+    public function factoresDeAbundamientoBancoMaterial() {
+        return $this->hasMany(FactoresAbundamiento\FactorAbundamientoBancoMaterial::class, 'IdMaterial');
+    }
 }

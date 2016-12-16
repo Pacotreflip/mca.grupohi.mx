@@ -30896,8 +30896,87 @@ $(".tiros_destroy").off().on("click", function (event) {
 'use strict';
 
 require('./vue-components/origenes-usuarios');
+require('./vue-components/fda-bancomaterial');
 
-},{"./vue-components/origenes-usuarios":34}],34:[function(require,module,exports){
+},{"./vue-components/fda-bancomaterial":34,"./vue-components/origenes-usuarios":35}],34:[function(require,module,exports){
+'use strict';
+
+Vue.component('fda-bancomaterial', {
+
+    data: function data() {
+        return {
+            factores: [],
+            materiales: [],
+            bancos: [],
+            factor: {
+                IdMaterial: '',
+                IdBanco: '',
+                FactorAbundamiento: ''
+            },
+            guardando: false
+        };
+    },
+
+    template: require('./templates/fda-bancomaterial.html'),
+
+    beforeCreate: function beforeCreate() {
+        var _this2 = this;
+
+        this.$http.get('materiales').then(function (response) {
+            _this2.materiales = response.body;
+        }, function (response) {
+            console.error(errors);
+        });
+
+        this.$http.get('origenes').then(function (response) {
+            _this2.bancos = response.body;
+        }, function (response) {
+            console.error(errors);
+        });
+
+        this.$http.get('factores_abundamiento_banco_material').then(function (response) {
+            _this2.factores = response.body;
+        }, function (response) {
+            console.error(errors);
+        });
+    },
+
+    methods: {
+        guardar: function guardar() {},
+
+        actualizar: function actualizar(factor) {},
+
+        asignar: function asignar(origen) {
+            var _this = this;
+            if (origen.estatus == 1 || origen.estatus == 2) {
+                swal({
+                    title: "¿Desea continuar?",
+                    text: "¡La asignación del origen cambiara!",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Aceptar",
+                    cancelButtonText: "Cancelar",
+                    closeOnConfirm: false }, function () {
+                    _this.$http.post(App.host + '/usuarios/' + _this.usuario + '/origenes/' + origen.id, { _token: App.csrfToken }).then(function (response) {
+                        _this.fetchOrigenes();
+                        swal({
+                            title: "",
+                            text: "La asignación del origen ha cambiado",
+                            timer: 750,
+                            showConfirmButton: false,
+                            type: "success"
+                        });
+                    }, function (response) {
+                        console.log(response);
+                    });
+                });
+            }
+        }
+    }
+});
+
+},{"./templates/fda-bancomaterial.html":36}],35:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -30967,8 +31046,10 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":35}],35:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >Seleccione un Usuario</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{"./templates/origenes-usuarios.html":37}],36:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <div class="form-horizontal rcorners">\n        <div class="form-group">\n            <label class="control-label col-sm-1">Banco</label>\n            <div class="col-sm-3">\n                <select class="form-control"  v-model="factor.IdBanco">\n                    <option value >Seleccione un Banco...</option>\n                    <option v-for="banco in bancos" v-bind:value="banco.id">\n                        {{ banco.descripcion }}\n                    </option>\n                </select>            \n            </div>\n            <label class="control-label col-sm-1">Material</label>\n            <div class="col-sm-3">\n                <select class="form-control"  v-model="factor.IdMaterial">\n                    <option value >Seleccione un Material...</option>\n                    <option v-for="material in materiales" v-bind:value="material.id">\n                        {{ material.descripcion }}\n                    </option>\n                </select>            \n            </div>\n            <label class="control-label col-sm-1">FDA</label>\n            <div class="col-sm-1">\n                <input class="form-control" step="any" type="number" v-model="factor.FactorAbundamiento">\n            </div>\n            <label class="control-label col-sm-1">Guardar</label>\n            <div class="col-sm-1">\n                <button class="btn btn-primary" type="submit" click="guardar">\n                    <span v-show="guardando"><i class="fa fa-spinner fa-spin"></i></span>\n                    <span v-else><i class="fa fa-save"></i></span>\n                </button>\n            </div>\n        </div>\n    </div>\n    <hr>\n    <table class="table table-hover">\n        <thead>\n            <tr>\n                <th>Banco</th>\n                <th>Material</th>\n                <th>FDA</th>\n                <th>Guardar</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="factor in factores">\n                <td>{{ factor.banco }}</td>\n                <td>{{ factor.material }}</td>\n                <td>{{ factor.factor }}</td>\n                <td>\n                    <button class="btn btn-primary" type="submit" @click="actualizar(factor)">\n                        <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>\n                        <span v-if="!guardando"><i class="fa fa-save"></i></span>\n                    </button>\n                </td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],37:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >Seleccione un Usuario...</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
 },{}]},{},[20]);
 
 //# sourceMappingURL=app.js.map
