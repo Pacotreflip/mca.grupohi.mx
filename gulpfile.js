@@ -26,8 +26,7 @@ elixir(function(mix) {
             .copy(paths.bootstrap + 'fonts/bootstrap', 'public/build/fonts/bootstrap')
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
             .copy(paths.fileinput + 'img', 'public/build/img')
-            .browserify('app.js', 'resources/assets/js/all.js')
-            .scripts(['all.js', 'app/*.js'], 'public/js/app.js')
+            .browserify('app.js')
             .version([
                 'public/css/app.css',
                 'public/js/app.js'

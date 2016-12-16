@@ -7,3 +7,13 @@ require('bootstrap-fileinput');
 require('bootstrap-fileinput/js/locales/es.js');
 require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
+require('./scripts');
+window.Vue = require('vue/dist/vue.js');
+require('vue-resource');
+
+if ($('#app').length) {
+    new Vue({
+        el: '#app',
+        components: require('./vue-components')
+    });   
+}

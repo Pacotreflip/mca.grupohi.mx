@@ -1,0 +1,25 @@
+<div class="table-responsive col-md-8 col-md-offset-2">
+    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">
+        <option value >Seleccione un Usuario</option>
+        <option v-for="usuario in usuarios" v-bind:value="usuario.id">
+            {{ usuario.nombre }}
+        </option>
+    </select>
+    <hr>
+    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">
+        <thead>
+            <tr>
+                <th>Asignación</th>
+                <th>Origen</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr v-for="origen in origenes">
+                <td>
+                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>
+                </td>
+                <td>{{ origen.descripcion }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

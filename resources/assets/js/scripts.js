@@ -1,0 +1,11 @@
+require('./scripts/camiones');
+require('./scripts/centroscostos');
+require('./scripts/empresas');
+require('./scripts/globales');
+require('./scripts/marcas');
+require('./scripts/materiales');
+require('./scripts/origenes');
+require('./scripts/rutas');
+require('./scripts/sindicatos');
+require('./scripts/tarifas');
+require('./scripts/tiros');
