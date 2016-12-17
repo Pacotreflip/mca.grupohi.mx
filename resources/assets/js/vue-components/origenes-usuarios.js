@@ -4,7 +4,10 @@ Vue.component('origenes-usuarios', {
         return {
             usuarios: [],
             usuario: '',
-            origenes:  []
+            origenes:  [],
+            form: {
+                errors: []
+            }
         }
     },
     
@@ -14,7 +17,7 @@ Vue.component('origenes-usuarios', {
         this.$http.get('usuarios').then((response) => {
             this.usuarios = response.body;
         }, (response) => {
-            console.error(errors)
+            console.error(response)
         });
     },
     
@@ -49,12 +52,12 @@ Vue.component('origenes-usuarios', {
                         swal({   
                             title: "",  
                             text: "La asignación del origen ha cambiado",   
-                            timer: 750,   
+                            timer: 1000,   
                             showConfirmButton: false ,
                             type: "success"
                         });
                     },(response) => {
-                       console.log(response); 
+                       App.setErrorsOnForm(this.form, response); 
                     });
                 });
             }

@@ -7,9 +7,11 @@ require('bootstrap-fileinput');
 require('bootstrap-fileinput/js/locales/es.js');
 require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
+window._ = require('underscore');
 require('./scripts');
 window.Vue = require('vue/dist/vue.js');
 require('vue-resource');
+Vue.http.headers.common['X-CSRF-TOKEN'] = App.csrfToken;
 
 if ($('#app').length) {
     new Vue({

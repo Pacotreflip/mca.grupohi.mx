@@ -20,14 +20,13 @@
                 </select>            
             </div>
             <label class="control-label col-sm-1">FDA</label>
-            <div class="col-sm-1">
+            <div class="col-sm-3">
                 <input class="form-control" step="any" type="number" v-model="factor.FactorAbundamiento">
             </div>
-            <label class="control-label col-sm-1">Guardar</label>
-            <div class="col-sm-1">
-                <button class="btn btn-primary" type="submit" click="guardar">
-                    <span v-show="guardando"><i class="fa fa-spinner fa-spin"></i></span>
-                    <span v-else><i class="fa fa-save"></i></span>
+            <div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
+                <button class="btn btn-success" type="submit" click="guardar">
+                    <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i> Guardar</span>
+                    <span v-else><i class="fa fa-save"></i> Guardar</span>
                 </button>
             </div>
         </div>
@@ -48,7 +47,7 @@
                 <td>{{ factor.material }}</td>
                 <td>{{ factor.factor }}</td>
                 <td>
-                    <button class="btn btn-primary" type="submit" @click="actualizar(factor)">
+                    <button class="btn btn-primary" type="submit" click="actualizar(factor)">
                         <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
                         <span v-else><i class="fa fa-save"></i></span>
                     </button>

@@ -54,8 +54,8 @@ Route::resource('tarifas_peso', 'TarifasPesoController');
 Route::resource('tarifas_tiporuta', 'TarifasTipoRutaController');
 Route::resource('operadores', 'OperadoresController');
 Route::resource('empresas', 'EmpresasController');
-Route::resource('factores_abundamiento_material', 'FactoresAbundamientoMaterialController');
-Route::resource('factores_abundamiento_banco_material', 'FactoresAbundamientoBancoMaterialController');
+Route::resource('fda_material', 'FDAMaterialController');
+Route::resource('fda_banco_material', 'FDABancoMaterialController');
 
 //Rutas de centros de costo
 Route::get('centroscostos', 'CentrosCostosController@index')->name('centroscostos.index');

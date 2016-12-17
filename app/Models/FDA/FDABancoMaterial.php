@@ -1,16 +1,18 @@
 <?php
 
-namespace App\Models\FactoresAbundamiento;
+namespace App\Models\FDA;
 
 use Illuminate\Database\Eloquent\Model;
 
-class FactorAbundamientoBancoMaterial extends Model
+class FDABancoMaterial extends Model
 {
+    use \App\Models\Traits\HasCompositePrimaryKey;
+    
     protected $connection = 'sca';
     protected $table = 'factorabundamiento_material';
-    protected $primaryKey = false;
-    protected $fillable = ['IdMaterial', 'IdBanco', 'FactorAbundamiento', 'Registra', 'Estatus'];
-    
+    protected $primaryKey = ['IdMaterial', 'IdBanco'];
+    protected $fillable = ['IdMaterial', 'IdBanco', 'FactorAbundamiento', 'Registra'];
+    public $incrementing = false;
     const CREATED_AT = 'TimestampAlta';
     const UPDATED_AT = 'TimestampAlta';
     
@@ -20,5 +22,5 @@ class FactorAbundamientoBancoMaterial extends Model
     
     public function origen() {
         return $this->belongsTo(\App\Models\Origen::class, 'IdBanco');
-    }
+    }    
 }

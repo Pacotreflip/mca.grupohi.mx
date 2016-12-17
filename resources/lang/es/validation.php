@@ -155,6 +155,9 @@ return [
         'VigenciaLicencia'      => 'Vigencia de Licencia',
         'RFC'                   => 'RFC',
         'razonSocial'           => 'Razón Social',
+        'IdMaterial'            => 'Material',
+        'IdBanco'               => 'Banco',
+        'FactorAbundamiento'    => 'FDA'
     ],
 
 ];

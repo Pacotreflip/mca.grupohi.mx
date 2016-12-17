@@ -34,7 +34,7 @@ class Material extends Model
                 ->where('tarifas_peso.Estatus', '=', 1);
     }
     
-    public function factoresDeAbundamientoBancoMaterial() {
-        return $this->hasMany(FactoresAbundamiento\FactorAbundamientoBancoMaterial::class, 'IdMaterial');
+    public function fdaBancoMaterial() {
+        return $this->hasMany(FDA\FDABancoMaterial::class, 'IdMaterial');
     }
 }

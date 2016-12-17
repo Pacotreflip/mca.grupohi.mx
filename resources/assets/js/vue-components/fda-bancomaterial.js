@@ -10,70 +10,83 @@ Vue.component('fda-bancomaterial', {
                 IdBanco: '',
                 FactorAbundamiento: ''
             },
+            form:{
+                errors: []
+            },
             guardando: false,
         }
     },
-    
-    template: require('./templates/fda-bancomaterial.html'),
-    
-    beforeCreate: function () {
-        this.$http.get('materiales').then((response) => {
-            this.materiales = response.body;
-        }, (response) => {
-            console.error(errors)
-        });
         
-        this.$http.get('origenes').then((response) => {
-            this.bancos = response.body;
-        }, (response) => {
-            console.error(errors)
-        });
-        
-        this.$http.get('factores_abundamiento_banco_material').then((response) => {
-            this.factores = response.body;
-        }, (response) => {
-            console.error(errors)
-        });
-        
-        
+    created: function () {
+        this.fetchBancos();
+        this.fetchMateriales();
+        this.fetchFactores();
     },
     
     methods: {
-        guardar: function() {
-            
-        },
-
-        actualizar: function(factor) {
-            
+        fetchBancos: function () {
+            this.$http.get('origenes').then((response) => {
+                this.bancos = response.body;
+            }, (response) => {
+                App.setErrorsOnForm(this.form, response.body);
+            });
         },
         
-        asignar: function(origen) {
-            var _this = this;
-            if(origen.estatus == 1 || origen.estatus == 2) {
-                swal({   
-                    title: "¿Desea continuar?",   
-                    text: "¡La asignación del origen cambiara!",   
-                    type: "warning",   
-                    showCancelButton: true,   
-                    confirmButtonColor: "#DD6B55",   
-                    confirmButtonText: "Aceptar",   
-                    cancelButtonText: "Cancelar",   
-                    closeOnConfirm: false }, 
-                function(){   
-                    _this.$http.post(App.host + '/usuarios/' + _this.usuario + '/origenes/' + origen.id, {_token: App.csrfToken}).then((response) => {
-                        _this.fetchOrigenes();
-                        swal({   
-                            title: "",  
-                            text: "La asignación del origen ha cambiado",   
-                            timer: 750,   
-                            showConfirmButton: false ,
-                            type: "success"
-                        });
-                    },(response) => {
-                       console.log(response); 
+        fetchMateriales: function() {
+            this.$http.get('materiales').then((response) => {
+                this.materiales = response.body;
+            }, (response) => {
+                App.setErrorsOnForm(this.form, response.body);
+            });
+        },
+        
+        fetchFactores: function() {
+            this.$http.get('fda_banco_material').then((response) => {
+                this.factores = response.body;
+            }, (response) => {
+                App.setErrorsOnForm(this.form, response.body);
+            });  
+        },
+        
+        guardar: function () {
+            this.guardando = true;
+            this.form.errors = [];
+            this.$http.post('fda_banco_material', this.factor).then((response) => {
+                if(response.body.success) {
+                    swal({
+                        type: 'success',
+                        title: '',
+                        text: response.body.message,
+                        timer: 1000,   
+                        showConfirmButton: false
                     });
-                });
-            }
-        }
+                    this.fetchFactores();
+                    this.guardando = false;
+                }
+            }, (response) => {
+                this.guardando = false;
+                App.setErrorsOnForm(this.form, response.body);
+            });
+        },
+
+        actualizar: function (factor) {
+            factor.guardando = true;
+            this.form.errors = [];
+            this.$http.post('fda_banco_material', factor).then((response) => {
+                if(response.body.success) {
+                    swal({
+                        type: 'success',
+                        title: '',
+                        text: response.body.message,
+                        timer: 1000,   
+                        showConfirmButton: false
+                    });
+                }
+                factor.guardando = false;
+            }, (response) => {
+                factor.guardando = false;
+                App.setErrorsOnForm(this.form, response.body);
+            });
+        },
     }
 });

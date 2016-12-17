@@ -218,6 +218,6 @@ Breadcrumbs::register('empresas.edit', function($breadcrumbs, $empresa){
 });
 
 //Factores de Abundamiento
-Breadcrumbs::register('factores_abundamiento_banco_material.index', function($breadcrumbs) {
-    $breadcrumbs->push('BANCO - MATERIAL', route('factores_abundamiento_banco_material.index'));
+Breadcrumbs::register('fda_banco_material.index', function($breadcrumbs) {
+    $breadcrumbs->push('BANCO - MATERIAL', route('fda_banco_material.index'));
 });
