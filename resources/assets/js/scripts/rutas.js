@@ -25,17 +25,17 @@ $(document).ready(function(){
     //EDIT
     if($('#edit_ruta').length) {
         calcularKmTotal();
-        div = $('div.id_ruta');
-        id_ruta = div.attr('id');
+        var div = $('div.id_ruta');
+        var id_ruta = div.attr('id');
         $.ajax({
             type: 'GET',
             url: App.host + '/ruta/' + id_ruta + '/archivos',
             success: function(response) {
                 if(response.hasCroquis) {
                     if (response.type === 'application/pdf') {
-                        preview = "<embed src='"+response.url+"' type='application/pdf' width='100%' height='100%'>";
+                        var preview = "<embed src='"+response.url+"' type='application/pdf' width='100%' height='100%'>";
                     } else {
-                        preview = "<img src='"+response.url+"' class='file-preview-image' style='width:100%;height:auto; max-width: 100%; max-height: 100%;'>";
+                        var preview = "<img src='"+response.url+"' class='file-preview-image' style='width:100%;height:auto; max-width: 100%; max-height: 100%;'>";
                     }
                     $("#croquis-edit").fileinput({
                         language: 'es',

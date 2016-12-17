@@ -136,16 +136,27 @@ class RutasController extends Controller
         
         if($request->hasFile('Croquis')) {
             $croquis = $request->file('Croquis');
-            $archivo = ArchivoRuta::firstOrCreate(['IdRuta' => $ruta->IdRuta]);
+            $tipo = $croquis->getClientMimeType();
+            $nombre = ArchivoRuta::creaNombre($croquis, $ruta);
+            $ruta_ = ArchivoRuta::baseDir().'/'.$nombre;
+
+            $archivo = ArchivoRuta::where(['IdRuta' => $ruta->IdRuta])->first();
+            if($archivo) {
+                $archivo->Tipo = $tipo;
+                $archivo->Ruta = $ruta_;
+                $archivo->save();
+            } else {
+                $archivo = ArchivoRuta::create([
+                    'IdRuta' => $ruta->IdRuta,
+                    'Tipo' => $tipo,
+                    'Ruta' => $ruta_
+                ]);
+            }
+            
             if(Storage::disk('uploads')->has($archivo->Ruta)) {
                 Storage::disk('uploads')->delete($archivo->Ruta);
             }
-            $nombre = $archivo->creaNombre($croquis, $ruta);
-            $croquis->move($archivo->baseDir(), $nombre);
-            $archivo->IdRuta = $ruta->IdRuta;
-            $archivo->Tipo = $croquis->getClientMimeType();
-            $archivo->Ruta = $archivo->baseDir().'/'.$nombre;
-            $archivo->save();
+            $croquis->move(ArchivoRuta::baseDir(), $nombre);
         }
         
         Flash::success('¡RUTA ACTUALIZADA CORRECTAMENTE!');

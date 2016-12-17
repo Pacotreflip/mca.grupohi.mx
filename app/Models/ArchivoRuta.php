@@ -18,11 +18,11 @@ class ArchivoRuta extends Model
         return $this->belongsTo(Ruta::class, 'IdRuta');
     }
     
-    public function baseDir() {
+    public static function baseDir() {
         return 'uploads/archivos_rutas';
     }
     
-    public function creaNombre(UploadedFile $file, Ruta $ruta) {
+    public static function creaNombre(UploadedFile $file, Ruta $ruta) {
         $name = $ruta->IdRuta;
         $extesion = $file->getClientOriginalExtension();
         return "{$name}.{$extesion}";        
