@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\EmpresaPresenter;
+use App\Presenters\ModelPresenter;
 
 class Empresa extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'empresas';
@@ -18,7 +17,7 @@ class Empresa extends Model
         'RFC',
         'Estatus'
     ];
-    protected $presenter = EmpresaPresenter::class;
+    protected $presenter = ModelPresenter::class;
     public $timestamps = false;
     
     public function camiones() {

@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\TiroPresenter;
+use App\Presenters\ModelPresenter;
 
 class Tiro extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'tiros';
     protected $primaryKey = 'IdTiro';
     protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta', 'Estatus'];
-    protected $presenter = TiroPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

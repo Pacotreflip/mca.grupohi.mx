@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ $ruta->present()->clave }}
+<h1>{{ $ruta->present()->claveRuta }}
     <a href="{{ route('rutas.edit', $ruta) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
     <a href="{{ route('rutas.destroy', $ruta) }}" class="btn pull-right rutas_destroy {{ $ruta->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $ruta->Estatus == 1 ? 'fa-close' : 'fa-plus' }}"></i> {{ $ruta->Estatus == 1 ? trans('strings.delete') : trans('strings.activate') }}</a>
 </h1>

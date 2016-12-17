@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\MarcaPresenter;
+use App\Presenters\ModelPresenter;
 
 class Marca extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'marcas';
     protected $primaryKey = 'IdMarca';
     protected $fillable = ['Descripcion', 'Estatus'];
-    protected $presenter = MarcaPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

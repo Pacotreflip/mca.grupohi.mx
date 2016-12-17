@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\CronometriaPresenter;
+use App\Presenters\ModelPresenter;
 
 class Cronometria extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'cronometrias';
@@ -22,7 +21,7 @@ class Cronometria extends Model
         'Registra', 
         'Estatus'
     ];
-    protected $presenter = CronometriaPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

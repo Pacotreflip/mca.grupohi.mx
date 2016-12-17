@@ -33,7 +33,7 @@
       @foreach($rutas as $ruta)
         <tr>
           <td>
-            <a href="{{ route('rutas.show', $ruta) }}">{{ $ruta->present()->clave }}</a>
+            <a href="{{ route('rutas.show', $ruta) }}">{{ $ruta->present()->claveRuta }}</a>
           </td>
           <td>{{ $ruta->origen->Descripcion }}</td>
           <td>{{ $ruta->tiro->Descripcion }}</td>
@@ -44,7 +44,7 @@
           <td>{{ $ruta->TotalKM . ' km' }}</td>
           <td>{{ $ruta->cronometria->TiempoMinimo }}</td>
           <td>{{ $ruta->cronometria->Tolerancia }}</td>
-          <td>{{ $ruta->present()->fechaYHora }}</td>
+          <td>{{ $ruta->present()->fechaYHoraRuta }}</td>
           <td>
               {!! link_to_route('rutas.edit', 'EDITAR', [$ruta], ['class' => 'btn btn-warning btn-sm']) !!}
               {!! link_to_route('rutas.destroy', ($ruta->Estatus == 1 ? 'ELIMINAR' : 'ACTIVAR'), [$ruta], ['class' => 'btn ' . ($ruta->Estatus == 1 ? 'btn-danger' : 'btn-success') . ' btn-sm rutas_destroy '.($ruta->Estatus == 1 ? 'activo' : 'inactivo')]) !!}

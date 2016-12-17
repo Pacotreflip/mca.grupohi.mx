@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\RutaPresenter;
+use App\Presenters\ModelPresenter;
 
 class Ruta extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'rutas';
@@ -27,7 +26,7 @@ class Ruta extends Model
         'HoraAlta', 
         'Estatus'
         ];
-    protected $presenter = RutaPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

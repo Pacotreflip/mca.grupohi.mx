@@ -21,7 +21,7 @@
       @foreach($origenes as $origen)
         <tr>
           <td>
-            <a href="{{ route('origenes.show', $origen) }}">{{ $origen->present()->clave }}</a>
+            <a href="{{ route('origenes.show', $origen) }}">{{ $origen->present()->claveOrigen }}</a>
           </td>
           <td>{{ $origen->tipoOrigen->Descripcion }}</td>
           <td>{{ $origen->Descripcion }}</td>

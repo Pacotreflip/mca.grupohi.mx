@@ -7,7 +7,7 @@
 @include('partials.errors')
 
 {!! Form::model($camion, ['method' => 'PATCH', 'route' => ['camiones.update', $camion], 'files' => true, 'id' => 'edit_camion']) !!}
-<div class="id_camion" id='{{$camion->IdCamion}}'></div>
+<div class="id_camion" id='{{ $camion->IdCamion }}'></div>
 <div class="form-horizontal col-md-10 col-md-offset-1 rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>

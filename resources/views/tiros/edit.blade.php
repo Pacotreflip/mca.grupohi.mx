@@ -12,7 +12,7 @@
     <div class="form-group">
         {!! Form::label('Clave', 'Clave', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::text('Clave', $tiro->present()->clave, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+            {!! Form::text('Clave', $tiro->present()->claveTiro, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
      <div class="form-group">

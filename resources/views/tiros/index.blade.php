@@ -20,7 +20,7 @@
       @foreach($tiros as $tiro)
         <tr>
           <td>
-            <a href="{{ route('tiros.show', $tiro) }}">{{ $tiro->present()->clave }}</a>
+            <a href="{{ route('tiros.show', $tiro) }}">{{ $tiro->present()->claveTiro }}</a>
           </td>
           <td>{{ $tiro->Descripcion }}</td>
           <td>{{ $tiro->present()->estatus }}</td>

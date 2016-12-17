@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\CamionPresenter;
-use Laracasts\Presenter\PresentableTrait;
+use App\Presenters\ModelPresenter;
 
 class Camion extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'camiones';
@@ -40,7 +39,7 @@ class Camion extends Model
         'IdEmpresa',
         'Disminucion'
     ];
-    protected $presenter = CamionPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

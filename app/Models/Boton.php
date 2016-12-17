@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\BotonPresenter;
+use App\Presenters\ModelPresenter;
 
 class Boton extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'botones';
     protected $primaryKey = 'IdBoton';
     protected $fillable = ['IdProyecto', 'Identificador', 'TipoBoton', 'Estatus'];
-    protected $presenter = BotonPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

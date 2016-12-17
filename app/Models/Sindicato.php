@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\SindicatoPresenter;
+use App\Presenters\ModelPresenter;
 
 class Sindicato extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'sindicatos';
     protected $primaryKey = 'IdSindicato';
     protected $fillable = ['Descripcion', 'NombreCorto', 'Estatus'];
-    protected $presenter = SindicatoPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

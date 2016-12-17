@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ $camion->present()->datos }}
+<h1>{{ $camion->present()->datosCamion }}
     <a href="{{ route('camiones.edit', $camion) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
     <a href="{{ route('camiones.destroy', $camion) }}" class="btn pull-right camiones_destroy {{ $camion->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $camion->Estatus == 1 ? 'fa-close' : 'fa-plus' }}"></i> {{ $camion->Estatus == 1 ? trans('strings.delete') : trans('strings.activate') }}</a>
 </h1>
@@ -67,7 +67,7 @@
         <div class="form-group">
             @if($camion->imagenes->count() > 0)
             @foreach($camion->imagenes as $imagen)
-            {!! Form::label($imagen->present()->tipo, $imagen->present()->tipo, ['class' => 'control-label col-sm-1']) !!}
+            {!! Form::label($imagen->present()->tipoImagen, $imagen->present()->tipoImagen, ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
                 <a class="btn btn-info col-md-12"  href="{{ URL::to('/').'/'.$imagen->Ruta }}" target="blank">
                     <i class="fa fa-file-image-o"></i> VER IMAGEN                  

@@ -31626,8 +31626,8 @@ $(document).ready(function () {
 
     //EDIT
     if ($('#edit_camion').length) {
-        div = $('div.id_camion');
-        id_camion = div.attr('id');
+        var div = $('div.id_camion');
+        var id_camion = div.attr('id');
         $.ajax({
             type: 'GET',
             url: App.host + '/camion/' + id_camion + '/imagenes',

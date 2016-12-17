@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\OrigenPresenter;
+use App\Presenters\ModelPresenter;
 
 class Origen extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'origenes';
     protected $primaryKey = 'IdOrigen';
     protected $fillable = ['IdTipoOrigen', 'IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta', 'Estatus'];
-    protected $presenter = OrigenPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

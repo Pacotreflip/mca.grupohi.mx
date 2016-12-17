@@ -113,7 +113,7 @@ Breadcrumbs::register('rutas.index', function($breadcrumbs){
 
 Breadcrumbs::register('rutas.show', function($breadcrumbs, $ruta){
     $breadcrumbs->parent('rutas.index');
-    $breadcrumbs->push(strtoupper($ruta->present()->clave), route('rutas.show', $ruta));
+    $breadcrumbs->push(strtoupper($ruta->present()->claveRuta), route('rutas.show', $ruta));
 });
 
 Breadcrumbs::register('rutas.create', function($breadcrumbs){
@@ -134,7 +134,7 @@ Breadcrumbs::register('camiones.index', function($breadcrumbs){
 
 Breadcrumbs::register('camiones.show', function($breadcrumbs, $camion){
     $breadcrumbs->parent('camiones.index');
-    $breadcrumbs->push($camion->present()->datos, route('camiones.show', $camion));
+    $breadcrumbs->push($camion->present()->datosCamion, route('camiones.show', $camion));
 });
 
 Breadcrumbs::register('camiones.create', function($breadcrumbs){

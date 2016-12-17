@@ -3,12 +3,11 @@
 namespace App\Models\Tarifas;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\TarifaPesoPresenter;
+use App\Presenters\ModelPresenter;
 
 class TarifaPeso extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'tarifas_peso';
@@ -22,7 +21,7 @@ class TarifaPeso extends Model
         'Fecha_Hora_Registra', 
         'Registra'
     ];
-    protected $presenter = TarifaPesoPresenter::class;
+    protected $presenter = ModelPresenter::class;
     public $timestamps = false;
     public function material() {
         return $this->belongsTo(\App\Models\Material::class, 'IdMaterial');

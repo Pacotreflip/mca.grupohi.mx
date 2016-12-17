@@ -3,19 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\ImagenCamionPresenter;
+use App\Presenters\ModelPresenter;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class ImagenCamion extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'camiones_imagenes';
     protected $primaryKey = 'Ruta';
     protected $fillable = ['IdCamion', 'TipoC', 'Tipo', 'Ruta'];
-    protected $presenter = ImagenCamionPresenter::class;
+    protected $presenter = ModelPresenter::class;
    
     public $timestamps = false;
     
@@ -23,11 +22,11 @@ class ImagenCamion extends Model
         return $this->belongsTo(Camion::class, 'IdCamion');
     }
     
-    public function baseDir() {
+    public static function baseDir() {
         return 'uploads/imagenes_camiones';
     }
     
-    public function creaNombre(UploadedFile $file, Camion $camion, $tipo) {
+    public static function creaNombre(UploadedFile $file, Camion $camion, $tipo) {
         $name = $camion->IdCamion . $tipo;
         $extesion = $file->getClientOriginalExtension();
         return "{$name}.{$extesion}";        

@@ -127,20 +127,31 @@ class CamionesController extends Controller
         $camion->update($request->all());    
         
         foreach($request->file() as $key => $file) {
-            $tipo = $key == 'Frente' ? 'f' : ($key == 'Derecha' ? 'd' : ($key == 'Atras' ? 't' : ($key == 'Izquierda' ? 'i' : '')));
-            $imagen = ImagenCamion::firstOrCreate([
+            $tipo = $file->getClientMimeType();
+            $tipoC = $key == 'Frente' ? 'f' : ($key == 'Derecha' ? 'd' : ($key == 'Atras' ? 't' : ($key == 'Izquierda' ? 'i' : '')));
+            $nombre = ImagenCamion::creaNombre($file, $camion, $key);
+            $ruta = ImagenCamion::baseDir().'/'.$nombre;
+
+            $imagen = ImagenCamion::where([
                 'IdCamion' => $camion->IdCamion,
-                'TipoC' => $tipo]);
+                'TipoC' => $tipoC])->first();
+            if($imagen) {
+                $imagen->Tipo = $tipo;
+                $imagen->Ruta = $ruta;
+                $imagen->save();
+            } else {
+                $imagen = ImagenCamion::create([
+                    'IdCamion' => $camion->IdCamion,
+                    'TipoC' => $tipoC,
+                    'Tipo' => $tipo,
+                    'Ruta' => $ruta
+                ]);
+            }
+            
             if(Storage::disk('uploads')->has($imagen->Ruta)) {
                 Storage::disk('uploads')->delete($imagen->Ruta);
             }
-            $nombre = $imagen->creaNombre($file, $camion, $key);
-            $file->move($imagen->baseDir(), $nombre);
-            $imagen->IdCamion = $camion->IdCamion;
-            $imagen->TipoC = $tipo;
-            $imagen->Tipo = $file->getClientMimeType();
-            $imagen->Ruta = $imagen->baseDir().'/'.$nombre;
-            $imagen->save();
+            $file->move(ImagenCamion::baseDir(), $nombre);
         }
         
         Flash::success('¡CAMIÓN ACTUALIZADO CORRECTAMENTE!');

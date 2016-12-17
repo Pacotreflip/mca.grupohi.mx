@@ -3,20 +3,18 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Models\ProyectoLocal;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\MaterialPresenter;
+use App\Presenters\ModelPresenter;
 
 
 class Material extends Model 
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'materiales';
     protected $primaryKey = 'IdMaterial';
     protected $fillable = ['IdTipoMaterial', 'IdProyecto', 'Descripcion', 'Estatus'];
-    protected $presenter = MaterialPresenter::class;
+    protected $presenter = ModelPresenter::class;
 
     public $timestamps = false;
     

@@ -3,12 +3,11 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Presenters\CentroCostoPresenter;
-use Laracasts\Presenter\PresentableTrait;
+use App\Presenters\ModelPresenter;
 
 class CentroCosto extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
     
     protected $connection = 'sca';
     protected $table = 'centroscosto';
@@ -21,7 +20,7 @@ class CentroCosto extends Model
         'IdPadre', 
         'Cuenta'
     ];
-    protected $presenter = CentroCostoPresenter::class;
+    protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;
     

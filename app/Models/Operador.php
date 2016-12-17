@@ -3,11 +3,12 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Laracasts\Presenter\PresentableTrait;
-use App\Presenters\OperadorPresenter;
+use App\Presenters\ModelPresenter;
+
 class Operador extends Model
 {
-    use PresentableTrait;
+    use \Laracasts\Presenter\PresentableTrait;
+    
     protected $connection = 'sca';
     protected $table = 'operadores';
     protected $primaryKey = 'IdOperador';
@@ -20,8 +21,8 @@ class Operador extends Model
         'FechaAlta', 
         'Estatus'
     ];
-    protected $presenter = OperadorPresenter::class;
-    
+    protected $presenter = ModelPresenter::class;
+
     public $timestamps = false;
     
     public function camiones() {
