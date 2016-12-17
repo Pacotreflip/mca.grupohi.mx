@@ -5,6 +5,14 @@ $(document).ready(function(){
             event.preventDefault();
             showModal($(this).attr('href'));  
         });
+        $(document).on('click', '.centrocosto_store', function(event){
+            event.preventDefault();
+            storeCentroCosto();
+        });
+        $(document).on('click', '.centrocosto_update', function(event){
+            event.preventDefault();
+            updateCentroCosto();
+        });
         $(document).on('click', '.centrocosto_edit', function(event){
             event.preventDefault();
             showModal($(this).attr('href'));  

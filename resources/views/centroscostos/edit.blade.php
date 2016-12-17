@@ -24,7 +24,7 @@
       <div class="row" id="errores"></div>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-success" onclick="updateCentroCosto(this)">Actualizar</button>
+        <button type="button" class="btn btn-success centrocosto_update">Actualizar</button>
       <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
     </div>
     {!! Form::close() !!}
