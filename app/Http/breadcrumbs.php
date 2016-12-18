@@ -221,3 +221,7 @@ Breadcrumbs::register('empresas.edit', function($breadcrumbs, $empresa){
 Breadcrumbs::register('fda_banco_material.index', function($breadcrumbs) {
     $breadcrumbs->push('BANCO - MATERIAL', route('fda_banco_material.index'));
 });
+
+Breadcrumbs::register('fda_material.index', function($breadcrumbs) {
+    $breadcrumbs->push('MATERIAL', route('fda_material.index'));    
+});

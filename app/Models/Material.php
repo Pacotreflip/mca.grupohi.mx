@@ -35,4 +35,8 @@ class Material extends Model
     public function fdaBancoMaterial() {
         return $this->hasMany(FDA\FDABancoMaterial::class, 'IdMaterial');
     }
+    
+    public function fdaMaterial() {
+        return $this->hasMany(FactoresAbundamiento\FDAMaterial::class, 'IdMaterial');
+    }
 }

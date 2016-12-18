@@ -32459,8 +32459,9 @@ require('./vue-components/global-errors');
 require('./vue-components/errors');
 require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
+require('./vue-components/fda-material');
 
-},{"./vue-components/errors":35,"./vue-components/fda-bancomaterial":36,"./vue-components/global-errors":37,"./vue-components/origenes-usuarios":38}],35:[function(require,module,exports){
+},{"./vue-components/errors":35,"./vue-components/fda-bancomaterial":36,"./vue-components/fda-material":37,"./vue-components/global-errors":38,"./vue-components/origenes-usuarios":39}],35:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32469,7 +32470,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":39}],36:[function(require,module,exports){
+},{"./templates/errors.html":40}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -32578,6 +32579,95 @@ Vue.component('fda-bancomaterial', {
 },{}],37:[function(require,module,exports){
 'use strict';
 
+Vue.component('fda-material', {
+    data: function data() {
+        return {
+            factores: [],
+            materiales: [],
+            factor: {
+                IdMaterial: '',
+                FactorAbundamiento: ''
+            },
+            form: {
+                errors: []
+            },
+            guardando: false
+        };
+    },
+
+    created: function created() {
+        this.fetchMateriales();
+        this.fetchFactores();
+    },
+
+    methods: {
+        fetchMateriales: function fetchMateriales() {
+            var _this = this;
+
+            this.$http.get('materiales').then(function (response) {
+                _this.materiales = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this.form, response.body);
+            });
+        },
+        fetchFactores: function fetchFactores() {
+            var _this2 = this;
+
+            this.$http.get('fda_material').then(function (response) {
+                _this2.factores = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this2.form, response.body);
+            });
+        },
+        guardar: function guardar() {
+            var _this3 = this;
+
+            this.guardando = true;
+            this.form.errors = [];
+            this.$http.post('fda_material', this.factor).then(function (response) {
+                if (response.body.success) {
+                    swal({
+                        type: 'success',
+                        title: '',
+                        text: response.body.message,
+                        timer: 1000,
+                        showConfirmButton: false
+                    });
+                    _this3.fetchFactores();
+                    _this3.guardando = false;
+                }
+            }, function (response) {
+                _this3.guardando = false;
+                App.setErrorsOnForm(_this3.form, response.body);
+            });
+        },
+        actualizar: function actualizar(factor) {
+            var _this4 = this;
+
+            factor.guardando = true;
+            this.form.errores = [];
+            this.$http.post('fda_material', factor).then(function (response) {
+                if (response.body.success) {
+                    swal({
+                        type: 'success',
+                        title: '',
+                        text: response.body.message,
+                        timer: 1000,
+                        showConfirmButton: false
+                    });
+                }
+                factor.guardando = false;
+            }, function (response) {
+                factor.guardando = false;
+                App.setErrorsOnForm(_this4.form, response.body);
+            });
+        }
+    }
+});
+
+},{}],38:[function(require,module,exports){
+'use strict';
+
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
 Vue.component('global-errors', {
@@ -32601,7 +32691,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":40}],38:[function(require,module,exports){
+},{"./templates/global-errors.html":41}],39:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -32676,11 +32766,11 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":41}],39:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":42}],40:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],40:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],41:[function(require,module,exports){
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
+},{}],42:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >Seleccione un Usuario...</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
 },{}]},{},[21]);
 

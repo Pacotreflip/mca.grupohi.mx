@@ -63,11 +63,11 @@ class FDABancoMaterialController extends Controller
     {
         $factor = FDABancoMaterial::find([$request->get('IdMaterial'), $request->get('IdBanco')]);
         if($factor){
-            $factor->update(array_merge($request->all(), ['Registra' => auth()->user()->idusuario]));
+            $factor->update(array_merge($request->all(), ['Registra' => auth()->user()->usuario]));
             $msg = '¡FACTOR DE ABUNDAMIENTO ACTUALIZADO CORRECTAMENTE!';
             
         } else {
-            FDABancoMaterial::create(array_merge($request->all(), ['Registra' => auth()->user()->idusuario]));
+            FDABancoMaterial::create(array_merge($request->all(), ['Registra' => auth()->user()->usuario]));
             $msg = '¡FACTOR DE ABUNDAMIENTO REGISTRADO CORRECTAMENTE!';
         }
         

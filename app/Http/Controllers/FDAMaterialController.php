@@ -6,17 +6,40 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use App\Models\FDA\FDAMaterial;
+use Carbon\Carbon;
 
 class FDAMaterialController extends Controller
 {
+    
+    function __construct() {
+        $this->middleware('auth');
+        $this->middleware('context');
+       
+        parent::__construct();
+    }
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        if($request->ajax()) {
+            $factores = FDAMaterial::all();
+            $data = [];
+            foreach($factores as $factor) {
+                $data[] = [
+                    'IdMaterial' => $factor->material->IdMaterial,
+                    'material' => ['Descripcion' => $factor->material->Descripcion],
+                    'FactorAbundamiento' => $factor->FactorAbundamiento,
+                    'Cargando' => false
+                ];
+            }
+            return response()->json($data);
+        } 
+        return view('fda.material.index');
     }
 
     /**
@@ -35,9 +58,27 @@ class FDAMaterialController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateFDAMaterialRequest $request)
     {
-        //
+        $factor = FDAMaterial::where(['IdMaterial' => $request->get('IdMaterial')])->first();
+        $extra = [
+            'Registra' => auth()->user()->usuario,
+            'FechaAlta' => Carbon::now()->toDateString(),
+            'HoraAlta' => Carbon::now()->toTimeString()
+        ];
+        if($factor){
+            $factor->update(array_merge($request->all(), $extra));
+            $msg = '¡FACTOR DE ABUNDAMIENTO ACTUALIZADO CORRECTAMENTE!';
+            
+        } else {
+            FDABancoMaterial::create(array_merge($request->all(), $extra));
+            $msg = '¡FACTOR DE ABUNDAMIENTO REGISTRADO CORRECTAMENTE!';
+        }
+        
+        return response()->json([
+            'success' => true,
+            'message' => $msg
+        ]);    
     }
 
     /**
