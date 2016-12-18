@@ -16,6 +16,13 @@
         <li><a href="{{ route('centroscostos.index') }}">{{ trans('strings.centroscostos') }}</a></li>
         <li><a href="{{ route('camiones.index') }}">{{ trans('strings.camiones') }}</a></li>
         <li><a href="{{ route('empresas.index') }}">{{ trans('strings.empresas') }}</a></li>
+        <li class="dropdown-submenu">
+            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Factores de Abundamiento</a>
+            <ul class="dropdown-menu">
+                <li><a tabindex="-1" href="{{ route('fda_material.index') }}">Por Material</a></li>
+                <li><a tabindex="-1" href="{{ route('fda_banco_material.index') }}">Por Banco y Material</a></li>
+            </ul>
+        </li>
         <li><a href="{{ route('marcas.index') }}">{{ trans('strings.brands') }}</a></li>
         <li><a href="{{ route('materiales.index') }}">{{ trans('strings.materials') }}</a></li>
         <li><a href="{{ route('operadores.index') }}">{{ trans('strings.operadores') }}</a></li>
