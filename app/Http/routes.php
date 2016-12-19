@@ -56,6 +56,7 @@ Route::resource('operadores', 'OperadoresController');
 Route::resource('empresas', 'EmpresasController');
 Route::resource('fda_material', 'FDAMaterialController');
 Route::resource('fda_banco_material', 'FDABancoMaterialController');
+Route::resource('etapas', 'EtapasController');
 
 //Rutas de centros de costo
 Route::get('centroscostos', 'CentrosCostosController@index')->name('centroscostos.index');
@@ -65,6 +66,7 @@ Route::get('centroscostos/{centroscostos}/edit', 'CentrosCostosController@edit')
 Route::patch('centroscostos/{centroscostos}', 'CentrosCostosController@update')->name('centroscostos.update');
 Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy')->name('centroscostos.destroy');
 
+//Rutas de Origenes por Usuario
 Route::get('usuarios/{usuarios}/origenes', 'OrigenesUsuariosController@index');
 Route::post('usuarios/{usuarios}/origenes/{origenes}', 'OrigenesUsuariosController@store');
 Route::get('usuarios', 'UserController@index');

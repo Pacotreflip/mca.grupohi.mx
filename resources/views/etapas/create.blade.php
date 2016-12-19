@@ -1,12 +1,12 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.edit')) }}</h1>
-{!! Breadcrumbs::render('marcas.edit', $marca) !!}
+<h1>NUEVA ETAPA</h1>
+{!! Breadcrumbs::render('etapas.create') !!}
 <hr>
 @include('partials.errors')
 
-{!! Form::model($marca, ['method' => 'PATCH', 'route' => ['marcas.update', $marca]]) !!}
+{!! Form::open(['route' => 'etapas.store']) !!}
 
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <div class="form-group">
@@ -18,13 +18,14 @@
     <div class="form-group">
         {!! Form::label('Estatus', 'Estatus', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], null, ['placeholder' => 'Seleccione un Estatus...', 'class' => 'form-control']) !!}
+            {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], '1', ['placeholder' => 'Seleccione un Estatus...', 'class' => 'form-control']) !!}
         </div>
     </div>
 </div>
 <div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
     <a class="btn btn-info" href="{{ URL::previous() }}">Regresar</a>        
-    {!! Form::submit('Actualizar', ['class' => 'btn btn-primary']) !!}
+    {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
 </div>
+
 {!! Form::close() !!}
 @stop

@@ -9,3 +9,4 @@ require('./scripts/rutas');
 require('./scripts/sindicatos');
 require('./scripts/tarifas');
 require('./scripts/tiros');
+require('./scripts/etapas');

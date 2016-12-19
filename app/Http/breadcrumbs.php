@@ -225,3 +225,23 @@ Breadcrumbs::register('fda_banco_material.index', function($breadcrumbs) {
 Breadcrumbs::register('fda_material.index', function($breadcrumbs) {
     $breadcrumbs->push('MATERIAL', route('fda_material.index'));    
 });
+
+//Etapas de Proyecto
+Breadcrumbs::register('etapas.index', function($breadcrumbs) {
+    $breadcrumbs->push('ETAPAS DE PROYECTO', route('etapas.index'));
+});
+
+Breadcrumbs::register('etapas.create', function($breadcrumbs) {
+    $breadcrumbs->parent('etapas.index');
+    $breadcrumbs->push('NUEVA ETAPA', route('etapas.create'));
+});
+
+Breadcrumbs::register('etapas.show', function($breadcrumbs, $etapa) {
+    $breadcrumbs->parent('etapas.index');
+    $breadcrumbs->push(strtoupper($etapa->Descripcion), route('etapas.show', $etapa));
+});
+
+Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
+    $breadcrumbs->parent('etapas.show', $etapa);
+    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('etapas.edit', $etapa));
+});

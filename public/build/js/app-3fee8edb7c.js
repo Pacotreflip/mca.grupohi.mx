@@ -31583,7 +31583,7 @@ if ($('#app').length) {
     });
 }
 
-},{"./scripts":22,"./vue-components":34,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
+},{"./scripts":22,"./vue-components":35,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
 'use strict';
 
 require('./scripts/camiones');
@@ -31597,8 +31597,9 @@ require('./scripts/rutas');
 require('./scripts/sindicatos');
 require('./scripts/tarifas');
 require('./scripts/tiros');
+require('./scripts/etapas');
 
-},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/empresas":25,"./scripts/globales":26,"./scripts/marcas":27,"./scripts/materiales":28,"./scripts/origenes":29,"./scripts/rutas":30,"./scripts/sindicatos":31,"./scripts/tarifas":32,"./scripts/tiros":33}],23:[function(require,module,exports){
+},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/empresas":25,"./scripts/etapas":26,"./scripts/globales":27,"./scripts/marcas":28,"./scripts/materiales":29,"./scripts/origenes":30,"./scripts/rutas":31,"./scripts/sindicatos":32,"./scripts/tarifas":33,"./scripts/tiros":34}],23:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32020,6 +32021,45 @@ $(".empresas_destroy").off().on("click", function (event) {
 });
 
 },{}],26:[function(require,module,exports){
+"use strict";
+
+$(".etapas_destroy").off().on("click", function (event) {
+    var btn = $(this);
+    event.preventDefault();
+    swal({
+        title: "¿Estás seguro?",
+        text: "¡Se eliminará la etapa y no podra recuperarla!",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Si, ¡Eliminar!",
+        closeOnConfirm: false
+    }, function () {
+        $.ajax({
+            url: btn.attr('href'),
+            type: 'POST',
+            data: { _method: 'delete', _token: App.csrfToken },
+            success: function success(response) {
+                if (response.success) {
+                    swal({
+                        title: "¡Etapa Eliminada!",
+                        type: "success",
+                        confirmButtonText: "OK",
+                        closeOnConfirm: false }, function () {
+                        window.location.href = response.url;
+                    });
+                } else {
+                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
+                }
+            },
+            error: function error() {
+                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
+            }
+        });
+    });
+});
+
+},{}],27:[function(require,module,exports){
 'use strict';
 
 $(function () {
@@ -32038,7 +32078,7 @@ $('.vigencia').datepicker({
     todayHighlight: true
 });
 
-},{}],27:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 $(".marcas_destroy").off().on("click", function (event) {
@@ -32077,7 +32117,7 @@ $(".marcas_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],28:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 $(".materiales_destroy").off().on("click", function (event) {
@@ -32116,7 +32156,7 @@ $(".materiales_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],29:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 $(".origenes_destroy").off().on("click", function (event) {
@@ -32155,7 +32195,7 @@ $(".origenes_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],30:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32320,7 +32360,7 @@ $(document).ready(function () {
     });
 });
 
-},{}],31:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 $(".sindicatos_destroy").off().on("click", function (event) {
@@ -32359,7 +32399,7 @@ $(".sindicatos_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],32:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32413,7 +32453,7 @@ $(document).ready(function () {
     }
 });
 
-},{}],33:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 
 $(".tiros_destroy").off().on("click", function (event) {
@@ -32452,7 +32492,7 @@ $(".tiros_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 require('./vue-components/global-errors');
@@ -32461,7 +32501,7 @@ require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
 
-},{"./vue-components/errors":35,"./vue-components/fda-bancomaterial":36,"./vue-components/fda-material":37,"./vue-components/global-errors":38,"./vue-components/origenes-usuarios":39}],35:[function(require,module,exports){
+},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32470,7 +32510,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":40}],36:[function(require,module,exports){
+},{"./templates/errors.html":41}],37:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -32576,7 +32616,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -32665,7 +32705,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32691,7 +32731,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":41}],39:[function(require,module,exports){
+},{"./templates/global-errors.html":42}],40:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -32766,11 +32806,11 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":42}],40:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":43}],41:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],41:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],42:[function(require,module,exports){
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
+},{}],43:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >Seleccione un Usuario...</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
 },{}]},{},[21]);
 

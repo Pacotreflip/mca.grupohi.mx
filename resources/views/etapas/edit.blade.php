@@ -2,11 +2,11 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.edit')) }}</h1>
-{!! Breadcrumbs::render('marcas.edit', $marca) !!}
+{!! Breadcrumbs::render('etapas.edit', $etapa) !!}
 <hr>
 @include('partials.errors')
 
-{!! Form::model($marca, ['method' => 'PATCH', 'route' => ['marcas.update', $marca]]) !!}
+{!! Form::model($etapa, ['method' => 'PATCH', 'route' => ['etapas.update', $etapa]]) !!}
 
 <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
     <div class="form-group">
