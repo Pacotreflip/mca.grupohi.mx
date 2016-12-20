@@ -26,8 +26,12 @@ class TirosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        dd($request->all());
+        if($request->ajax()) {
+            return response()->json(Tiro::all()->toArray());
+        }
         return view('tiros.index')
                 ->withTiros(Tiro::all());
     }

@@ -6,11 +6,11 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-use App\Models\Material;
-use Laracasts\Flash\Flash;
+use Carbon\Carbon;
+use App\Models\Ruta;
 use App\Models\ProyectoLocal;
 
-class MaterialesController extends Controller
+class ViajesNetosController extends Controller
 {
     
     function __construct() {
@@ -19,20 +19,15 @@ class MaterialesController extends Controller
        
         parent::__construct();
     }
-
+    
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(Request $request)
+    public function index()
     {
-        if($request->ajax()) {
-            return response()->json(Material::all()->toArray());
-        }
-        
-        return view('materiales.index')
-                ->withMateriales($materiales);
+        return view('viajesnetos.index');
     }
 
     /**
@@ -42,7 +37,7 @@ class MaterialesController extends Controller
      */
     public function create()
     {
-        return view('materiales.create');
+        return view('viajesnetos.create');
     }
 
     /**
@@ -51,14 +46,32 @@ class MaterialesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Requests\CreateMaterialRequest $request)
+    public function store(Requests\CreateViajeNetoRequest $request)
     {
-        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
-        $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
-        $material = Material::create($request->all());
+        $ruta = Ruta::where('IdOrigen', $request->get('IdOrigen'))
+                ->where('IdTiro', $request->get('IdTiro'))
+                ->first();
+        $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $request->get('FechaLlegada').' '.$request->get('HoraLlegada'))
+                ->subMinutes($ruta->cronometria->TiempoMinimo); 
         
-        Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
+        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+        $extra = [
+            'FechaCarga' => Carbon::now()->toDateString(),
+            'HoraCarga' => Carbon::now()->toTimeString(),
+            'FechaSalida' => $fecha_salida->toDateString(),
+            'HoraSalida' => $fecha_salida->toTimeString(),
+            'IdProyecto' => $proyecto_local->IdProyecto,
+            'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
+            'Estatus' => 29,
+            
+        ];
+        
+        \App\Models\ViajeNeto::create(array_merge($request->all(), $extra));
+        
+        return response()->json([
+            'success' => true,
+            'message' => '¡VIAJE REGISTRADO CORRECTAMENTE!'
+        ]);
     }
 
     /**
@@ -69,8 +82,7 @@ class MaterialesController extends Controller
      */
     public function show($id)
     {
-        return view('materiales.show')
-                ->withMaterial(Material::findOrFail($id));
+        //
     }
 
     /**
@@ -81,8 +93,7 @@ class MaterialesController extends Controller
      */
     public function edit($id)
     {
-        return view('materiales.edit')
-                ->withMaterial(Material::findOrFail($id));
+        //
     }
 
     /**
@@ -92,13 +103,9 @@ class MaterialesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\EditMaterialRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $material = Material::findOrFail($id);
-        $material->update($request->all());
-        
-        Flash::success('¡MATERIAL ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
+        //
     }
 
     /**
@@ -109,11 +116,6 @@ class MaterialesController extends Controller
      */
     public function destroy($id)
     {
-        Material::findOrFail($id);
-        Material::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('materiales.index')
-            ]);
+        //
     }
 }

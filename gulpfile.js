@@ -30,5 +30,5 @@ elixir(function(mix) {
             .version([
                 'public/css/app.css',
                 'public/js/app.js'
-            ]);
+        ]);
 });

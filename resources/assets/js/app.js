@@ -12,10 +12,11 @@ require('./scripts');
 window.Vue = require('vue/dist/vue.js');
 require('vue-resource');
 Vue.http.headers.common['X-CSRF-TOKEN'] = App.csrfToken;
-
+//require('./vue-directives');
 if ($('#app').length) {
     new Vue({
         el: '#app',
         components: require('./vue-components')
     });   
+    
 }

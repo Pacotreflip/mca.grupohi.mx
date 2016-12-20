@@ -12,7 +12,7 @@
     <div class="form-group">
         {!! Form::label('Tipo', 'Tipo de Origen', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::select('IdTipoOrigen', $tipos, null, ['placeholder' => 'Seleccione un Tipo...', 'class' => 'form-control']) !!}
+            {!! Form::select('IdTipoOrigen', $tipos, null, ['placeholder' => '--SELECCIONE--', 'class' => 'form-control']) !!}
         </div>
     </div>
     <div class="form-group">
@@ -24,7 +24,7 @@
     <div class="form-group">
         {!! Form::label('Estatus', 'Estatus', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], '1', ['placeholder' => 'Seleccione un Estatus...', 'class' => 'form-control']) !!}
+            {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], '1', ['placeholder' => '--SELECCIONE--', 'class' => 'form-control']) !!}
         </div>
     </div>
 </div>

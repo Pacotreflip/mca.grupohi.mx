@@ -40,4 +40,12 @@ class Origen extends Model
     public function fdaBancoMaterial() {
         return $this->hasMany(FDA\FDABancoMaterial::class, 'IdBanco', 'IdOrigen');
     }
+    
+    public function viajesNetos() {
+        return $this->hasMany(ViajeNeto::class, 'IdOrigen');
+    }
+    
+    public function tiros() {
+        return $this->belongsToMany(Tiro::class, 'rutas', 'IdOrigen', 'IdTiro');
+    }
 }

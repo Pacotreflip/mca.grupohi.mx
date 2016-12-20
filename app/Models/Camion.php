@@ -74,4 +74,8 @@ class Camion extends Model
     public function getVigenciaPolizaSeguroAttribute() {        
         return $this->attributes['VigenciaPolizaSeguro'] != '0000-00-00' ? $this->attributes['VigenciaPolizaSeguro'] : '';    
     }
+    
+    public function viajesNetos() {
+        return $this->hasMany(ViajeNeto::class, 'IdCamion');
+    }
 }

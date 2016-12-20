@@ -13,11 +13,11 @@
         <div class="form-group">
             {!! Form::label('IdSindicato', 'Sindicato', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-5">
-                {!! Form::select('IdSindicato', $sindicatos, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione un Sindicato...']) !!}
+                {!! Form::select('IdSindicato', $sindicatos, null,  ['class' => 'form-control', 'placeholder' => '--SELECCIONE--']) !!}
             </div>
             {!! Form::label('IdEmpresa', 'Empresa', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-5">
-                {!! Form::select('IdEmpresa', $empresas, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione una Empresa...']) !!}
+                {!! Form::select('IdEmpresa', $empresas, null,  ['class' => 'form-control', 'placeholder' => '--SELECCIONE--']) !!}
             </div>
         </div>
         <div class="form-group">
@@ -27,7 +27,7 @@
             </div>
             {!! Form::label('IdOperador','Operador', ['class' => 'control-label col-sm-1'])  !!}
             <div class="col-sm-5">
-                {!! Form::select('IdOperador', $operadores, null,  ['class' => 'form-control', 'placeholder' => 'Seleccione un Operador...']) !!}
+                {!! Form::select('IdOperador', $operadores, null,  ['class' => 'form-control', 'placeholder' => '--SELECCIONE--']) !!}
             </div>
         </div>
         <div class="form-group">
@@ -47,7 +47,7 @@
         <div class="form-group">
             {!! Form::label('IdMarca', 'Marca', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-3">
-                {!! Form::select('IdMarca', $marcas, null, ['class' => 'form-control', 'placeholder' => 'Seleccione una Marca...']) !!}  
+                {!! Form::select('IdMarca', $marcas, null, ['class' => 'form-control', 'placeholder' => '--SELECCIONE--']) !!}  
             </div>
             {!! Form::label('Modelo', 'Modelo', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-3">
@@ -55,7 +55,7 @@
             </div>
             {!! Form::label('IdBoton', 'Dispositivo', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-3">
-                {!! Form::select('IdBoton', $botones, null, ['class' => 'form-control' , 'placeholder' => 'Seleccione un Dispositivo...']) !!}  
+                {!! Form::select('IdBoton', $botones, null, ['class' => 'form-control' , 'placeholder' => '--SELECCIONE--']) !!}  
             </div>
         </div>
     </fieldset>
@@ -99,7 +99,7 @@
             </div>
             {!! Form::label('VigenciaPolizaSeguro', 'Vigencia', ['class' => 'control-label col-sm-1']) !!} 
             <div class="col-sm-3">
-                {!! Form::text('VigenciaPolizaSeguro', null, ['class' => 'form-control vigencia']) !!}
+                {!! Form::text('VigenciaPolizaSeguro', null, ['class' => 'form-control fecha']) !!}
             </div>
         </div>
     </fieldset>

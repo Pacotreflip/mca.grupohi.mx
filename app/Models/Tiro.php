@@ -28,4 +28,12 @@ class Tiro extends Model
     public function __toString() {
         return $this->Descripcion;
     }
+    
+    public function viajesNetos() {
+        return $this->hasMany(ViajeNeto::class, 'IdTiro');
+    }
+    
+    public function origenes() {
+        return $this->belongsToMany(Origen::class, 'rutas', 'IdTiro', 'IdOrigen');
+    }
 }

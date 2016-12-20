@@ -157,7 +157,10 @@ return [
         'razonSocial'           => 'Razón Social',
         'IdMaterial'            => 'Material',
         'IdBanco'               => 'Banco',
-        'FactorAbundamiento'    => 'FDA'
+        'FactorAbundamiento'    => 'FDA',
+        'IdCamion'              => 'Camión',
+        'FechaLlegada'          => 'Fecha',
+        'HoraLlegada'           => 'Hora'
     ],
 
 ];

@@ -15,18 +15,18 @@
                     <label class="control-label col-sm-1">Banco</label>
                     <div class="col-sm-3">
                         <select class="form-control"  v-model="factor.IdBanco">
-                            <option value >Seleccione un Banco...</option>
-                            <option v-for="banco in bancos" v-bind:value="banco.id">
-                                @{{ banco.descripcion }}
+                            <option value >--SELECCIONE--</option>
+                            <option v-for="banco in bancos" v-bind:value="banco.IdOrigen">
+                                @{{ banco.Descripcion }}
                             </option>
                         </select>            
                     </div>
                     <label class="control-label col-sm-1">Material</label>
                     <div class="col-sm-3">
                         <select class="form-control"  v-model="factor.IdMaterial">
-                            <option value >Seleccione un Material...</option>
-                            <option v-for="material in materiales" v-bind:value="material.id">
-                                @{{ material.descripcion }}
+                            <option value >--SELECCIONE--</option>
+                            <option v-for="material in materiales" v-bind:value="material.IdMaterial">
+                                @{{ material.Descripcion }}
                             </option>
                         </select>            
                     </div>

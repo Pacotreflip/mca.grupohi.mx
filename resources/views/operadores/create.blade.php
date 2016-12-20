@@ -28,7 +28,7 @@
         </div>
         {!! Form::label('VigenciaLicencia', 'Vigencia de Licencia', ['class' => 'control-label col-sm-2']) !!}
         <div class="col-sm-4">
-            {!! Form::text('VigenciaLicencia', null, ['class' => 'form-control vigencia', 'placeholder' => 'Vigencia de Licencia...']) !!}
+            {!! Form::text('VigenciaLicencia', null, ['class' => 'form-control fecha', 'placeholder' => 'Vigencia de Licencia...']) !!}
         </div>
     </div>
 </div>

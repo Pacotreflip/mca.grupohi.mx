@@ -13,17 +13,17 @@
         <div class="form-group">
             {!! Form::label('IdOrigen', 'Origen', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-5">
-                {!! Form::select('IdOrigen', $origenes, null, ['placeholder' => 'Seleccione un Origen...', 'class' => 'form-control']) !!}
+                {!! Form::select('IdOrigen', $origenes, null, ['placeholder' => '--SELECCIONE--', 'class' => 'form-control']) !!}
             </div>
             {!! Form::label('IdTiro', 'Tiro', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-5">
-                {!! Form::select('IdTiro', $tiros, null, ['placeholder' => 'Seleccione un Tiro...', 'class' => 'form-control']) !!}
+                {!! Form::select('IdTiro', $tiros, null, ['placeholder' => '--SELECCIONE--', 'class' => 'form-control']) !!}
             </div>
         </div>
         <div class="form-group">
             {!! Form::label('IdTipoRuta','Tipo de Ruta', ['class' => 'control-label col-sm-2'])!!}
             <div class="col-sm-10">
-                {!! Form::select('IdTipoRuta', $tipos, null, ['placeholder' => 'Seleccione un Tipo...', 'class' => 'form-control']) !!}
+                {!! Form::select('IdTipoRuta', $tipos, null, ['placeholder' => '--SELECCIONE--', 'class' => 'form-control']) !!}
             </div>
         </div>
     </fieldset>

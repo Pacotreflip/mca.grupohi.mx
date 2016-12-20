@@ -31575,7 +31575,7 @@ require('./scripts');
 window.Vue = require('vue/dist/vue.js');
 require('vue-resource');
 Vue.http.headers.common['X-CSRF-TOKEN'] = App.csrfToken;
-
+//require('./vue-directives');
 if ($('#app').length) {
     new Vue({
         el: '#app',
@@ -32070,7 +32070,7 @@ $(function () {
     });
 });
 $('[data-submenu]').submenupicker();
-$('.vigencia').datepicker({
+$('.fecha').datepicker({
     format: 'yyyy-mm-dd',
     language: 'es',
     autoclose: true,
@@ -32500,8 +32500,9 @@ require('./vue-components/errors');
 require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
+require('./vue-components/viajes-registro-manual');
 
-},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40}],36:[function(require,module,exports){
+},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-registro-manual":44}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32811,7 +32812,126 @@ module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-dang
 },{}],42:[function(require,module,exports){
 module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],43:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >Seleccione un Usuario...</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],44:[function(require,module,exports){
+'use strict';
+
+Vue.component('viajes-registro-manual', {
+
+    data: function data() {
+        return {
+            'materiales': [],
+            'origenes': [],
+            'tiros': [],
+            'camiones': [],
+            'form': {
+                'FechaLlegada': '',
+                'HoraLlegada': '',
+                'IdCamion': '',
+                'IdOrigen': '',
+                'IdTiro': '',
+                'IdMaterial': '',
+                'Observaciones': '',
+                'errors': []
+            },
+            'guardando': false,
+            'cargando': false
+        };
+    },
+
+    created: function created() {
+        this.cargando = true;
+        this.fetchMateriales();
+        this.fetchOrigenes();
+        this.fetchCamiones();
+        this.cargando = false;
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: false,
+                    clearBtn: true,
+                    todayHighlight: true
+                });
+            }
+        }
+    },
+
+    methods: {
+        setFechaLlegada: function setFechaLlegada(event) {
+            this.form.FechaLlegada = event.currentTarget.value;
+        },
+
+        fetchMateriales: function fetchMateriales() {
+            var _this = this;
+
+            this.$http.get(App.host + '/materiales').then(function (response) {
+                _this.materiales = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this.form, response.body);
+            });
+        },
+
+        fetchOrigenes: function fetchOrigenes() {
+            var _this2 = this;
+
+            this.$http.get(App.host + '/origenes').then(function (response) {
+                _this2.origenes = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this2.form, response.body);
+            });
+        },
+
+        fetchTiros: function fetchTiros() {
+            var _this3 = this;
+
+            if (this.form.IdOrigen) {
+                this.$http.get(App.host + '/origenes/' + this.form.IdOrigen + '/tiros').then(function (response) {
+                    _this3.tiros = response.body;
+                }, function (response) {
+                    App.setErrorsOnForm(_this3.form, response.body);
+                });
+            }
+        },
+
+        fetchCamiones: function fetchCamiones() {
+            var _this4 = this;
+
+            this.$http.get(App.host + '/camiones').then(function (response) {
+                _this4.camiones = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this4.form, response.body);
+            });
+        },
+
+        guardar: function guardar() {
+            var _this5 = this;
+
+            this.guardando = true;
+            this.form.errors = [];
+            this.$http.post(App.host + '/viajes/registro_manual', this.form).then(function (response) {
+                if (response.body.success) {
+                    swal({
+                        type: 'success',
+                        title: '',
+                        text: response.body.message,
+                        timer: 1000,
+                        showConfirmButton: false
+                    });
+                    _this5.guardando = false;
+                }
+            }, function (response) {
+                _this5.guardando = false;
+                App.setErrorsOnForm(_this5.form, response.body);
+            });
+        }
+    }
+});
+
 },{}]},{},[21]);
 
 //# sourceMappingURL=app.js.map

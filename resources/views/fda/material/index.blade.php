@@ -14,9 +14,9 @@
                     <label class="control-label col-sm-2">Material</label>
                     <div class="col-sm-5">
                         <select class="form-control"  v-model="factor.IdMaterial">
-                            <option value >Seleccione un Banco...</option>
-                            <option v-for="material in materiales" v-bind:value="material.id">
-                                @{{ material.descripcion }}
+                            <option value >--SELECCIONE--</option>
+                            <option v-for="material in materiales" v-bind:value="material.IdMaterial">
+                                @{{ material.Descripcion }}
                             </option>
                         </select>            
                     </div>

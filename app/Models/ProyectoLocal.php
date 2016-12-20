@@ -38,4 +38,8 @@ class ProyectoLocal extends Model
     public function etapas() {
         return $this->hasMany(Etapa::class, 'IdProyecto');
     }
+    
+    public function viajesNetos() {
+        return $this->hasMany(ViajeNeto::class, 'IdProyecto');
+    }
 }

@@ -31,14 +31,7 @@ class OrigenesController extends Controller
     {
         $origenes = Origen::all();
         if($request->ajax()) {
-            $data = [];
-            foreach($origenes as $origen) {
-                $data[] = [
-                    'id' => $origen->IdOrigen,
-                    'descripcion' => $origen->Descripcion
-                ];
-            }
-            return response()->json($data);
+            return response()->json($origenes->toArray());
         }
         return view('origenes.index')
                 ->withOrigenes($origenes);

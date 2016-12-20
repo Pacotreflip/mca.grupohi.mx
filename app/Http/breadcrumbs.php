@@ -245,3 +245,13 @@ Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
     $breadcrumbs->parent('etapas.show', $etapa);
     $breadcrumbs->push(strtoupper(trans('strings.edit')), route('etapas.edit', $etapa));
 });
+
+//ViajesNetos
+Breadcrumbs::register('viajesnetos.index', function($breadcrumbs) {
+    $breadcrumbs->push('VALIDACIÓN DE VIAJES', route('viajesnetos.index'));
+});
+
+Breadcrumbs::register('viajesnetos.create', function($breadcrumbs) {
+    $breadcrumbs->parent('viajesnetos.index');
+    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajesnetos.create'));
+});

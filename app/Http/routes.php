@@ -44,6 +44,7 @@ Route::resource('materiales', 'MaterialesController');
 Route::resource('marcas', 'MarcasController');
 Route::resource('sindicatos', 'SindicatosController');
 Route::resource('origenes', 'OrigenesController');
+Route::get('origenes/{origenes}/tiros', 'OrigenesTirosController@index')->name('origenes.tiros.index');
 Route::resource('tiros', 'TirosController');
 Route::resource('rutas', 'RutasController');
 Route::resource('ruta.archivos', 'RutaArchivosController');
@@ -70,3 +71,8 @@ Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy'
 Route::get('usuarios/{usuarios}/origenes', 'OrigenesUsuariosController@index');
 Route::post('usuarios/{usuarios}/origenes/{origenes}', 'OrigenesUsuariosController@store');
 Route::get('usuarios', 'UserController@index');
+
+//Rutas de Viajes Netos
+Route::get('viajes/validacion', 'ViajesNetosController@index')->name('viajesnetos.index');
+Route::get('viajes/registro_manual', 'ViajesNetosController@create')->name('viajesnetos.create');
+Route::post('viajes/registro_manual', 'ViajesNetosController@store')->name('viajesnetos.store');

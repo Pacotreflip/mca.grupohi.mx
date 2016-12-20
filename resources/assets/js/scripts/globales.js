@@ -6,7 +6,7 @@ $(function () {
     });    
 });
 $('[data-submenu]').submenupicker();
-$('.vigencia').datepicker({
+$('.fecha').datepicker({
     format: 'yyyy-mm-dd',
     language: 'es',
     autoclose: true,

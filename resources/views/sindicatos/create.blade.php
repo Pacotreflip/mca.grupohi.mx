@@ -24,7 +24,7 @@
     <div class="form-group">
         {!! Form::label('Estatus', 'Estatus', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
-            {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], '1', ['placeholder' => 'Seleccione un Estatus...', 'class' => 'form-control']) !!}
+            {!! Form::select('Estatus', ['1' => 'ACTIVO', '0' => 'INACTIVO'], '1', ['placeholder' => '--SELECCIONE--', 'class' => 'form-control']) !!}
         </div>
     </div>
 </div>
