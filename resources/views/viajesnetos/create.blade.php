@@ -2,62 +2,63 @@
 
 @section('content')
 <h1>REGISTRO MANUAL DE VIAJES</h1>
-{!! Breadcrumbs::render('viajesnetos.create') !!}
+{!! Breadcrumbs::render('viajes.manual.create') !!}
 <hr>
 <div id="app">
     <global-errors></global-errors>
-    <viajes-registro-manual inline-template>
-        <section>            <app-errors v-bind:form="form"></app-errors>
-
+    <viajes-manual-registro inline-template>
+        <section>            
+            <app-errors v-bind:form="form"></app-errors>
             <div v-if="!cargando" class="table-responsive col-md-10 col-md-offset-1 rcorners">
                 <table class="table">
                     <thead>
                         <tr>
+                            <th>#</th>
                             <th>Fecha</th>
                             <th>Hora</th>
                             <th>Camión</th>
                             <th>Origen</th>
                             <th>Tiro</th>
                             <th>Material</th>
+                            <th><button class="btn btn-xs btn-primary" @click="addViaje"><i class="fa fa-plus-circle"></i></button></th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
+                        <tr v-for="viaje in form.viajes">
+                            <td>@{{ viaje.Id }}</td>
                             <td>
-                                <input id="FechaLlegada" @blur="setFechaLlegada($event)" v-datepicker type="text" class="form-control fecha input-sm" v-model="form.FechaLlegada">
+                                <input id="FechaLlegada" @blur="setFechaLlegada(viaje, $event)" v-datepicker type="text" class="form-control fecha input-sm" v-model="viaje.FechaLlegada">
                             </td>
                             <td>
-                                <input type="time" class="form-control input-sm" v-model="form.HoraLlegada">
+                                <input type="time" class="form-control input-sm" v-model="viaje.HoraLlegada">
                             </td>
                             <td>
-                                <select class="form-control input-sm" v-model="form.IdCamion">
+                                <select class="form-control input-sm" v-model="viaje.IdCamion">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="camion in camiones" v-bind:value="camion.IdCamion">@{{ camion.Economico }}</option>
+                                    <option v-for="camion in camiones" v-bind:value="viaje.IdCamion">@{{ camion.Economico }}</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control input-sm" v-model="form.IdOrigen" v-on:change="fetchTiros">
+                                <select class="form-control input-sm" v-model="viaje.IdOrigen">
                                     <option value>--SELECCIONE--</option>
                                     <option v-for="origen in origenes" v-bind:value="origen.IdOrigen">@{{ origen.Descripcion }}</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control input-sm" v-model="form.IdTiro">
+                                <select class="form-control input-sm" v-model="viaje.IdTiro">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="tiro in tiros" v-bind:value="tiro.IdTiro">@{{ tiro.Descripcion }}</option>
+                                    <option v-for="tiro in tiros | origen(IdOrigen)" v-bind:value="tiro.IdTiro">@{{ tiro.Descripcion }}</option>
                                 </select>
                             </td>
                             <td>
-                                <select class="form-control input-sm" v-model="form.IdMaterial">
+                                <select class="form-control input-sm" v-model="viaje.IdMaterial">
                                     <option value>--SELECCIONE--</option>
                                     <option v-for="material in materiales" v-bind:value="material.IdMaterial">@{{ material.Descripcion }}</option>
                                 </select>
                             </td>
-                        </tr>
-                        <tr>
                             <td><strong>Observaciones<strong></td>
                             <td colspan="5">
-                                <input type="text" class="form-control input-sm" v-model="form.Observaciones">
+                                <input type="text" class="form-control input-sm" v-model="viaje.Observaciones">
                             </td>
                         </tr>
                     </tbody>
@@ -70,6 +71,6 @@
                 </button>
             </div>
         </section>
-    </viajes-registro-manual>
+    </viajes-manual-registro>
 </div>
 @stop

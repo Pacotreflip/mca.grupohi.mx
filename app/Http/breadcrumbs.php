@@ -247,11 +247,6 @@ Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
 });
 
 //ViajesNetos
-Breadcrumbs::register('viajesnetos.index', function($breadcrumbs) {
-    $breadcrumbs->push('VALIDACIÓN DE VIAJES', route('viajesnetos.index'));
-});
-
-Breadcrumbs::register('viajesnetos.create', function($breadcrumbs) {
-    $breadcrumbs->parent('viajesnetos.index');
-    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajesnetos.create'));
+Breadcrumbs::register('viajes.manual.create', function($breadcrumbs) {
+    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajes.manual.create'));
 });

@@ -29,12 +29,11 @@ class OrigenesController extends Controller
      */
     public function index(Request $request)
     {
-        $origenes = Origen::all();
         if($request->ajax()) {
-            return response()->json($origenes->toArray());
+            return response()->json(Origen::with('tiros')->get()->toArray());
         }
         return view('origenes.index')
-                ->withOrigenes($origenes);
+                ->withOrigenes(Origen::all());
     }
 
     /**

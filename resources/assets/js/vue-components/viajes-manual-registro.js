@@ -1,4 +1,4 @@
-function initialState() {
+function initialState(index) {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -15,18 +15,18 @@ function initialState() {
     var time = hh + ":" + min;
 
     return {
+        'Id': index,
         'FechaLlegada': date,
         'HoraLlegada': time,
         'IdCamion': '',
         'IdOrigen': '',
         'IdTiro': '',
         'IdMaterial': '',
-        'Observaciones': '',
-        'errors': []
-    }  
+        'Observaciones': ''
+    }
 }
 
-Vue.component('viajes-registro-manual', {
+Vue.component('viajes-manual-registro', {
     
     data: function() {
         return {
@@ -34,9 +34,13 @@ Vue.component('viajes-registro-manual', {
             'origenes': [],
             'tiros': [],
             'camiones': [],
-            'form': initialState(),
+            'form': {
+                'viajes': [initialState(1)],
+                'errors': []
+            },
             'guardando': false,
-            'cargando': false
+            'cargando': false,
+            'numViajes': 1
         }
     },
     
@@ -59,17 +63,38 @@ Vue.component('viajes-registro-manual', {
         }
     },
     
+    filters: {
+        origen: function(value, IdOrigen) {
+            console.log(value);
+            return this.tiros.filter(function(tiro){
+                var result = false;
+                tiro.origenes.forEach(function(origen){
+                    if(origen.IdOrigen == IdOrigen) {
+                        result = true;
+                    }
+                });
+                return result;
+            });
+        }
+    },
+    
     methods: {         
         initialize: function() {
             this.cargando = true;
             this.fetchMateriales();
             this.fetchOrigenes();
+            this.fetchTiros();
             this.fetchCamiones();
             this.cargando = false;            
         },
 
-        setFechaLlegada: function(event) {
-            this.form.FechaLlegada = event.currentTarget.value;
+        setFechaLlegada: function(viaje, event) {
+            viaje.FechaLlegada = event.currentTarget.value;
+        },
+        
+        addViaje: function() {
+            this.numViajes++;
+            this.form.viajes.push(initialState(this.numViajes));
         },
         
         fetchMateriales: function() {
@@ -89,13 +114,11 @@ Vue.component('viajes-registro-manual', {
         },
         
         fetchTiros: function() {
-            if(this.form.IdOrigen) {
-                this.$http.get(App.host + '/origenes/' + this.form.IdOrigen + '/tiros').then((response) => {
-                    this.tiros = response.body;
-                }, (response) => {
-                    App.setErrorsOnForm(this.form, response.body);
-                });
-            }
+            this.$http.get(App.host + '/tiros').then((response) => {
+                this.tiros = response.body;
+            }, (response) => {
+                App.setErrorsOnForm(this.form, response.body);
+            });
         },
         
         fetchCamiones: function() {
@@ -109,7 +132,7 @@ Vue.component('viajes-registro-manual', {
         registrar: function() {
             this.guardando = true;
             this.form.errors = [];
-            this.$http.post(App.host + '/viajes/registro_manual', this.form).then((response) => {
+            this.$http.post(App.host + '/viajes/manual', this.form).then((response) => {
                 if(response.body.success) {
                     swal({
                         type: 'success',

@@ -32500,9 +32500,9 @@ require('./vue-components/errors');
 require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
-require('./vue-components/viajes-registro-manual');
+require('./vue-components/viajes-manual-registro');
 
-},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-registro-manual":44}],36:[function(require,module,exports){
+},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-manual-registro":44}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32816,7 +32816,7 @@ module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <
 },{}],44:[function(require,module,exports){
 'use strict';
 
-function initialState() {
+function initialState(index) {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -32841,18 +32841,18 @@ function initialState() {
     var time = hh + ":" + min;
 
     return {
+        'Id': index,
         'FechaLlegada': date,
         'HoraLlegada': time,
         'IdCamion': '',
         'IdOrigen': '',
         'IdTiro': '',
         'IdMaterial': '',
-        'Observaciones': '',
-        'errors': []
+        'Observaciones': ''
     };
 }
 
-Vue.component('viajes-registro-manual', {
+Vue.component('viajes-manual-registro', {
 
     data: function data() {
         return {
@@ -32860,9 +32860,13 @@ Vue.component('viajes-registro-manual', {
             'origenes': [],
             'tiros': [],
             'camiones': [],
-            'form': initialState(),
+            'form': {
+                'viajes': [initialState(1)],
+                'errors': []
+            },
             'guardando': false,
-            'cargando': false
+            'cargando': false,
+            'numViajes': 1
         };
     },
 
@@ -32885,17 +32889,37 @@ Vue.component('viajes-registro-manual', {
         }
     },
 
+    filters: {
+        origen: function origen(IdOrigen) {
+            return this.tiros.filter(function (tiro) {
+                var result = false;
+                tiro.origenes.forEach(function (origen) {
+                    if (origen.IdOrigen == IdOrigen) {
+                        result = true;
+                    }
+                });
+                return result;
+            });
+        }
+    },
+
     methods: {
         initialize: function initialize() {
             this.cargando = true;
             this.fetchMateriales();
             this.fetchOrigenes();
+            this.fetchTiros();
             this.fetchCamiones();
             this.cargando = false;
         },
 
-        setFechaLlegada: function setFechaLlegada(event) {
-            this.form.FechaLlegada = event.currentTarget.value;
+        setFechaLlegada: function setFechaLlegada(viaje, event) {
+            viaje.FechaLlegada = event.currentTarget.value;
+        },
+
+        addViaje: function addViaje() {
+            this.numViajes++;
+            this.form.viajes.push(initialState(this.numViajes));
         },
 
         fetchMateriales: function fetchMateriales() {
@@ -32921,13 +32945,11 @@ Vue.component('viajes-registro-manual', {
         fetchTiros: function fetchTiros() {
             var _this3 = this;
 
-            if (this.form.IdOrigen) {
-                this.$http.get(App.host + '/origenes/' + this.form.IdOrigen + '/tiros').then(function (response) {
-                    _this3.tiros = response.body;
-                }, function (response) {
-                    App.setErrorsOnForm(_this3.form, response.body);
-                });
-            }
+            this.$http.get(App.host + '/tiros').then(function (response) {
+                _this3.tiros = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this3.form, response.body);
+            });
         },
 
         fetchCamiones: function fetchCamiones() {
@@ -32945,7 +32967,7 @@ Vue.component('viajes-registro-manual', {
 
             this.guardando = true;
             this.form.errors = [];
-            this.$http.post(App.host + '/viajes/registro_manual', this.form).then(function (response) {
+            this.$http.post(App.host + '/viajes/manual', this.form).then(function (response) {
                 if (response.body.success) {
                     swal({
                         type: 'success',

@@ -30,7 +30,7 @@ class TirosController extends Controller
     {
         dd($request->all());
         if($request->ajax()) {
-            return response()->json(Tiro::all()->toArray());
+            return response()->json(Tiro::with('origenes')->all()->toArray());
         }
         return view('tiros.index')
                 ->withTiros(Tiro::all());
