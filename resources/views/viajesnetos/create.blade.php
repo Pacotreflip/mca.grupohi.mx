@@ -64,7 +64,7 @@
                 </table>
             </div>
             <div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
-                <button class="btn btn-success btn-sm" type="submit" @click="guardar">
+                <button class="btn btn-success btn-sm" type="submit" @click="confirmarRegistro">
                     <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i> Guardar</span>
                     <span v-else><i class="fa fa-save"></i> Guardar</span>
                 </button>

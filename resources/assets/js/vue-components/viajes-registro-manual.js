@@ -1,3 +1,31 @@
+function initialState() {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    var min = today.getMinutes();
+
+    if(dd < 10) {dd = '0' + dd} 
+    if(mm < 10) {mm = '0' + mm} 
+    if(hh < 10) {hh = '0' + hh}
+    if(min < 10) {min = '0' + min}
+
+    var date = yyyy + '-' + mm + '-' + dd;
+    var time = hh + ":" + min;
+
+    return {
+        'FechaLlegada': date,
+        'HoraLlegada': time,
+        'IdCamion': '',
+        'IdOrigen': '',
+        'IdTiro': '',
+        'IdMaterial': '',
+        'Observaciones': '',
+        'errors': []
+    }  
+}
+
 Vue.component('viajes-registro-manual', {
     
     data: function() {
@@ -6,27 +34,14 @@ Vue.component('viajes-registro-manual', {
             'origenes': [],
             'tiros': [],
             'camiones': [],
-            'form': {
-                'FechaLlegada': '',
-                'HoraLlegada': '',
-                'IdCamion': '',
-                'IdOrigen': '',
-                'IdTiro': '',
-                'IdMaterial': '',
-                'Observaciones': '',
-                'errors': []
-            },
+            'form': initialState(),
             'guardando': false,
             'cargando': false
-        };
+        }
     },
     
     created: function() {
-        this.cargando = true;
-        this.fetchMateriales();
-        this.fetchOrigenes();
-        this.fetchCamiones();
-        this.cargando = false;
+        this.initialize();
     },
     
     directives: { 
@@ -37,13 +52,22 @@ Vue.component('viajes-registro-manual', {
                     language: 'es',
                     autoclose: false,
                     clearBtn: true,
-                    todayHighlight: true
+                    todayHighlight: true,
+                    endDate: '0d'
                 });
             }
         }
     },
     
-    methods: {
+    methods: {         
+        initialize: function() {
+            this.cargando = true;
+            this.fetchMateriales();
+            this.fetchOrigenes();
+            this.fetchCamiones();
+            this.cargando = false;            
+        },
+
         setFechaLlegada: function(event) {
             this.form.FechaLlegada = event.currentTarget.value;
         },
@@ -82,7 +106,7 @@ Vue.component('viajes-registro-manual', {
             });
         },
         
-        guardar: function() {
+        registrar: function() {
             this.guardando = true;
             this.form.errors = [];
             this.$http.post(App.host + '/viajes/registro_manual', this.form).then((response) => {
@@ -95,11 +119,27 @@ Vue.component('viajes-registro-manual', {
                         showConfirmButton: false
                     });
                     this.guardando = false;
+                    this.form = initialState();
+                    this.tiros = [];
                 }
             }, (response) => {
                 this.guardando = false;
                 App.setErrorsOnForm(this.form, response.body);
             });
-        }
+        },
+        
+        confirmarRegistro: function (e) {
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar con el registro?", 
+                text: "¿Esta seguro de que la información es correcta?", 
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, () => this.registrar() );
+        },
     }
 });
