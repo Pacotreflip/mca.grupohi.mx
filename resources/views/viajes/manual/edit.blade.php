@@ -1,5 +1,5 @@
 @extends('layout')
 
 @section('content')
-<h1>VALIDACIÓN DE VIAJES</h1>
+<h1>AUTORIZACIÓN DE VIAJES MANUALES</h1>
 @stop

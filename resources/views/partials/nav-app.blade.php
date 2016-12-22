@@ -41,6 +41,25 @@
         </li>
     </ul>
   </li>
+  <li class="dropdown">
+    <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
+        Operación<span class="caret"></span>
+    </a>
+    <ul class="dropdown-menu" role="menu">
+        <li class="dropdown-submenu">
+            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Registrar Viajes</a>  
+            <ul class="dropdown-menu">
+                <li class="dropdown-submenu">
+                    <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Carga Manual</a>
+                    <ul class="dropdown-menu">
+                        <li><a tabindex="-1" href="{{ route('viajes.manual.create') }}">Ingresar Viajes</a></li>
+                        <li><a tabindex="-1" href="{{ route('viajes.manual.edit') }}">Autorizar Viajes</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+    </ul>
+  </li>
 @else
   <li><a href="{{ route('proyectos') }}">{{ trans('strings.projects') }}</a></li>
 @endif
