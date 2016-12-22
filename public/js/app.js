@@ -33002,12 +33002,9 @@ Vue.component('viajes-manual-registro', {
                         type: 'success',
                         title: '',
                         text: response.body.message,
-                        timer: 1000,
-                        showConfirmButton: false
+                        showConfirmButton: true
                     });
                     _this5.guardando = false;
-                    _this5.form = initialState();
-                    _this5.tiros = [];
                 }
             }, function (response) {
                 _this5.guardando = false;

@@ -168,12 +168,9 @@ Vue.component('viajes-manual-registro', {
                         type: 'success',
                         title: '',
                         text: response.body.message,
-                        timer: 1000,   
-                        showConfirmButton: false
+                        showConfirmButton: true
                     });
                     this.guardando = false;
-                    this.form = initialState();
-                    this.tiros = [];
                 }
             }, (response) => {
                 this.guardando = false;

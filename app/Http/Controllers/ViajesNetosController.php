@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use App\Models\Ruta;
 use App\Models\ProyectoLocal;
+use App\Models\ViajeNeto;
 
 class ViajesNetosController extends Controller
 {
@@ -48,29 +49,32 @@ class ViajesNetosController extends Controller
      */
     public function store(Requests\CreateViajeNetoRequest $request)
     {
-        $ruta = Ruta::where('IdOrigen', $request->get('IdOrigen'))
-                ->where('IdTiro', $request->get('IdTiro'))
-                ->first();
-        $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $request->get('FechaLlegada').' '.$request->get('HoraLlegada'))
-                ->subMinutes($ruta->cronometria->TiempoMinimo); 
+        foreach($request->get('viajes', []) as $viaje) {
         
-        $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
-        $extra = [
-            'FechaCarga' => Carbon::now()->toDateString(),
-            'HoraCarga' => Carbon::now()->toTimeString(),
-            'FechaSalida' => $fecha_salida->toDateString(),
-            'HoraSalida' => $fecha_salida->toTimeString(),
-            'IdProyecto' => $proyecto_local->IdProyecto,
-            'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
-            'Estatus' => 29,
-            
-        ];
-        
-        \App\Models\ViajeNeto::create(array_merge($request->all(), $extra));
-        
+            $ruta = Ruta::where('IdOrigen', $viaje['IdOrigen'])
+                    ->where('IdTiro', $viaje['IdTiro'])
+                    ->first();
+            $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaLlegada'].' '.$viaje['HoraLlegada'])
+                    ->subMinutes($ruta->cronometria->TiempoMinimo); 
+
+            $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+            $extra = [
+                'FechaCarga' => Carbon::now()->toDateString(),
+                'HoraCarga' => Carbon::now()->toTimeString(),
+                'FechaSalida' => $fecha_salida->toDateString(),
+                'HoraSalida' => $fecha_salida->toTimeString(),
+                'IdProyecto' => $proyecto_local->IdProyecto,
+                'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
+                'Estatus' => 29,
+
+            ];
+
+            ViajeNeto::create(array_merge($viaje, $extra));
+        }
+
         return response()->json([
             'success' => true,
-            'message' => '¡VIAJE REGISTRADO CORRECTAMENTE!'
+            'message' => '¡'.count($request->get('viajes')).' VIAJE(S) REGISTRADO(S) CORRECTAMENTE!'
         ]);
     }
 
