@@ -1,20 +1,14 @@
 @extends('layout')
 
-@section('styles')
-<link rel="stylesheet" href="http://maxazan.github.io/jquery-treegrid/css/jquery.treegrid.css">
-@stop
 @section('content')
-<h1>{{ strtoupper(trans('strings.centroscostos')) }}</h1>
+<h1>{{ strtoupper(trans('strings.centroscostos')) }}
+  <a href="{{ route('centroscostos.create', 0) }}" class="btn btn-success pull-right centrocosto_create"><i class="fa fa-plus"></i> NUEVO CENTRO DE COSTO</a>
+</h1>
 {!! Breadcrumbs::render('centroscostos.index') !!}
 <hr>
 <div class="table-responsive col-md-8 col-md-offset-2">
     <table id='centros_costos_table' class="table table-hover">
         <thead>
-            <tr>
-        <a style="margin-bottom: 5px" href="{{ route('centroscostos.create', 0) }}" class="pull-right btn btn-success btn-sm centrocosto_create" type="button">
-                    <i class="fa fa-plus-circle"></i> NUEVO CENTRO DE COSTO
-                </a>                
-            </tr>
             <tr>
                 <th>Centro de Costo</th>
                 <th>Cuenta</th>

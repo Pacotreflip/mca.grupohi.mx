@@ -4,22 +4,6 @@ To change this template file, choose Tools | Templates
 and open the template in the editor.
 */
 /* 
-    Created on : 7/12/2016, 01:02:16 PM
-    Author     : jfesquivel
-*/
-
-.treegrid-indent {width:16px; height: 16px; display: inline-block; position: relative;}
-
-.treegrid-expander {width:16px; height: 16px; display: inline-block; position: relative; cursor: pointer;}
-
-.treegrid-expander-expanded{background-image: url(../img/collapse.png); }
-.treegrid-expander-collapsed{background-image: url(../img/expand.png);}
-/*
-To change this license header, choose License Headers in Project Properties.
-To change this template file, choose Tools | Templates
-and open the template in the editor.
-*/
-/* 
     Created on : 1/12/2016, 11:34:58 PM
     Author     : jfesquivel
 */
