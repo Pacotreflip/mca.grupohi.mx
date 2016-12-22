@@ -32816,7 +32816,7 @@ module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <
 },{}],44:[function(require,module,exports){
 'use strict';
 
-function initialState(index) {
+function timeStamp(type) {
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1; //January is 0!
@@ -32840,17 +32840,16 @@ function initialState(index) {
     var date = yyyy + '-' + mm + '-' + dd;
     var time = hh + ":" + min;
 
-    return {
-        'Id': index,
-        'FechaLlegada': date,
-        'HoraLlegada': time,
-        'IdCamion': '',
-        'IdOrigen': '',
-        'IdTiro': '',
-        'IdMaterial': '',
-        'Observaciones': ''
-    };
+    return type == 1 ? date : time;
 }
+
+Array.prototype.removeValue = function (name, value) {
+    var array = $.map(this, function (v, i) {
+        return v[name] === value ? null : v;
+    });
+    this.length = 0; //clear original array
+    this.push.apply(this, array); //push all elements except the one we want to delete
+};
 
 Vue.component('viajes-manual-registro', {
 
@@ -32861,7 +32860,17 @@ Vue.component('viajes-manual-registro', {
             'tiros': [],
             'camiones': [],
             'form': {
-                'viajes': [initialState(1)],
+                'viajes': [{
+                    'Id': 1,
+                    'FechaLlegada': timeStamp(1),
+                    'HoraLlegada': timeStamp(2),
+                    'IdCamion': '',
+                    'IdOrigen': '',
+                    'IdTiro': '',
+                    'IdMaterial': '',
+                    'Observaciones': '',
+                    'Tiros': []
+                }],
                 'errors': []
             },
             'guardando': false,
@@ -32889,20 +32898,6 @@ Vue.component('viajes-manual-registro', {
         }
     },
 
-    filters: {
-        origen: function origen(IdOrigen) {
-            return this.tiros.filter(function (tiro) {
-                var result = false;
-                tiro.origenes.forEach(function (origen) {
-                    if (origen.IdOrigen == IdOrigen) {
-                        result = true;
-                    }
-                });
-                return result;
-            });
-        }
-    },
-
     methods: {
         initialize: function initialize() {
             this.cargando = true;
@@ -32913,13 +32908,47 @@ Vue.component('viajes-manual-registro', {
             this.cargando = false;
         },
 
+        setTiros: function setTiros(viaje) {
+            viaje.Tiros = [];
+            if (viaje.IdOrigen) {
+                this.tiros.forEach(function (tiro) {
+                    var result = false;
+                    tiro.origenes.forEach(function (origen) {
+                        if (origen.IdOrigen == viaje.IdOrigen) {
+                            result = true;
+                        }
+                    });
+                    if (result) {
+                        viaje.Tiros.push(tiro);
+                    }
+                });
+            } else {
+                viaje.IdTiro = '';
+            }
+        },
+
         setFechaLlegada: function setFechaLlegada(viaje, event) {
             viaje.FechaLlegada = event.currentTarget.value;
         },
 
         addViaje: function addViaje() {
-            this.numViajes++;
-            this.form.viajes.push(initialState(this.numViajes));
+            this.numViajes += 1;
+            this.form.viajes.push({
+                'Id': this.numViajes,
+                'FechaLlegada': timeStamp(1),
+                'HoraLlegada': timeStamp(2),
+                'IdCamion': '',
+                'IdOrigen': '',
+                'IdTiro': '',
+                'IdMaterial': '',
+                'Observaciones': '',
+                'Tiros': []
+            });
+        },
+
+        removeViaje: function removeViaje(viaje) {
+            this.form.viajes.removeValue('Id', viaje.Id);
+            this.numViajes--;
         },
 
         fetchMateriales: function fetchMateriales() {

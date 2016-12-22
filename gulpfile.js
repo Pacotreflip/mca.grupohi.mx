@@ -19,14 +19,14 @@ var paths = {
  */
 
 elixir(function(mix) {
-    mix./*sass('app.scss', './resources/assets/css/sass.css')
+    mix.sass('app.scss', './resources/assets/css/sass.css')
             .less('app.less', './resources/assets/css/less.css')
             .styles(['*.css'], 'public/css/app.css')
             .copy(paths.roboto + 'fonts', 'public/build/fonts/roboto')
             .copy(paths.bootstrap + 'fonts/bootstrap', 'public/build/fonts/bootstrap')
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
             .copy(paths.fileinput + 'img', 'public/build/img')
-            .*/browserify('app.js')
+            .browserify('app.js')
             .version([
                 'public/css/app.css',
                 'public/js/app.js'
