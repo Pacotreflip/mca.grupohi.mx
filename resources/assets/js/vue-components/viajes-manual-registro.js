@@ -124,7 +124,6 @@ Vue.component('viajes-manual-registro', {
         
         removeViaje: function(viaje) {
             this.form.viajes.removeValue('Id', viaje.Id);
-            this.numViajes--;
         },
        
         fetchMateriales: function() {
