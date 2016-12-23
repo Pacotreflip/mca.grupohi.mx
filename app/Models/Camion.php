@@ -78,4 +78,8 @@ class Camion extends Model
     public function viajesNetos() {
         return $this->hasMany(ViajeNeto::class, 'IdCamion');
     }
+    
+    public function __toString() {
+        return $this->Economico;
+    }
 }

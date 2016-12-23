@@ -50,4 +50,8 @@ class ViajeNeto extends Model
     public function material() {
         return $this->belongsTo(Material::class, 'IdMaterial');
     }
+    
+    public function scopeRegistradosManualmente($query) {
+        return $query->where('Estatus', 29);
+    }
 }

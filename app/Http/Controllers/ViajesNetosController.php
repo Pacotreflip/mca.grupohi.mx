@@ -28,7 +28,7 @@ class ViajesNetosController extends Controller
      */
     public function index()
     {
-        return view('viajesnetos.index');
+        
     }
 
     /**
@@ -97,7 +97,8 @@ class ViajesNetosController extends Controller
      */
     public function edit()
     {
-        return view('viajes.manual.edit');
+        return view('viajes.manual.edit')
+                ->withViajes(ViajeNeto::registradosManualmente()->get());
     }
 
     /**
@@ -109,7 +110,7 @@ class ViajesNetosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        dd($request->all(), $id);
     }
 
     /**

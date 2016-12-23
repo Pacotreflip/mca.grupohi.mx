@@ -43,4 +43,8 @@ class Material extends Model
     public function viajesNetos() {
         return $this->hasMany(ViajeNeto::class, 'IdMaterial');
     }
+    
+    public function __toString() {
+        return $this->Descripcion;
+    }
 }
