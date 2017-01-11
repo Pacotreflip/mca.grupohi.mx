@@ -5,7 +5,8 @@ var paths = {
     'fontawesome': './node_modules/font-awesome/',
     'roboto': './node_modules/roboto-fontface/',
     'fileinput': './node_modules/bootstrap-fileinput/',
-    'treegrid': './node_modules/jquery-treegrid/'
+    'treegrid': './node_modules/jquery-treegrid/',
+    'tablefilter': './node_modules/tablefilter/'
 };
     
 /*
@@ -28,6 +29,7 @@ elixir(function(mix) {
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
             .copy(paths.fileinput + 'img', 'public/build/img')
             .copy(paths.treegrid + 'img', 'public/build/img')
+            .copy(paths.tablefilter + 'dist/tablefilter', 'public/tablefilter')
             .browserify('app.js')
             .version([
                 'public/css/app.css',

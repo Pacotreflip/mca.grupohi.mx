@@ -77,4 +77,4 @@ Route::get('viajes/manual/index', 'ViajesNetosController@index')->name('viajes.m
 Route::get('viajes/manual/create', 'ViajesNetosController@create')->name('viajes.manual.create');
 Route::post('viajes/manual', 'ViajesNetosController@store')->name('viajes.manual.store');
 Route::get('viajes/manual/autorizar' , 'ViajesNetosController@edit')->name('viajes.manual.edit');
-Route::patch('viajes/manual/{viaje}', 'ViajesNetosController@update')->name('viajes.manual.update');
+Route::patch('viajes/manual', 'ViajesNetosController@update')->name('viajes.manual.update');

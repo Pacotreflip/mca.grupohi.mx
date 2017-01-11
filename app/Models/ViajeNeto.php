@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
+use Illuminate\Support\Facades\DB;
 
 class ViajeNeto extends Model
 {
@@ -53,5 +54,43 @@ class ViajeNeto extends Model
     
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
+    }
+    
+    public static function autorizar($data) {
+        $autorizados = 0;
+        DB::connection('sca')->beginTransaction();
+        try {
+            if(count($data) == 0) {
+                $msg = "SELECCIONA AL MENOS UN VIAJE";
+            } else {
+                foreach($data as $key => $estatus) {
+                    $viaje = ViajeNeto::findOrFail($key);
+                    $viaje->Estatus = $estatus;
+                    $viaje->save();
+                    if($estatus == "20") {
+                        $autorizados += 1;    
+                    }
+                }
+                $msg = "VIAJES AUTORIZADOS (".$autorizados.")\n VIAJES RECHAZADOS (".(count($data) - $autorizados).")";
+            }
+            
+            DB::connection('sca')->commit();
+            return $msg;
+        } catch (Exception $ex) {
+            DB::connection('sca')->rollback();
+        }
+    }
+    
+    public function rechazar() {
+        DB::connection($this->connection)->beginTransaction();
+        try {
+            
+            $this->Estatus = 22;
+            $this->save();
+            
+            DB::connection($this->connection)->commit();
+        } catch (Exception $ex) {
+            DB::connection($this->connection)->rollback();
+        }
     }
 }

@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Carbon\Carbon;
+use Laracasts\Flash\Flash;
 use App\Models\Ruta;
 use App\Models\ProyectoLocal;
 use App\Models\ViajeNeto;
@@ -108,9 +109,11 @@ class ViajesNetosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request)
     {
-        dd($request->all(), $id);
+        $msg = ViajeNeto::autorizar($request->get('Estatus'));
+        Flash::success($msg);
+        return response()->json(['path' => route('viajes.manual.edit')]);
     }
 
     /**
