@@ -69,7 +69,7 @@
             @foreach($camion->imagenes as $imagen)
             {!! Form::label($imagen->present()->tipoImagen, $imagen->present()->tipoImagen, ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                <a class="btn btn-info col-md-12"  href="{{ URL::to('/').'/'.$imagen->Ruta }}" target="blank">
+                <a class="btn btn-info col-md-12"  href="data:{{$imagen->Tipo}};base64,{{$imagen->Imagen}}" target="blank">
                     <i class="fa fa-file-image-o"></i> VER IMAGEN                  
                 </a> 
             </div>

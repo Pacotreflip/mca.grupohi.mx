@@ -13,7 +13,7 @@ class ImagenCamion extends Model
     protected $connection = 'sca';
     protected $table = 'camiones_imagenes';
     protected $primaryKey = 'Ruta';
-    protected $fillable = ['IdCamion', 'TipoC', 'Tipo', 'Ruta'];
+    protected $fillable = ['IdCamion', 'TipoC', 'Tipo', 'Imagen'];
     protected $presenter = ModelPresenter::class;
    
     public $timestamps = false;

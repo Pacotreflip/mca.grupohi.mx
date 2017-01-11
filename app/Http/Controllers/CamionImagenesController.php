@@ -33,17 +33,15 @@ class CamionImagenesController extends Controller
             if($imagenes->count() != 0) {
                 $data['hasImagenes'] = true;
                 foreach($imagenes as $imagen) {
-                    $nombre = explode('/', $imagen->Ruta)[count(explode('/', $imagen->Ruta)) - 1];
-                    $size = Storage::disk('uploads')->size($imagen->Ruta);
+                    //$nombre = explode('/', $imagen->Ruta)[count(explode('/', $imagen->Ruta)) - 1];
+                    //$size = Storage::disk('uploads')->size($imagen->Ruta);
                     $data['data'][''.$imagen->TipoC.''] = [
                         'type' => $imagen->Tipo,
-                        'url' => URL::to('/').'/'.$imagen->Ruta,
+                        'url' => 'data:'.$imagen->Tipo.';base64,'.$imagen->Imagen,
                         'data' => [
-                            'size' => $size,
                             'url' => route('camion.imagenes.destroy', [$id_camion, $imagen->TipoC]),
                             'width' => '50px',
                             'key' => $imagen->TipoC,
-                            'caption' => $nombre
                         ]
                     ];
                 }
@@ -115,10 +113,6 @@ class CamionImagenesController extends Controller
      */
     public function destroy($id_camion, $tipoC)
     {
-        $imagen = ImagenCamion::where('IdCamion', '=', $id_camion)->where('TipoC', '=', $tipoC)->first();
-        $ruta = $imagen->Ruta;
-        $imagen->delete();        
-        Storage::disk('uploads')->delete($ruta);
-        
+        $imagen = ImagenCamion::where('IdCamion', $id_camion)->where('TipoC', $tipoC)->delete();
         return response()->json(['success' => true]);    }
 }
