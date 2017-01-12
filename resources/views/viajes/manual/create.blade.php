@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>REGISTRO MANUAL DE VIAJES</h1>
+<h1>VIAJES MANUALES</h1>
 {!! Breadcrumbs::render('viajes.manual.create') !!}
 <hr>
 <div id="app">

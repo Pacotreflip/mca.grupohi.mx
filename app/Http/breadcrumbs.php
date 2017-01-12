@@ -250,3 +250,11 @@ Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
 Breadcrumbs::register('viajes.manual.create', function($breadcrumbs) {
     $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajes.manual.create'));
 });
+
+Breadcrumbs::register('viajes.manual.edit', function($breadcrumbs) {
+    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES MANUALES', route('viajes.manual.edit'));
+});
+
+Breadcrumbs::register('viajes.manual.completa', function($breadcrumbs) {
+    $breadcrumbs->push('CARGA MANUAL COMPLETA', route('viajes.manual.completa'));
+});

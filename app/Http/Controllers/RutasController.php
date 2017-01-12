@@ -32,8 +32,15 @@ class RutasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()) {
+
+            return response()->json(Ruta::where([
+                'IdOrigen' => $request->get('IdOrigen'),
+                'IdTiro' => $request->get('IdTiro')
+            ])->get()->toArray());
+        }
         return view('rutas.index')
                 ->withRutas(Ruta::all());
     }

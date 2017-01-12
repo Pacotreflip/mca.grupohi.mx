@@ -7,8 +7,6 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use App\Models\ImagenCamion;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\URL;
 
 class CamionImagenesController extends Controller
 {
@@ -114,5 +112,6 @@ class CamionImagenesController extends Controller
     public function destroy($id_camion, $tipoC)
     {
         $imagen = ImagenCamion::where('IdCamion', $id_camion)->where('TipoC', $tipoC)->delete();
-        return response()->json(['success' => true]);    }
+        return response()->json(['success' => true]);    
+    }
 }

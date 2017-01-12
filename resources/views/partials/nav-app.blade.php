@@ -56,6 +56,7 @@
                         <li><a tabindex="-1" href="{{ route('viajes.manual.edit') }}">Autorizar Viajes</a></li>
                     </ul>
                 </li>
+                <li><a href="{{ route('viajes.manual.completa') }}">Carga Manual Completa</a></li>
             </ul>
         </li>
     </ul>

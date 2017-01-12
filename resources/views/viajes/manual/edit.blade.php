@@ -1,7 +1,8 @@
 @extends('layout')
 
 @section('content')
-<h1>AUTORIZACIÓN DE VIAJES MANUALES</h1>
+<h1>VIAJES MANUALES</h1>
+{!! Breadcrumbs::render('viajes.manual.edit') !!}
 <hr>
 <div class="table-responsive col-md-10 col-md-offset-1 rcorners">
     {!! Form::open(['id' => 'viaje_neto_update' , 'method' => 'patch', 'route' => ['viajes.manual.update']]) !!}

@@ -75,6 +75,7 @@ Route::get('usuarios', 'UserController@index');
 //Rutas de Viajes Netos
 Route::get('viajes/manual/index', 'ViajesNetosController@index')->name('viajes.manual.index');
 Route::get('viajes/manual/create', 'ViajesNetosController@create')->name('viajes.manual.create');
+Route::get('viajes/manual/completa', 'ViajesNetosController@completa')->name('viajes.manual.completa');
 Route::post('viajes/manual', 'ViajesNetosController@store')->name('viajes.manual.store');
 Route::get('viajes/manual/autorizar' , 'ViajesNetosController@edit')->name('viajes.manual.edit');
 Route::patch('viajes/manual', 'ViajesNetosController@update')->name('viajes.manual.update');

@@ -32501,8 +32501,9 @@ require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
 require('./vue-components/viajes-manual-registro');
+require('./vue-components/viajes-manual-completa');
 
-},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-manual-registro":44}],36:[function(require,module,exports){
+},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-manual-completa":44,"./vue-components/viajes-manual-registro":45}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32814,6 +32815,173 @@ module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul
 },{}],43:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
 },{}],44:[function(require,module,exports){
+'use strict';
+
+function timeStamp(type) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    var min = today.getMinutes();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (hh < 10) {
+        hh = '0' + hh;
+    }
+    if (min < 10) {
+        min = '0' + min;
+    }
+
+    var date = yyyy + '-' + mm + '-' + dd;
+    var time = hh + ":" + min;
+
+    return type == 1 ? date : time;
+}
+
+Vue.component('viajes-manual-completa', {
+
+    data: function data() {
+        return {
+            'camiones': [],
+            'origenes': [],
+            'tiros': [],
+            'materiales': [],
+            'generales': {
+                'IdCamion': '',
+                'IdOrigen': '',
+                'IdTiro': '',
+                'IdMaterial': ''
+            },
+            'form': {
+                'viajes': [],
+                'errors': []
+            },
+            'guardando': false,
+            'cargando': false,
+            'numViajes': ''
+        };
+    },
+
+    created: function created() {
+        this.initialize();
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: false,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        }
+    },
+
+    methods: {
+        initialize: function initialize() {
+            this.cargando = true;
+            this.fetchCamiones();
+            this.fetchOrigenes();
+            this.fetchTiros();
+            this.fetchMateriales();
+            this.cargando = false;
+        },
+        setFechaLlegada: function setFechaLlegada(viaje, event) {
+            viaje.FechaLlegada = event.currentTarget.value;
+        },
+        setCubicacion: function setCubicacion(viaje) {
+            var result = $.grep(this.camiones, function (e) {
+                return e.IdCamion == viaje.IdCamion;
+            });
+            viaje.Cubicacion = result[0].CubicacionParaPago;
+        },
+        fillTable: function fillTable() {
+            this.form.viajes = [];
+            var i = 1;
+            while (i <= this.numViajes) {
+                this.addViaje(i);
+                i++;
+            }
+        },
+        addViaje: function addViaje(index) {
+            this.form.viajes.push({
+                'Id': index,
+                'FechaLlegada': timeStamp(1),
+                'IdCamion': '',
+                'Cubicacion': '',
+                'IdOrigen': '',
+                'IdTiro': '',
+                'IdRuta': '',
+                'IdMaterial': '',
+                'PrimerKm': '',
+                'KmSub': '',
+                'KmAd': '',
+                'Turno': '',
+                'Observaciones': '',
+                'Rutas': []
+            });
+        },
+        fetchCamiones: function fetchCamiones() {
+            var _this = this;
+
+            this.$http.get(App.host + '/camiones').then(function (response) {
+                _this.camiones = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this.form, response.body);
+            });
+        },
+        fetchOrigenes: function fetchOrigenes() {
+            var _this2 = this;
+
+            this.$http.get(App.host + '/origenes').then(function (response) {
+                _this2.origenes = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this2.form, response.body);
+            });
+        },
+        fetchTiros: function fetchTiros() {
+            var _this3 = this;
+
+            this.$http.get(App.host + '/tiros').then(function (response) {
+                _this3.tiros = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this3.form, response.body);
+            });
+        },
+        fetchMateriales: function fetchMateriales() {
+            var _this4 = this;
+
+            this.$http.get(App.host + '/materiales').then(function (response) {
+                _this4.materiales = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this4.form, response.body);
+            });
+        },
+        fetchRutas: function fetchRutas(viaje) {
+            var _this5 = this;
+
+            if (viaje.IdOrigen && viaje.IdTiro) {
+                this.$http.get(App.host + '/rutas', { 'params': { 'IdOrigen': viaje.IdOrigen, 'IdTiro': viaje.IdTiro } }).then(function (response) {
+                    viaje.Rutas = response.body;
+                }, function (response) {
+                    App.setErrorsOnForm(_this5.form, response.body);
+                });
+            }
+        }
+    }
+});
+
+},{}],45:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {

@@ -4,3 +4,4 @@ require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
 require('./vue-components/viajes-manual-registro');
+require('./vue-components/viajes-manual-completa');

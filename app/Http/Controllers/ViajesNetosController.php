@@ -41,6 +41,16 @@ class ViajesNetosController extends Controller
     {
         return view('viajes.manual.create');
     }
+    
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function completa()
+    {
+        return view('viajes.manual.completa');
+    }
 
     /**
      * Store a newly created resource in storage.
