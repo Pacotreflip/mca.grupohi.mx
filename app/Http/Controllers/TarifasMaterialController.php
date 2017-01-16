@@ -25,8 +25,12 @@ class TarifasMaterialController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()) {
+            $material = Material::findOrFail($request->get('IdMaterial'));
+            return response()->json($material->tarifaMaterial->toArray());
+        }
         return view('tarifas.material.index')
                 ->withMateriales(Material::all());
     }

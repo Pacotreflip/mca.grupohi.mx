@@ -32905,7 +32905,8 @@ Vue.component('viajes-manual-completa', {
             });
             viaje.Cubicacion = result[0].CubicacionParaPago;
         },
-        fillTable: function fillTable() {
+        fillTable: function fillTable(e) {
+            e.preventDefault();
             this.form.viajes = [];
             var i = 1;
             while (i <= this.numViajes) {
@@ -32916,6 +32917,7 @@ Vue.component('viajes-manual-completa', {
         addViaje: function addViaje(index) {
             this.form.viajes.push({
                 'Id': index,
+                'NumViajes': '',
                 'FechaLlegada': timeStamp(1),
                 'IdCamion': '',
                 'Cubicacion': '',
@@ -32926,57 +32928,128 @@ Vue.component('viajes-manual-completa', {
                 'PrimerKm': '',
                 'KmSub': '',
                 'KmAd': '',
-                'Turno': '',
+                'Turno': 'm',
                 'Observaciones': '',
                 'Rutas': []
             });
         },
         fetchCamiones: function fetchCamiones() {
-            var _this = this;
-
-            this.$http.get(App.host + '/camiones').then(function (response) {
-                _this.camiones = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this.form, response.body);
-            });
-        },
-        fetchOrigenes: function fetchOrigenes() {
             var _this2 = this;
 
-            this.$http.get(App.host + '/origenes').then(function (response) {
-                _this2.origenes = response.body;
+            this.$http.get(App.host + '/camiones').then(function (response) {
+                _this2.camiones = response.body;
             }, function (response) {
                 App.setErrorsOnForm(_this2.form, response.body);
             });
         },
-        fetchTiros: function fetchTiros() {
+        fetchOrigenes: function fetchOrigenes() {
             var _this3 = this;
 
-            this.$http.get(App.host + '/tiros').then(function (response) {
-                _this3.tiros = response.body;
+            this.$http.get(App.host + '/origenes').then(function (response) {
+                _this3.origenes = response.body;
             }, function (response) {
                 App.setErrorsOnForm(_this3.form, response.body);
             });
         },
-        fetchMateriales: function fetchMateriales() {
+        fetchTiros: function fetchTiros() {
             var _this4 = this;
 
-            this.$http.get(App.host + '/materiales').then(function (response) {
-                _this4.materiales = response.body;
+            this.$http.get(App.host + '/tiros').then(function (response) {
+                _this4.tiros = response.body;
             }, function (response) {
                 App.setErrorsOnForm(_this4.form, response.body);
             });
         },
-        fetchRutas: function fetchRutas(viaje) {
+        fetchMateriales: function fetchMateriales() {
             var _this5 = this;
+
+            this.$http.get(App.host + '/materiales').then(function (response) {
+                _this5.materiales = response.body;
+            }, function (response) {
+                App.setErrorsOnForm(_this5.form, response.body);
+            });
+        },
+        fetchRutas: function fetchRutas(viaje) {
+            var _this6 = this;
 
             if (viaje.IdOrigen && viaje.IdTiro) {
                 this.$http.get(App.host + '/rutas', { 'params': { 'IdOrigen': viaje.IdOrigen, 'IdTiro': viaje.IdTiro } }).then(function (response) {
                     viaje.Rutas = response.body;
+                    if (viaje.Rutas.length) {
+                        var Ruta = viaje.Rutas[0];
+                        viaje.IdRuta = Ruta.IdRuta;
+                    }
                 }, function (response) {
-                    App.setErrorsOnForm(_this5.form, response.body);
+                    App.setErrorsOnForm(_this6.form, response.body);
                 });
+            } else {
+                viaje.IdRuta = "";
             }
+        },
+        fetchKms: function fetchKms(viaje) {
+            var _this7 = this;
+
+            if (viaje.IdMaterial) {
+                this.$http.get(App.host + '/tarifas_material', { 'params': { 'IdMaterial': viaje.IdMaterial } }).then(function (response) {
+                    viaje.PrimerKm = response.body.PrimerKM;
+                    viaje.KmSub = response.body.KMSubsecuente;
+                    viaje.KmAd = response.body.KMAdicional;
+                }, function (response) {
+                    App.setErrorsOnForm(_this7.form, response.body);
+                });
+            } else {
+                viaje.PrimerKm = '';
+                viaje.KmSub = '';
+                viaje.KmAd = '';
+            }
+        },
+        setCamionGeneral: function setCamionGeneral() {
+            var _this = this;
+            this.form.viajes.forEach(function (viaje) {
+                viaje.IdCamion = _this.generales.IdCamion;
+                _this.setCubicacion(viaje);
+            });
+        },
+        setOrigenGeneral: function setOrigenGeneral() {
+            var _this = this;
+            this.form.viajes.forEach(function (viaje) {
+                viaje.IdOrigen = _this.generales.IdOrigen;
+                _this.fetchRutas(viaje);
+            });
+        },
+        setTiroGeneral: function setTiroGeneral() {
+            var _this = this;
+            this.form.viajes.forEach(function (viaje) {
+                viaje.IdTiro = _this.generales.IdTiro;
+                _this.fetchRutas(viaje);
+            });
+        },
+        setMaterialGeneral: function setMaterialGeneral() {
+            var _this = this;
+            this.form.viajes.forEach(function (viaje) {
+                viaje.IdMaterial = _this.generales.IdMaterial;
+                _this.fetchKms(viaje);
+            });
+        },
+        confirmarCarga: function confirmarCarga(e) {
+            var _this8 = this;
+
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar con el registro?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this8.registrar();
+            });
+        },
+        registrar: function registrar() {
+            console.log(this.form.viajes);
         }
     }
 });

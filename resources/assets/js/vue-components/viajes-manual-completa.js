@@ -77,7 +77,8 @@ Vue.component('viajes-manual-completa', {
             var result = $.grep(this.camiones, function(e){ return e.IdCamion == viaje.IdCamion; });
             viaje.Cubicacion = result[0].CubicacionParaPago;
         },
-        fillTable: function() {
+        fillTable: function(e) {
+            e.preventDefault();
             this.form.viajes = [];
             var i = 1;
             while(i <= this.numViajes) {
@@ -88,6 +89,7 @@ Vue.component('viajes-manual-completa', {
         addViaje: function(index) {
             this.form.viajes.push({
                'Id': index,
+               'NumViajes': '',
                'FechaLlegada': timeStamp(1),
                'IdCamion': '',
                'Cubicacion': '',
@@ -98,7 +100,7 @@ Vue.component('viajes-manual-completa', {
                'PrimerKm': '',
                'KmSub': '',
                'KmAd': '',
-               'Turno': '',
+               'Turno': 'm',
                'Observaciones': '',
                'Rutas': []
             });
@@ -135,10 +137,75 @@ Vue.component('viajes-manual-completa', {
             if(viaje.IdOrigen && viaje.IdTiro) {
                 this.$http.get(App.host + '/rutas', {'params': {'IdOrigen': viaje.IdOrigen, 'IdTiro': viaje.IdTiro}}).then((response) => {
                     viaje.Rutas = response.body;
+                    if(viaje.Rutas.length) {
+                        var Ruta = viaje.Rutas[0];
+                        viaje.IdRuta = Ruta.IdRuta;
+                    }
                 }, (response) => {
                     App.setErrorsOnForm(this.form, response.body);
                 })
+            } else {
+                viaje.IdRuta = "";
             }
+        },
+        fetchKms: function(viaje) {
+            if(viaje.IdMaterial) {
+                this.$http.get(App.host + '/tarifas_material', {'params': {'IdMaterial': viaje.IdMaterial}}).then((response) => {
+                    viaje.PrimerKm = response.body.PrimerKM;
+                    viaje.KmSub = response.body.KMSubsecuente;
+                    viaje.KmAd = response.body.KMAdicional;
+                }, (response) => {
+                    App.setErrorsOnForm(this.form, response.body);
+                });
+            } else {
+                viaje.PrimerKm = '';
+                viaje.KmSub = '';
+                viaje.KmAd = '';
+            }
+        },
+        setCamionGeneral: function() {
+            var _this = this;
+            this.form.viajes.forEach(function(viaje) {
+                viaje.IdCamion = _this.generales.IdCamion;
+                _this.setCubicacion(viaje);
+            });
+        },
+        setOrigenGeneral: function() {
+            var _this = this;
+            this.form.viajes.forEach(function(viaje) {
+                viaje.IdOrigen = _this.generales.IdOrigen;
+                _this.fetchRutas(viaje);
+            });
+        },
+        setTiroGeneral: function() {
+            var _this = this;
+            this.form.viajes.forEach(function(viaje) {
+                viaje.IdTiro = _this.generales.IdTiro;
+                _this.fetchRutas(viaje);
+            });
+        },
+        setMaterialGeneral: function() {
+            var _this = this;
+            this.form.viajes.forEach(function(viaje) {
+                viaje.IdMaterial = _this.generales.IdMaterial;
+                _this.fetchKms(viaje);
+            });
+        },
+        confirmarCarga: function(e) {
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar con el registro?", 
+                text: "¿Esta seguro de que la información es correcta?", 
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, () => this.registrar() );
+        },
+        registrar: function() {
+            console.log(this.form.viajes);
         }
     }
 });
