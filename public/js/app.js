@@ -32907,12 +32907,17 @@ Vue.component('viajes-manual-completa', {
         },
         fillTable: function fillTable(e) {
             e.preventDefault();
+            this.cargando = true;
             this.form.viajes = [];
+            this.generales.IdCamion = '';
+            this.generales.IdOrigen = '', this.generales.IdTiro = '';
+            this.generales.IdMaterial = '';
             var i = 1;
             while (i <= this.numViajes) {
                 this.addViaje(i);
                 i++;
             }
+            this.cargando = false;
         },
         addViaje: function addViaje(index) {
             this.form.viajes.push({
@@ -32928,7 +32933,7 @@ Vue.component('viajes-manual-completa', {
                 'PrimerKm': '',
                 'KmSub': '',
                 'KmAd': '',
-                'Turno': 'm',
+                'Turno': 'M',
                 'Observaciones': '',
                 'Rutas': []
             });
@@ -33049,7 +33054,21 @@ Vue.component('viajes-manual-completa', {
             });
         },
         registrar: function registrar() {
-            console.log(this.form.viajes);
+            var _this9 = this;
+
+            this.guardando = true;
+            this.form.errors = [];
+
+            this.$http.post(App.host + '/viajes/manual/completa', this.form).then(function (response) {
+                swal('', response.body.message, 'success');
+                _this9.guardando = false;
+                if (!response.body.rechazados.length) {
+                    _this9.form.viajes = [];
+                }
+            }, function (response) {
+                App.setErrorsOnForm(_this9.form, response.body);
+                _this9.guardando = false;
+            });
         }
     }
 });

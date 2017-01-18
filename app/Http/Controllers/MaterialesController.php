@@ -31,6 +31,8 @@ class MaterialesController extends Controller
             return response()->json(Material::all()->toArray());
         }
         
+        $materiales = Material::all();
+        
         return view('materiales.index')
                 ->withMateriales($materiales);
     }

@@ -93,4 +93,56 @@ class ViajeNeto extends Model
             DB::connection($this->connection)->rollback();
         }
     }
+    
+    public static function cargaManualCompleta($request) {
+        DB::connection('sca')->beginTransaction();
+        try {
+            $registrados = 0;
+            $rechazados = 0;
+            $rechazadosArray = [];
+            foreach($request->get('viajes', []) as $viaje) {
+                for($i = 0; $i < $viaje['NumViajes']; $i++) {
+                    DB::connection("sca")->statement("call registra_viajes_netos_viajes("
+                            .$request->session()->get("id").",'"
+                            .$viaje["FechaLlegada"]."',"
+                            .$viaje["IdCamion"].","
+                            .$viaje["Cubicacion"].","
+                            .$viaje["IdOrigen"].","
+                            .$viaje["IdTiro"].","
+                            .$viaje["IdRuta"].","
+                            .$viaje["IdMaterial"].","
+                            .$viaje["PrimerKm"].","
+                            .$viaje["KmSub"].","
+                            .$viaje["KmAd"].",'"
+                            .$viaje["Turno"]."','"
+                            .$viaje["Observaciones"]."',"
+                            .auth()->user()->idusuario
+                            .",@OK);"
+                    );  
+                    $result = DB::connection('sca')->select('SELECT @OK');
+                    if($result[0]->{'@OK'} == '1') {
+                        $registrados += 1;
+                    } else {
+                        $rechazados += 1;
+                        $rechazadosArray [] = $viaje['Id'];
+                    }
+                }
+            }
+            
+            $i = 0;
+            $str = '';
+            foreach($rechazadosArray as $r) {
+                if($i == 0) {
+                    $str .= $r;
+                } else {
+                    $str .= ', '.$r;
+                }
+            }
+            DB::connection('sca')->commit();
+            return ['message' => "VIAJES AUTORIZADOS (".$registrados.")\n VIAJES NO REGISTRADOS (".$rechazados.")".(count($rechazadosArray) > 0 ? "\n ID's NO REGISTRADOS (".$str.")" : ""),
+                'rechazados' => $rechazadosArray];
+        } catch (Exception $ex) {
+            DB::connection('sca')->rollback();
+        }
+    }
 }

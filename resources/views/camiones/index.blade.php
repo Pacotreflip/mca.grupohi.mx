@@ -31,7 +31,7 @@
                 <a href="{{ route('camiones.show', $camion) }}">{{ $camion->Economico }}</a>
           </td>
           <td>{{ $camion->Propietario }}</td>
-          <td>{{ $camion->operador->Nombre }}</td>
+          <td>{{ isset($camion->operador->Nombre) ? $camion->operador->Nombre : 'SIN OPERADOR' }}</td>
           <td>{{ $camion->CubicacionReal}} m<sup>3</sup></td>
           <td>{{ $camion->CubicacionParaPago}} m<sup>3</sup></td>
           <td>{{ $camion->present()->estatus }}</td>

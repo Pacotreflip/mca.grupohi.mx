@@ -9042,4 +9042,22 @@ body {
   position: relative;
   top: -5px; }
 
+input.chico {
+  width: 50px; }
+
+input.mediano {
+  width: 100px; }
+
+input.grande {
+  width: 150px; }
+
+select.chico {
+  width: 50px; }
+
+select.mediano {
+  width: 100px; }
+
+select.grande {
+  width: 150px; }
+
 /*# sourceMappingURL=sass.css.map */

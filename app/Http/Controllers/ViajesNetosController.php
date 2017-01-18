@@ -136,4 +136,8 @@ class ViajesNetosController extends Controller
     {
         //
     }
+    
+    public function store_completa(Requests\CreateViajeNetoCompletaRequest $request) {
+        return response()->json(ViajeNeto::cargaManualCompleta($request));
+    }
 }
