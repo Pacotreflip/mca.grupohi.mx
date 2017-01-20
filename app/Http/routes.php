@@ -73,7 +73,7 @@ Route::post('usuarios/{usuarios}/origenes/{origenes}', 'OrigenesUsuariosControll
 Route::get('usuarios', 'UserController@index');
 
 //Rutas de Viajes Netos
-Route::get('viajes/manual/index', 'ViajesNetosController@index')->name('viajes.manual.index');
+Route::get('viajes/netos', 'ViajesNetosController@index')->name('viajes.netos.index');
 Route::get('viajes/netos/create', 'ViajesNetosController@create')->name('viajes.netos.create');
 Route::group(['prefix' => 'viajes/netos'], function() {
     Route::post('completa', 'ViajesNetosController@store');

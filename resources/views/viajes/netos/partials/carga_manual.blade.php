@@ -3,7 +3,7 @@
 <hr>
 <div id="app">
     <global-errors></global-errors>
-    <viajes-manual-registro inline-template>
+    <viajes-manual inline-template>
         <section>            
             <app-errors v-bind:form="form"></app-errors>
             <div v-if="!cargando" class="table-responsive col-md-10 col-md-offset-1 rcorners">

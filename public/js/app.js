@@ -32500,10 +32500,11 @@ require('./vue-components/errors');
 require('./vue-components/origenes-usuarios');
 require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
-require('./vue-components/viajes-manual-registro');
-require('./vue-components/viajes-manual-completa');
+require('./vue-components/viajes-manual');
+require('./vue-components/viajes-completa');
+require('./vue-components/viajes-validar');
 
-},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-manual-completa":44,"./vue-components/viajes-manual-registro":45}],36:[function(require,module,exports){
+},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-completa":44,"./vue-components/viajes-manual":45,"./vue-components/viajes-validar":46}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -33111,7 +33112,7 @@ Array.prototype.removeValue = function (name, value) {
     this.push.apply(this, array); //push all elements except the one we want to delete
 };
 
-Vue.component('viajes-manual-registro', {
+Vue.component('viajes-manual', {
 
     data: function data() {
         return {
@@ -33286,6 +33287,74 @@ Vue.component('viajes-manual-registro', {
                 confirmButtonColor: "#ec6c62"
             }, function () {
                 return _this6.registrar();
+            });
+        }
+    }
+});
+
+},{}],46:[function(require,module,exports){
+'use strict';
+
+Vue.component('viajes-validar', {
+    data: function data() {
+        return {
+            'fechas': {
+                'FechaInicial': '',
+                'FechaFinal': ''
+            },
+            'form': {
+                'viajes': [],
+                'errors': []
+            }
+        };
+    },
+
+    created: function created() {
+        this.initialize();
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: false,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        }
+    },
+
+    methods: {
+        initialize: function initialize() {
+            this.cargando = true;
+            this.cargando = false;
+        },
+
+        setFechaInicial: function setFechaInicial(event) {
+            this.fechas.FechaInicial = event.currentTarget.value;
+        },
+
+        setFechaFinal: function setFechaFinal(event) {
+            this.fechas.FechaFinal = event.currentTarget.value;
+        },
+
+        fetchViajes: function fetchViajes(e) {
+            var _this = this;
+
+            e.preventDefault();
+
+            this.cargando = true;
+            this.form.viajes = [];
+            this.$http.get(App.host + '/viajes/netos', { 'params': { 'type': 'validar', 'fechas': this.fechas } }).then(function (response) {
+                _this.form.viajes = response.body;
+                _this.cargando = false;
+            }, function (response) {
+                App.setErrorsOnForm(_this.form, response.body);
+                _this.cargando = false;
             });
         }
     }

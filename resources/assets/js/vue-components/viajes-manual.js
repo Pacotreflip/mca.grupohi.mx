@@ -25,7 +25,7 @@ Array.prototype.removeValue = function(name, value){
    this.push.apply(this, array); //push all elements except the one we want to delete
 }
 
-Vue.component('viajes-manual-registro', {
+Vue.component('viajes-manual', {
     
     data: function() {
         return {

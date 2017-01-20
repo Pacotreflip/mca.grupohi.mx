@@ -24,11 +24,15 @@
                 <td>{{ $viaje->HoraLlegada }}
                 <td>{{ $viaje->Camion }}</td>
                 <td>{{ $viaje->Tiro }}</td>
-                <td>{{ $viaje->Origen }}
-                <td>{{ $viaje->Material }}
-                <td>{{ $viaje->Observaciones }}
-                <td><input id="{{$viaje->IdViajeNeto}}" type="checkbox" value="20" name="Estatus[{{$viaje->IdViajeNeto}}]"/></td>
-                <td><input id="{{$viaje->IdViajeNeto}}" type="checkbox" value="22" name="Estatus[{{$viaje->IdViajeNeto}}]"/></td>
+                <td>{{ $viaje->Origen }}</td>
+                <td>{{ $viaje->Material }}</td>
+                <td>{{ $viaje->Observaciones }}</td>
+                <td>
+                    <input id="{{$viaje->IdViajeNeto}}" type="checkbox" value="20" name="Estatus[{{$viaje->IdViajeNeto}}]"/>
+                </td>
+                <td>
+                    <input id="{{$viaje->IdViajeNeto}}" type="checkbox" value="22" name="Estatus[{{$viaje->IdViajeNeto}}]"/>
+                </td>
             </tr>
             @endforeach
         </tbody>
