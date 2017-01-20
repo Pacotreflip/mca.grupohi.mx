@@ -247,14 +247,18 @@ Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
 });
 
 //ViajesNetos
-Breadcrumbs::register('viajes.manual.create', function($breadcrumbs) {
-    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajes.manual.create'));
+Breadcrumbs::register('viajes.netos.carga_manual', function($breadcrumbs) {
+    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajes.netos.create', ['action' => 'create']));
 });
 
-Breadcrumbs::register('viajes.manual.edit', function($breadcrumbs) {
-    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES MANUALES', route('viajes.manual.edit'));
+Breadcrumbs::register('viajes.netos.carga_manual_completa', function($breadcrumbs) {
+    $breadcrumbs->push('CARGA MANUAL COMPLETA', route('viajes.netos.create', ['action' => 'completa']));
 });
 
-Breadcrumbs::register('viajes.manual.completa', function($breadcrumbs) {
-    $breadcrumbs->push('CARGA MANUAL COMPLETA', route('viajes.manual.completa'));
+Breadcrumbs::register('viajes.netos.autorizar', function($breadcrumbs) {
+    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES MANUALES', route('viajes.netos.edit', ['action' => 'autorizar']));
+});
+
+Breadcrumbs::register('viajes.netos.validar', function($breadcrumbs) {
+    $breadcrumbs->push('VALIDAR VIAJES', route('viajes.netos.edit', ['action' => 'validar']));
 });

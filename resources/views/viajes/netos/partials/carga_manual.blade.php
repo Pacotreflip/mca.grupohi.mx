@@ -1,8 +1,5 @@
-@extends('layout')
-
-@section('content')
 <h1>VIAJES MANUALES</h1>
-{!! Breadcrumbs::render('viajes.manual.create') !!}
+{!! Breadcrumbs::render('viajes.netos.carga_manual') !!}
 <hr>
 <div id="app">
     <global-errors></global-errors>
@@ -78,4 +75,3 @@
         </section>
     </viajes-manual-registro>
 </div>
-@stop

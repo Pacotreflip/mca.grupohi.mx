@@ -33,60 +33,32 @@ class ViajesNetosController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Show the form for creating new resources.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        return view('viajes.manual.create');
-    }
-    
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function completa()
-    {
-        return view('viajes.manual.completa');
+        if($request->get('action') == 'manual') {
+            return view('viajes.netos.create')->withAction('manual');
+        } else if($request->get('action') == 'completa') {
+            return view('viajes.netos.create')->withAction('completa');
+        }       
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Store newly created resources in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateViajeNetoRequest $request)
     {
-        foreach($request->get('viajes', []) as $viaje) {
-        
-            $ruta = Ruta::where('IdOrigen', $viaje['IdOrigen'])
-                    ->where('IdTiro', $viaje['IdTiro'])
-                    ->first();
-            $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaLlegada'].' '.$viaje['HoraLlegada'])
-                    ->subMinutes($ruta->cronometria->TiempoMinimo); 
-
-            $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
-            $extra = [
-                'FechaCarga' => Carbon::now()->toDateString(),
-                'HoraCarga' => Carbon::now()->toTimeString(),
-                'FechaSalida' => $fecha_salida->toDateString(),
-                'HoraSalida' => $fecha_salida->toTimeString(),
-                'IdProyecto' => $proyecto_local->IdProyecto,
-                'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
-                'Estatus' => 29,
-
-            ];
-
-            ViajeNeto::create(array_merge($viaje, $extra));
+        if($request->path() == 'viajes/netos/manual') {
+            return response()->json(ViajeNeto::cargaManual($request));
+        } else if($request->path() == 'viajes/netos/completa') {
+            return response()->json(ViajeNeto::cargaManualCompleta($request));
         }
-
-        return response()->json([
-            'success' => true,
-            'message' => '¡'.count($request->get('viajes')).' VIAJE(S) REGISTRADO(S) CORRECTAMENTE!'
-        ]);
     }
 
     /**
@@ -101,29 +73,39 @@ class ViajesNetosController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Show the form for editing all the resources.
      *
-     * @param  int  $id
+     * @param  Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function edit()
+    public function edit(Request $request)
     {
-        return view('viajes.manual.edit')
-                ->withViajes(ViajeNeto::registradosManualmente()->get());
+        if($request->get('action') == 'validar') {
+            return view('viajes.netos.edit')
+                    ->withViajes(ViajeNeto::porValidar()->get())
+                    ->withAction('validar');
+        } else if($request->get('action') == 'autorizar') {
+            return view('viajes.netos.edit')
+                ->withViajes(ViajeNeto::registradosManualmente()->get())
+                ->withAction('autorizar');
+        }
     }
 
     /**
-     * Update the specified resource in storage.
+     * Update the resources in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function update(Requests\EditViajeNetoRequest $request)
     {
-        $msg = ViajeNeto::autorizar($request->get('Estatus'));
-        Flash::success($msg);
-        return response()->json(['path' => route('viajes.manual.edit')]);
+        if($request->path() == 'viajes/netos/validar') {
+            //Validar Viajes Netos
+        } else if($request->path() == 'viajes/netos/autorizar') {
+            $msg = ViajeNeto::autorizar($request->get('Estatus'));
+            Flash::success($msg);
+            return response()->json(['path' => route('viajes.netos.edit', ['action' => 'autorizar'])]);
+        }
     }
 
     /**
@@ -135,9 +117,5 @@ class ViajesNetosController extends Controller
     public function destroy($id)
     {
         //
-    }
-    
-    public function store_completa(Requests\CreateViajeNetoCompletaRequest $request) {
-        return response()->json(ViajeNeto::cargaManualCompleta($request));
     }
 }

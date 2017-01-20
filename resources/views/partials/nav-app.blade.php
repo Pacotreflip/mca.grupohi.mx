@@ -52,11 +52,11 @@
                 <li class="dropdown-submenu">
                     <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Carga Manual</a>
                     <ul class="dropdown-menu">
-                        <li><a tabindex="-1" href="{{ route('viajes.manual.create') }}">Ingresar Viajes</a></li>
-                        <li><a tabindex="-1" href="{{ route('viajes.manual.edit') }}">Autorizar Viajes</a></li>
+                        <li><a tabindex="-1" href="{{ route('viajes.netos.create', ['action' => 'manual']) }}">Ingresar Viajes</a></li>
+                        <li><a tabindex="-1" href="{{ route('viajes.netos.edit', ['action' => 'autorizar']) }}">Autorizar Viajes</a></li>
                     </ul>
                 </li>
-                <li><a href="{{ route('viajes.manual.completa') }}">Carga Manual Completa</a></li>
+                <li><a href="{{ route('viajes.netos.create', ['action' => 'completa']) }}">Carga Manual Completa</a></li>
             </ul>
         </li>
     </ul>

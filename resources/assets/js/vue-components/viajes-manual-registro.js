@@ -161,7 +161,7 @@ Vue.component('viajes-manual-registro', {
         registrar: function() {
             this.guardando = true;
             this.form.errors = [];
-            this.$http.post(App.host + '/viajes/manual', this.form).then((response) => {
+            this.$http.post(App.host + '/viajes/netos/manual', this.form).then((response) => {
                 if(response.body.success) {
                     swal({
                         type: 'success',

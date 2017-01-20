@@ -74,9 +74,13 @@ Route::get('usuarios', 'UserController@index');
 
 //Rutas de Viajes Netos
 Route::get('viajes/manual/index', 'ViajesNetosController@index')->name('viajes.manual.index');
-Route::get('viajes/manual/create', 'ViajesNetosController@create')->name('viajes.manual.create');
-Route::get('viajes/manual/completa', 'ViajesNetosController@completa')->name('viajes.manual.completa');
-Route::post('viajes/manual', 'ViajesNetosController@store')->name('viajes.manual.store');
-Route::post('viajes/manual/completa', 'ViajesNetosController@store_completa')->name('viajes.manual.completa');
-Route::get('viajes/manual/autorizar' , 'ViajesNetosController@edit')->name('viajes.manual.edit');
-Route::patch('viajes/manual', 'ViajesNetosController@update')->name('viajes.manual.update');
+Route::get('viajes/netos/create', 'ViajesNetosController@create')->name('viajes.netos.create');
+Route::group(['prefix' => 'viajes/netos'], function() {
+    Route::post('completa', 'ViajesNetosController@store');
+    Route::post('manual', 'ViajesNetosController@store');
+});
+Route::get('viajes/netos/edit' , 'ViajesNetosController@edit')->name('viajes.netos.edit');
+Route::group(['prefix' => 'viajes/netos'], function() {
+    Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes.netos.autorizar');
+    Route::patch('validar', 'ViajesNetosController@update')->name('viajes.netos.validar');
+});

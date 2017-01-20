@@ -33059,7 +33059,7 @@ Vue.component('viajes-manual-completa', {
             this.guardando = true;
             this.form.errors = [];
 
-            this.$http.post(App.host + '/viajes/manual/completa', this.form).then(function (response) {
+            this.$http.post(App.host + '/viajes/netos/completa', this.form).then(function (response) {
                 swal('', response.body.message, 'success');
                 _this9.guardando = false;
                 if (!response.body.rechazados.length) {
@@ -33255,7 +33255,7 @@ Vue.component('viajes-manual-registro', {
 
             this.guardando = true;
             this.form.errors = [];
-            this.$http.post(App.host + '/viajes/manual', this.form).then(function (response) {
+            this.$http.post(App.host + '/viajes/netos/manual', this.form).then(function (response) {
                 if (response.body.success) {
                     swal({
                         type: 'success',

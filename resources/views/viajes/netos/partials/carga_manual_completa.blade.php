@@ -2,7 +2,7 @@
 
 @section('content')
 <h1>VIAJES MANUALES</h1>
-{!! Breadcrumbs::render('viajes.manual.completa') !!}
+{!! Breadcrumbs::render('viajes.netos.carga_manual_completa') !!}
 <hr>
 <div id="app">
     <global-errors></global-errors>

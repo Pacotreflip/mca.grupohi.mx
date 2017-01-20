@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class ViajeNeto extends Model
 {
@@ -56,6 +57,10 @@ class ViajeNeto extends Model
         return $query->where('Estatus', 29);
     }
     
+    public function scopePorValidar($query) {
+        return $query->where('Estatus', 0)->orWhere('Estatus', 10)->orWhere('Estatus', 20);
+    }
+    
     public static function autorizar($data) {
         $autorizados = 0;
         DB::connection('sca')->beginTransaction();
@@ -92,6 +97,39 @@ class ViajeNeto extends Model
         } catch (Exception $ex) {
             DB::connection($this->connection)->rollback();
         }
+    }
+    
+    public static function cargaManual($request) {
+        DB::connection('sca')->beginTransaction();
+        try {
+            foreach($request->get('viajes', []) as $viaje) {
+                $ruta = Ruta::where('IdOrigen', $viaje['IdOrigen'])
+                        ->where('IdTiro', $viaje['IdTiro'])
+                        ->first();
+                $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaLlegada'].' '.$viaje['HoraLlegada'])
+                        ->subMinutes($ruta->cronometria->TiempoMinimo); 
+
+                $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
+                $extra = [
+                    'FechaCarga' => Carbon::now()->toDateString(),
+                    'HoraCarga' => Carbon::now()->toTimeString(),
+                    'FechaSalida' => $fecha_salida->toDateString(),
+                    'HoraSalida' => $fecha_salida->toTimeString(),
+                    'IdProyecto' => $proyecto_local->IdProyecto,
+                    'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
+                    'Estatus' => 29,
+                ];
+
+                ViajeNeto::create(array_merge($viaje, $extra));
+            }
+            DB::connection('sca')->commit();
+            return [
+                'success' => true,
+                'message' => '¡'.count($request->get('viajes')).' VIAJE(S) REGISTRADO(S) CORRECTAMENTE!'
+            ];
+        } catch (Exception $ex) {
+            DB::connection('sca')->rollback();
+        }        
     }
     
     public static function cargaManualCompleta($request) {
