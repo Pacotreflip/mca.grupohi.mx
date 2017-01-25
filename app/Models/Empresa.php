@@ -11,7 +11,7 @@ class Empresa extends Model
     
     protected $connection = 'sca';
     protected $table = 'empresas';
-    protected $primaryKey = 'idEmpresa';
+    protected $primaryKey = 'IdEmpresa';
     protected $fillable = [
         'razonSocial',
         'RFC',

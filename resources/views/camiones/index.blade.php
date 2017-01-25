@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>{{ strtoupper(trans('strings.camiones')) }}
+<h1>CAMIONES
   <a href="{{ route('camiones.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_camion') }}</a>
 </h1>
 {!! Breadcrumbs::render('camiones.index') !!}
@@ -21,7 +21,7 @@
         <th>Real</th>
         <th>Para Pago</th>
         <th>Estatus</th>
-        <th width="160px">Acciones</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -36,8 +36,12 @@
           <td>{{ $camion->CubicacionParaPago}} m<sup>3</sup></td>
           <td>{{ $camion->present()->estatus }}</td>
           <td>
-              {!! link_to_route('camiones.edit', trans('strings.edit'), [$camion], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('camiones.destroy', ($camion->Estatus == 1 ? trans('strings.delete') : trans('strings.activate')), [$camion], ['class' => 'btn ' . ($camion->Estatus == 1 ? 'btn-danger' : 'btn-success') . ' btn-sm camiones_destroy '.($camion->Estatus == 1 ? 'activo' : 'inactivo')]) !!}
+              <a href="{{ route('camiones.edit', [$camion]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($camion->Estatus == 1)
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-danger btn-sm camiones_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-sm camiones_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

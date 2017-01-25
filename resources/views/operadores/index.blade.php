@@ -16,7 +16,7 @@
         <th>No. Licencia</th>
         <th>Vigencia Licencia</th>
         <th>Estatus</th>
-        <th width="160px">Acciones</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -31,8 +31,12 @@
           <td>{{ $operador->VigenciaLicencia }}</td>
           <td>{{ $operador->present()->estatus }}</td>
           <td>
-              {!! link_to_route('operadores.edit', 'EDITAR', [$operador], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('operadores.destroy', 'ELIMINAR', [$operador], ['class' => 'btn btn-danger btn-sm operadores_destroy']) !!}
+              <a href="{{ route('operadores.edit', [$operador]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($operador->Estatus == 1)
+              <a href="{{ route('operadores.destroy', [$operador]) }}" class="btn btn-danger btn-sm operadores_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('operadores.destroy', [$operador]) }}" class="btn btn-success btn-sm operadores_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

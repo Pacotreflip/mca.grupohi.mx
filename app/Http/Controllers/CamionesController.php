@@ -174,7 +174,7 @@ class CamionesController extends Controller
         $camion = Camion::findOrFail($id);
         if($camion->Estatus == 1) {
             $camion->Estatus = 0;
-            $text = '¡Camión Deshabilitado!';
+            $text = '¡Camión Inhabilitado!';
         } else {
             $camion->Estatus = 1;
             $text = '¡Camión Habilitado!';

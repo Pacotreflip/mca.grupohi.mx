@@ -21,7 +21,7 @@
       @foreach($empresas as $empresa)
         <tr>
           <td>
-            <a href="{{ route('empresas.show', $empresa) }}">#{{ $empresa->idEmpresa }}</a>
+            <a href="{{ route('empresas.show', $empresa) }}">#{{ $empresa->IdEmpresa }}</a>
           </td>
           <td>{{ $empresa->razonSocial }}</td>
           <td>{{ $empresa->RFC }}</td>

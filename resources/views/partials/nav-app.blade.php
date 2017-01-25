@@ -4,39 +4,39 @@
         {{ $currentProyecto->descripcion }} <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li>{!! link_to_route('proyectos', trans('strings.change_project')) !!}</li>
+        <li>{!! link_to_route('proyectos', 'Cambiar De Proyecto') !!}</li>
     </ul>
   </li>
   
   <li class="dropdown">
     <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
-        {{ trans('strings.catalogs') }} <span class="caret"></span>
+        Catálogos <span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
-        <li><a href="{{ route('centroscostos.index') }}">{{ trans('strings.centroscostos') }}</a></li>
-        <li><a href="{{ route('camiones.index') }}">{{ trans('strings.camiones') }}</a></li>
-        <li><a href="{{ route('empresas.index') }}">{{ trans('strings.empresas') }}</a></li>
+        <li><a href="{{ route('centroscostos.index') }}">Centros De Costo</a></li>
+        <li><a href="{{ route('camiones.index') }}">Camiones</a></li>
+        <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
         <li class="dropdown-submenu">
-            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Factores de Abundamiento</a>
+            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Factores De Abundamiento</a>
             <ul class="dropdown-menu">
                 <li><a tabindex="-1" href="{{ route('fda_material.index') }}">Por Material</a></li>
-                <li><a tabindex="-1" href="{{ route('fda_banco_material.index') }}">Por Banco y Material</a></li>
+                <li><a tabindex="-1" href="{{ route('fda_banco_material.index') }}">Por Banco Y Material</a></li>
             </ul>
         </li>
-        <li><a href="{{ route('marcas.index') }}">{{ trans('strings.brands') }}</a></li>
-        <li><a href="{{ route('materiales.index') }}">{{ trans('strings.materials') }}</a></li>
-        <li><a href="{{ route('operadores.index') }}">{{ trans('strings.operadores') }}</a></li>
-        <li><a href="{{ route('origenes.index') }}">{{ trans('strings.origins') }}</a></li>
-        <li><a href="{{ route('origenes_usuarios.index') }}">{{ trans('strings.origenes_usuarios') }}</a></li>
-        <li><a href="{{ route('rutas.index') }}">{{ trans('strings.rutas') }}</a></li>
-        <li><a href="{{ route('sindicatos.index') }}">{{ trans('strings.sindicatos') }}</a></li>
-        <li><a href="{{ route('tiros.index') }}">{{ trans('strings.tiros') }}</a></li>
+        <li><a href="{{ route('marcas.index') }}">Marcas</a></li>
+        <li><a href="{{ route('materiales.index') }}">Materiales</a></li>
+        <li><a href="{{ route('operadores.index') }}">Operadores</a></li>
+        <li><a href="{{ route('origenes.index') }}">Origenes</a></li>
+        <li><a href="{{ route('origenes_usuarios.index') }}">Origenes Por Usuario</a></li>
+        <li><a href="{{ route('rutas.index') }}">Rutas</a></li>
+        <li><a href="{{ route('sindicatos.index') }}">Sindicatos</a></li>
+        <li><a href="{{ route('tiros.index') }}">Tiros</a></li>
         <li class="dropdown-submenu">
-            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">{{ trans('strings.tarifas') }}</a>
+            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Tarifas</a>
             <ul class="dropdown-menu">
-                <li><a tabindex="-1" href="{{ route('tarifas_material.index') }}">{{ trans('strings.tarifas_material') }}</a></li>
-                <li><a tabindex="-1" href="{{ route('tarifas_peso.index') }}">{{ trans('strings.tarifas_peso') }}</a></li>
-                <li><a tabindex="-1" href="{{ route('tarifas_tiporuta.index') }}">{{ trans('strings.tarifas_tiporuta') }}</a></li>
+                <li><a tabindex="-1" href="{{ route('tarifas_material.index') }}">Tarifas Por Material</a></li>
+                <li><a tabindex="-1" href="{{ route('tarifas_peso.index') }}">Tarifas Por Peso</a></li>
+                <li><a tabindex="-1" href="{{ route('tarifas_tiporuta.index') }}">Tarifas Por Tipo De Ruta</a></li>
             </ul>
         </li>
     </ul>
@@ -59,8 +59,9 @@
                 <li><a href="{{ route('viajes.netos.create', ['action' => 'completa']) }}">Carga Manual Completa</a></li>
             </ul>
         </li>
+        <li><a href="{{ route('viajes.netos.edit', ['action' => 'validar']) }}">Validar Viajes</a></li>
     </ul>
   </li>
 @else
-  <li><a href="{{ route('proyectos') }}">{{ trans('strings.projects') }}</a></li>
+  <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
 @endif

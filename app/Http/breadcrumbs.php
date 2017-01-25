@@ -3,7 +3,7 @@
 //Catalogos->Materiales
 
 Breadcrumbs::register('materiales.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.materials')), route('materiales.index'));
+    $breadcrumbs->push('MATERIALES', route('materiales.index'));
 });
 
 Breadcrumbs::register('materiales.show', function($breadcrumbs, $material){
@@ -13,18 +13,18 @@ Breadcrumbs::register('materiales.show', function($breadcrumbs, $material){
 
 Breadcrumbs::register('materiales.create', function($breadcrumbs){
     $breadcrumbs->parent('materiales.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_material')), route('materiales.create'));
+    $breadcrumbs->push('NUEVO MATERIAL', route('materiales.create'));
 });
 
 Breadcrumbs::register('materiales.edit', function($breadcrumbs, $material){
     $breadcrumbs->parent('materiales.show', $material);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('materiales.edit', $material));
+    $breadcrumbs->push('EDITAR', route('materiales.edit', $material));
 });
 
 //Catalogos->Marcas
 
 Breadcrumbs::register('marcas.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.brands')), route('marcas.index'));
+    $breadcrumbs->push('MARCAS', route('marcas.index'));
 });
 
 Breadcrumbs::register('marcas.show', function($breadcrumbs, $marca){
@@ -34,18 +34,18 @@ Breadcrumbs::register('marcas.show', function($breadcrumbs, $marca){
 
 Breadcrumbs::register('marcas.create', function($breadcrumbs){
     $breadcrumbs->parent('marcas.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_brand')), route('marcas.create'));
+    $breadcrumbs->push('NUEVA MARCA', route('marcas.create'));
 });
 
 Breadcrumbs::register('marcas.edit', function($breadcrumbs, $marca){
     $breadcrumbs->parent('marcas.show', $marca);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('marcas.edit', $marca));
+    $breadcrumbs->push('EDITAR', route('marcas.edit', $marca));
 });
 
 //Catalogos->Sindicatos
 
 Breadcrumbs::register('sindicatos.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.sindicatos')), route('sindicatos.index'));
+    $breadcrumbs->push('SINDICATOS', route('sindicatos.index'));
 });
 
 Breadcrumbs::register('sindicatos.show', function($breadcrumbs, $sindicato){
@@ -55,18 +55,18 @@ Breadcrumbs::register('sindicatos.show', function($breadcrumbs, $sindicato){
 
 Breadcrumbs::register('sindicatos.create', function($breadcrumbs){
     $breadcrumbs->parent('sindicatos.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_sindicato')), route('sindicatos.create'));
+    $breadcrumbs->push('NUEVO SINDICATO', route('sindicatos.create'));
 });
 
 Breadcrumbs::register('sindicatos.edit', function($breadcrumbs, $sindicato){
     $breadcrumbs->parent('sindicatos.show', $sindicato);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('sindicatos.edit', $sindicato));
+    $breadcrumbs->push('EDITAR', route('sindicatos.edit', $sindicato));
 });
 
 //Catalogos->Origenes
 
 Breadcrumbs::register('origenes.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.origins')), route('origenes.index'));
+    $breadcrumbs->push('ORIGENES', route('origenes.index'));
 });
 
 Breadcrumbs::register('origenes.show', function($breadcrumbs, $origen){
@@ -76,18 +76,18 @@ Breadcrumbs::register('origenes.show', function($breadcrumbs, $origen){
 
 Breadcrumbs::register('origenes.create', function($breadcrumbs){
     $breadcrumbs->parent('origenes.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_origin')), route('origenes.create'));
+    $breadcrumbs->push('NUEVO ORIGEN', route('origenes.create'));
 });
 
 Breadcrumbs::register('origenes.edit', function($breadcrumbs, $origen){
     $breadcrumbs->parent('origenes.show', $origen);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('origenes.edit', $origen));
+    $breadcrumbs->push('EDITAR', route('origenes.edit', $origen));
 });
 
 //Catalogos->Tiros
 
 Breadcrumbs::register('tiros.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.tiros')), route('tiros.index'));
+    $breadcrumbs->push('TIROS', route('tiros.index'));
 });
 
 Breadcrumbs::register('tiros.show', function($breadcrumbs, $tiro){
@@ -97,18 +97,18 @@ Breadcrumbs::register('tiros.show', function($breadcrumbs, $tiro){
 
 Breadcrumbs::register('tiros.create', function($breadcrumbs){
     $breadcrumbs->parent('tiros.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_tiro')), route('tiros.create'));
+    $breadcrumbs->push('NUEVO TIRO', route('tiros.create'));
 });
 
 Breadcrumbs::register('tiros.edit', function($breadcrumbs, $tiro){
     $breadcrumbs->parent('tiros.show', $tiro);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('tiros.edit', $tiro));
+    $breadcrumbs->push('EDITAR', route('tiros.edit', $tiro));
 });
 
 //Catalogos->Rutas
 
 Breadcrumbs::register('rutas.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.rutas')), route('rutas.index'));
+    $breadcrumbs->push('RUTAS', route('rutas.index'));
 });
 
 Breadcrumbs::register('rutas.show', function($breadcrumbs, $ruta){
@@ -118,18 +118,18 @@ Breadcrumbs::register('rutas.show', function($breadcrumbs, $ruta){
 
 Breadcrumbs::register('rutas.create', function($breadcrumbs){
     $breadcrumbs->parent('rutas.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_ruta')), route('rutas.create'));
+    $breadcrumbs->push('NUEVA RUTA', route('rutas.create'));
 });
 
 Breadcrumbs::register('rutas.edit', function($breadcrumbs, $ruta){
     $breadcrumbs->parent('rutas.show', $ruta);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('rutas.edit', $ruta));
+    $breadcrumbs->push('EDITAR', route('rutas.edit', $ruta));
 });
 
 //Catalogos->Camiones
 
 Breadcrumbs::register('camiones.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.camiones')), route('camiones.index'));
+    $breadcrumbs->push('CAMIONES', route('camiones.index'));
 });
 
 Breadcrumbs::register('camiones.show', function($breadcrumbs, $camion){
@@ -139,36 +139,36 @@ Breadcrumbs::register('camiones.show', function($breadcrumbs, $camion){
 
 Breadcrumbs::register('camiones.create', function($breadcrumbs){
     $breadcrumbs->parent('camiones.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_camion')), route('camiones.create'));
+    $breadcrumbs->push('NUEVO CAMIÓN', route('camiones.create'));
 });
 
 Breadcrumbs::register('camiones.edit', function($breadcrumbs, $camion){
     $breadcrumbs->parent('camiones.show', $camion);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('camiones.edit', $camion));
+    $breadcrumbs->push('EDITAR', route('camiones.edit', $camion));
 });
 
 //Catalogos->Tarifas por Material
 
 Breadcrumbs::register('tarifas_material.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.tarifas_material')), route('tarifas_material.index'));
+    $breadcrumbs->push('TARIFAS POR MATERIAL', route('tarifas_material.index'));
 });
 
 //Catalogos->Tarifas por Peso
 
 Breadcrumbs::register('tarifas_peso.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.tarifas_peso')), route('tarifas_peso.index'));
+    $breadcrumbs->push('TARIFAS POR PESO', route('tarifas_peso.index'));
 });
 
 //Catalogos->Tarifas por Tipo de Ruta
 
 Breadcrumbs::register('tarifas_tiporuta.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.tarifas_tiporuta')), route('tarifas_tiporuta.index'));
+    $breadcrumbs->push('TARIFAS POR TIPO DE RUTA', route('tarifas_tiporuta.index'));
 });
 
 //Catalogos->Materiales
 
 Breadcrumbs::register('operadores.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.operadores')), route('operadores.index'));
+    $breadcrumbs->push('OPERADORES', route('operadores.index'));
 });
 
 Breadcrumbs::register('operadores.show', function($breadcrumbs, $operador){
@@ -178,28 +178,28 @@ Breadcrumbs::register('operadores.show', function($breadcrumbs, $operador){
 
 Breadcrumbs::register('operadores.create', function($breadcrumbs){
     $breadcrumbs->parent('operadores.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_operador')), route('operadores.create'));
+    $breadcrumbs->push('NUEVO OPERADOR', route('operadores.create'));
 });
 
 Breadcrumbs::register('operadores.edit', function($breadcrumbs, $operador){
     $breadcrumbs->parent('operadores.show', $operador);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('operadores.edit', $operador));
+    $breadcrumbs->push('EDITAR', route('operadores.edit', $operador));
 });
 
 //Catálogos->centros_costo
 
 Breadcrumbs::register('centroscostos.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.centroscostos')), route('centroscostos.index'));
+    $breadcrumbs->push('CENTROS DE COSTO', route('centroscostos.index'));
 });
 
 //Origenes por Usuario
 Breadcrumbs::register('origenes_usuarios.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.origenes_usuarios')), route('origenes_usuarios.index'));
+    $breadcrumbs->push('ORIGENES POR USUARIO', route('origenes_usuarios.index'));
 });
 
 //Empresas
 Breadcrumbs::register('empresas.index', function($breadcrumbs){
-    $breadcrumbs->push(strtoupper(trans('strings.empresas')), route('empresas.index'));
+    $breadcrumbs->push('EMPRESAS', route('empresas.index'));
 });
 
 Breadcrumbs::register('empresas.show', function($breadcrumbs, $empresa){
@@ -209,12 +209,12 @@ Breadcrumbs::register('empresas.show', function($breadcrumbs, $empresa){
 
 Breadcrumbs::register('empresas.create', function($breadcrumbs){
     $breadcrumbs->parent('empresas.index');
-    $breadcrumbs->push(strtoupper(trans('strings.new_empresa')), route('empresas.create'));
+    $breadcrumbs->push('NUEVA EMPRESA', route('empresas.create'));
 });
 
 Breadcrumbs::register('empresas.edit', function($breadcrumbs, $empresa){
     $breadcrumbs->parent('empresas.show', $empresa);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('empresas.edit', $empresa));
+    $breadcrumbs->push('EDITAR', route('empresas.edit', $empresa));
 });
 
 //Factores de Abundamiento
@@ -243,7 +243,7 @@ Breadcrumbs::register('etapas.show', function($breadcrumbs, $etapa) {
 
 Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
     $breadcrumbs->parent('etapas.show', $etapa);
-    $breadcrumbs->push(strtoupper(trans('strings.edit')), route('etapas.edit', $etapa));
+    $breadcrumbs->push('EDITAR', route('etapas.edit', $etapa));
 });
 
 //ViajesNetos

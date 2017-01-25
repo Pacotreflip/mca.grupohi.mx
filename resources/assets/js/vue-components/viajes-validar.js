@@ -46,17 +46,19 @@ Vue.component('viajes-validar', {
         },
 
         fetchViajes: function(e) {
-        	e.preventDefault();
+            e.preventDefault();
 
-        	this.cargando = true;
-        	this.form.viajes = [];
-        	this.$http.get(App.host + '/viajes/netos', {'params' : {'type' : 'validar', 'fechas' : this.fechas}}).then((response) => {
-        		this.form.viajes = response.body;
-        		this.cargando = false;
-        	}, (response) => {
-                App.setErrorsOnForm(this.form, response.body);
-        		this.cargando = false;
-        	});
+            this.cargando = true;
+            console.log('cargando');
+            this.form.viajes = [];
+            this.$http.get(App.host + '/viajes/netos', {'params' : {'type' : 'validar', 'fechas' : this.fechas}}).then((response) => {
+                    this.form.viajes = response.body;
+                    this.cargando = false;
+                    console.log('fin');
+            }, (response) => {
+            App.setErrorsOnForm(this.form, response.body);
+                    this.cargando = false;
+            });
         }       
     }
 });

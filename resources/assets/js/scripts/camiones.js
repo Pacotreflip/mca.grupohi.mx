@@ -155,17 +155,19 @@ $(document).ready(function(){
                     btn.removeClass('btn-danger activo').addClass('btn-success inactivo');
                     if(!btn.hasClass('btn-sm')) {
                         var i = btn.closest('i');
-                        btn.html('<i class="fa fa-plus"></i> ACTIVAR');
+                        btn.html('<i class="fa fa-check"></i> HABILITAR');
                     } else {
-                        btn.text('ACTIVAR');
+                        btn.html('<i class="fa fa-check"></i>');
+                        btn.attr('title', 'Habilitar');
                     }
                 } else {
                     btn.removeClass('btn-success inactivo').addClass('btn-danger activo');
                     if(!btn.hasClass('btn-sm')) {
                         var i = btn.closest('i');
-                        btn.html('<i class="fa fa-close"></i> ELIMINAR');
+                        btn.html('<i class="fa fa-ban"></i> INHABILITAR');
                     } else {
-                        btn.text('ELIMINAR');
+                        btn.html('<i class="fa fa-ban"></i>');
+                        btn.attr('title', 'Inhabilitar');
                     }
                 }
                 swal(response.text, "", "success");

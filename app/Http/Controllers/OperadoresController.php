@@ -108,6 +108,16 @@ class OperadoresController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $operador = Operador::findOrFail($id);
+        if($operador->Estatus == 1) {
+            $operador->Estatus = 0;
+            $text = '¡Operador Inhabilitado!';
+        } else {
+            $operador->Estatus = 1;
+            $text = '¡Operador Habilitado!';
+        }
+        $operador->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

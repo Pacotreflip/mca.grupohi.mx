@@ -10,3 +10,4 @@ require('./scripts/sindicatos');
 require('./scripts/tarifas');
 require('./scripts/tiros');
 require('./scripts/etapas');
+require('./scripts/operadores');

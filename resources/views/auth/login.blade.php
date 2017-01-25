@@ -1,5 +1,5 @@
 @extends('layout')
 
 @section('content')
-    @include('ghi::login')
+  @include('ghi::login')
 @stop
