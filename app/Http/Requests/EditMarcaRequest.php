@@ -24,7 +24,6 @@ class EditMarcaRequest extends Request
     public function rules()
     {
         return [
-            'Estatus' => 'required|numeric',
             'Descripcion' => 'required|unique:sca.marcas,Descripcion,'.$this->route('marcas').',IdMarca'
         ];
     }

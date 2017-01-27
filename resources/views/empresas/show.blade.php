@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ $empresa->razonSocial }}
     <a href="{{ route('empresas.edit', $empresa) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
-    <a href="{{ route('empresas.destroy', $empresa) }}" class="btn btn-danger pull-right empresas_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete') }}</a>
+    <a href="{{ route('empresas.destroy', $empresa) }}" class="btn pull-right element_destroy {{ $empresa->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $empresa->Estatus == 1 ? 'fa-ban' : 'fa-check' }}"></i> {{ $empresa->Estatus == 1 ? 'INHABILITAR' : 'HABILITAR' }}</a>
 </h1>
 {!! Breadcrumbs::render('empresas.show', $empresa) !!}
 <hr>

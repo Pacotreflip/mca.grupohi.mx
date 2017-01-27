@@ -16,6 +16,7 @@
         <li><a href="{{ route('centroscostos.index') }}">Centros De Costo</a></li>
         <li><a href="{{ route('camiones.index') }}">Camiones</a></li>
         <li><a href="{{ route('empresas.index') }}">Empresas</a></li>
+        <li><a href="{{ route('etapas.index') }}">Etapas De Proyecto</a></li>
         <li class="dropdown-submenu">
             <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Factores De Abundamiento</a>
             <ul class="dropdown-menu">

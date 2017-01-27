@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ $material->Descripcion }}
     <a href="{{ route('materiales.edit', $material) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
-    <a href="{{ route('materiales.destroy', $material) }}" class="btn btn-danger pull-right materiales_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete') }}</a>
+    <a href="{{ route('materiales.destroy', $material) }}" class="btn pull-right element_destroy {{ $material->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $material->Estatus == 1 ? 'fa-ban' : 'fa-check' }}"></i> {{ $material->Estatus == 1 ? 'INHABILITAR' : 'HABILITAR' }}</a>
 </h1>
 {!! Breadcrumbs::render('materiales.show', $material) !!}
 <hr>

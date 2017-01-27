@@ -27,8 +27,13 @@
           <td>{{ $empresa->RFC }}</td>
           <td>{{ $empresa->present()->estatus }}</td>
           <td>
-              {!! link_to_route('empresas.edit', 'EDITAR', [$empresa], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('empresas.destroy', 'ELIMINAR', [$empresa], ['class' => 'btn btn-danger btn-sm empresas_destroy']) !!}
+              <a href="{{ route('empresas.edit', [$empresa]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($empresa->Estatus == 1)
+              <a href="{{ route('empresas.destroy', [$empresa]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('empresas.destroy', [$empresa]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
+          </td>
           </td>
         </tr>
       @endforeach

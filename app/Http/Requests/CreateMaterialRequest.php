@@ -25,7 +25,6 @@ class CreateMaterialRequest extends Request
     {
         return [
             'Descripcion' => 'required|unique:sca.materiales,Descripcion',
-            'Estatus' => 'required|numeric'
         ];
     }
     

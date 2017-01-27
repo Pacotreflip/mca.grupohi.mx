@@ -24,8 +24,7 @@ class CreateMarcaRequest extends Request
     public function rules()
     {
         return [
-            'Descripcion' => 'required|unique:sca.marcas,Descripcion',
-            'Estatus' => 'required|numeric'
+            'Descripcion' => 'required|unique:sca.marcas,Descripcion'
         ];
     }
     

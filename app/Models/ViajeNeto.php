@@ -27,8 +27,7 @@ class ViajeNeto extends Model
         'HoraLlegada',
         'IdMaterial', 
         'Observaciones', 
-        'Creo', 
-        'Estatus'
+        'Creo'
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;

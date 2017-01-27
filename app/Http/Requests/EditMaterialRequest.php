@@ -24,7 +24,6 @@ class EditMaterialRequest extends Request
     public function rules()
     {
         return [
-            'Estatus' => 'required|numeric',
             'Descripcion' => 'required|unique:sca.materiales,Descripcion,'.$this->route('materiales').',IdMaterial'
         ];
     }

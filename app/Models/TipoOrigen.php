@@ -12,7 +12,7 @@ class TipoOrigen extends Model
     protected $connection = 'sca';
     protected $table = 'tiposorigenes';
     protected $primaryKey = 'IdTipoOrigen';
-    protected $fillable = ['Descripcion', 'Estatus'];
+    protected $fillable = ['Descripcion'];
     protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;

@@ -12,7 +12,7 @@ class Tiro extends Model
     protected $connection = 'sca';
     protected $table = 'tiros';
     protected $primaryKey = 'IdTiro';
-    protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta', 'Estatus'];
+    protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta'];
     protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;

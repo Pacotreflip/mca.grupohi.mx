@@ -25,8 +25,7 @@ class EditOrigenRequest extends Request
     {
         return [
             'IdTipoOrigen' => 'required|numeric|exists:sca.tiposorigenes,IdTipoOrigen',
-            'Descripcion' => 'required|unique:sca.origenes,Descripcion,'.$this->route('origenes').',IdOrigen',
-            'Estatus' => 'required|numeric'
+            'Descripcion' => 'required|unique:sca.origenes,Descripcion,'.$this->route('origenes').',IdOrigen'
         ];
     }
     

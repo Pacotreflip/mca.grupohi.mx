@@ -25,8 +25,7 @@ class EditEmpresaRequest extends Request
     {
         return [
             'razonSocial' => 'required|unique:sca.empresas,razonSocial,'.$this->route('empresas').',idEmpresa',
-            'RFC' => 'required|unique:sca.empresas,RFC,'.$this->route('empresas').',idEmpresa',
-            'Estatus' => 'required|numeric'
+            'RFC' => 'required|unique:sca.empresas,RFC,'.$this->route('empresas').',idEmpresa'
         ];
     }
     

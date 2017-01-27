@@ -12,7 +12,7 @@ class Sindicato extends Model
     protected $connection = 'sca';
     protected $table = 'sindicatos';
     protected $primaryKey = 'IdSindicato';
-    protected $fillable = ['Descripcion', 'NombreCorto', 'Estatus'];
+    protected $fillable = ['Descripcion', 'NombreCorto'];
     protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;

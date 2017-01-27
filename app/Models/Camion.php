@@ -35,7 +35,6 @@ class Camion extends Model
         'CubicacionParaPago',
         'FechaAlta',
         'HoraAlta',
-        'Estatus',
         'IdEmpresa',
         'Disminucion'
     ];

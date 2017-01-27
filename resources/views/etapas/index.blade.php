@@ -12,7 +12,7 @@
         <th>ID Etapa</th>
         <th>Descripción</th>
         <th>Estatus</th>
-        <th width="160px">Acciones</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -24,8 +24,12 @@
           <td>{{ $etapa->Descripcion }}</td>
           <td>{{ $etapa->present()->estatus }}</td>
           <td>
-              {!! link_to_route('etapas.edit', 'EDITAR', [$etapa], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('etapas.destroy', 'ELIMINAR', [$etapa], ['class' => 'btn btn-danger btn-sm etapas_destroy']) !!}
+              <a href="{{ route('etapas.edit', [$etapa]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($etapa->Estatus == 1)
+              <a href="{{ route('etapas.destroy', [$etapa]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('etapas.destroy', [$etapa]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

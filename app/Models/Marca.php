@@ -12,7 +12,7 @@ class Marca extends Model
     protected $connection = 'sca';
     protected $table = 'marcas';
     protected $primaryKey = 'IdMarca';
-    protected $fillable = ['Descripcion', 'Estatus'];
+    protected $fillable = ['Descripcion'];
     protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;

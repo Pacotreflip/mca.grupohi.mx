@@ -15,8 +15,7 @@ class Etapa extends Model
     protected $fillable = [
         'IdProyecto', 
         'Nivel', 
-        'Descripcion',
-        'Estatus'
+        'Descripcion'
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;

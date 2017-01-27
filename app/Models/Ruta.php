@@ -23,8 +23,7 @@ class Ruta extends Model
         'TotalKM', 
         'FechaAlta', 
         'Registra', 
-        'HoraAlta', 
-        'Estatus'
+        'HoraAlta'
         ];
     protected $presenter = ModelPresenter::class;
     

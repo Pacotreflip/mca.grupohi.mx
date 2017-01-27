@@ -31583,12 +31583,11 @@ if ($('#app').length) {
     });
 }
 
-},{"./scripts":22,"./vue-components":36,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
+},{"./scripts":22,"./vue-components":35,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
 'use strict';
 
 require('./scripts/camiones');
 require('./scripts/centroscostos');
-require('./scripts/empresas');
 require('./scripts/globales');
 require('./scripts/marcas');
 require('./scripts/materiales');
@@ -31600,7 +31599,7 @@ require('./scripts/tiros');
 require('./scripts/etapas');
 require('./scripts/operadores');
 
-},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/empresas":25,"./scripts/etapas":26,"./scripts/globales":27,"./scripts/marcas":28,"./scripts/materiales":29,"./scripts/operadores":30,"./scripts/origenes":31,"./scripts/rutas":32,"./scripts/sindicatos":33,"./scripts/tarifas":34,"./scripts/tiros":35}],23:[function(require,module,exports){
+},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/etapas":25,"./scripts/globales":26,"./scripts/marcas":27,"./scripts/materiales":28,"./scripts/operadores":29,"./scripts/origenes":30,"./scripts/rutas":31,"./scripts/sindicatos":32,"./scripts/tarifas":33,"./scripts/tiros":34}],23:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -31747,41 +31746,6 @@ $(document).ready(function () {
         $('input.real').val(dim.toFixed(2));
         $('input.pago').val(Math.round(dim.toFixed(2)));
     }
-
-    $(".camiones_destroy").off().on("click", function (event) {
-        var btn = $(this);
-        event.preventDefault();
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (btn.hasClass('activo')) {
-                    btn.removeClass('btn-danger activo').addClass('btn-success inactivo');
-                    if (!btn.hasClass('btn-sm')) {
-                        var i = btn.closest('i');
-                        btn.html('<i class="fa fa-check"></i> HABILITAR');
-                    } else {
-                        btn.html('<i class="fa fa-check"></i>');
-                        btn.attr('title', 'Habilitar');
-                    }
-                } else {
-                    btn.removeClass('btn-success inactivo').addClass('btn-danger activo');
-                    if (!btn.hasClass('btn-sm')) {
-                        var i = btn.closest('i');
-                        btn.html('<i class="fa fa-ban"></i> INHABILITAR');
-                    } else {
-                        btn.html('<i class="fa fa-ban"></i>');
-                        btn.attr('title', 'Inhabilitar');
-                    }
-                }
-                swal(response.text, "", "success");
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
 });
 
 },{}],24:[function(require,module,exports){
@@ -31987,45 +31951,6 @@ function toggleCentroCosto(e, url) {
 },{}],25:[function(require,module,exports){
 "use strict";
 
-$(".empresas_destroy").off().on("click", function (event) {
-    var btn = $(this);
-    event.preventDefault();
-    swal({
-        title: "¿Estás seguro?",
-        text: "¡Se eliminará la empresa y no podra recuperarla!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, ¡Eliminar!",
-        closeOnConfirm: false
-    }, function () {
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (response.success) {
-                    swal({
-                        title: "¡Empresa Eliminada!",
-                        type: "success",
-                        confirmButtonText: "OK",
-                        closeOnConfirm: false }, function () {
-                        window.location.href = response.url;
-                    });
-                } else {
-                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
-                }
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
-});
-
-},{}],26:[function(require,module,exports){
-"use strict";
-
 $(".etapas_destroy").off().on("click", function (event) {
     var btn = $(this);
     event.preventDefault();
@@ -32062,7 +31987,7 @@ $(".etapas_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],27:[function(require,module,exports){
+},{}],26:[function(require,module,exports){
 'use strict';
 
 $(function () {
@@ -32080,8 +32005,42 @@ $('.fecha').datepicker({
     clearBtn: true,
     todayHighlight: true
 });
+$(".element_destroy").off().on("click", function (event) {
+    var btn = $(this);
+    event.preventDefault();
+    $.ajax({
+        url: btn.attr('href'),
+        type: 'POST',
+        data: { _method: 'delete', _token: App.csrfToken },
+        success: function success(response) {
+            if (btn.hasClass('activo')) {
+                btn.removeClass('btn-danger activo').addClass('btn-success inactivo');
+                if (!btn.hasClass('btn-sm')) {
+                    var i = btn.closest('i');
+                    btn.html('<i class="fa fa-check"></i> HABILITAR');
+                } else {
+                    btn.html('<i class="fa fa-check"></i>');
+                    btn.attr('title', 'Habilitar');
+                }
+            } else {
+                btn.removeClass('btn-success inactivo').addClass('btn-danger activo');
+                if (!btn.hasClass('btn-sm')) {
+                    var i = btn.closest('i');
+                    btn.html('<i class="fa fa-ban"></i> INHABILITAR');
+                } else {
+                    btn.html('<i class="fa fa-ban"></i>');
+                    btn.attr('title', 'Inhabilitar');
+                }
+            }
+            swal(response.text, "", "success");
+        },
+        error: function error() {
+            sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
+        }
+    });
+});
 
-},{}],28:[function(require,module,exports){
+},{}],27:[function(require,module,exports){
 "use strict";
 
 $(".marcas_destroy").off().on("click", function (event) {
@@ -32120,7 +32079,7 @@ $(".marcas_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],29:[function(require,module,exports){
+},{}],28:[function(require,module,exports){
 "use strict";
 
 $(".materiales_destroy").off().on("click", function (event) {
@@ -32159,7 +32118,7 @@ $(".materiales_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],30:[function(require,module,exports){
+},{}],29:[function(require,module,exports){
 "use strict";
 
 $(".operadores_destroy").off().on("click", function (event) {
@@ -32198,7 +32157,7 @@ $(".operadores_destroy").off().on("click", function (event) {
   });
 });
 
-},{}],31:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 "use strict";
 
 $(".origenes_destroy").off().on("click", function (event) {
@@ -32237,7 +32196,7 @@ $(".origenes_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],32:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32402,7 +32361,7 @@ $(document).ready(function () {
     });
 });
 
-},{}],33:[function(require,module,exports){
+},{}],32:[function(require,module,exports){
 "use strict";
 
 $(".sindicatos_destroy").off().on("click", function (event) {
@@ -32441,7 +32400,7 @@ $(".sindicatos_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],34:[function(require,module,exports){
+},{}],33:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32495,7 +32454,7 @@ $(document).ready(function () {
     }
 });
 
-},{}],35:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 "use strict";
 
 $(".tiros_destroy").off().on("click", function (event) {
@@ -32534,7 +32493,7 @@ $(".tiros_destroy").off().on("click", function (event) {
     });
 });
 
-},{}],36:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 require('./vue-components/global-errors');
@@ -32546,7 +32505,7 @@ require('./vue-components/viajes-manual');
 require('./vue-components/viajes-completa');
 require('./vue-components/viajes-validar');
 
-},{"./vue-components/errors":37,"./vue-components/fda-bancomaterial":38,"./vue-components/fda-material":39,"./vue-components/global-errors":40,"./vue-components/origenes-usuarios":41,"./vue-components/viajes-completa":45,"./vue-components/viajes-manual":46,"./vue-components/viajes-validar":47}],37:[function(require,module,exports){
+},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-completa":44,"./vue-components/viajes-manual":45,"./vue-components/viajes-validar":46}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32555,7 +32514,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":42}],38:[function(require,module,exports){
+},{"./templates/errors.html":41}],37:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -32661,7 +32620,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -32750,7 +32709,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],40:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32776,7 +32735,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":43}],41:[function(require,module,exports){
+},{"./templates/global-errors.html":42}],40:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -32851,13 +32810,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":44}],42:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":43}],41:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],43:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -33116,7 +33075,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],46:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -33334,7 +33293,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],47:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-validar', {

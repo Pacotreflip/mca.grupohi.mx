@@ -25,8 +25,7 @@ class EditSindicatoRequest extends Request
     {
         return [
             'Descripcion' => 'required|unique:sca.sindicatos,Descripcion,'.$this->route('sindicatos').',IdSindicato',
-            'NombreCorto' => 'required|unique:sca.sindicatos,NombreCorto,'.$this->route('sindicatos').',IdSIndicato',
-            'Estatus' => 'required|numeric'
+            'NombreCorto' => 'required|unique:sca.sindicatos,NombreCorto,'.$this->route('sindicatos').',IdSIndicato'
         ];
     }
     

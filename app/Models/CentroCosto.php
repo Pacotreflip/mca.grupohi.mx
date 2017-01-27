@@ -15,8 +15,7 @@ class CentroCosto extends Model
     protected $fillable = [
         'IdProyecto', 
         'Nivel', 
-        'Descripcion', 
-        'Estatus', 
+        'Descripcion',
         'IdPadre', 
         'Cuenta'
     ];

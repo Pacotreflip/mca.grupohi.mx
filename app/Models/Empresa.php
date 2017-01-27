@@ -14,8 +14,7 @@ class Empresa extends Model
     protected $primaryKey = 'IdEmpresa';
     protected $fillable = [
         'razonSocial',
-        'RFC',
-        'Estatus'
+        'RFC'
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;

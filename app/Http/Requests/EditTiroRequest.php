@@ -24,8 +24,7 @@ class EditTiroRequest extends Request
     public function rules()
     {
         return [
-            'Descripcion' => 'required|unique:sca.tiros,Descripcion,'.$this->route('tiros').',IdTiro',
-            'Estatus' => 'required|numeric'
+            'Descripcion' => 'required|unique:sca.tiros,Descripcion,'.$this->route('tiros').',IdTiro'
         ];
     }
     

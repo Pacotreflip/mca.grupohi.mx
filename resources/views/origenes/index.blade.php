@@ -27,8 +27,12 @@
           <td>{{ $origen->Descripcion }}</td>
           <td>{{ $origen->present()->estatus }}</td>
           <td>
-              {!! link_to_route('origenes.edit', 'EDITAR', [$origen], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('origenes.destroy', 'ELIMINAR', [$origen], ['class' => 'btn btn-danger btn-sm origenes_destroy']) !!}
+              <a href="{{ route('origenes.edit', [$origen]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($origen->Estatus == 1)
+              <a href="{{ route('origenes.destroy', [$origen]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('origenes.destroy', [$origen]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

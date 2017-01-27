@@ -12,7 +12,7 @@ class TipoRuta extends Model
     protected $connection = 'sca';
     protected $table = 'tipo_ruta';
     protected $primaryKey = 'IdTipoRuta';
-    protected $fillable = ['Descripcion', 'Estatus'];
+    protected $fillable = ['Descripcion'];
     protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;

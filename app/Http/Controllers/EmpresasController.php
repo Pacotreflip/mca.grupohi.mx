@@ -102,11 +102,16 @@ class EmpresasController extends Controller
      */
     public function destroy($id)
     {
-        Empresa::findOrFail($id);
-        Empresa::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('empresas.index')
-            ]); 
+        $empresa = Empresa::findOrFail($id);
+        if($empresa->Estatus == 1) {
+            $empresa->Estatus = 0;
+            $text = '¡Empresa Inhabilitada!';
+        } else {
+            $empresa->Estatus = 1;
+            $text = '¡Empresa Habilitada!';
+        }
+        $empresa->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

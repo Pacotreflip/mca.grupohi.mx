@@ -1,6 +1,5 @@
 require('./scripts/camiones');
 require('./scripts/centroscostos');
-require('./scripts/empresas');
 require('./scripts/globales');
 require('./scripts/marcas');
 require('./scripts/materiales');

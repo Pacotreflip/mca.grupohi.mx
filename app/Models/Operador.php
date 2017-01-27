@@ -18,8 +18,7 @@ class Operador extends Model
         'Direccion', 
         'NoLicencia', 
         'VigenciaLicencia', 
-        'FechaAlta', 
-        'Estatus'
+        'FechaAlta' 
     ];
     protected $presenter = ModelPresenter::class;
 

@@ -24,8 +24,7 @@ class CreateTiroRequest extends Request
     public function rules()
     {
         return [
-            'Descripcion' => 'required|unique:sca.tiros,Descripcion',
-            'Estatus' => 'required|numeric'
+            'Descripcion' => 'required|unique:sca.tiros,Descripcion'
         ];
     }
     

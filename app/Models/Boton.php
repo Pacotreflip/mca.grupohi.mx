@@ -12,7 +12,7 @@ class Boton extends Model
     protected $connection = 'sca';
     protected $table = 'botones';
     protected $primaryKey = 'IdBoton';
-    protected $fillable = ['IdProyecto', 'Identificador', 'TipoBoton', 'Estatus'];
+    protected $fillable = ['IdProyecto', 'Identificador', 'TipoBoton'];
     protected $presenter = ModelPresenter::class;
     
     public $timestamps = false;

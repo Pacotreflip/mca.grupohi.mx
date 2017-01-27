@@ -38,9 +38,9 @@
           <td>
               <a href="{{ route('camiones.edit', [$camion]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
               @if($camion->Estatus == 1)
-              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-danger btn-sm camiones_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
               @else
-              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-sm camiones_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
               @endif
           </td>
         </tr>

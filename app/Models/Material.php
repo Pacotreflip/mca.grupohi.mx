@@ -13,7 +13,7 @@ class Material extends Model
     protected $connection = 'sca';
     protected $table = 'materiales';
     protected $primaryKey = 'IdMaterial';
-    protected $fillable = ['IdTipoMaterial', 'IdProyecto', 'Descripcion', 'Estatus'];
+    protected $fillable = ['IdTipoMaterial', 'IdProyecto', 'Descripcion'];
     protected $presenter = ModelPresenter::class;
 
     public $timestamps = false;

@@ -26,7 +26,6 @@ class CreateOrigenRequest extends Request
         return [
             'IdTipoOrigen' => 'required|numeric|exists:sca.tiposorigenes,IdTipoOrigen',
             'Descripcion' => 'required|unique:sca.origenes,Descripcion',
-            'Estatus' => 'required|numeric'
         ];
     }
     

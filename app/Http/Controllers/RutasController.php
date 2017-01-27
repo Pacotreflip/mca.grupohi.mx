@@ -183,7 +183,7 @@ class RutasController extends Controller
             $ruta->Estatus = 0;
             $ruta->Elimina = auth()->user()->idusuario;
             $ruta->FechaHoraElimina = Carbon::now()->toDateTimeString();
-            $text = '¡Ruta Deshabilitada!';
+            $text = '¡Ruta Inhabilitada!';
         } else {
             $ruta->Estatus = 1;
             $text = '¡Ruta Habilitada!';

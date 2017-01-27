@@ -102,11 +102,16 @@ class MarcasController extends Controller
      */
     public function destroy($id)
     {
-        Marca::findOrFail($id);
-        Marca::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('marcas.index')
-            ]);
+        $marca = Marca::findOrFail($id);
+        if($marca->Estatus == 1) {
+            $marca->Estatus = 0;
+            $text = '¡Marca Inhabilitada!';
+        } else {
+            $marca->Estatus = 1;
+            $text = '¡Marca Habilitada!';
+        }
+        $marca->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

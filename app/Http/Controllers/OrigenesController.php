@@ -116,11 +116,16 @@ class OrigenesController extends Controller
      */
     public function destroy($id)
     {
-        Origen::findOrFail($id);
-        Origen::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('origenes.index')
-            ]);
+        $origen = Origen::findOrFail($id);
+        if($origen->Estatus == 1) {
+            $origen->Estatus = 0;
+            $text = '¡Origen Inhabilitado!';
+        } else {
+            $origen->Estatus = 1;
+            $text = '¡Origen Habilitado!';
+        }
+        $origen->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

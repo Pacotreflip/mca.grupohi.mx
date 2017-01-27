@@ -109,11 +109,16 @@ class EtapasController extends Controller
      */
     public function destroy($id)
     {
-        Etapa::findOrFail($id);
-        Etapa::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('etapas.index')
-            ]); 
+        $etapa = Etapa::findOrFail($id);
+        if($etapa->Estatus == 1) {
+            $etapa->Estatus = 0;
+            $text = '¡Etapa Inhabilitada!';
+        } else {
+            $etapa->Estatus = 1;
+            $text = '¡Etapa Habilitada!';
+        }
+        $etapa->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

@@ -25,8 +25,7 @@ class CreateSindicatoRequest extends Request
     {
         return [
             'Descripcion' => 'required|unique:sca.sindicatos,Descripcion',
-            'NombreCorto' => 'required|unique:sca.sindicatos,NombreCorto',
-            'Estatus' => 'required|numeric'
+            'NombreCorto' => 'required|unique:sca.sindicatos,NombreCorto'
         ];
     }
     

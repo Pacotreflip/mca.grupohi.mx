@@ -25,8 +25,7 @@ class CreateEmpresaRequest extends Request
     {
         return [
             'razonSocial' => 'required|unique:sca.empresas,razonSocial',
-            'RFC' => 'required|unique:sca.empresas,RFC',
-            'Estatus' => 'required|numeric'
+            'RFC' => 'required|unique:sca.empresas,RFC'
         ];
     }
     
