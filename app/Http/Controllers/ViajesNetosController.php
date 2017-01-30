@@ -93,7 +93,8 @@ class ViajesNetosController extends Controller
     {
         if($request->get('action') == 'validar') {
             return view('viajes.netos.edit')
-                    ->withViajes(ViajeNeto::porValidar()->get())
+                    ->withViajes(ViajeNeto::porValidar($request->get('FechaInicial'), $request->get('FechaFinal'))
+                            ->get())
                     ->withAction('validar');
         } else if($request->get('action') == 'autorizar') {
             return view('viajes.netos.edit')

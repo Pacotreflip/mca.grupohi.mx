@@ -13,7 +13,7 @@
         <th>Clave</th>
         <th>Descripción</th>
         <th>Estatus</th>
-        <th width="160px">Acciones</th>
+        <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -25,8 +25,12 @@
           <td>{{ $tiro->Descripcion }}</td>
           <td>{{ $tiro->present()->estatus }}</td>
           <td>
-              {!! link_to_route('tiros.edit', 'EDITAR', [$tiro], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('tiros.destroy', 'ELIMINAR', [$tiro], ['class' => 'btn btn-danger btn-sm tiros_destroy']) !!}
+              <a href="{{ route('tiros.edit', [$tiro]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($tiro->Estatus == 1)
+              <a href="{{ route('tiros.destroy', [$tiro]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('tiros.destroy', [$tiro]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

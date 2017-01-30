@@ -26,7 +26,7 @@
         <th>Tiempo Minimo</th>
         <th>Tiempo Tolerancia</th>
         <th>Fecha/Hora Registro</th>
-        <th width="160px">Acciones</th>
+        <th width="100px">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -46,8 +46,12 @@
           <td>{{ $ruta->cronometria->Tolerancia }}</td>
           <td>{{ $ruta->present()->fechaYHoraRuta }}</td>
           <td>
-              {!! link_to_route('rutas.edit', 'EDITAR', [$ruta], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('rutas.destroy', ($ruta->Estatus == 1 ? 'ELIMINAR' : 'ACTIVAR'), [$ruta], ['class' => 'btn ' . ($ruta->Estatus == 1 ? 'btn-danger' : 'btn-success') . ' btn-sm rutas_destroy '.($ruta->Estatus == 1 ? 'activo' : 'inactivo')]) !!}
+              <a href="{{ route('rutas.edit', [$ruta]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($ruta->Estatus == 1)
+              <a href="{{ route('rutas.destroy', [$ruta]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('rutas.destroy', [$ruta]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

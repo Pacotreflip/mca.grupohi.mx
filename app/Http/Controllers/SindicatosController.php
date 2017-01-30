@@ -102,11 +102,16 @@ class SindicatosController extends Controller
      */
     public function destroy($id)
     {
-        Sindicato::findOrFail($id);
-        Sindicato::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('sindicatos.index')
-            ]); 
+        $sindicato = Sindicato::findOrFail($id);
+        if($sindicato->Estatus == 1) {
+            $sindicato->Estatus = 0;
+            $text = '¡Sindicato Inhabilitado!';
+        } else {
+            $sindicato->Estatus = 1;
+            $text = '¡Sindicato Habilitado!';
+        }
+        $sindicato->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

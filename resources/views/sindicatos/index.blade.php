@@ -27,8 +27,12 @@
           <td>{{ $sindicato->NombreCorto }}</td>
           <td>{{ $sindicato->present()->estatus }}</td>
           <td>
-              {!! link_to_route('sindicatos.edit', 'EDITAR', [$sindicato], ['class' => 'btn btn-warning btn-sm']) !!}
-              {!! link_to_route('sindicatos.destroy', 'ELIMINAR', [$sindicato], ['class' => 'btn btn-danger btn-sm sindicatos_destroy']) !!}
+              <a href="{{ route('sindicatos.edit', [$sindicato]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              @if($sindicato->Estatus == 1)
+              <a href="{{ route('sindicatos.destroy', [$sindicato]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              @else
+              <a href="{{ route('sindicatos.destroy', [$sindicato]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              @endif
           </td>
         </tr>
       @endforeach

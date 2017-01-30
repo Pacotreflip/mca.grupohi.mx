@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ $tiro->Descripcion }}
     <a href="{{ route('tiros.edit', $tiro) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> {{ trans('strings.edit') }}</a>
-    <a href="{{ route('tiros.destroy', $tiro) }}" class="btn btn-danger pull-right tiros_destroy" style="margin-right: 5px"><i class="fa fa-close"></i> {{ trans('strings.delete') }}</a>
+    <a href="{{ route('tiros.destroy', $tiro) }}" class="btn pull-right element_destroy {{ $tiro->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $tiro->Estatus == 1 ? 'fa-ban' : 'fa-check' }}"></i> {{ $tiro->Estatus == 1 ? 'INHABILITAR' : 'HABILITAR' }}</a>
 </h1>
 {!! Breadcrumbs::render('tiros.show', $tiro) !!}
 <hr>
@@ -19,12 +19,6 @@
         {!! Form::label('Descripcion', 'Descripción', ['class' => 'control-label col-sm-3']) !!}
         <div class="col-sm-9">
             {!! Form::text('Descripcion', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
-        </div>
-    </div>
-    <div class="form-group">
-        {!! Form::label('Estatus', 'Estatus', ['class' => 'control-label col-sm-3']) !!}
-        <div class="col-sm-9">
-            {!! Form::text('Estatus', $tiro->present()->estatus, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
         </div>
     </div>
 </div>

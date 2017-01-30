@@ -114,11 +114,16 @@ class TirosController extends Controller
      */
     public function destroy($id)
     {
-        Tiro::findOrFail($id);
-        Tiro::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('tiros.index')
-            ]);
+        $tiro = Tiro::findOrFail($id);
+        if($tiro->Estatus == 1) {
+            $tiro->Estatus = 0;
+            $text = '¡Tiro Inhabilitado!';
+        } else {
+            $tiro->Estatus = 1;
+            $text = '¡Tiro Habilitado!';
+        }
+        $tiro->save();
+                
+        return response()->json(['text' => $text]);
     }
 }

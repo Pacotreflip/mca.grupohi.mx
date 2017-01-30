@@ -125,37 +125,4 @@ $(document).ready(function(){
         });
         $('.totalKm').val(sum.toFixed(2));
     }
-
-    $(".rutas_destroy").off().on("click", function(event) {
-        var btn = $(this);   
-        event.preventDefault();
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: {_method: 'delete', _token: App.csrfToken },
-            success: function(response) {
-                if(btn.hasClass('activo')) {
-                    btn.removeClass('btn-danger activo').addClass('btn-success inactivo');
-                    if(!btn.hasClass('btn-sm')) {
-                        var i = btn.closest('i');
-                        btn.html('<i class="fa fa-plus"></i> ACTIVAR');
-                    } else {
-                        btn.text('ACTIVAR');
-                    }
-                } else {
-                    btn.removeClass('btn-success inactivo').addClass('btn-danger activo');
-                    if(!btn.hasClass('btn-sm')) {
-                        var i = btn.closest('i');
-                        btn.html('<i class="fa fa-close"></i> ELIMINAR');
-                    } else {
-                        btn.text('ELIMINAR');
-                    }
-                }
-                swal(response.text, "", "success");
-            },
-            error: function() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
 });

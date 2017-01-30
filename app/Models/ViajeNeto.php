@@ -56,8 +56,9 @@ class ViajeNeto extends Model
         return $query->where('Estatus', 29);
     }
     
-    public function scopePorValidar($query) {
-        return $query->where('Estatus', 0)->orWhere('Estatus', 10)->orWhere('Estatus', 20);
+    public function scopePorValidar($query, $fecha_inicial = '', $fecha_final = '') {
+        return $query->whereBetween('FechaLlegada', [$fecha_inicial, $fecha_final])
+                ->whereIn('Estatus', [0, 10, 20]);
     }
     
     public static function autorizar($data) {
