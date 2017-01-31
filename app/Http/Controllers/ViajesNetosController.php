@@ -30,16 +30,32 @@ class ViajesNetosController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()) {
-            $fechas = $request->get('fechas', []);
-
-            return response()->json(ViajeNeto::with('tiro')
-                    ->with('origen')
-                    ->with('material')
-                    ->with('camion')
-                    ->porValidar()
-                    ->where('FechaLlegada', '>', $fechas['FechaInicial'])
-                    ->orWhere('FechaLlegada', '<', $fechas['FechaFinal'])
-                    ->get());
+            $data = [];
+            if($request->get('type') == 'dates') {
+                $viajes = ViajeNeto::porValidar()
+                    ->whereBetween('FechaLlegada', [$request->get('fechaInicial'), $request->get('fechaFinal')])
+                    ->get();
+                foreach($viajes as $viaje) {
+                    $data [] =  [
+                        'FechaLlegada' => $viaje->FechaLlegada,
+                        'Tiro' => $viaje->tiro->Descripcion,
+                        'Camion' => $viaje->camion->Economico,
+                        'HoraLlegada' => $viaje->HoraLlegada,
+                        'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                        'Origen' => $viaje->origen->Descripcion,
+                        'Sincicato' => $viaje->camion->sindicato,
+                        'Empresa' => $viaje->camion->empresa,
+                        'Material' => $viaje->material->Descripcion,
+                        'Tiempo' => $viaje->getTiempo(),
+                        'Ruta' => $viaje->ruta->present()->claveRuta
+                        
+                    ]; 
+                }
+                
+                return response()->json($data);
+            } else {
+                
+            }
         }
     }
 

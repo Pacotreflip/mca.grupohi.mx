@@ -31583,7 +31583,7 @@ if ($('#app').length) {
     });
 }
 
-},{"./scripts":22,"./vue-components":35,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
+},{"./scripts":22,"./vue-components":31,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
 'use strict';
 
 require('./scripts/camiones');
@@ -31591,15 +31591,11 @@ require('./scripts/centroscostos');
 require('./scripts/globales');
 require('./scripts/marcas');
 require('./scripts/materiales');
-require('./scripts/origenes');
 require('./scripts/rutas');
-require('./scripts/sindicatos');
 require('./scripts/tarifas');
-require('./scripts/tiros');
 require('./scripts/etapas');
-require('./scripts/operadores');
 
-},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/etapas":25,"./scripts/globales":26,"./scripts/marcas":27,"./scripts/materiales":28,"./scripts/operadores":29,"./scripts/origenes":30,"./scripts/rutas":31,"./scripts/sindicatos":32,"./scripts/tarifas":33,"./scripts/tiros":34}],23:[function(require,module,exports){
+},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/etapas":25,"./scripts/globales":26,"./scripts/marcas":27,"./scripts/materiales":28,"./scripts/rutas":29,"./scripts/tarifas":30}],23:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32119,84 +32115,6 @@ $(".materiales_destroy").off().on("click", function (event) {
 });
 
 },{}],29:[function(require,module,exports){
-"use strict";
-
-$(".operadores_destroy").off().on("click", function (event) {
-  var btn = $(this);
-  event.preventDefault();
-
-  $.ajax({
-    url: btn.attr('href'),
-    method: 'POST',
-    data: { _method: 'delete', _token: App.csrfToken },
-    success: function success(response) {
-      if (btn.hasClass('activo')) {
-        btn.removeClass('btn-danger activo').addClass('btn-success inactivo');
-        if (!btn.hasClass('btn-sm')) {
-          var i = btn.closest('i');
-          btn.html('<i class="fa fa-check"></i> HABILITAR');
-        } else {
-          btn.html('<i class="fa fa-check"></i>');
-          btn.attr('title', 'Habilitar');
-        }
-      } else {
-        btn.removeClass('btn-success inactivo').addClass('btn-danger activo');
-        if (!btn.hasClass('btn-sm')) {
-          var i = btn.closest('i');
-          btn.html('<i class="fa fa-ban"></i> INHABILITAR');
-        } else {
-          btn.html('<i class="fa fa-ban"></i>');
-          btn.attr('title', 'Inhabilitar');
-        }
-      }
-      swal(response.text, "", "success");
-    },
-    error: function error() {
-      sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-    }
-  });
-});
-
-},{}],30:[function(require,module,exports){
-"use strict";
-
-$(".origenes_destroy").off().on("click", function (event) {
-    var btn = $(this);
-    event.preventDefault();
-    swal({
-        title: "¿Estás seguro?",
-        text: "¡Se eliminará el origen y no podra recuperarlo!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, ¡Eliminar!",
-        closeOnConfirm: false
-    }, function () {
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (response.success) {
-                    swal({
-                        title: "¡Origen Eliminado!",
-                        type: "success",
-                        confirmButtonText: "OK",
-                        closeOnConfirm: false }, function () {
-                        window.location.href = response.url;
-                    });
-                } else {
-                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
-                }
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
-});
-
-},{}],31:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32326,81 +32244,9 @@ $(document).ready(function () {
         });
         $('.totalKm').val(sum.toFixed(2));
     }
-
-    $(".rutas_destroy").off().on("click", function (event) {
-        var btn = $(this);
-        event.preventDefault();
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (btn.hasClass('activo')) {
-                    btn.removeClass('btn-danger activo').addClass('btn-success inactivo');
-                    if (!btn.hasClass('btn-sm')) {
-                        var i = btn.closest('i');
-                        btn.html('<i class="fa fa-plus"></i> ACTIVAR');
-                    } else {
-                        btn.text('ACTIVAR');
-                    }
-                } else {
-                    btn.removeClass('btn-success inactivo').addClass('btn-danger activo');
-                    if (!btn.hasClass('btn-sm')) {
-                        var i = btn.closest('i');
-                        btn.html('<i class="fa fa-close"></i> ELIMINAR');
-                    } else {
-                        btn.text('ELIMINAR');
-                    }
-                }
-                swal(response.text, "", "success");
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
 });
 
-},{}],32:[function(require,module,exports){
-"use strict";
-
-$(".sindicatos_destroy").off().on("click", function (event) {
-    var btn = $(this);
-    event.preventDefault();
-    swal({
-        title: "¿Estás seguro?",
-        text: "¡Se eliminará el sindicato y no podra recuperarlo!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, ¡Eliminar!",
-        closeOnConfirm: false
-    }, function () {
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (response.success) {
-                    swal({
-                        title: "¡Sindicato Eliminado!",
-                        type: "success",
-                        confirmButtonText: "OK",
-                        closeOnConfirm: false }, function () {
-                        window.location.href = response.url;
-                    });
-                } else {
-                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
-                }
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
-});
-
-},{}],33:[function(require,module,exports){
+},{}],30:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32454,46 +32300,7 @@ $(document).ready(function () {
     }
 });
 
-},{}],34:[function(require,module,exports){
-"use strict";
-
-$(".tiros_destroy").off().on("click", function (event) {
-    var btn = $(this);
-    event.preventDefault();
-    swal({
-        title: "¿Estás seguro?",
-        text: "¡Se eliminará el tiro y no podra recuperarlo!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, ¡Eliminar!",
-        closeOnConfirm: false
-    }, function () {
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (response.success) {
-                    swal({
-                        title: "¡Tiro Eliminado!",
-                        type: "success",
-                        confirmButtonText: "OK",
-                        closeOnConfirm: false }, function () {
-                        window.location.href = response.url;
-                    });
-                } else {
-                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
-                }
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
-});
-
-},{}],35:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 require('./vue-components/global-errors');
@@ -32503,9 +32310,9 @@ require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
 require('./vue-components/viajes-manual');
 require('./vue-components/viajes-completa');
-require('./vue-components/viajes-validar');
+require('./vue-components/validar');
 
-},{"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-completa":44,"./vue-components/viajes-manual":45,"./vue-components/viajes-validar":46}],36:[function(require,module,exports){
+},{"./vue-components/errors":32,"./vue-components/fda-bancomaterial":33,"./vue-components/fda-material":34,"./vue-components/global-errors":35,"./vue-components/origenes-usuarios":36,"./vue-components/validar":40,"./vue-components/viajes-completa":41,"./vue-components/viajes-manual":42}],32:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32514,7 +32321,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":41}],37:[function(require,module,exports){
+},{"./templates/errors.html":37}],33:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -32620,7 +32427,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],38:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -32709,7 +32516,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],39:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32735,7 +32542,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":42}],40:[function(require,module,exports){
+},{"./templates/global-errors.html":38}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -32810,13 +32617,110 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":43}],41:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":39}],37:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],42:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
-},{}],43:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
-},{}],44:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
+'use strict';
+
+function timeStamp(type) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    var min = today.getMinutes();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (hh < 10) {
+        hh = '0' + hh;
+    }
+    if (min < 10) {
+        min = '0' + min;
+    }
+
+    var date = yyyy + '-' + mm + '-' + dd;
+    var time = hh + ":" + min;
+
+    return type == 1 ? date : time;
+}
+
+Vue.component('viajes-validar', {
+    data: function data() {
+        return {
+            'datosConsulta': {
+                'fechaInicial': timeStamp(1),
+                'fechaFinal': timeStamp(1),
+                'code': '',
+                'tipo': ''
+            },
+            'viajes': []
+        };
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: false,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        }
+    },
+
+    methods: {
+        setFechaInicial: function setFechaInicial(event) {
+            this.datosConsulta.fechaInicial = event.currentTarget.value;
+        },
+
+        setFechaFinal: function setFechaFinal(event) {
+            this.datosConsulta.fechaFinal = event.currentTarget.value;
+        },
+
+        fetchViajes: function fetchViajes(tipo) {
+            var _this = this;
+
+            if (tipo == 'dates') {
+                if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
+                    swal('Por favor introduzca las fechas', '', 'warning');
+                } else {
+                    this.viajes = [];
+                    this.$http.get(App.host + '/viajes/netos', { 'params': { 'type': 'dates', 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
+                        _this.viajes = response.body;
+                    }, function (error) {
+                        App.setErrorsOnForm(_this.form, response.body);
+                    });
+                }
+            } else {
+                if (!this.datosConsulta.code) {
+                    swal('Por favor introduzca el codigo del viaje', '', 'warning');
+                } else {
+                    this.viajes = [];
+                    this.$http.get(App.host + '/viajes/netos', { 'params': { 'type': 'code', 'code': this.datosConsulta.code } }).then(function (response) {
+                        _this.viajes = response.body;
+                    }, function (error) {
+                        App.setErrorsOnForm(_this.form, response.body);
+                    });
+                }
+            }
+        }
+    }
+});
+
+},{}],41:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -33075,7 +32979,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],45:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -33288,76 +33192,6 @@ Vue.component('viajes-manual', {
                 confirmButtonColor: "#ec6c62"
             }, function () {
                 return _this6.registrar();
-            });
-        }
-    }
-});
-
-},{}],46:[function(require,module,exports){
-'use strict';
-
-Vue.component('viajes-validar', {
-    data: function data() {
-        return {
-            'fechas': {
-                'FechaInicial': '',
-                'FechaFinal': ''
-            },
-            'form': {
-                'viajes': [],
-                'errors': []
-            }
-        };
-    },
-
-    created: function created() {
-        this.initialize();
-    },
-
-    directives: {
-        datepicker: {
-            inserted: function inserted(el) {
-                $(el).datepicker({
-                    format: 'yyyy-mm-dd',
-                    language: 'es',
-                    autoclose: false,
-                    clearBtn: true,
-                    todayHighlight: true,
-                    endDate: '0d'
-                });
-            }
-        }
-    },
-
-    methods: {
-        initialize: function initialize() {
-            this.cargando = true;
-            this.cargando = false;
-        },
-
-        setFechaInicial: function setFechaInicial(event) {
-            this.fechas.FechaInicial = event.currentTarget.value;
-        },
-
-        setFechaFinal: function setFechaFinal(event) {
-            this.fechas.FechaFinal = event.currentTarget.value;
-        },
-
-        fetchViajes: function fetchViajes(e) {
-            var _this = this;
-
-            e.preventDefault();
-
-            this.cargando = true;
-            console.log('cargando');
-            this.form.viajes = [];
-            this.$http.get(App.host + '/viajes/netos', { 'params': { 'type': 'validar', 'fechas': this.fechas } }).then(function (response) {
-                _this.form.viajes = response.body;
-                _this.cargando = false;
-                console.log('fin');
-            }, function (response) {
-                App.setErrorsOnForm(_this.form, response.body);
-                _this.cargando = false;
             });
         }
     }

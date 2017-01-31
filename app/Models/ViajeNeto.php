@@ -52,15 +52,18 @@ class ViajeNeto extends Model
         return $this->belongsTo(Material::class, 'IdMaterial');
     }
     
+    public function ruta() {
+        return $this->hasOne(Ruta::class, 'IdTiro', 'IdTiro')->where('rutas.IdOrigen', $this->IdOrigen);
+    }
+    
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
     }
     
-    public function scopePorValidar($query, $fecha_inicial = '', $fecha_final = '') {
-        return $query->whereBetween('FechaLlegada', [$fecha_inicial, $fecha_final])
-                ->whereIn('Estatus', [0, 10, 20]);
+    public function scopePorValidar($query) {
+        return $query->whereIn('Estatus', [0, 10, 20]);
     }
-    
+        
     public static function autorizar($data) {
         $autorizados = 0;
         DB::connection('sca')->beginTransaction();
@@ -182,5 +185,12 @@ class ViajeNeto extends Model
         } catch (Exception $ex) {
             DB::connection('sca')->rollback();
         }
+    }
+    
+    public function getTiempo() {
+        $timestampSalida = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
+        $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
+        
+        return $timestampSalida->diffInMinutes($timestampLlegada);
     }
 }
