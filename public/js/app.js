@@ -32721,6 +32721,10 @@ function timeStamp(type) {
 
     return type == 1 ? date : time;
 }
+// register modal component
+Vue.component('modal', {
+    template: '#modal-template'
+});
 
 Vue.component('viajes-validar', {
     data: function data() {
@@ -32732,7 +32736,8 @@ Vue.component('viajes-validar', {
                 'tipo': ''
             },
             'viajes': [],
-            'cargando': false
+            'cargando': false,
+            'showModal': false
         };
     },
 

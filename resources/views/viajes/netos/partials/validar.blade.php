@@ -50,6 +50,7 @@
                             <th>Material</th>
                             <th>Tiempo</th>
                             <th>Ruta</th>
+                            <th>?</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -70,6 +71,23 @@
                             <td>@{{ viaje.Material }}</td>
                             <td>@{{ viaje.Tiempo }}</td>
                             <td>@{{ viaje.Ruta }}</td>
+                            <td>
+                                <span v-if="!viaje.valido">
+                                    <a id="show-modal" @click="showModal = true">
+                                        <i class="fa fa-flag" style="color: green"></i>
+                                    </a>
+                                    <modal v-if="showModal" @close="showModal = false">
+                                    <!--
+                                      you can use custom content here to overwrite
+                                      default content
+                                    -->
+                                    <h3 slot="header">@{{ viaje.Ruta }}</h3>
+                                  </modal>
+                                </span>
+                                <span v-else>
+                                    <i class="fa fa-flag" style="color: red"></i>
+                                </span>
+                            </td>
                         </tr>
                     </tbody>
                 </table>
