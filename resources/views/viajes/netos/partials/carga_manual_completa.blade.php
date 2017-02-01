@@ -9,20 +9,19 @@
     <viajes-manual-completa inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
-            <form>
-            <div class="col-xs-6 col-md-3 form-group">
-                <label class="col-xs-12">No. de Viajes</label>
-                <div class="col-xs-9 col-md-10">
-                    <input type="number" class="form-control" v-model="numViajes">
+            <div class="form-inline">
+                <div class="form-group">
+                    <label>Número de Viajes </label>
+                    <input type="number" class="form-control input-sm" v-model="numViajes">
                 </div>
-                <button type="submit" class="btn btn-sm btn-success col-xs-3 col-md-2" v-on:click="fillTable">
+                <button class="btn btn-sm btn-primary" v-on:click="fillTable">
                     <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i></span>
                     <span v-else><i class="fa fa-play-circle"></i></span>
                 </button>
             </div>
-            </form>
-            <div class="table-responsive col-md-12 col-xs-12 rcorners" v-if="!cargando">
-                <table class="table table-bordered table-hover">                    
+            <hr>
+            <div class="table-responsive col-md-12 col-xs-12" v-if="!cargando">
+                <table v-if="form.viajes.length" class="table table-condensed table-hover table-bordered">                    
                     <thead>
                         <tr>
                             <th rowspan="2">ID</th>
@@ -31,7 +30,7 @@
                             <th rowspan="2">
                                 Camión
                                 <br>
-                                <select v-if="form.viajes.length" class="form-control input-sm" v-model="generales.IdCamion" v-on:change="setCamionGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdCamion" v-on:change="setCamionGeneral">
                                     <option value>--SELECCIONE--</option>
                                     <option v-for="camion in camiones" v-bind:value="camion.IdCamion">@{{camion.Economico}}</option>
                                 </select>
@@ -40,7 +39,7 @@
                             <th rowspan="2">
                                 Origen
                                 <br>
-                                <select v-if="form.viajes.length" class="form-control input-sm" v-model="generales.IdOrigen" v-on:change="setOrigenGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdOrigen" v-on:change="setOrigenGeneral">
                                     <option value>--SELECCIONE--</option>
                                     <option v-for="origen in origenes" v-bind:value="origen.IdOrigen">@{{origen.Descripcion}}</option>
                                 </select>
@@ -48,7 +47,7 @@
                             <th rowspan="2">
                                 Tiro
                                 <br>
-                                <select v-if="form.viajes.length" class="form-control input-sm" v-model="generales.IdTiro" v-on:change="setTiroGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdTiro" v-on:change="setTiroGeneral">
                                     <option value>--SELECCIONE--</option>
                                     <option v-for="tiro in tiros" v-bind:value="tiro.IdTiro">@{{tiro.Descripcion}}</option>
                                 </select>
@@ -59,7 +58,7 @@
                             <th rowspan="2">
                                 Material
                                 <br>
-                                <select v-if="form.viajes.length" class="form-control input-sm" v-model="generales.IdMaterial" v-on:change="setMaterialGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdMaterial" v-on:change="setMaterialGeneral">
                                     <option value>--SELECCIONE--</option>
                                     <option v-for="material in materiales" v-bind:value="material.IdMaterial">@{{material.Descripcion}}</option>
                                 </select>

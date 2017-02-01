@@ -6,8 +6,8 @@
     <viajes-manual inline-template>
         <section>            
             <app-errors v-bind:form="form"></app-errors>
-            <div v-if="!cargando" class="table-responsive col-md-10 col-md-offset-1 rcorners">
-                <table class="table">
+            <div v-if="!cargando" class="table-responsive col-md-10 col-md-offset-1">
+                <table class="table table-hover table-bordered table-condensed">
                     <thead>
                         <tr>
                             <th>#</th>

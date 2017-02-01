@@ -4,37 +4,39 @@
 <div id="app">
     <global-errors></global-errors>
     <viajes-validar inline-template>
-        <section>    
-            <div class="form-inline">
-              <div class="row">
-                <select class="input-sm form-control" placeholder="Buscar Por" v-model="datosConsulta.tipo">
-                    <option value>Buscar Por...</option>
-                    <option value="dates">Rango de Fechas</option>
-                    <option value="code">Código</option>
-                </select>         
-              </div>
-                <br>
-                <div class="row">
-              <span v-show="datosConsulta.tipo == 'dates'">
-              <div class="form-group">
-                  <input type="text" v-model="datosConsulta.fechaInicial" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Inicio" @blur="setFechaInicial($event)">
-              </div>
-              <div class="form-group">
-                <input type="text" v-model="datosConsulta.fechaFinal" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Fin" @blur="setFechaFinal($event)">
-              </div>
-              </span>
-              <span v-show="datosConsulta.tipo == 'code'">
-              <div class="form-group">
-                  <input type="text" v-model="datosConsulta.code" class="form-control input-sm" placeholder="Código">
-              </div>
-              </span>
-              <button v-if="datosConsulta.tipo" v-on:click="fetchViajes(datosConsulta.tipo)" class="btn btn-sm btn-primary" >Consultar</button>
+        <section>
+            <div class="row">
+                <div class="col-md-4 col-xs-6">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label>Inicio</label>
+                            <input type="text" v-model="datosConsulta.fechaInicial" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Inicio" @blur="setFechaInicial($event)">
+                        </div>
+                        <div class="form-group">
+                            <label>Fin</label>
+                            <input type="text" v-model="datosConsulta.fechaFinal" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Fin" @blur="setFechaFinal($event)">
+                        </div>
+                        <button v-on:click="fetchViajes()" class="btn btn-sm btn-primary" >Consultar</button>
+                    </div>
+                </div>
+                <div class="text-right col-md-4 col-xs-6 col-md-offset-4">
+                    <div class="form-inline">
+                        <div class="form-group">
+                            <label>Buscar código</label>
+                            <input type="text" v-model="datosConsulta.code" class="form-control input-sm" placeholder="Código del viaje">
+                        </div>
+                    </div>
                 </div>
             </div>
             <hr>
             <br>
             <div class="table-responsive">
-                <table class="table table-condensed">
+                <span v-if="cargando">
+                    <div class="text-center">
+                        <i class="fa fa-2x fa-spinner fa-spin"></i> Cargando Viajes...
+                    </div>
+                </span>
+                <table v-if="viajes.length" class="table table-condensed">
                     <thead>
                         <tr>
                             <th>Fecha de Llegada</th>
@@ -51,7 +53,12 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="viaje in viajes">
+                        <span v-if="datosConsulta.tipo = 'code'">
+                            <tr v-for="viaje in getViajesByCode">
+                        </span>
+                        <span v-else>
+                            <tr v-for="viaje in getViajesByCode">
+                        </span>
                             <td>@{{ viaje.FechaLlegada }}</td>
                             <td>@{{ viaje.HoraLlegada }}</td>
                             <td>@{{ viaje.Tiro }}</td>

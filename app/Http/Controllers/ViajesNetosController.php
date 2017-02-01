@@ -31,31 +31,27 @@ class ViajesNetosController extends Controller
     {
         if($request->ajax()) {
             $data = [];
-            if($request->get('type') == 'dates') {
-                $viajes = ViajeNeto::porValidar()
-                    ->whereBetween('FechaLlegada', [$request->get('fechaInicial'), $request->get('fechaFinal')])
-                    ->get();
-                foreach($viajes as $viaje) {
-                    $data [] =  [
-                        'FechaLlegada' => $viaje->FechaLlegada,
-                        'Tiro' => $viaje->tiro->Descripcion,
-                        'Camion' => $viaje->camion->Economico,
-                        'HoraLlegada' => $viaje->HoraLlegada,
-                        'Cubicacion' => $viaje->camion->CubicacionParaPago,
-                        'Origen' => $viaje->origen->Descripcion,
-                        'Sincicato' => $viaje->camion->sindicato,
-                        'Empresa' => $viaje->camion->empresa,
-                        'Material' => $viaje->material->Descripcion,
-                        'Tiempo' => $viaje->getTiempo(),
-                        'Ruta' => $viaje->ruta->present()->claveRuta
-                        
-                    ]; 
-                }
-                
-                return response()->json($data);
-            } else {
-                
+           
+            $viajes = ViajeNeto::porValidar()
+                ->whereBetween('FechaLlegada', [$request->get('fechaInicial'), $request->get('fechaFinal')])
+                ->get();
+            foreach($viajes as $viaje) {
+                $data [] =  [
+                    'FechaLlegada' => $viaje->FechaLlegada,
+                    'Tiro' => $viaje->tiro->Descripcion,
+                    'Camion' => $viaje->camion->Economico,
+                    'HoraLlegada' => $viaje->HoraLlegada,
+                    'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                    'Origen' => $viaje->origen->Descripcion,
+                    'Sincicato' => $viaje->camion->sindicato,
+                    'Empresa' => $viaje->camion->empresa,
+                    'Material' => $viaje->material->Descripcion,
+                    'Tiempo' => $viaje->getTiempo(),
+                    'Ruta' => $viaje->ruta->present()->claveRuta,
+                    'Code' => isset($viaje->Code) ? $viaje->Code : ""
+                ]; 
             }
+            return response()->json($data);
         }
     }
 
@@ -132,7 +128,7 @@ class ViajesNetosController extends Controller
         } else if($request->path() == 'viajes/netos/autorizar') {
             $msg = ViajeNeto::autorizar($request->get('Estatus'));
             Flash::success($msg);
-            return response()->json(['path' => route('viajes.netos.edit', ['action' => 'autorizar'])]);
+            return redirect()->back();
         }
     }
 

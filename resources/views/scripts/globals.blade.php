@@ -4,6 +4,7 @@
         // Token CSRF de Laravel
         csrfToken: '{{ csrf_token() }}',
         host: '{{ url("/") }}',
+        tablefilterBasePath: '{{ asset("tablefilter"). '/'}}',
 
         // ID del Usuario Actual
         userId: {!! Auth::check() ? Auth::id() : 'null' !!},

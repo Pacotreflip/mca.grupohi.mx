@@ -6,3 +6,4 @@ require('./scripts/materiales');
 require('./scripts/rutas');
 require('./scripts/tarifas');
 require('./scripts/etapas');
+require('./scripts/viajes');

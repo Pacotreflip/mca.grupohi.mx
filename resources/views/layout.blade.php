@@ -19,6 +19,7 @@
         @yield('content')
     </div>
     <br>
+    <script src="{{ asset('tablefilter/tablefilter.js')}}"></script>
     <script src="{{ asset(elixir("js/app.js")) }}"></script>
     @yield('scripts')
   </body>

@@ -31583,7 +31583,7 @@ if ($('#app').length) {
     });
 }
 
-},{"./scripts":22,"./vue-components":31,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
+},{"./scripts":22,"./vue-components":32,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"jquery":8,"jquery-treegrid/js/jquery.treegrid.js":7,"sweetalert":17,"underscore":18,"vue-resource":19,"vue/dist/vue.js":20}],22:[function(require,module,exports){
 'use strict';
 
 require('./scripts/camiones');
@@ -31594,8 +31594,9 @@ require('./scripts/materiales');
 require('./scripts/rutas');
 require('./scripts/tarifas');
 require('./scripts/etapas');
+require('./scripts/viajes');
 
-},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/etapas":25,"./scripts/globales":26,"./scripts/marcas":27,"./scripts/materiales":28,"./scripts/rutas":29,"./scripts/tarifas":30}],23:[function(require,module,exports){
+},{"./scripts/camiones":23,"./scripts/centroscostos":24,"./scripts/etapas":25,"./scripts/globales":26,"./scripts/marcas":27,"./scripts/materiales":28,"./scripts/rutas":29,"./scripts/tarifas":30,"./scripts/viajes":31}],23:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32303,6 +32304,74 @@ $(document).ready(function () {
 },{}],31:[function(require,module,exports){
 'use strict';
 
+if ($('#viajes_netos_autorizar').length) {
+    var auth_config = {
+        auto_filter: true,
+        watermark: ['Fecha Llegada', 'Hora Llegada', 'Camión', 'Tiro', 'Origen', 'Material', 'Observaciones'],
+        col_2: 'select',
+        col_3: 'select',
+        col_4: 'select',
+        col_5: 'select',
+        col_7: 'none',
+        col_8: 'none',
+        col_9: 'none',
+        base_path: App.tablefilterBasePath,
+        col_types: ['string', 'string', 'string', 'string', 'string', 'string', 'string', 'none', 'none', 'none'],
+        paging: true,
+        paging_length: 50,
+        rows_counter: true,
+        rows_counter_text: 'Viajes: ',
+        btn_reset: true,
+        btn_reset_text: 'Limpiar',
+        clear_filter_text: 'Limpiar',
+        loader: true,
+        page_text: 'Pagina',
+        of_text: 'de',
+        help_instructions: false,
+        extensions: [{ name: 'sort' }]
+    };
+    var tf = new TableFilter('viajes_netos_autorizar', auth_config);
+    tf.init();
+
+    $("input:checkbox").click(function (e) {
+        if (this.checked) {
+            var group = "input:checkbox[id='" + $(this).attr("id") + "']";
+            $(group).prop("checked", false);
+            $(this).prop("checked", true);
+        }
+    });
+}
+
+$('#viaje_neto_update').submit(function (e) {
+    e.preventDefault();
+    var form = $(this);
+    swal({
+        title: "¿Estás seguro?",
+        text: "Cambiaras es estado del viaje",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#DD6B55",
+        confirmButtonText: "Si",
+        cancelButtonText: 'Cancelar',
+        closeOnConfirm: false
+    }, function () {
+        $.ajax({
+            type: form.attr('method'),
+            url: form.attr('action'),
+            data: form.serialize(),
+            success: function success(response) {
+                window.location = response.path;
+            },
+            error: function error(_error) {
+                sweetAlert("Oops...", "Error Interno del Servidor!", "error");
+            }
+        });
+    });
+});
+
+},{}],32:[function(require,module,exports){
+'use strict';
+
 require('./vue-components/global-errors');
 require('./vue-components/errors');
 require('./vue-components/origenes-usuarios');
@@ -32312,7 +32381,7 @@ require('./vue-components/viajes-manual');
 require('./vue-components/viajes-completa');
 require('./vue-components/validar');
 
-},{"./vue-components/errors":32,"./vue-components/fda-bancomaterial":33,"./vue-components/fda-material":34,"./vue-components/global-errors":35,"./vue-components/origenes-usuarios":36,"./vue-components/validar":40,"./vue-components/viajes-completa":41,"./vue-components/viajes-manual":42}],32:[function(require,module,exports){
+},{"./vue-components/errors":33,"./vue-components/fda-bancomaterial":34,"./vue-components/fda-material":35,"./vue-components/global-errors":36,"./vue-components/origenes-usuarios":37,"./vue-components/validar":41,"./vue-components/viajes-completa":42,"./vue-components/viajes-manual":43}],33:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32321,7 +32390,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":37}],33:[function(require,module,exports){
+},{"./templates/errors.html":38}],34:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -32427,7 +32496,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],34:[function(require,module,exports){
+},{}],35:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -32516,7 +32585,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],35:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -32542,7 +32611,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":38}],36:[function(require,module,exports){
+},{"./templates/global-errors.html":39}],37:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -32617,13 +32686,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":39}],37:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":40}],38:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],38:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],39:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],40:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],41:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -32662,8 +32731,24 @@ Vue.component('viajes-validar', {
                 'code': '',
                 'tipo': ''
             },
-            'viajes': []
+            'viajes': [],
+            'cargando': false
         };
+    },
+
+    computed: {
+        getViajesByCode: function getViajesByCode() {
+            var _this = this;
+            var search = RegExp(_this.datosConsulta.code);
+            return _this.viajes.filter(function (viaje) {
+                if (!viaje.Code.length && !_this.datosConsulta.code.length) {
+                    return true;
+                } else if (viaje.Code && viaje.Code.match(search)) {
+                    return true;
+                }
+                return false;
+            });
+        }
     },
 
     directives: {
@@ -32690,37 +32775,27 @@ Vue.component('viajes-validar', {
             this.datosConsulta.fechaFinal = event.currentTarget.value;
         },
 
-        fetchViajes: function fetchViajes(tipo) {
-            var _this = this;
+        fetchViajes: function fetchViajes() {
+            var _this2 = this;
 
-            if (tipo == 'dates') {
-                if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
-                    swal('Por favor introduzca las fechas', '', 'warning');
-                } else {
-                    this.viajes = [];
-                    this.$http.get(App.host + '/viajes/netos', { 'params': { 'type': 'dates', 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
-                        _this.viajes = response.body;
-                    }, function (error) {
-                        App.setErrorsOnForm(_this.form, response.body);
-                    });
-                }
+            if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
+                swal('Por favor introduzca las fechas', '', 'warning');
             } else {
-                if (!this.datosConsulta.code) {
-                    swal('Por favor introduzca el codigo del viaje', '', 'warning');
-                } else {
-                    this.viajes = [];
-                    this.$http.get(App.host + '/viajes/netos', { 'params': { 'type': 'code', 'code': this.datosConsulta.code } }).then(function (response) {
-                        _this.viajes = response.body;
-                    }, function (error) {
-                        App.setErrorsOnForm(_this.form, response.body);
-                    });
-                }
+                this.viajes = [];
+                this.cargando = true;
+                this.$http.get(App.host + '/viajes/netos', { 'params': { 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
+                    _this2.viajes = response.body;
+                    _this2.cargando = false;
+                }, function (error) {
+                    App.setErrorsOnForm(_this2.form, response.body);
+                    _this2.cargando = false;
+                });
             }
         }
     }
 });
 
-},{}],41:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -32979,7 +33054,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {

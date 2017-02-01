@@ -26,7 +26,23 @@ Vue.component('viajes-validar', {
                 'code' : '',
                 'tipo' : ''
             },
-            'viajes' : []
+            'viajes' : [],
+            'cargando' : false
+        }
+    },
+    
+    computed: {
+        getViajesByCode: function() {
+            var _this = this;
+            var search = RegExp(_this.datosConsulta.code);
+            return _this.viajes.filter(function(viaje) {
+            if(!viaje.Code.length && !_this.datosConsulta.code.length ) {
+                return true;
+            } else if (viaje.Code && (viaje.Code).match(search)) {
+              return true;
+            }
+            return false;
+          });
         }
     },
     
@@ -54,30 +70,20 @@ Vue.component('viajes-validar', {
             this.datosConsulta.fechaFinal = event.currentTarget.value;
         },
         
-        fetchViajes: function(tipo) {
-            if(tipo == 'dates') {
-                if(!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
-                    swal('Por favor introduzca las fechas', '', 'warning');
-                } else {
-                    this.viajes = [];
-                    this.$http.get(App.host + '/viajes/netos', {'params' : {'type' : 'dates', 'fechaInicial' : this.datosConsulta.fechaInicial, 'fechaFinal' : this.datosConsulta.fechaFinal}}).then((response) => {
-                        this.viajes = response.body;
-                    }, (error) => {
-                        App.setErrorsOnForm(this.form, response.body);
-                    });
-                }
+        fetchViajes: function() {
+            if(!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
+                swal('Por favor introduzca las fechas', '', 'warning');
             } else {
-                if(!this.datosConsulta.code) {
-                    swal('Por favor introduzca el codigo del viaje', '', 'warning');
-                } else {
-                    this.viajes = [];
-                    this.$http.get(App.host + '/viajes/netos', {'params' : {'type' : 'code', 'code' : this.datosConsulta.code}}).then((response) => {
-                        this.viajes = response.body;
-                    }, (error) => {
-                        App.setErrorsOnForm(this.form, response.body);
-                    });
-                }
-            } 
+                this.viajes = [];
+                this.cargando = true;
+                this.$http.get(App.host + '/viajes/netos', {'params' : {'fechaInicial' : this.datosConsulta.fechaInicial, 'fechaFinal' : this.datosConsulta.fechaFinal}}).then((response) => {
+                    this.viajes = response.body;
+                    this.cargando = false;
+                }, (error) => {
+                    App.setErrorsOnForm(this.form, response.body);
+                    this.cargando = false;
+                });
+            }
         }
     }
 });
