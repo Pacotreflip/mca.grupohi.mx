@@ -32368,6 +32368,15 @@ $('#viaje_neto_update').submit(function (e) {
         });
     });
 });
+if ($('#viaje_neto_validar').length) {
+    $("input:checkbox").click(function (e) {
+        if (this.checked) {
+            var group = "input:checkbox[id='" + $(this).attr("id") + "']";
+            $(group).prop("checked", false);
+            $(this).prop("checked", true);
+        }
+    });
+}
 
 },{}],32:[function(require,module,exports){
 'use strict';
@@ -32722,7 +32731,7 @@ function timeStamp(type) {
     return type == 1 ? date : time;
 }
 // register modal component
-Vue.component('modal', {
+Vue.component('modal-validar', {
     template: '#modal-template'
 });
 
@@ -32736,8 +32745,12 @@ Vue.component('viajes-validar', {
                 'tipo': ''
             },
             'viajes': [],
+            'empresas': [],
+            'sindicatos': [],
             'cargando': false,
-            'showModal': false
+            'form': {
+                'errors': []
+            }
         };
     },
 
@@ -32756,6 +32769,10 @@ Vue.component('viajes-validar', {
         }
     },
 
+    created: function created() {
+        this.initialize();
+    },
+
     directives: {
         datepicker: {
             inserted: function inserted(el) {
@@ -32772,6 +32789,13 @@ Vue.component('viajes-validar', {
     },
 
     methods: {
+        initialize: function initialize() {
+            this.cargando = true;
+            this.fetchEmpresas();
+            this.fetchSindicatos();
+            this.cargando = false;
+        },
+
         setFechaInicial: function setFechaInicial(event) {
             this.datosConsulta.fechaInicial = event.currentTarget.value;
         },
@@ -32788,14 +32812,44 @@ Vue.component('viajes-validar', {
             } else {
                 this.viajes = [];
                 this.cargando = true;
+                this.form.errors = [];
                 this.$http.get(App.host + '/viajes/netos', { 'params': { 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
                     _this2.viajes = response.body;
                     _this2.cargando = false;
                 }, function (error) {
-                    App.setErrorsOnForm(_this2.form, response.body);
+                    App.setErrorsOnForm(_this2.form, error.body);
                     _this2.cargando = false;
                 });
             }
+        },
+        fetchEmpresas: function fetchEmpresas() {
+            var _this3 = this;
+
+            this.cargando = true;
+            this.$http.get(App.host + '/empresas').then(function (response) {
+                _this3.empresas = response.body;
+                _this3.cargando = false;
+            }, function (error) {
+                App.setErrorsOnForm(_this3.form, error.body);
+                _this3.cargando = false;
+            });
+        },
+
+        fetchSindicatos: function fetchSindicatos() {
+            var _this4 = this;
+
+            this.cargando = true;
+            this.$http.get(App.host + '/sindicatos').then(function (response) {
+                _this4.sindicatos = response.body;
+                _this4.cargando = false;
+            }, function (error) {
+                App.setErrorsOnForm(_this4.form, error.body);
+                _this4.cargando = false;
+            });
+        },
+
+        confirmarValidacion: function confirmarValidacion(viaje) {
+            swal('', '', 'warning');
         }
     }
 });

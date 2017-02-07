@@ -19,7 +19,7 @@
 }
 
 .modal-container {
-  width: 300px;
+  width: 600px;
   margin: 0px auto;
   padding: 20px 30px;
   background-color: #fff;
@@ -75,33 +75,33 @@
 @stop
 @section('scripts')
 <script type="text/x-template" id="modal-template">
-          <transition name="modal">
-            <div class="modal-mask">
-              <div class="modal-wrapper">
-                <div class="modal-container">
+    <transition name="modal">
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
 
-                  <div class="modal-header">
-                    <slot name="header">
-                      default header
-                    </slot>
-                  </div>
-
-                  <div class="modal-body">
-                    <slot name="body">
-                    </slot>
-                  </div>
-
-                  <div class="modal-footer">
-                    <slot name="footer">
-                      default footer
-                      <button class="modal-default-button" @click="$emit('close')">
-                        OK
-                      </button>
-                    </slot>
-                  </div>
-                </div>
-              </div>
+            <div class="modal-header">
+              <slot name="header">
+                default header
+              </slot>
             </div>
-          </transition>
-        </script>
+
+            <div class="modal-body">
+              <slot name="body">
+              </slot>
+            </div>
+
+            <div class="modal-footer">
+              <slot name="footer">
+                default footer
+                <button class="modal-default-button" @click="$emit('close')">
+                  OK
+                </button>
+              </slot>
+            </div>
+          </div>
+        </div>
+      </div>
+    </transition>
+  </script>
 @stop

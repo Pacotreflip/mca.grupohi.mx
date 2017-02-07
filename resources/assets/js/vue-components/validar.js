@@ -17,7 +17,7 @@ function timeStamp(type) {
     return type == 1 ? date : time;
 }
 // register modal component
-Vue.component('modal', {
+Vue.component('modal-validar', {
   template: '#modal-template'
 });
 
@@ -31,8 +31,12 @@ Vue.component('viajes-validar', {
                 'tipo' : ''
             },
             'viajes' : [],
+            'empresas' : [],
+            'sindicatos' : [],
             'cargando' : false,
-            'showModal' : false,
+            'form' : {
+                'errors' : []
+            }
         }
     },
     
@@ -51,6 +55,10 @@ Vue.component('viajes-validar', {
         }
     },
     
+    created: function() {
+        this.initialize();
+    },
+    
     directives: { 
         datepicker: {
             inserted: function(el) {
@@ -67,6 +75,13 @@ Vue.component('viajes-validar', {
     },
     
     methods: {
+        initialize: function() {
+            this.cargando = true;
+            this.fetchEmpresas();
+            this.fetchSindicatos();
+            this.cargando = false;
+        },
+
         setFechaInicial: function(event) {
             this.datosConsulta.fechaInicial = event.currentTarget.value;
         },
@@ -81,14 +96,40 @@ Vue.component('viajes-validar', {
             } else {
                 this.viajes = [];
                 this.cargando = true;
+                this.form.errors = [];
                 this.$http.get(App.host + '/viajes/netos', {'params' : {'fechaInicial' : this.datosConsulta.fechaInicial, 'fechaFinal' : this.datosConsulta.fechaFinal}}).then((response) => {
-                    this.viajes = response.body;
+                    this.viajes = response.body;                    
                     this.cargando = false;
                 }, (error) => {
-                    App.setErrorsOnForm(this.form, response.body);
+                    App.setErrorsOnForm(this.form, error.body);
                     this.cargando = false;
                 });
             }
+        },
+        fetchEmpresas: function() {
+            this.cargando = true;
+            this.$http.get(App.host + '/empresas').then((response) => {
+                this.empresas = response.body;
+                this.cargando = false;
+            }, (error) => {
+                App.setErrorsOnForm(this.form, error.body);
+                this.cargando = false;
+            });
+        },
+        
+        fetchSindicatos: function() {
+            this.cargando = true;
+            this.$http.get(App.host + '/sindicatos').then((response) => {
+                this.sindicatos = response.body;
+                this.cargando = false;
+            }, (error) => {
+                App.setErrorsOnForm(this.form, error.body);
+                this.cargando = false;
+            });
+        },
+        
+        confirmarValidacion: function(viaje) {
+            swal('','','warning');
         }
     }
 });

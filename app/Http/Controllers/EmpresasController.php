@@ -24,8 +24,12 @@ class EmpresasController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()) {
+            return response()->json(Empresa::all());
+        }
+        
         return view('empresas.index')
                 ->withEmpresas(Empresa::all());
     }

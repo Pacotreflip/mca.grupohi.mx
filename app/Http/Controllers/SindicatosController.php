@@ -24,10 +24,13 @@ class SindicatosController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        if($request->ajax()) {
+            return response()->json(Sindicato::all());
+        }
         return view('sindicatos.index')
-                ->withSindicatos(SIndicato::all());
+                ->withSindicatos(Sindicato::all());
     }
 
     /**

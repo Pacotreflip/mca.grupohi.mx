@@ -81,3 +81,12 @@ $('#viaje_neto_update').submit(function(e) {
         });
     });
 });
+if($('#viaje_neto_validar').length) {
+    $("input:checkbox").click(function(e){
+        if(this.checked) {
+            var group = "input:checkbox[id='"+$(this).attr("id")+"']";
+            $(group).prop("checked", false);
+            $(this).prop("checked",true);
+        }
+    });
+}

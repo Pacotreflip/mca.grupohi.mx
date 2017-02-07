@@ -57,6 +57,10 @@ class ViajeNeto extends Model
         return $this->hasOne(Ruta::class, 'IdTiro', 'IdTiro')->where('rutas.IdOrigen', $this->IdOrigen);
     }
     
+    public function tarifaMaterial() {
+        return $this->hasManyThrough(Tarifas\TarifaMaterial::class, Material::class, 'IdMaterial', 'IdMaterial', 'IdMaterial');
+    }
+    
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
     }
@@ -192,6 +196,39 @@ class ViajeNeto extends Model
         $timestampSalida = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
         
-        return $timestampSalida->diffInMinutes($timestampLlegada);
+        return $timestampSalida->diffInSeconds($timestampLlegada);
+    }
+    
+    public function getImporte() {
+        return (($this->material->tarifaMaterial->PrimerKM * 1 * $this->camion->CubicacionParaPago) + 
+                ($this->material->tarifaMaterial->KMSubsecuente * $this->ruta->KmSubsecuentes * $this->camion->CubicacionParaPago) + 
+                ($this->material->tarifaMaterial->KMAdicional * $this->ruta->KmAdicionales * $this->camion->cubicacionParaPago));
+    }
+    
+    public function valido() {
+        $min = $this->ruta->cronometria->TiempoMinimo;
+        $tol = $this->ruta->cronometria->Tolerancia;
+        if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+    
+    public function estado() {
+        $min = $this->ruta->cronometria->TiempoMinimo;
+        $tol = $this->ruta->cronometria->Tolerancia;
+        
+        if($this->getTiempo() == 0 && $this->Estatus == 0) {
+            return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
+        } else if($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))) {
+            return 'El viaje no puede ser registrado porque no cumple con los tiempos de cronometría de la ruta';
+        } else if(!isset($this->ruta) && $this->Estatus == 0) { 
+            return 'El viaje no puede ser registrado porque no existe una ruta entre su origen y destino'; 
+        } else if(count($this->tarifaMaterial) == 0 && isset($this->material)) {
+            return 'El viaje no puede ser registrado porque no hay una tarifa registrada para su material';
+        } else if($this->Estatus == 10) {
+            return 'El viaje no puede ser registrado porque debe seleccionar primero su origen';
+        }
     }
 }

@@ -43,12 +43,24 @@ class ViajesNetosController extends Controller
                     'HoraLlegada' => $viaje->HoraLlegada,
                     'Cubicacion' => $viaje->camion->CubicacionParaPago,
                     'Origen' => $viaje->origen->Descripcion,
-                    'Sincicato' => $viaje->camion->sindicato,
-                    'Empresa' => $viaje->camion->empresa,
+                    'Sindicato' => isset($viaje->camion->sindicato->IdSindicato) ? $viaje->camion->sindicato->IdSindicato : '',
+                    'Empresa' => isset($viaje->camion->empresa->IdEmpresa) ? $viaje->camion->empresa->IdEmpresa : '',
                     'Material' => $viaje->material->Descripcion,
-                    'Tiempo' => $viaje->getTiempo(),
+                    'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
                     'Ruta' => $viaje->ruta->present()->claveRuta,
-                    'Code' => isset($viaje->Code) ? $viaje->Code : ""
+                    'Code' => isset($viaje->Code) ? $viaje->Code : "",
+                    'Valido' => $viaje->valido(),
+                    'ShowModal' => false,
+                    'Distancia' => $viaje->ruta->TotalKM,
+                    'Estado' => $viaje->estado(),
+                    'Importe' => $viaje->getImporte(),
+                    'PrimerKM' => $viaje->material->tarifaMaterial->PrimerKM,
+                    'KMSubsecuente' => $viaje->material->tarifaMaterial->KMSubsecuente,
+                    'KMAdicional' => $viaje->material->tarifaMaterial->KMAdicional,
+                    'Tara' => 0,
+                    'Bruto' => 0,
+                    'TipoTarifa' => 'm',
+                    'TipoFDA' => 'm'
                 ]; 
             }
             return response()->json($data);
