@@ -32785,10 +32785,61 @@ Vue.component('viajes-validar', {
                     endDate: '0d'
                 });
             }
+        },
+
+        tablefilter: {
+            inserted: function inserted(el) {
+                var val_config = {
+                    auto_filter: true,
+                    watermark: ['Fecha Llegada', 'Hora Llegada', '?', 'Tiro', 'Camion', 'Origen', 'Material', 'Tiempo', 'Ruta', 'Distancia', '1er Km', 'Km Sub.', 'Km Adc.', 'Importe'],
+                    col_2: 'none',
+                    col_3: 'select',
+                    col_4: 'select',
+                    col_5: 'select',
+                    col_6: 'select',
+                    col_8: 'select',
+                    col_10: 'none',
+                    col_11: 'none',
+                    col_12: 'none',
+
+                    base_path: App.tablefilterBasePath,
+                    paging: false,
+                    rows_counter: true,
+                    rows_counter_text: 'Viajes: ',
+                    btn_reset: true,
+                    btn_reset_text: 'Limpiar',
+                    clear_filter_text: 'Limpiar',
+                    loader: true,
+                    help_instructions: false,
+                    extensions: [{ name: 'sort' }]
+                };
+                var tf = new TableFilter('viajes_netos_validar', val_config);
+                tf.init();
+            },
+            update: function update(NEW, OLD) {
+                console.log(NEW);
+                console.log(OLD);
+            }
+        },
+
+        switchbox: {
+            inserted: function inserted(el) {
+                $(el).click(function (e) {
+                    if (this.checked) {
+                        var group = "input:checkbox[id='" + $(this).attr("id") + "']";
+                        $(group).prop("checked", false);
+                        $(this).prop("checked", true);
+                    }
+                });
+            }
         }
     },
 
     methods: {
+        checkboxName: function checkboxName(IdViaje) {
+            return 'Accion[' + IdViaje + ']';
+        },
+
         initialize: function initialize() {
             this.cargando = true;
             this.fetchEmpresas();
@@ -32808,7 +32859,7 @@ Vue.component('viajes-validar', {
             var _this2 = this;
 
             if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
-                swal('Por favor introduzca las fechas', '', 'warning');
+                swal('', 'Por favor introduzca el rango de fechas a consultar', 'warning');
             } else {
                 this.viajes = [];
                 this.cargando = true;

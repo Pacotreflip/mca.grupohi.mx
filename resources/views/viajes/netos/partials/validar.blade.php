@@ -37,7 +37,7 @@
                         <i class="fa fa-2x fa-spinner fa-spin"></i> Cargando Viajes...
                     </div>
                 </span>
-                <table v-if="viajes.length" class="table table-condensed table-bordered table-hover">
+                <table id="viajes_netos_validar" v-tablefilter v-if="viajes.length" class="table table-condensed table-bordered table-hover">
                     <thead>
                         <tr>
                             <th rowspan="2" rowspan="2">Fecha de Llegada</th>
@@ -115,6 +115,27 @@
                                                         <label>Bruto:</label>
                                                         <input type="number" step="any" class="form-control input-sm" v-model="viaje.Bruto">
                                                     </div>
+                                                    <hr>
+                                                    <span v-if="viaje.Valido">
+                                                        <div >
+                                                            <label><i class="fa fa-check" style="color: green"></i> Validar:</label>
+                                                            <input checked="checked" v-switchbox v-bind:id="viaje.IdViajeNeto" type="checkbox" value="1" v-bind:name="checkboxName(viaje.IdViajeNeto)"/>
+                                                        </div>
+                                                        <div>
+                                                            <label><i class="fa fa-close" style="color: red"></i> Denegar:</label>
+                                                            <input v-switchbox v-bind:id="viaje.IdViajeNeto" type="checkbox" value="0" v-bind:name="checkboxName(viaje.IdViajeNeto)"/>
+                                                        </div>   
+                                                    </span>
+                                                    <span v-else>
+                                                        <div >
+                                                            <label><i class="fa fa-check" style="color: green"></i> Validar:</label>
+                                                            <input disabled="disabled" v-bind:id="viaje.IdViajeNeto" type="checkbox" value="1" v-bind:name="checkboxName(viaje.IdViajeNeto)"/>
+                                                        </div>
+                                                        <div>
+                                                            <label><i class="fa fa-close" style="color: red"></i> Denegar:</label>
+                                                            <input checked="checked" v-bind:id="viaje.IdViajeNeto" type="checkbox" value="0" v-bind:name="checkboxName(viaje.IdViajeNeto)"/>
+                                                        </div>   
+                                                    </span>
                                                 </div>
                                             </div>
                                         </div>

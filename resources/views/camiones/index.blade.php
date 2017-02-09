@@ -6,6 +6,7 @@
 </h1>
 {!! Breadcrumbs::render('camiones.index') !!}
 <hr>
+@include('partials.search-form')
 <div class="table-responsive col-md-10 col-md-offset-1">
   <table class="table table-hover table-bordered">
       <thead>
@@ -48,7 +49,7 @@
     </tbody>
   </table>
   <div class="text-center">
-    {!! $camiones->render() !!}
+    {!! $camiones->appends(['buscar' => $busqueda])->render() !!}
   </div>
 </div>
 @stop

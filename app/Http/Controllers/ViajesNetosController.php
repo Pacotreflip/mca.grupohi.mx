@@ -37,6 +37,7 @@ class ViajesNetosController extends Controller
                 ->get();
             foreach($viajes as $viaje) {
                 $data [] =  [
+                    'IdViajeNeto' => $viaje->IdViajeNeto,
                     'FechaLlegada' => $viaje->FechaLlegada,
                     'Tiro' => $viaje->tiro->Descripcion,
                     'Camion' => $viaje->camion->Economico,
@@ -47,7 +48,7 @@ class ViajesNetosController extends Controller
                     'Empresa' => isset($viaje->camion->empresa->IdEmpresa) ? $viaje->camion->empresa->IdEmpresa : '',
                     'Material' => $viaje->material->Descripcion,
                     'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
-                    'Ruta' => $viaje->ruta->present()->claveRuta,
+                    'Ruta' => isset($viaje->ruta) ?  $viaje->ruta->present()->claveRuta : "",
                     'Code' => isset($viaje->Code) ? $viaje->Code : "",
                     'Valido' => $viaje->valido(),
                     'ShowModal' => false,

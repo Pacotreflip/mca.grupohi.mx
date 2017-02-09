@@ -25,9 +25,15 @@ class OperadoresController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        return view('operadores.index')->withOperadores(Operador::paginate(50));
+        $busqueda = $request->get('buscar');
+        return view('operadores.index')
+                ->withOperadores(Operador::where(function($query) use ($busqueda) {
+                    $query->where('Nombre', 'LIKE', '%'.$busqueda.'%')
+                        ->orWhere('NoLicencia', 'LIKE', '%'.$busqueda.'%');
+                })->paginate(50))
+                ->withBusqueda($busqueda);
     }
 
     /**

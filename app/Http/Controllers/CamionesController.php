@@ -39,8 +39,16 @@ class CamionesController extends Controller
             $camiones = Camion::all()->toArray();
             return response()->json($camiones);
         }
+        $busqueda = $request->get('buscar');
         return view('camiones.index')
-                ->withCamiones(Camion::paginate(50));
+                ->withCamiones(Camion::where(function ($query) use ($busqueda){
+                    $query->where('Economico', 'LIKE', '%'.$busqueda.'%')
+                            ->orWhere('Propietario', 'LIKE', '%'.$busqueda.'%')
+                            ->orWhereHas('operador', function ($query) use ($busqueda){
+                                $query->where('Nombre', 'LIKE', '%'.$busqueda.'%');
+                            });
+                })->paginate(50))
+                ->withBusqueda($busqueda);
     }
 
     /**

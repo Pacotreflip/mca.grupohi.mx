@@ -6,6 +6,7 @@
 </h1>
 {!! Breadcrumbs::render('operadores.index') !!}
 <hr>
+@include('partials.search-form')
 <div class="table-responsive col-md-8 col-md-offset-2">
   <table class="table table-striped">
     <thead>
@@ -43,7 +44,7 @@
     </tbody>
   </table>
   <div class="text-center">
-    {!! $operadores->render() !!}
+    {!! $operadores->appends(['buscar' => $busqueda])->render() !!}
   </div>
 </div>
 @stop
