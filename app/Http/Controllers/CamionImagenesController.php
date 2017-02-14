@@ -26,7 +26,8 @@ class CamionImagenesController extends Controller
     public function index(Request $request, $id_camion)
     {
         if($request->ajax()){
-            $imagenes = ImagenCamion::where('IdCamion', '=', $id_camion)->get();
+            $camion = \App\Models\Camion::findOrFail($id_camion);
+            $imagenes = $camion->imagenes;
             $data= [];
             if($imagenes->count() != 0) {
                 $data['hasImagenes'] = true;
@@ -111,7 +112,10 @@ class CamionImagenesController extends Controller
      */
     public function destroy($id_camion, $tipoC)
     {
-        $imagen = ImagenCamion::where('IdCamion', $id_camion)->where('TipoC', $tipoC)->delete();
+        $camion = \App\Models\Camion::findOrFail($id_camion);
+        $imagen = $camion->imagenes->where('TipoC', $tipoC)->first();
+        $imagen -> Estatus = 0;
+        $imagen -> save();
         return response()->json(['success' => true]);    
     }
 }

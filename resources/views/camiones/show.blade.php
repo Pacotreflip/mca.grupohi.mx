@@ -47,36 +47,50 @@
         </div>
         <div class="form-group">
             {!! Form::label('Marca', 'Marca', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 {!! Form::text('Marca', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
             </div>
             {!! Form::label('Modelo', 'Modelo', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 {!! Form::text('Modelo', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
             </div>
             {!! Form::label('Boton', 'Dispositivo', ['class' => 'control-label col-sm-1']) !!}
-            <div class="col-sm-3">
+            <div class="col-sm-2">
                 {!! Form::text('Boton', null, ['class' => 'form-control' , 'disabled' => 'disabled']) !!}  
             </div>
-        </div>
-    </fieldset>
-</div>
-<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px"> 
-    <fieldset>
-        <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
-        <div class="form-group">
-            @if($camion->imagenes->count() > 0)
-            @foreach($camion->imagenes as $imagen)
-            {!! Form::label($imagen->present()->tipoImagen, $imagen->present()->tipoImagen, ['class' => 'control-label col-sm-1']) !!}
+            {!! Form::label('Imagenes', 'Imagenes', ['class' => 'control-label col-sm-1']) !!}
             <div class="col-sm-2">
-                <a class="btn btn-info col-md-12"  href="data:{{$imagen->Tipo}};base64,{{$imagen->Imagen}}" target="blank">
-                    <i class="fa fa-file-image-o"></i> VER IMAGEN                  
-                </a> 
+            @if($camion->imagenes->count() > 0)
+            <a class="btn btn-info" data-toggle="modal" data-target=".bs-example-modal-lg">Ver imagenes</a>
+            <div class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div id="carousel-example-generic" class="carousel slide" data-ride="carousel">
+
+                        <!-- Wrapper for slides -->
+                        <div class="carousel-inner">
+                            @foreach($camion->imagenes as $key => $imagen)
+                            <div class="item {{$key == 0 ? 'active' : ''}}">
+                                <img class="img-responsive" src="data:{{$imagen->Tipo}};base64,{{$imagen->Imagen}}" alt="{{$imagen->present()->tipoImagen}}">
+                                <div class="carousel-caption"><h1>{{$imagen->present()->tipoImagen}}</h1></div>
+                            </div>
+                            @endforeach
+                        </div>
+                            <!-- Controls -->
+                            <a class="left carousel-control" href="#carousel-example-generic" role="button" data-slide="prev">
+                              <span class="glyphicon glyphicon-chevron-left"></span>
+                            </a>
+                            <a class="right carousel-control" href="#carousel-example-generic" role="button" data-slide="next">
+                              <span class="glyphicon glyphicon-chevron-right"></span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
             </div>
-            @endforeach
-            @else
-            <h2 style="text-align: center">No hay imagenes...</h2>
-            @endif
+           @else 
+           <button class="btn btn-default" disabled="disabled">Sin imagenes</button>
+           @endif
+            </div>
         </div>
     </fieldset>
 </div>

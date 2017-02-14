@@ -32815,10 +32815,6 @@ Vue.component('viajes-validar', {
                 };
                 var tf = new TableFilter('viajes_netos_validar', val_config);
                 tf.init();
-            },
-            update: function update(NEW, OLD) {
-                console.log(NEW);
-                console.log(OLD);
             }
         },
 

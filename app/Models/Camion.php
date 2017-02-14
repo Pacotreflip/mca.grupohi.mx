@@ -63,7 +63,7 @@ class Camion extends Model
     }
     
     public function imagenes() {
-        return $this->hasMany(ImagenCamion::class, 'IdCamion');
+        return $this->hasMany(ImagenCamion::class, 'IdCamion')->where('Estatus', '=', 1);
     }
     
     public function empresa() {
@@ -80,5 +80,28 @@ class Camion extends Model
     
     public function __toString() {
         return $this->Economico;
+    }
+    
+    public function fill(array $attributes) {
+        $totallyGuarded = $this->totallyGuarded();
+
+        foreach ($this->fillableFromArray($attributes) as $key => $value) {
+            $key = $this->removeTableFromKey($key);
+
+            // The developers may choose to place some attributes in the "fillable"
+            // array, which means only those attributes may be set through mass
+            // assignment to the model, and all others will just be ignored.
+            if ($this->isFillable($key)) {
+                if($value == ''){
+                    $this->setAttribute($key, NULL);
+                } else {
+                    $this->setAttribute($key, $value);
+                }
+            } elseif ($totallyGuarded) {
+                throw new MassAssignmentException($key);
+            }
+        }
+
+        return $this;
     }
 }

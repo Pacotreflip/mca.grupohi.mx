@@ -28,7 +28,7 @@ class EditCamionRequest extends Request
             'Propietario'   => 'required|string',
             'IdOperador'    => 'required|integer|exists:sca.operadores,IdOperador',
             'Economico'     => 'required|string|unique:sca.camiones,Economico,'.$this->route('camiones').',IdCamion',
-            'Placas'        => 'required|string|unique:sca.camiones,Placas,'.$this->route('camiones').',IdCamion',
+            'Placas'        => 'string|unique:sca.camiones,Placas,'.$this->route('camiones').',IdCamion',
             'PlacasCaja'    => 'string',
             'IdMarca'       => 'required|integer|exists:sca.marcas,IdMarca',
             'Modelo'        => 'required|string',

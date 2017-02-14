@@ -15,7 +15,6 @@ use App\Models\ProyectoLocal;
 use Carbon\Carbon;
 use App\Models\ImagenCamion;
 use Laracasts\Flash\Flash;
-use Illuminate\Support\Facades\Storage;
 use App\Models\Empresa;
 
 class CamionesController extends Controller
@@ -124,7 +123,7 @@ class CamionesController extends Controller
                 ->withOperadores(Operador::all()->lists('Nombre', 'IdOperador'))
                 ->withMarcas(Marca::all()->lists('Descripcion', 'IdMarca'))
                 ->withBotones(Boton::all()->lists('Identificador', 'IdBoton'))
-                ->withEmpresas(Empresa::all()->lists('razonSocial', 'idEmpresa'));
+                ->withEmpresas(Empresa::all()->lists('razonSocial', 'IdEmpresa'));
     }
 
     /**
@@ -145,22 +144,19 @@ class CamionesController extends Controller
             //$nombre = ImagenCamion::creaNombre($file, $camion, $key);
             //$ruta = ImagenCamion::baseDir().'/'.$nombre;
 
-            $imagen = ImagenCamion::where([
-                'IdCamion' => $camion->IdCamion,
-                'TipoC' => $tipoC])->first();
-            if($imagen) {
-                $imagen->Tipo = $tipo;
-                $imagen->Imagen = base64_encode(file_get_contents($file));
-                $imagen->save();
-            } else {
-                $imagen = ImagenCamion::create([
-                    'IdCamion' => $camion->IdCamion,
-                    'TipoC' => $tipoC,
-                    'Tipo' => $tipo,
-                    'Imagen' => base64_encode(file_get_contents($file))
-                ]);
-            }
+            $imagen = $camion->imagenes->where('TipoC', $tipoC)->first();
             
+            if($imagen) {
+                $imagen->Estatus = 0;
+                $imagen->save();
+            } 
+            
+            ImagenCamion::create([
+                'IdCamion' => $camion->IdCamion,
+                'TipoC' => $tipoC,
+                'Tipo' => $tipo,
+                'Imagen' => base64_encode(file_get_contents($file))
+            ]);
             //if(Storage::disk('uploads')->has($imagen->Ruta)) {
             //    Storage::disk('uploads')->delete($imagen->Ruta);
             //}
