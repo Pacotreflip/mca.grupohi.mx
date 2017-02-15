@@ -34,6 +34,7 @@ Vue.component('viajes-validar', {
             'empresas' : [],
             'sindicatos' : [],
             'cargando' : false,
+            'guardando' : false,
             'form' : {
                 'errors' : []
             },
@@ -78,9 +79,9 @@ Vue.component('viajes-validar', {
                 var val_config = {
                     auto_filter: true,
                     watermark: [
+                        'Código', 
                         'Fecha Llegada', 
                         'Hora Llegada',
-                        '?',
                         'Tiro', 
                         'Camion', 
                         'Origen', 
@@ -91,9 +92,11 @@ Vue.component('viajes-validar', {
                         '1er Km',
                         'Km Sub.',
                         'Km Adc.',
-                        'Importe'
+                        'Importe',
+                        '?',
+                        'Validar'
                     ],
-                    col_2: 'none',
+                    col_1: 'select',
                     col_3: 'select',
                     col_4: 'select',
                     col_5: 'select',
@@ -102,6 +105,8 @@ Vue.component('viajes-validar', {
                     col_10: 'none',
                     col_11: 'none',
                     col_12: 'none',
+                    col_14: 'none',
+                    col_15: 'none',
                     
                     base_path: App.tablefilterBasePath,
                     paging: false,
@@ -117,26 +122,10 @@ Vue.component('viajes-validar', {
                 var tf = new TableFilter('viajes_netos_validar', val_config);
                 tf.init();
             }         
-        },
-        
-        switchbox: {
-            inserted: function(el) {
-                $(el).click(function(e){ 
-                    if(this.checked) {
-                        var group = "input:checkbox[id='"+$(this).attr("id")+"']";
-                        $(group).prop("checked", false);
-                        $(this).prop("checked",true);
-                    }
-                });
-            }
-        } 
+        }        
     },
     
     methods: {
-        checkboxName: function(IdViaje) {
-            return 'Accion[' + IdViaje + ']';
-        },
-        
         initialize: function() {
             this.cargando = true;
             this.fetchEmpresas();
@@ -190,8 +179,43 @@ Vue.component('viajes-validar', {
             });
         },
         
-        confirmarValidacion: function(viaje) {
-            swal('','','warning');
+        confirmarValidacion: function (index) {
+                        
+            swal({
+                title: "¿Desea continuar con la validación?", 
+                text: "¿Esta seguro de que la información es correcta?", 
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, () => this.validar(index));
+        },
+        
+        validar: function(index) {
+            var _this = this;
+            this.guardando = true;
+            this.form.errors = [];
+            var viaje = this.viajes[index];
+            this.$http.post(App.host + '/viajes/netos/validar', {'_method' : 'PATCH',  viaje}).then((response) => {
+                swal({
+                    type: response.body.tipo,
+                    title: '',
+                    text: response.body.message,
+                    showConfirmButton: true
+                });
+                
+                if(response.body.tipo == 'success' || response.body.tipo == 'info') {
+                    _this.viajes[index].ShowModal = false;
+                    _this.viajes.splice(index, 1);
+                } 
+                
+                _this.guardando = false;
+            }, (response) => {
+                _this.guardando = false;
+                _this.viajes[index].ShowModal = false;
+                App.setErrorsOnForm(_this.form, response.body);
+            });
         }
     }
 });

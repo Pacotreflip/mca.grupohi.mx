@@ -37,6 +37,7 @@ class ViajesNetosController extends Controller
                 ->get();
             foreach($viajes as $viaje) {
                 $data [] =  [
+                    'Accion' => $viaje->valido() ? 1 : 0,
                     'IdViajeNeto' => $viaje->IdViajeNeto,
                     'FechaLlegada' => $viaje->FechaLlegada,
                     'Tiro' => $viaje->tiro->Descripcion,
@@ -44,6 +45,7 @@ class ViajesNetosController extends Controller
                     'HoraLlegada' => $viaje->HoraLlegada,
                     'Cubicacion' => $viaje->camion->CubicacionParaPago,
                     'Origen' => $viaje->origen->Descripcion,
+                    'IdOrigen' => $viaje->origen->IdOrigen,
                     'Sindicato' => isset($viaje->camion->sindicato->IdSindicato) ? $viaje->camion->sindicato->IdSindicato : '',
                     'Empresa' => isset($viaje->camion->empresa->IdEmpresa) ? $viaje->camion->empresa->IdEmpresa : '',
                     'Material' => $viaje->material->Descripcion,
@@ -134,10 +136,12 @@ class ViajesNetosController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\EditViajeNetoRequest $request)
+    public function update(Request $request)
     {
         if($request->path() == 'viajes/netos/validar') {
-            //Validar Viajes Netos
+            $viaje = $request->get('viaje');
+            $viaje_neto = ViajeNeto::findOrFail($viaje['IdViajeNeto']);
+            return response()->json($viaje_neto->validar($request));
         } else if($request->path() == 'viajes/netos/autorizar') {
             $msg = ViajeNeto::autorizar($request->get('Estatus'));
             Flash::success($msg);

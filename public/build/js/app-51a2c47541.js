@@ -32748,6 +32748,7 @@ Vue.component('viajes-validar', {
             'empresas': [],
             'sindicatos': [],
             'cargando': false,
+            'guardando': false,
             'form': {
                 'errors': []
             }
@@ -32791,8 +32792,8 @@ Vue.component('viajes-validar', {
             inserted: function inserted(el) {
                 var val_config = {
                     auto_filter: true,
-                    watermark: ['Fecha Llegada', 'Hora Llegada', '?', 'Tiro', 'Camion', 'Origen', 'Material', 'Tiempo', 'Ruta', 'Distancia', '1er Km', 'Km Sub.', 'Km Adc.', 'Importe'],
-                    col_2: 'none',
+                    watermark: ['Código', 'Fecha Llegada', 'Hora Llegada', 'Tiro', 'Camion', 'Origen', 'Material', 'Tiempo', 'Ruta', 'Distancia', '1er Km', 'Km Sub.', 'Km Adc.', 'Importe', '?', 'Validar'],
+                    col_1: 'select',
                     col_3: 'select',
                     col_4: 'select',
                     col_5: 'select',
@@ -32801,6 +32802,8 @@ Vue.component('viajes-validar', {
                     col_10: 'none',
                     col_11: 'none',
                     col_12: 'none',
+                    col_14: 'none',
+                    col_15: 'none',
 
                     base_path: App.tablefilterBasePath,
                     paging: false,
@@ -32816,26 +32819,10 @@ Vue.component('viajes-validar', {
                 var tf = new TableFilter('viajes_netos_validar', val_config);
                 tf.init();
             }
-        },
-
-        switchbox: {
-            inserted: function inserted(el) {
-                $(el).click(function (e) {
-                    if (this.checked) {
-                        var group = "input:checkbox[id='" + $(this).attr("id") + "']";
-                        $(group).prop("checked", false);
-                        $(this).prop("checked", true);
-                    }
-                });
-            }
         }
     },
 
     methods: {
-        checkboxName: function checkboxName(IdViaje) {
-            return 'Accion[' + IdViaje + ']';
-        },
-
         initialize: function initialize() {
             this.cargando = true;
             this.fetchEmpresas();
@@ -32895,8 +32882,46 @@ Vue.component('viajes-validar', {
             });
         },
 
-        confirmarValidacion: function confirmarValidacion(viaje) {
-            swal('', '', 'warning');
+        confirmarValidacion: function confirmarValidacion(index) {
+            var _this5 = this;
+
+            swal({
+                title: "¿Desea continuar con la validación?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this5.validar(index);
+            });
+        },
+
+        validar: function validar(index) {
+            var _this = this;
+            this.guardando = true;
+            this.form.errors = [];
+            var viaje = this.viajes[index];
+            this.$http.post(App.host + '/viajes/netos/validar', { '_method': 'PATCH', viaje: viaje }).then(function (response) {
+                swal({
+                    type: response.body.tipo,
+                    title: '',
+                    text: response.body.message,
+                    showConfirmButton: true
+                });
+
+                if (response.body.tipo == 'success' || response.body.tipo == 'info') {
+                    _this.viajes[index].ShowModal = false;
+                    _this.viajes.splice(index, 1);
+                }
+
+                _this.guardando = false;
+            }, function (response) {
+                _this.guardando = false;
+                _this.viajes[index].ShowModal = false;
+                App.setErrorsOnForm(_this.form, response.body);
+            });
         }
     }
 });

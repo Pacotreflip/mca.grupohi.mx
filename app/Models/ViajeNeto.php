@@ -231,4 +231,43 @@ class ViajeNeto extends Model
             return 'El viaje no puede ser registrado porque debe seleccionar primero su origen';
         }
     }
+    
+    public function validar($request) {
+        $viaje = $request->get('viaje');
+        DB::connection('sca')->beginTransaction();
+        try {
+            DB::connection("sca")->statement("call sca_sp_registra_viaje_fda("
+                .$viaje["Accion"].","
+                .$this->IdViajeNeto.","
+                ."0".","
+                ."0".","
+                .$this->origen->IdOrigen.","
+                .($viaje["Sindicato"] ? $viaje["Sindicato"] : 'NULL').","
+                .($viaje["Empresa"] ? $viaje["Empresa"] : 'NULL').","
+                .auth()->user()->idusuario.",'"
+                .$viaje["TipoTarifa"]."','"
+                .$viaje["TipoFDA"]."',"
+                .$viaje["Tara"].","
+                .$viaje["Bruto"].","
+                .$viaje["Cubicacion"].","
+                .$this->camion->CubicacionParaPago.
+                 ",@a);"
+            );  
+            
+            $result = DB::connection('sca')->select('SELECT @a');
+            if($result[0]->{'@a'} == 'ok') {
+                $msg = $viaje['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
+                $tipo = $viaje['Accion'] == 1 ? 'success' : 'info';
+            } else {
+                $msg = 'Error al procesar el viaje';
+                $tipo = 'error';
+            }            
+            
+            DB::connection('sca')->commit();
+            return ['message' => $msg,
+                'tipo' => $tipo];
+        } catch (Exception $ex) {
+            DB::connection('sca')->rollback();
+        }
+    }
 }
