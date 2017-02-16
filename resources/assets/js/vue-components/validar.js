@@ -101,6 +101,7 @@ Vue.component('viajes-validar', {
                     col_12: 'none',
                     col_14: 'none',
                     col_15: 'none',
+                    col_16: 'none',
                     
                     base_path: App.tablefilterBasePath,
                     paging: false,
@@ -182,6 +183,14 @@ Vue.component('viajes-validar', {
                 _this.viajes[index].ShowModal = false;
                 App.setErrorsOnForm(_this.form, response.body);
             });
+        },
+
+        itemClass: function(index) {
+            if(index == 0){
+                return 'item active';
+            } else {
+                return 'item';
+            }
         }
     }
 });

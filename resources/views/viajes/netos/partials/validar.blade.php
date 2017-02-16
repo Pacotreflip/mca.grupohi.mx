@@ -46,6 +46,7 @@
                             <th rowspan="2">Importe</th>
                             <th rowspan="2">?</th>
                             <th rowspan="2">Validar</th>
+                            <th rowspan="2"></th>
                         </tr>
                         <tr>
                             <th>1er Km</th>
@@ -166,6 +167,36 @@
                                         </button>
                                     </div>
                                 </modal-validar>
+                            </td>
+                            <td>
+                                <span v-if="viaje.Imagenes.length">
+                                    <button class="btn btn-xs btn-default" data-toggle="modal" v-bind:data-target="'.modal-lg-' + viaje.IdViajeNeto"><i class="fa fa-2x fa-photo"></i></button>
+                                    <div v-bind:class="'modal fade modal-lg-' + viaje.IdViajeNeto" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog modal-lg">
+                                            <div class="modal-content">
+                                                <div v-bind:id="'carousel' + viaje.IdViajeNeto" class="carousel slide" data-ride="carousel">
+                                                    <!-- Wrapper for slides -->
+                                                    <div class="carousel-inner">
+                                                        <div v-for="imagen in viaje.Imagenes" v-bind:class="itemClass(viaje.Imagenes.indexOf(imagen))">
+                                                            <img class="img-responsive" v-bind:src="'data:image/png;base64,' + imagen.imagen">
+                                                            <div class="carousel-caption"><h1>Imagen del viaje @{{ viaje.Imagenes.indexOf(imagen) + 1 }}</h1></div>
+                                                        </div>
+                                                    </div>
+                                                        <!-- Controls -->
+                                                    <a class="left carousel-control" v-bind:href="'#carousel' + viaje.IdViajeNeto" role="button" data-slide="prev">
+                                                      <span class="glyphicon glyphicon-chevron-left"></span>
+                                                    </a>
+                                                    <a class="right carousel-control" v-bind:href="'#carousel' + viaje.IdViajeNeto" role="button" data-slide="next">
+                                                      <span class="glyphicon glyphicon-chevron-right"></span>
+                                                    </a>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                                <span v-else>
+                                    <button class="btn btn-xs btn-default" disabled="disabled"><i class="fa fa-2x fa-photo"></i></button>
+                                </span>           
                             </td>
                         </tr>
                     </tbody>

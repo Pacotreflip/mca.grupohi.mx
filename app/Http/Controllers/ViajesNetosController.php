@@ -66,9 +66,10 @@ class ViajesNetosController extends Controller
                     'Tara' => 0,
                     'Bruto' => 0,
                     'TipoTarifa' => 'm',
-                    'TipoFDA' => 'm'
+                    'TipoFDA' => 'm',
+                    'Imagenes' => $viaje->imagenes
                 ]; 
-            }
+             }
             return response()->json($data);
         }
     }

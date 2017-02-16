@@ -61,6 +61,10 @@ class ViajeNeto extends Model
         return $this->hasManyThrough(Tarifas\TarifaMaterial::class, Material::class, 'IdMaterial', 'IdMaterial', 'IdMaterial');
     }
     
+    public function imagenes() {
+        return $this->hasMany(ImagenViajeNeto::class, 'idviaje_neto')->where('estado', 1);
+    }
+    
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
     }
