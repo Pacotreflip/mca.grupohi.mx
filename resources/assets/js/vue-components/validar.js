@@ -104,7 +104,7 @@ Vue.component('viajes-validar', {
                     
                     base_path: App.tablefilterBasePath,
                     paging: false,
-                    rows_counter: true,
+                    rows_counter: false,
                     rows_counter_text: 'Viajes: ',
                     btn_reset: true,
                     btn_reset_text: 'Limpiar',

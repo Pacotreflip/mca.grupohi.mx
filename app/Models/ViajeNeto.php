@@ -202,7 +202,7 @@ class ViajeNeto extends Model
     public function getImporte() {
         return (($this->material->tarifaMaterial->PrimerKM * 1 * $this->camion->CubicacionParaPago) + 
                 ($this->material->tarifaMaterial->KMSubsecuente * $this->ruta->KmSubsecuentes * $this->camion->CubicacionParaPago) + 
-                ($this->material->tarifaMaterial->KMAdicional * $this->ruta->KmAdicionales * $this->camion->cubicacionParaPago));
+                ($this->material->tarifaMaterial->KMAdicional * $this->ruta->KmAdicionales * $this->camion->CubicacionParaPago));
     }
     
     public function valido() {
