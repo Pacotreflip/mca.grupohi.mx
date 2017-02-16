@@ -90,14 +90,18 @@
                                                     <label>Sindicato:</label>
                                                     <select v-model="viaje.Sindicato" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        <option v-for="sindicato in sindicatos" v-bind:value="sindicato.IdSindicato">@{{ sindicato.NombreCorto }}</option>
+                                                        @foreach($sindicatos as $sindicato)
+                                                        <option value="{{ $sindicato->IdSindicato}}">{{ $sindicato->NombreCorto }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Empresa:</label>
                                                     <select v-model="viaje.Empresa" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        <option v-for="empresa in empresas" v-bind:value="empresa.IdEmpresa">@{{ empresa.razonSocial }}</option>
+                                                        @foreach($empresas as $empresa)
+                                                        <option value="{{ $empresa->IdEmpresa }}">{{ $empresa->razonSocial }}</option>
+                                                        @endforeach
                                                     </select>
                                                 </div>
                                                 <hr>

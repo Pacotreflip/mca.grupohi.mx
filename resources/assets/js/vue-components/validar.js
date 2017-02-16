@@ -31,8 +31,6 @@ Vue.component('viajes-validar', {
                 'tipo' : ''
             },
             'viajes' : [],
-            'empresas' : [],
-            'sindicatos' : [],
             'cargando' : false,
             'guardando' : false,
             'form' : {
@@ -54,10 +52,6 @@ Vue.component('viajes-validar', {
             return false;
           });
         }
-    },
-    
-    created: function() {
-        this.initialize();
     },
     
     directives: { 
@@ -126,13 +120,6 @@ Vue.component('viajes-validar', {
     },
     
     methods: {
-        initialize: function() {
-            this.cargando = true;
-            this.fetchEmpresas();
-            this.fetchSindicatos();
-            this.cargando = false;
-        },
-
         setFechaInicial: function(event) {
             this.datosConsulta.fechaInicial = event.currentTarget.value;
         },
@@ -156,27 +143,6 @@ Vue.component('viajes-validar', {
                     this.cargando = false;
                 });
             }
-        },
-        fetchEmpresas: function() {
-            this.cargando = true;
-            this.$http.get(App.host + '/empresas').then((response) => {
-                this.empresas = response.body;
-                this.cargando = false;
-            }, (error) => {
-                App.setErrorsOnForm(this.form, error.body);
-                this.cargando = false;
-            });
-        },
-        
-        fetchSindicatos: function() {
-            this.cargando = true;
-            this.$http.get(App.host + '/sindicatos').then((response) => {
-                this.sindicatos = response.body;
-                this.cargando = false;
-            }, (error) => {
-                App.setErrorsOnForm(this.form, error.body);
-                this.cargando = false;
-            });
         },
         
         confirmarValidacion: function (index) {

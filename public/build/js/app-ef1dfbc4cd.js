@@ -32745,8 +32745,6 @@ Vue.component('viajes-validar', {
                 'tipo': ''
             },
             'viajes': [],
-            'empresas': [],
-            'sindicatos': [],
             'cargando': false,
             'guardando': false,
             'form': {
@@ -32768,10 +32766,6 @@ Vue.component('viajes-validar', {
                 return false;
             });
         }
-    },
-
-    created: function created() {
-        this.initialize();
     },
 
     directives: {
@@ -32823,13 +32817,6 @@ Vue.component('viajes-validar', {
     },
 
     methods: {
-        initialize: function initialize() {
-            this.cargando = true;
-            this.fetchEmpresas();
-            this.fetchSindicatos();
-            this.cargando = false;
-        },
-
         setFechaInicial: function setFechaInicial(event) {
             this.datosConsulta.fechaInicial = event.currentTarget.value;
         },
@@ -32856,34 +32843,9 @@ Vue.component('viajes-validar', {
                 });
             }
         },
-        fetchEmpresas: function fetchEmpresas() {
-            var _this3 = this;
-
-            this.cargando = true;
-            this.$http.get(App.host + '/empresas').then(function (response) {
-                _this3.empresas = response.body;
-                _this3.cargando = false;
-            }, function (error) {
-                App.setErrorsOnForm(_this3.form, error.body);
-                _this3.cargando = false;
-            });
-        },
-
-        fetchSindicatos: function fetchSindicatos() {
-            var _this4 = this;
-
-            this.cargando = true;
-            this.$http.get(App.host + '/sindicatos').then(function (response) {
-                _this4.sindicatos = response.body;
-                _this4.cargando = false;
-            }, function (error) {
-                App.setErrorsOnForm(_this4.form, error.body);
-                _this4.cargando = false;
-            });
-        },
 
         confirmarValidacion: function confirmarValidacion(index) {
-            var _this5 = this;
+            var _this3 = this;
 
             swal({
                 title: "¿Desea continuar con la validación?",
@@ -32894,7 +32856,7 @@ Vue.component('viajes-validar', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, function () {
-                return _this5.validar(index);
+                return _this3.validar(index);
             });
         },
 

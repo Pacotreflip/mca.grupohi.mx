@@ -11,6 +11,9 @@ use Laracasts\Flash\Flash;
 use App\Models\Ruta;
 use App\Models\ProyectoLocal;
 use App\Models\ViajeNeto;
+use App\Models\Empresa;
+use App\Models\Sindicato;
+
 
 class ViajesNetosController extends Controller
 {
@@ -120,8 +123,8 @@ class ViajesNetosController extends Controller
     {
         if($request->get('action') == 'validar') {
             return view('viajes.netos.edit')
-                    ->withViajes(ViajeNeto::porValidar($request->get('FechaInicial'), $request->get('FechaFinal'))
-                            ->get())
+                    ->withSindicatos(Sindicato::all())
+                    ->withEmpresas(Empresa::all())
                     ->withAction('validar');
         } else if($request->get('action') == 'autorizar') {
             return view('viajes.netos.edit')

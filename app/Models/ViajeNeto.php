@@ -229,6 +229,8 @@ class ViajeNeto extends Model
             return 'El viaje no puede ser registrado porque no hay una tarifa registrada para su material';
         } else if($this->Estatus == 10) {
             return 'El viaje no puede ser registrado porque debe seleccionar primero su origen';
+        } else {
+            return 'El viaje es valido para su registro';
         }
     }
     
