@@ -210,12 +210,16 @@ class ViajeNeto extends Model
     }
     
     public function valido() {
-        $min = $this->ruta->cronometria->TiempoMinimo;
-        $tol = $this->ruta->cronometria->Tolerancia;
-        if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
+        if(!isset($this->ruta)) {
             return false;
-        } else {
-            return true;
+        } else { 
+            $min = $this->ruta->cronometria->TiempoMinimo;
+            $tol = $this->ruta->cronometria->Tolerancia;
+            if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
+                return false;
+            } else {
+                return true;
+            }
         }
     }
     
