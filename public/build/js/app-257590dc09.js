@@ -33159,10 +33159,6 @@ Vue.component('viajes-manual', {
 
     data: function data() {
         return {
-            'materiales': [],
-            'origenes': [],
-            'tiros': [],
-            'camiones': [],
             'form': {
                 'viajes': [{
                     'Id': 1,
@@ -33183,10 +33179,6 @@ Vue.component('viajes-manual', {
         };
     },
 
-    created: function created() {
-        this.initialize();
-    },
-
     directives: {
         datepicker: {
             inserted: function inserted(el) {
@@ -33203,28 +33195,17 @@ Vue.component('viajes-manual', {
     },
 
     methods: {
-        initialize: function initialize() {
-            this.cargando = true;
-            this.fetchMateriales();
-            this.fetchOrigenes();
-            this.fetchTiros();
-            this.fetchCamiones();
-            this.cargando = false;
-        },
 
         setTiros: function setTiros(viaje) {
+            var _this = this;
+
             viaje.Tiros = [];
             if (viaje.IdOrigen) {
-                this.tiros.forEach(function (tiro) {
-                    var result = false;
-                    tiro.origenes.forEach(function (origen) {
-                        if (origen.IdOrigen == viaje.IdOrigen) {
-                            result = true;
-                        }
-                    });
-                    if (result) {
-                        viaje.Tiros.push(tiro);
-                    }
+                this.$http.get(App.host + '/origenes/' + viaje.IdOrigen + '/tiros').then(function (response) {
+                    viaje.Tiros = response.body;
+                    viaje.IdTiro = '';
+                }, function (response) {
+                    App.setErrorsOnForm(_this.form, response.body);
                 });
             } else {
                 viaje.IdTiro = '';
@@ -33254,48 +33235,8 @@ Vue.component('viajes-manual', {
             this.form.viajes.removeValue('Id', viaje.Id);
         },
 
-        fetchMateriales: function fetchMateriales() {
-            var _this = this;
-
-            this.$http.get(App.host + '/materiales').then(function (response) {
-                _this.materiales = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this.form, response.body);
-            });
-        },
-
-        fetchOrigenes: function fetchOrigenes() {
-            var _this2 = this;
-
-            this.$http.get(App.host + '/origenes').then(function (response) {
-                _this2.origenes = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this2.form, response.body);
-            });
-        },
-
-        fetchTiros: function fetchTiros() {
-            var _this3 = this;
-
-            this.$http.get(App.host + '/tiros').then(function (response) {
-                _this3.tiros = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this3.form, response.body);
-            });
-        },
-
-        fetchCamiones: function fetchCamiones() {
-            var _this4 = this;
-
-            this.$http.get(App.host + '/camiones').then(function (response) {
-                _this4.camiones = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this4.form, response.body);
-            });
-        },
-
         registrar: function registrar() {
-            var _this5 = this;
+            var _this2 = this;
 
             this.guardando = true;
             this.form.errors = [];
@@ -33307,16 +33248,16 @@ Vue.component('viajes-manual', {
                         text: response.body.message,
                         showConfirmButton: true
                     });
-                    _this5.guardando = false;
+                    _this2.guardando = false;
                 }
             }, function (response) {
-                _this5.guardando = false;
-                App.setErrorsOnForm(_this5.form, response.body);
+                _this2.guardando = false;
+                App.setErrorsOnForm(_this2.form, response.body);
             });
         },
 
         confirmarRegistro: function confirmarRegistro(e) {
-            var _this6 = this;
+            var _this3 = this;
 
             e.preventDefault();
 
@@ -33329,7 +33270,7 @@ Vue.component('viajes-manual', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, function () {
-                return _this6.registrar();
+                return _this3.registrar();
             });
         }
     }

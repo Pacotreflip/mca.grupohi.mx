@@ -24,7 +24,7 @@ class OrigenesTirosController extends Controller
     public function index(Request $request, $id_origen)
     {
         if($request->ajax()) {
-            return response()->json(Origen::findOrFail($id_origen)->tiros->toArray());
+            return response()->json(Origen::findOrFail($id_origen)->tiros);
         }
     }
 

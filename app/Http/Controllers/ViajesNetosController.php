@@ -81,16 +81,12 @@ class ViajesNetosController extends Controller
      */
     public function create(Request $request)
     {
-        if($request->get('action') == 'manual') {
-            return view('viajes.netos.create')->withAction('manual');
-        } else if($request->get('action') == 'completa') {
-            return view('viajes.netos.create')
-                    ->withCamiones(\App\Models\Camion::all())
-                    ->withOrigenes(\App\Models\Origen::all())
-                    ->withTiros(\App\Models\Tiro::all())
-                    ->withMateriales(\App\Models\Material::all())
-                    ->withAction('completa');
-        }       
+        return view('viajes.netos.create')
+                ->withCamiones(\App\Models\Camion::all())
+                ->withOrigenes(\App\Models\Origen::all())
+                ->withTiros(\App\Models\Tiro::all())
+                ->withMateriales(\App\Models\Material::all())
+                ->withAction($request->get('action'));       
     }
 
     /**

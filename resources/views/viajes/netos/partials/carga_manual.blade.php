@@ -32,13 +32,17 @@
                             <td>
                                 <select class="form-control input-sm" v-model="viaje.IdCamion">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="camion in camiones" v-bind:value="camion.IdCamion">@{{ camion.Economico }}</option>
+                                    @foreach($camiones as $camion)
+                                    <option value="{{ $camion->IdCamion}}">{{ $camion->Economico }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
                                 <select class="form-control input-sm" v-model="viaje.IdOrigen" v-on:change="setTiros(viaje)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="origen in origenes" v-bind:value="origen.IdOrigen">@{{ origen.Descripcion }}</option>
+                                    @foreach($origenes as $origen)
+                                    <option value="{{ $origen->IdOrigen }}">{{ $origen->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
@@ -50,7 +54,9 @@
                             <td>
                                 <select class="form-control input-sm" v-model="viaje.IdMaterial">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="material in materiales" v-bind:value="material.IdMaterial">@{{ material.Descripcion }}</option>
+                                    @foreach($materiales as $material)
+                                    <option value="{{ $material->IdMaterial }}">{{ $material->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </td> 
                             <td>

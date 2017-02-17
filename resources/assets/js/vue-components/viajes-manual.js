@@ -29,10 +29,6 @@ Vue.component('viajes-manual', {
     
     data: function() {
         return {
-            'materiales': [],
-            'origenes': [],
-            'tiros': [],
-            'camiones': [],
             'form': {
                 'viajes': [
                     {
@@ -55,10 +51,6 @@ Vue.component('viajes-manual', {
         }
     },
     
-    created: function() {
-        this.initialize();
-    },
-    
     directives: { 
         datepicker: {
             inserted: function(el) {
@@ -75,29 +67,16 @@ Vue.component('viajes-manual', {
     },
  
     methods: {         
-        initialize: function() {
-            this.cargando = true;
-            this.fetchMateriales();
-            this.fetchOrigenes();
-            this.fetchTiros();
-            this.fetchCamiones();
-            this.cargando = false;            
-        },
         
         setTiros: function(viaje) {
             viaje.Tiros = [];
             if(viaje.IdOrigen) {
-                this.tiros.forEach(function(tiro){
-                    var result = false;
-                    tiro.origenes.forEach(function(origen){
-                        if(origen.IdOrigen == viaje.IdOrigen) {
-                            result = true;
-                        }
-                    });
-                    if(result) {
-                        viaje.Tiros.push(tiro);
-                    }
-                })
+                this.$http.get(App.host + '/origenes/' + viaje.IdOrigen + '/tiros').then((response) => {
+                    viaje.Tiros = response.body;
+                    viaje.IdTiro = '';
+                }, (response) => {
+                    App.setErrorsOnForm(this.form, response.body);
+                });
             } else {
                 viaje.IdTiro = '';
             }
@@ -124,38 +103,6 @@ Vue.component('viajes-manual', {
         
         removeViaje: function(viaje) {
             this.form.viajes.removeValue('Id', viaje.Id);
-        },
-       
-        fetchMateriales: function() {
-            this.$http.get(App.host + '/materiales').then((response) => {
-                this.materiales = response.body;
-            }, (response) => {
-                App.setErrorsOnForm(this.form, response.body);
-            });
-        },
-        
-        fetchOrigenes: function() {
-            this.$http.get(App.host + '/origenes').then((response) => {
-                this.origenes = response.body;
-            }, (response) => {
-                App.setErrorsOnForm(this.form, response.body);
-            });
-        },
-        
-        fetchTiros: function() {
-            this.$http.get(App.host + '/tiros').then((response) => {
-                this.tiros = response.body;
-            }, (response) => {
-                App.setErrorsOnForm(this.form, response.body);
-            });
-        },
-        
-        fetchCamiones: function() {
-            this.$http.get(App.host + '/camiones').then((response) => {
-                this.camiones = response.body;
-            }, (response) => {
-                App.setErrorsOnForm(this.form, response.body);
-            });
         },
         
         registrar: function() {
