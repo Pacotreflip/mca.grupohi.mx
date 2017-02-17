@@ -32931,10 +32931,6 @@ Vue.component('viajes-manual-completa', {
 
     data: function data() {
         return {
-            'camiones': [],
-            'origenes': [],
-            'tiros': [],
-            'materiales': [],
             'generales': {
                 'IdCamion': '',
                 'IdOrigen': '',
@@ -32949,10 +32945,6 @@ Vue.component('viajes-manual-completa', {
             'cargando': false,
             'numViajes': ''
         };
-    },
-
-    created: function created() {
-        this.initialize();
     },
 
     directives: {
@@ -32971,23 +32963,21 @@ Vue.component('viajes-manual-completa', {
     },
 
     methods: {
-        initialize: function initialize() {
-            this.cargando = true;
-            this.fetchCamiones();
-            this.fetchOrigenes();
-            this.fetchTiros();
-            this.fetchMateriales();
-            this.cargando = false;
-        },
+
         setFechaLlegada: function setFechaLlegada(viaje, event) {
             viaje.FechaLlegada = event.currentTarget.value;
         },
-        setCubicacion: function setCubicacion(viaje) {
-            var result = $.grep(this.camiones, function (e) {
-                return e.IdCamion == viaje.IdCamion;
+
+        setCubicacion: function setCubicacion(viaje, event) {
+            var _this2 = this;
+
+            this.$http.get(App.host + '/camiones/' + event.currentTarget.value).then(function (response) {
+                viaje.Cubicacion = response.body.CubicacionParaPago;
+            }, function (response) {
+                App.setErrorsOnForm(_this2.form, response.body);
             });
-            viaje.Cubicacion = result[0].CubicacionParaPago;
         },
+
         fillTable: function fillTable(e) {
             e.preventDefault();
             this.cargando = true;
@@ -33021,44 +33011,9 @@ Vue.component('viajes-manual-completa', {
                 'Rutas': []
             });
         },
-        fetchCamiones: function fetchCamiones() {
-            var _this2 = this;
 
-            this.$http.get(App.host + '/camiones').then(function (response) {
-                _this2.camiones = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this2.form, response.body);
-            });
-        },
-        fetchOrigenes: function fetchOrigenes() {
-            var _this3 = this;
-
-            this.$http.get(App.host + '/origenes').then(function (response) {
-                _this3.origenes = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this3.form, response.body);
-            });
-        },
-        fetchTiros: function fetchTiros() {
-            var _this4 = this;
-
-            this.$http.get(App.host + '/tiros').then(function (response) {
-                _this4.tiros = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this4.form, response.body);
-            });
-        },
-        fetchMateriales: function fetchMateriales() {
-            var _this5 = this;
-
-            this.$http.get(App.host + '/materiales').then(function (response) {
-                _this5.materiales = response.body;
-            }, function (response) {
-                App.setErrorsOnForm(_this5.form, response.body);
-            });
-        },
         fetchRutas: function fetchRutas(viaje) {
-            var _this6 = this;
+            var _this3 = this;
 
             if (viaje.IdOrigen && viaje.IdTiro) {
                 this.$http.get(App.host + '/rutas', { 'params': { 'IdOrigen': viaje.IdOrigen, 'IdTiro': viaje.IdTiro } }).then(function (response) {
@@ -33068,14 +33023,15 @@ Vue.component('viajes-manual-completa', {
                         viaje.IdRuta = Ruta.IdRuta;
                     }
                 }, function (response) {
-                    App.setErrorsOnForm(_this6.form, response.body);
+                    App.setErrorsOnForm(_this3.form, response.body);
                 });
             } else {
                 viaje.IdRuta = "";
             }
         },
+
         fetchKms: function fetchKms(viaje) {
-            var _this7 = this;
+            var _this4 = this;
 
             if (viaje.IdMaterial) {
                 this.$http.get(App.host + '/tarifas_material', { 'params': { 'IdMaterial': viaje.IdMaterial } }).then(function (response) {
@@ -33083,7 +33039,7 @@ Vue.component('viajes-manual-completa', {
                     viaje.KmSub = response.body.KMSubsecuente;
                     viaje.KmAd = response.body.KMAdicional;
                 }, function (response) {
-                    App.setErrorsOnForm(_this7.form, response.body);
+                    App.setErrorsOnForm(_this4.form, response.body);
                 });
             } else {
                 viaje.PrimerKm = '';
@@ -33091,36 +33047,41 @@ Vue.component('viajes-manual-completa', {
                 viaje.KmAd = '';
             }
         },
-        setCamionGeneral: function setCamionGeneral() {
+
+        setCamionGeneral: function setCamionGeneral(event) {
             var _this = this;
             this.form.viajes.forEach(function (viaje) {
-                viaje.IdCamion = _this.generales.IdCamion;
-                _this.setCubicacion(viaje);
+                viaje.IdCamion = event.currentTarget.value;
+                _this.setCubicacion(viaje, event);
             });
         },
-        setOrigenGeneral: function setOrigenGeneral() {
+
+        setOrigenGeneral: function setOrigenGeneral(event) {
             var _this = this;
             this.form.viajes.forEach(function (viaje) {
-                viaje.IdOrigen = _this.generales.IdOrigen;
+                viaje.IdOrigen = event.currentTarget.value;
                 _this.fetchRutas(viaje);
             });
         },
-        setTiroGeneral: function setTiroGeneral() {
+
+        setTiroGeneral: function setTiroGeneral(event) {
             var _this = this;
             this.form.viajes.forEach(function (viaje) {
-                viaje.IdTiro = _this.generales.IdTiro;
+                viaje.IdTiro = event.currentTarget.value;
                 _this.fetchRutas(viaje);
             });
         },
-        setMaterialGeneral: function setMaterialGeneral() {
+
+        setMaterialGeneral: function setMaterialGeneral(event) {
             var _this = this;
             this.form.viajes.forEach(function (viaje) {
-                viaje.IdMaterial = _this.generales.IdMaterial;
+                viaje.IdMaterial = event.currentTarget.value;
                 _this.fetchKms(viaje);
             });
         },
+
         confirmarCarga: function confirmarCarga(e) {
-            var _this8 = this;
+            var _this5 = this;
 
             e.preventDefault();
 
@@ -33133,24 +33094,24 @@ Vue.component('viajes-manual-completa', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, function () {
-                return _this8.registrar();
+                return _this5.registrar();
             });
         },
         registrar: function registrar() {
-            var _this9 = this;
+            var _this6 = this;
 
             this.guardando = true;
             this.form.errors = [];
 
             this.$http.post(App.host + '/viajes/netos/completa', this.form).then(function (response) {
                 swal('', response.body.message, 'success');
-                _this9.guardando = false;
+                _this6.guardando = false;
                 if (!response.body.rechazados.length) {
-                    _this9.form.viajes = [];
+                    _this6.form.viajes = [];
                 }
             }, function (response) {
-                App.setErrorsOnForm(_this9.form, response.body);
-                _this9.guardando = false;
+                App.setErrorsOnForm(_this6.form, response.body);
+                _this6.guardando = false;
             });
         }
     }

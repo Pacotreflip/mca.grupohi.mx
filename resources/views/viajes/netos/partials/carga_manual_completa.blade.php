@@ -30,26 +30,32 @@
                             <th rowspan="2">
                                 Camión
                                 <br>
-                                <select class="form-control input-sm" v-model="generales.IdCamion" v-on:change="setCamionGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdCamion" v-on:change="setCamionGeneral($event)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="camion in camiones" v-bind:value="camion.IdCamion">@{{camion.Economico}}</option>
+                                    @foreach($camiones as $camion)
+                                    <option value="{{ $camion->IdCamion}}">{{ $camion->Economico }}</option>
+                                    @endforeach
                                 </select>
                             </th>
                             <th rowspan="2">Cubicación</th>
                             <th rowspan="2">
                                 Origen
                                 <br>
-                                <select class="form-control input-sm" v-model="generales.IdOrigen" v-on:change="setOrigenGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdOrigen" v-on:change="setOrigenGeneral($event)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="origen in origenes" v-bind:value="origen.IdOrigen">@{{origen.Descripcion}}</option>
+                                    @foreach($origenes as $origen)
+                                    <option value="{{ $origen->IdOrigen }}">{{ $origen->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </th>
                             <th rowspan="2">
                                 Tiro
                                 <br>
-                                <select class="form-control input-sm" v-model="generales.IdTiro" v-on:change="setTiroGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdTiro" v-on:change="setTiroGeneral($event)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="tiro in tiros" v-bind:value="tiro.IdTiro">@{{tiro.Descripcion}}</option>
+                                    @foreach($tiros as $tiro)
+                                    <option value="{{ $tiro->IdTiro}}">{{ $tiro->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </th>
                             <th rowspan="2">
@@ -58,9 +64,11 @@
                             <th rowspan="2">
                                 Material
                                 <br>
-                                <select class="form-control input-sm" v-model="generales.IdMaterial" v-on:change="setMaterialGeneral">
+                                <select class="form-control input-sm" v-model="generales.IdMaterial" v-on:change="setMaterialGeneral($event)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="material in materiales" v-bind:value="material.IdMaterial">@{{material.Descripcion}}</option>
+                                    @foreach($materiales as $material)
+                                    <option value="{{ $material->IdMaterial}}">{{ $material->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </th>
                             <th colspan="3">Tarifas</th>
@@ -83,9 +91,11 @@
                                 <input class="form-control input-sm grande" id="FechaLlegada" @blur="setFechaLlegada(viaje, $event)" v-datepicker type="text" class="fecha" v-model="viaje.FechaLlegada">
                             </td>
                             <td>
-                                <select class="form-control input-sm grande" v-model="viaje.IdCamion" v-on:change="setCubicacion(viaje)">
+                                <select class="form-control input-sm grande" v-model="viaje.IdCamion" v-on:change="setCubicacion(viaje, $event)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="camion in camiones" v-bind:value="camion.IdCamion">@{{camion.Economico}}</option>
+                                    @foreach($camiones as $camion)
+                                    <option value="{{ $camion->IdCamion}}">{{ $camion->Economico }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
@@ -94,13 +104,17 @@
                             <td>
                                 <select class="form-control input-sm grande" v-model="viaje.IdOrigen" v-on:change="fetchRutas(viaje)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="origen in origenes" v-bind:value="origen.IdOrigen">@{{origen.Descripcion}}</option>
+                                    @foreach($origenes as $origen)
+                                    <option value="{{ $origen->IdOrigen}}">{{ $origen->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>
                                 <select class="form-control input-sm grande" v-model="viaje.IdTiro" v-on:change="fetchRutas(viaje)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="tiro in tiros" v-bind:value="tiro.IdTiro">@{{tiro.Descripcion}}</option>
+                                    @foreach($tiros as $tiro)
+                                    <option value="{{ $tiro->IdTiro }}">{{ $tiro->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td style="width: 100px">
@@ -112,7 +126,9 @@
                             <td>
                                 <select class="form-control input-sm grande" v-model="viaje.IdMaterial" v-on:change="fetchKms(viaje)">
                                     <option value>--SELECCIONE--</option>
-                                    <option v-for="material in materiales" v-bind:value="material.IdMaterial">@{{material.Descripcion}}</option>
+                                    @foreach($materiales as $material)
+                                    <option value="{{ $material->IdMaterial}}">{{ $material->Descripcion }}</option>
+                                    @endforeach
                                 </select>
                             </td>
                             <td>

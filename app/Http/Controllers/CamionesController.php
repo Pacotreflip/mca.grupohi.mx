@@ -103,8 +103,11 @@ class CamionesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
+        if($request->ajax()) {
+            return response()->json(Camion::findOrFail($id));
+        }
         return view('camiones.show')
                 ->withCamion(Camion::findOrFail($id));
     }
