@@ -28,7 +28,11 @@
   transition: all .3s ease;
   font-family: Helvetica, Arial, sans-serif;
 }
-
+@media (max-width:768px){
+    .modal-container {
+        width: 300px;
+    }
+}
 .modal-header h3 {
   margin-top: 0;
   color: #42b983;
@@ -71,6 +75,8 @@
 @include('viajes.netos.partials.autorizar')
 @elseif($action == 'validar')
 @include('viajes.netos.partials.validar')
+@elseif($action == 'modificar')
+@include('viajes.netos.partials.modificar')
 @endif
 @stop
 @section('scripts')

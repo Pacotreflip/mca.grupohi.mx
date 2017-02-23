@@ -61,6 +61,7 @@
             </ul>
         </li>
         <li><a href="{{ route('viajes.netos.edit', ['action' => 'validar']) }}">Validar Viajes</a></li>
+        <li><a href="{{ route('viajes.netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>
     </ul>
   </li>
 @else

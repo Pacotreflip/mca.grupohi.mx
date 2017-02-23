@@ -280,4 +280,34 @@ class ViajeNeto extends Model
             DB::connection('sca')->rollback();
         }
     }
+    
+    public function modificar($request) {
+        $viaje = $request->get('viaje');
+        DB::connection('sca')->beginTransaction();
+        try {
+            $this->IdCamion = $viaje['IdCamion'];
+            $this->IdTiro = $viaje['IdTiro'];
+            $this->IdMaterial = $viaje['IdMaterial'];
+            $this->IdOrigen = $viaje['IdOrigen'];
+            $this->save();
+            
+            DB::connection('sca')->commit();
+            return ['message' => 'Viaje Modificado Correctamente',
+                'tipo' => 'success',
+                'viaje' => [
+                    'Camion' => $this->camion->Economico,
+                    'IdCamion' => $this->camion->IdCamion,
+                    'Cubicacion' => $this->camion->CubicacionParaPago,
+                    'IdOrigen' => $this->origen->IdOrigen,
+                    'Origen' => $this->origen->Descripcion,
+                    'IdTiro' => $this->tiro->IdTiro,
+                    'Tiro' => $this->tiro->Descripcion,
+                    'Material' => $this->material->Descripcion,
+                    'IdMaterial' => $this->material->IdMaterial
+                ]
+            ];
+        } catch (Exception $ex) {
+            DB::connection('sca')->rollback();
+        }
+    }
 }
