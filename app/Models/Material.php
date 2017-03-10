@@ -37,7 +37,7 @@ class Material extends Model
     }
     
     public function fdaMaterial() {
-        return $this->hasMany(FactoresAbundamiento\FDAMaterial::class, 'IdMaterial');
+        return $this->hasMany(FDA\FDAMaterial::class, 'IdMaterial');
     }
     
     public function viajesNetos() {
