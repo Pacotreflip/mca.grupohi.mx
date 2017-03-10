@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Conciliacion\Conciliacion;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 
@@ -55,5 +56,9 @@ class Ruta extends Model
     
     public function archivo() {
         return $this->hasOne(ArchivoRuta::class, 'IdRuta');
+    }
+
+    public function conciliaciones() {
+        return $this->belongsToMany(Conciliacion::class, 'conciliacion_rutas', 'IdRuta', 'IdConciliacion');
     }
 }

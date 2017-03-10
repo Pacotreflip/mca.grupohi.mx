@@ -48,3 +48,4 @@ class Material extends Model
         return $this->Descripcion;
     }
 }
+
