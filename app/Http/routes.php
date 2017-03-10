@@ -84,3 +84,12 @@ Route::group(['prefix' => 'viajes/netos'], function() {
     Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes.netos.autorizar');
     Route::patch('validar', 'ViajesNetosController@update')->name('viajes.netos.validar');
 });
+
+//PDF Routes
+Route::group(['prefix' => 'pdf'], function () {
+
+    Route::get('conciliacion/{id}', [
+        'as'   => 'pfd.conciliacion',
+        'uses' => 'PDFController@conciliacion'
+    ]);
+});

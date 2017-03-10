@@ -2,9 +2,13 @@
 
 namespace App\Models\Conciliacion;
 
+use App\Models\Material;
 use App\Models\Ruta;
+use App\Models\Sindicato;
 use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\DB;
 
 class Conciliacion extends Model
 {
@@ -31,6 +35,32 @@ class Conciliacion extends Model
 
     public function conciliacionDetalle()
     {
-        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion', 'idconciliacion_detalle');
+        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion');
+    }
+
+    public function sindicato() {
+        return $this->belongsTo(Sindicato::class, 'idsindicato');
+    }
+
+    public function materiales() {
+
+        return DB::connection($this->connection)->select(DB::raw('
+            SELECT viajes.IdMaterial, materiales.Descripcion as material 
+              FROM (viajes viajes 
+                INNER JOIN materiales materiales
+                  ON (viajes.IdMaterial = materiales.IdMaterial))
+                RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
+				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
+			  WHERE (conciliacion_detalle.idconciliacion = '.$this->idconciliacion.') 
+			  GROUP BY materiales.Descripcion
+			  ORDER BY materiales.Descripcion ASC;'));
+    }
+
+    public function viajes() {
+        $viajes = new Collection();
+        foreach ($this->conciliacionDetalle as $cd) {
+            $viajes->push($cd->viaje);
+        }
+        return $viajes;
     }
 }
