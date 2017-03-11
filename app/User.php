@@ -13,13 +13,20 @@ use Ghi\Core\App\Auth\AuthenticatableIntranetUser;
 use Laracasts\Presenter\PresentableTrait;
 use App\Presenters\UserPresenter;
 use Illuminate\Support\Facades\DB;
+use Zizaco\Entrust\Traits\EntrustUserTrait;
+use Illuminate\Support\Facades\Config;
+use App\Facades\Context;
 
 
 class User extends Model implements AuthenticatableContract,
                                     AuthorizableContract,
                                     CanResetPasswordContract
 {
-    use AuthenticatableIntranetUser, Authorizable, CanResetPassword, PresentableTrait;
+    use AuthenticatableIntranetUser,
+        Authorizable,
+        CanResetPassword,
+        PresentableTrait,
+        EntrustUserTrait {EntrustUserTrait ::can insteadof Authorizable;}
 
     protected $table = 'igh.usuario';
     protected $primaryKey = 'idusuario';
@@ -46,5 +53,10 @@ class User extends Model implements AuthenticatableContract,
     
     public function origenes() {
         return $this->belongsToMany(Models\Origen::class, 'origen_x_usuario', 'idusuario_intranet', 'idorigen');
+    }
+
+    public function roles()
+    {
+        return $this->belongsToMany(Config::get('entrust.role'), Config::get('entrust.role_user_table'), 'user_id', 'role_id')->where('id_proyecto', Context::getId());
     }
 }

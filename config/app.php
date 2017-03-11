@@ -151,6 +151,11 @@ return [
         Laracasts\Flash\FlashServiceProvider::class,
         DaveJamesMiller\Breadcrumbs\ServiceProvider::class,
         Intervention\Image\ImageServiceProvider::class,
+        Zizaco\Entrust\EntrustServiceProvider::class,
+
+        Ghidev\Fpdf\FpdfServiceProvider::class,
+        Ghidev\Fpdf\RotationServiceProvider::class,
+        Ghidev\Fpdf\MC_TableServiceProvider::class,
 
     ],
 
@@ -205,6 +210,10 @@ return [
         'Context'   => App\Facades\Context::class,
         'Breadcrumbs'=> DaveJamesMiller\Breadcrumbs\Facade::class,
         'Image'     => Intervention\Image\Facades\Image::class,
+        'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
+        'Fpdf'      => Ghidev\Fpdf\Facades\Fpdf::class,
+        'Rotation'    => Ghidev\Fpdf\Facades\Rotation::class,
+        'MC_Table'  => Ghidev\Fpdf\Facades\MC_Table::class,
 
     ],
 
