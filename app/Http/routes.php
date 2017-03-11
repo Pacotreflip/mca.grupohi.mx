@@ -84,3 +84,5 @@ Route::group(['prefix' => 'viajes/netos'], function() {
     Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes.netos.autorizar');
     Route::patch('validar', 'ViajesNetosController@update')->name('viajes.netos.validar');
 });
+
+Route::resource('conciliaciones', 'ConciliacionesController');
