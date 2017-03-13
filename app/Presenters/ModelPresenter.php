@@ -29,7 +29,7 @@ class ModelPresenter extends Presenter
     }
 
     public function descripcionRuta() {
-        return $this->entity->Clave.'-'.$this->entity->IdRuta.' '.$this->entity->TotalKM.' km ['.$this->entity->origen.' - '.$this->entity->tiro.']';
+        return $this->entity->Clave.' - '.$this->entity->IdRuta.' '.$this->entity->TotalKM.' km [ '.$this->entity->origen.' - '.$this->entity->tiro.' ]';
     }
     
     public function fechaYHoraRuta() {

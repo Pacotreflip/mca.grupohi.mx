@@ -2,6 +2,7 @@
 
 namespace App\Models\Conciliacion;
 
+use App\Models\Empresa;
 use App\Models\Material;
 use App\Models\Ruta;
 use App\Models\Sindicato;
@@ -43,7 +44,6 @@ class Conciliacion extends Model
     }
 
     public function materiales() {
-
         return DB::connection($this->connection)->select(DB::raw('
             SELECT viajes.IdMaterial, materiales.Descripcion as material 
               FROM (viajes viajes 
@@ -62,5 +62,23 @@ class Conciliacion extends Model
             $viajes->push($cd->viaje);
         }
         return $viajes;
+    }
+
+    public function camiones() {
+        return DB::connection($this->connection)->select(DB::raw('
+            SELECT viajes.IdCamion, camiones.Economico as Economico 
+              FROM (viajes viajes 
+                INNER JOIN camiones camiones
+                  ON (viajes.IdCamion = camiones.IdCamion))
+                RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
+				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
+			  WHERE (conciliacion_detalle.idconciliacion = '.$this->idconciliacion.') 
+			  GROUP BY camiones.Economico
+			  ORDER BY camiones.Economico ASC;'));
+    }
+
+    public function empresa() {
+        return $this->belongsTo(Empresa::class, 'idempresa');
+
     }
 }
