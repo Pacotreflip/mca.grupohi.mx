@@ -2,8 +2,10 @@
 
 namespace App\Models\Conciliacion;
 
+use App\Models\Material;
 use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Collection;
 
 class ConciliacionDetalle extends Model
 {
@@ -23,7 +25,7 @@ class ConciliacionDetalle extends Model
     public function viaje() {
         return $this->belongsTo(Viaje::class, 'idviaje');
     }
-    
+
     public function conciliacion() {
         return $this->belongsTo(Conciliacion::class, 'idconciliacion');
     }

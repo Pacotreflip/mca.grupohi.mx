@@ -262,3 +262,7 @@ Breadcrumbs::register('viajes.netos.autorizar', function($breadcrumbs) {
 Breadcrumbs::register('viajes.netos.validar', function($breadcrumbs) {
     $breadcrumbs->push('VALIDAR VIAJES', route('viajes.netos.edit', ['action' => 'validar']));
 });
+
+Breadcrumbs::register('viajes.netos.modificar', function($breadcrumbs) {
+    $breadcrumbs->push('MODIFICAR VIAJES', route('viajes.netos.edit', ['action' => 'modificar']));
+});

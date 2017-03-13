@@ -32388,9 +32388,10 @@ require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
 require('./vue-components/viajes-manual');
 require('./vue-components/viajes-completa');
-require('./vue-components/validar');
+require('./vue-components/viajes-validar');
+require('./vue-components/viajes-modificar');
 
-},{"./vue-components/errors":33,"./vue-components/fda-bancomaterial":34,"./vue-components/fda-material":35,"./vue-components/global-errors":36,"./vue-components/origenes-usuarios":37,"./vue-components/validar":41,"./vue-components/viajes-completa":42,"./vue-components/viajes-manual":43}],33:[function(require,module,exports){
+},{"./vue-components/errors":33,"./vue-components/fda-bancomaterial":34,"./vue-components/fda-material":35,"./vue-components/global-errors":36,"./vue-components/origenes-usuarios":37,"./vue-components/viajes-completa":41,"./vue-components/viajes-manual":42,"./vue-components/viajes-modificar":43,"./vue-components/viajes-validar":44}],33:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -32730,202 +32731,6 @@ function timeStamp(type) {
 
     return type == 1 ? date : time;
 }
-// register modal component
-Vue.component('modal-validar', {
-    template: '#modal-template'
-});
-
-Vue.component('viajes-validar', {
-    data: function data() {
-        return {
-            'datosConsulta': {
-                'fechaInicial': timeStamp(1),
-                'fechaFinal': timeStamp(1),
-                'code': '',
-                'tipo': ''
-            },
-            'viajes': [],
-            'cargando': false,
-            'guardando': false,
-            'form': {
-                'errors': []
-            }
-        };
-    },
-
-    computed: {
-        getViajesByCode: function getViajesByCode() {
-            var _this = this;
-            var search = RegExp(_this.datosConsulta.code);
-            return _this.viajes.filter(function (viaje) {
-                if (!viaje.Code.length && !_this.datosConsulta.code.length) {
-                    return true;
-                } else if (viaje.Code && viaje.Code.match(search)) {
-                    return true;
-                }
-                return false;
-            });
-        }
-    },
-
-    directives: {
-        datepicker: {
-            inserted: function inserted(el) {
-                $(el).datepicker({
-                    format: 'yyyy-mm-dd',
-                    language: 'es',
-                    autoclose: false,
-                    clearBtn: true,
-                    todayHighlight: true,
-                    endDate: '0d'
-                });
-            }
-        },
-
-        tablefilter: {
-            inserted: function inserted(el) {
-                var val_config = {
-                    auto_filter: true,
-                    watermark: ['Código', 'Fecha Llegada', 'Hora Llegada', 'Tiro', 'Camion', 'Origen', 'Material', 'Tiempo', 'Ruta', 'Distancia', '1er Km', 'Km Sub.', 'Km Adc.', 'Importe', '?', 'Validar'],
-                    col_1: 'select',
-                    col_3: 'select',
-                    col_4: 'select',
-                    col_5: 'select',
-                    col_6: 'select',
-                    col_8: 'select',
-                    col_10: 'none',
-                    col_11: 'none',
-                    col_12: 'none',
-                    col_14: 'none',
-                    col_15: 'none',
-                    col_16: 'none',
-
-                    base_path: App.tablefilterBasePath,
-                    paging: false,
-                    rows_counter: false,
-                    rows_counter_text: 'Viajes: ',
-                    btn_reset: true,
-                    btn_reset_text: 'Limpiar',
-                    clear_filter_text: 'Limpiar',
-                    loader: true,
-                    help_instructions: false,
-                    extensions: [{ name: 'sort' }]
-                };
-                var tf = new TableFilter('viajes_netos_validar', val_config);
-                tf.init();
-            }
-        }
-    },
-
-    methods: {
-        setFechaInicial: function setFechaInicial(event) {
-            this.datosConsulta.fechaInicial = event.currentTarget.value;
-        },
-
-        setFechaFinal: function setFechaFinal(event) {
-            this.datosConsulta.fechaFinal = event.currentTarget.value;
-        },
-
-        fetchViajes: function fetchViajes() {
-            var _this2 = this;
-
-            if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
-                swal('', 'Por favor introduzca el rango de fechas a consultar', 'warning');
-            } else {
-                this.viajes = [];
-                this.cargando = true;
-                this.form.errors = [];
-                this.$http.get(App.host + '/viajes/netos', { 'params': { 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
-                    _this2.viajes = response.body;
-                    _this2.cargando = false;
-                }, function (error) {
-                    App.setErrorsOnForm(_this2.form, error.body);
-                    _this2.cargando = false;
-                });
-            }
-        },
-
-        confirmarValidacion: function confirmarValidacion(index) {
-            var _this3 = this;
-
-            swal({
-                title: "¿Desea continuar con la validación?",
-                text: "¿Esta seguro de que la información es correcta?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                confirmButtonColor: "#ec6c62"
-            }, function () {
-                return _this3.validar(index);
-            });
-        },
-
-        validar: function validar(index) {
-            var _this = this;
-            this.guardando = true;
-            this.form.errors = [];
-            var viaje = this.viajes[index];
-            this.$http.post(App.host + '/viajes/netos/validar', { '_method': 'PATCH', viaje: viaje }).then(function (response) {
-                swal({
-                    type: response.body.tipo,
-                    title: '',
-                    text: response.body.message,
-                    showConfirmButton: true
-                });
-
-                if (response.body.tipo == 'success' || response.body.tipo == 'info') {
-                    _this.viajes[index].ShowModal = false;
-                    _this.viajes.splice(index, 1);
-                }
-
-                _this.guardando = false;
-            }, function (response) {
-                _this.guardando = false;
-                _this.viajes[index].ShowModal = false;
-                App.setErrorsOnForm(_this.form, response.body);
-            });
-        },
-
-        itemClass: function itemClass(index) {
-            if (index == 0) {
-                return 'item active';
-            } else {
-                return 'item';
-            }
-        }
-    }
-});
-
-},{}],42:[function(require,module,exports){
-'use strict';
-
-function timeStamp(type) {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    var hh = today.getHours();
-    var min = today.getMinutes();
-
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-    if (hh < 10) {
-        hh = '0' + hh;
-    }
-    if (min < 10) {
-        min = '0' + min;
-    }
-
-    var date = yyyy + '-' + mm + '-' + dd;
-    var time = hh + ":" + min;
-
-    return type == 1 ? date : time;
-}
 
 Vue.component('viajes-manual-completa', {
 
@@ -33117,7 +32922,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],43:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -33272,6 +33077,371 @@ Vue.component('viajes-manual', {
             }, function () {
                 return _this3.registrar();
             });
+        }
+    }
+});
+
+},{}],43:[function(require,module,exports){
+'use strict';
+
+function timeStamp(type) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    var min = today.getMinutes();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (hh < 10) {
+        hh = '0' + hh;
+    }
+    if (min < 10) {
+        min = '0' + min;
+    }
+
+    var date = yyyy + '-' + mm + '-' + dd;
+    var time = hh + ":" + min;
+
+    return type == 1 ? date : time;
+}
+
+// register modal component
+Vue.component('modal-modificar', {
+    template: '#modal-template'
+});
+
+Vue.component('viajes-modificar', {
+    data: function data() {
+        return {
+            'datosConsulta': {
+                'fechaInicial': timeStamp(1),
+                'fechaFinal': timeStamp(1)
+            },
+            'viajes': [],
+            'cargando': false,
+            'guardando': false,
+            'form': {
+                'errors': []
+            }
+        };
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: false,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        },
+
+        tablefilter: {
+            inserted: function inserted(el) {
+                var val_config = {
+                    auto_filter: true,
+                    watermark: ['Fecha Llegada', 'Tiro', 'Camion', 'Cubic.', 'Material', 'Origen', 'Modificar'],
+                    col_0: 'select',
+                    col_1: 'select',
+                    col_2: 'select',
+                    col_4: 'select',
+                    col_5: 'select',
+                    col_6: 'none',
+
+                    base_path: App.tablefilterBasePath,
+                    paging: false,
+                    rows_counter: false,
+                    rows_counter_text: 'Viajes: ',
+                    btn_reset: true,
+                    btn_reset_text: 'Limpiar',
+                    clear_filter_text: 'Limpiar',
+                    loader: true,
+                    help_instructions: false,
+                    extensions: [{ name: 'sort' }]
+                };
+                var tf = new TableFilter('viajes_netos_modificar', val_config);
+                tf.init();
+            }
+        }
+    },
+
+    methods: {
+        setFechaInicial: function setFechaInicial(event) {
+            this.datosConsulta.fechaInicial = event.currentTarget.value;
+        },
+
+        setFechaFinal: function setFechaFinal(event) {
+            this.datosConsulta.fechaFinal = event.currentTarget.value;
+        },
+
+        fetchViajes: function fetchViajes() {
+            var _this2 = this;
+
+            if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
+                swal('', 'Por favor introduzca el rango de fechas a consultar', 'warning');
+            } else {
+                this.viajes = [];
+                this.cargando = true;
+                this.form.errors = [];
+                this.$http.get(App.host + '/viajes/netos', { 'params': { 'action': 'modificar', 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
+                    _this2.viajes = response.body;
+                    _this2.cargando = false;
+                }, function (error) {
+                    App.setErrorsOnForm(_this2.form, error.body);
+                    _this2.cargando = false;
+                });
+            }
+        },
+
+        confirmarModificacion: function confirmarModificacion(index) {
+            var _this3 = this;
+
+            swal({
+                title: "¿Desea continuar con la modificación?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this3.modificar(index);
+            });
+        },
+
+        modificar: function modificar(index) {
+            var _this = this;
+            this.guardando = true;
+            this.form.errors = [];
+            var viaje = this.viajes[index];
+            this.$http.post(App.host + '/viajes/netos/modificar', { '_method': 'PATCH', viaje: viaje }).then(function (response) {
+                swal({
+                    type: response.body.tipo,
+                    title: '',
+                    text: response.body.message,
+                    showConfirmButton: true
+                });
+                _this.viajes[index].Camion = response.body.viaje.Camion;
+                _this.viajes[index].IdCamion = response.body.viaje.IdCamion;
+                _this.viajes[index].Cubicacion = response.body.viaje.Cubicacion;
+                _this.viajes[index].Tiro = response.body.viaje.Tiro;
+                _this.viajes[index].IdTiro = response.body.viaje.IdTiro;
+                _this.viajes[index].Origen = response.body.viaje.Origen;
+                _this.viajes[index].IdOrigen = response.body.viaje.IdOrigen;
+                _this.viajes[index].Material = response.body.viaje.Material;
+                _this.viajes[index].IdMaterial = response.body.viaje.IdMaterial;
+
+                _this.viajes[index].ShowModal = false;
+                _this.guardando = false;
+            }, function (response) {
+                _this.guardando = false;
+                _this.viajes[index].ShowModal = false;
+                App.setErrorsOnForm(_this.form, response.body);
+            });
+        }
+    }
+});
+
+},{}],44:[function(require,module,exports){
+'use strict';
+
+function timeStamp(type) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    var min = today.getMinutes();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (hh < 10) {
+        hh = '0' + hh;
+    }
+    if (min < 10) {
+        min = '0' + min;
+    }
+
+    var date = yyyy + '-' + mm + '-' + dd;
+    var time = hh + ":" + min;
+
+    return type == 1 ? date : time;
+}
+// register modal component
+Vue.component('modal-validar', {
+    template: '#modal-template'
+});
+
+Vue.component('viajes-validar', {
+    data: function data() {
+        return {
+            'datosConsulta': {
+                'fechaInicial': timeStamp(1),
+                'fechaFinal': timeStamp(1)
+            },
+            'viajes': [],
+            'cargando': false,
+            'guardando': false,
+            'form': {
+                'errors': []
+            }
+        };
+    },
+
+    /*computed: {
+        getViajesByCode: function() {
+            var _this = this;
+            var search = RegExp(_this.datosConsulta.code);
+            return _this.viajes.filter(function(viaje) {
+            if(!viaje.Code.length && !_this.datosConsulta.code.length ) {
+                return true;
+            } else if (viaje.Code && (viaje.Code).match(search)) {
+              return true;
+            }
+            return false;
+          });
+        }
+    },*/
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: false,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        },
+
+        tablefilter: {
+            inserted: function inserted(el) {
+                var val_config = {
+                    auto_filter: true,
+                    watermark: ['Código', 'Fecha Llegada', 'Hora Llegada', 'Tiro', 'Camion', 'Origen', 'Material', 'Tiempo', 'Ruta', 'Distancia', '1er Km', 'Km Sub.', 'Km Adc.', 'Importe', '?', 'Validar'],
+                    col_1: 'select',
+                    col_3: 'select',
+                    col_4: 'select',
+                    col_5: 'select',
+                    col_6: 'select',
+                    col_8: 'select',
+                    col_10: 'none',
+                    col_11: 'none',
+                    col_12: 'none',
+                    col_14: 'none',
+                    col_15: 'none',
+                    col_16: 'none',
+
+                    base_path: App.tablefilterBasePath,
+                    paging: false,
+                    rows_counter: false,
+                    rows_counter_text: 'Viajes: ',
+                    btn_reset: true,
+                    btn_reset_text: 'Limpiar',
+                    clear_filter_text: 'Limpiar',
+                    loader: true,
+                    help_instructions: false,
+                    extensions: [{ name: 'sort' }]
+                };
+                var tf = new TableFilter('viajes_netos_validar', val_config);
+                tf.init();
+            }
+        }
+    },
+
+    methods: {
+        setFechaInicial: function setFechaInicial(event) {
+            this.datosConsulta.fechaInicial = event.currentTarget.value;
+        },
+
+        setFechaFinal: function setFechaFinal(event) {
+            this.datosConsulta.fechaFinal = event.currentTarget.value;
+        },
+
+        fetchViajes: function fetchViajes() {
+            var _this2 = this;
+
+            if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
+                swal('', 'Por favor introduzca el rango de fechas a consultar', 'warning');
+            } else {
+                this.viajes = [];
+                this.cargando = true;
+                this.form.errors = [];
+                this.$http.get(App.host + '/viajes/netos', { 'params': { 'action': 'validar', 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
+                    _this2.viajes = response.body;
+                    _this2.cargando = false;
+                }, function (error) {
+                    App.setErrorsOnForm(_this2.form, error.body);
+                    _this2.cargando = false;
+                });
+            }
+        },
+
+        confirmarValidacion: function confirmarValidacion(index) {
+            var _this3 = this;
+
+            swal({
+                title: "¿Desea continuar con la validación?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this3.validar(index);
+            });
+        },
+
+        validar: function validar(index) {
+            var _this = this;
+            this.guardando = true;
+            this.form.errors = [];
+            var viaje = this.viajes[index];
+            this.$http.post(App.host + '/viajes/netos/validar', { '_method': 'PATCH', viaje: viaje }).then(function (response) {
+                swal({
+                    type: response.body.tipo,
+                    title: '',
+                    text: response.body.message,
+                    showConfirmButton: true
+                });
+
+                if (response.body.tipo == 'success' || response.body.tipo == 'info') {
+                    _this.viajes[index].ShowModal = false;
+                    _this.viajes.splice(index, 1);
+                }
+
+                _this.guardando = false;
+            }, function (response) {
+                _this.guardando = false;
+                _this.viajes[index].ShowModal = false;
+                App.setErrorsOnForm(_this.form, response.body);
+            });
+        },
+
+        itemClass: function itemClass(index) {
+            if (index == 0) {
+                return 'item active';
+            } else {
+                return 'item';
+            }
         }
     }
 });

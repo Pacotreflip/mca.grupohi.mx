@@ -7,7 +7,7 @@
         <section>
             <app-errors v-bind:form="form"></app-errors>
             <div class="row">
-                <div class="col-md-4 col-xs-6">
+                <div class="col-md-12">
                     <div class="form-inline">
                         <div class="form-group">
                             <label>Inicio</label>
@@ -55,7 +55,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="viaje in getViajesByCode">
+                        <tr v-for="viaje in viajes">
                             <td>@{{ viaje.Code }}</td>
                             <td>@{{ viaje.FechaLlegada }}</td>
                             <td>@{{ viaje.HoraLlegada }}</td>                            

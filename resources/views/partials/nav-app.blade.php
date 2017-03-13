@@ -64,6 +64,7 @@
         @if (Auth::user()->hasRole(['conciliacion'])) 
             <li><a href="{{ route('conciliaciones.index') }}">Conciliaciones</a></li>
         @endif
+        <li><a href="{{ route('viajes.netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>
     </ul>
   </li>
 @else

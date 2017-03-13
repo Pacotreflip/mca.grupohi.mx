@@ -27,6 +27,10 @@ class ModelPresenter extends Presenter
     public function claveRuta() {
         return $this->entity->Clave . $this->entity->IdRuta;
     }
+
+    public function descripcionRuta() {
+        return $this->entity->Clave.' - '.$this->entity->IdRuta.' '.$this->entity->TotalKM.' km [ '.$this->entity->origen.' - '.$this->entity->tiro.' ]';
+    }
     
     public function fechaYHoraRuta() {
         $dateTime = Carbon::createFromFormat('Y-m-d H:i:s', $this->entity->FechaAlta . ' ' . $this->entity->HoraAlta);  

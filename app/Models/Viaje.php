@@ -15,4 +15,16 @@ class Viaje extends Model
     public function conciliacionDetalle() {
         return $this->hasOne(ConciliacionDetalle::class, 'IdViaje');
     }
+
+    public function camion() {
+        return $this->belongsTo(Camion::class, 'IdCamion');
+    }
+
+    public function origen() {
+        return $this->belongsTo(Destino::class, 'IdDestino');
+    }
+
+    public function tiro() {
+        return $this->belongsTo(Tiro::class, 'IdTiro');
+    }
 }

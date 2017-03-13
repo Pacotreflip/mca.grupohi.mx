@@ -5,4 +5,5 @@ require('./vue-components/fda-bancomaterial');
 require('./vue-components/fda-material');
 require('./vue-components/viajes-manual');
 require('./vue-components/viajes-completa');
-require('./vue-components/validar');
+require('./vue-components/viajes-validar');
+require('./vue-components/viajes-modificar');

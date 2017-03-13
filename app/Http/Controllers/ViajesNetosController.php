@@ -13,6 +13,10 @@ use App\Models\ProyectoLocal;
 use App\Models\ViajeNeto;
 use App\Models\Empresa;
 use App\Models\Sindicato;
+use App\Models\Origen;
+use App\Models\Tiro;
+use App\Models\Camion;
+use App\Models\Material;
 
 
 class ViajesNetosController extends Controller
@@ -38,38 +42,62 @@ class ViajesNetosController extends Controller
             $viajes = ViajeNeto::porValidar()
                 ->whereBetween('FechaLlegada', [$request->get('fechaInicial'), $request->get('fechaFinal')])
                 ->get();
-            foreach($viajes as $viaje) {
-                $data [] =  [
-                    'Accion' => $viaje->valido() ? 1 : 0,
-                    'IdViajeNeto' => $viaje->IdViajeNeto,
-                    'FechaLlegada' => $viaje->FechaLlegada,
-                    'Tiro' => $viaje->tiro->Descripcion,
-                    'Camion' => $viaje->camion->Economico,
-                    'HoraLlegada' => $viaje->HoraLlegada,
-                    'Cubicacion' => $viaje->camion->CubicacionParaPago,
-                    'Origen' => $viaje->origen->Descripcion,
-                    'IdOrigen' => $viaje->origen->IdOrigen,
-                    'Sindicato' => isset($viaje->camion->sindicato->IdSindicato) ? $viaje->camion->sindicato->IdSindicato : '',
-                    'Empresa' => isset($viaje->camion->empresa->IdEmpresa) ? $viaje->camion->empresa->IdEmpresa : '',
-                    'Material' => $viaje->material->Descripcion,
-                    'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
-                    'Ruta' => isset($viaje->ruta) ?  $viaje->ruta->present()->claveRuta : "",
-                    'Code' => isset($viaje->Code) ? $viaje->Code : "",
-                    'Valido' => $viaje->valido(),
-                    'ShowModal' => false,
-                    'Distancia' => $viaje->ruta->TotalKM,
-                    'Estado' => $viaje->estado(),
-                    'Importe' => $viaje->getImporte(),
-                    'PrimerKM' => $viaje->material->tarifaMaterial->PrimerKM,
-                    'KMSubsecuente' => $viaje->material->tarifaMaterial->KMSubsecuente,
-                    'KMAdicional' => $viaje->material->tarifaMaterial->KMAdicional,
-                    'Tara' => 0,
-                    'Bruto' => 0,
-                    'TipoTarifa' => 'm',
-                    'TipoFDA' => 'm',
-                    'Imagenes' => $viaje->imagenes
-                ]; 
-             }
+            
+            if($request->get('action') == 'modificar') {
+
+                foreach ($viajes as $viaje) {
+                    $data [] = [
+                        'IdViajeNeto' => $viaje->IdViajeNeto,
+                        'FechaLlegada' => $viaje->FechaLlegada,
+                        'Tiro' => $viaje->tiro->Descripcion,
+                        'IdTiro' => $viaje->tiro->IdTiro,
+                        'Camion' => $viaje->camion->Economico,
+                        'IdCamion' => $viaje->camion->IdCamion,
+                        'HoraLlegada' => $viaje->HoraLlegada,
+                        'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                        'Origen' => $viaje->origen->Descripcion,
+                        'IdOrigen' => $viaje->origen->IdOrigen,
+                        'Material' => $viaje->material->Descripcion,
+                        'IdMaterial' => $viaje->material->IdMaterial,
+                        'ShowModal' => false
+                    ];
+                }
+
+            } else if ($request->get('action') == 'validar') {
+
+                foreach($viajes as $viaje) {
+                    $data [] =  [
+                        'Accion' => $viaje->valido() ? 1 : 0,
+                        'IdViajeNeto' => $viaje->IdViajeNeto,
+                        'FechaLlegada' => $viaje->FechaLlegada,
+                        'Tiro' => $viaje->tiro->Descripcion,
+                        'Camion' => $viaje->camion->Economico,
+                        'HoraLlegada' => $viaje->HoraLlegada,
+                        'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                        'Origen' => $viaje->origen->Descripcion,
+                        'IdOrigen' => $viaje->origen->IdOrigen,
+                        'Sindicato' => isset($viaje->camion->sindicato->IdSindicato) ? $viaje->camion->sindicato->IdSindicato : '',
+                        'Empresa' => isset($viaje->camion->empresa->IdEmpresa) ? $viaje->camion->empresa->IdEmpresa : '',
+                        'Material' => $viaje->material->Descripcion,
+                        'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
+                        'Ruta' => isset($viaje->ruta) ?  $viaje->ruta->present()->claveRuta : "",
+                        'Code' => isset($viaje->Code) ? $viaje->Code : "",
+                        'Valido' => $viaje->valido(),
+                        'ShowModal' => false,
+                        'Distancia' => $viaje->ruta->TotalKM,
+                        'Estado' => $viaje->estado(),
+                        'Importe' => $viaje->getImporte(),
+                        'PrimerKM' => $viaje->material->tarifaMaterial->PrimerKM,
+                        'KMSubsecuente' => $viaje->material->tarifaMaterial->KMSubsecuente,
+                        'KMAdicional' => $viaje->material->tarifaMaterial->KMAdicional,
+                        'Tara' => 0,
+                        'Bruto' => 0,
+                        'TipoTarifa' => 'm',
+                        'TipoFDA' => 'm',
+                        'Imagenes' => $viaje->imagenes
+                    ]; 
+                 }
+            }
             return response()->json($data);
         }
     }
@@ -82,10 +110,10 @@ class ViajesNetosController extends Controller
     public function create(Request $request)
     {
         return view('viajes.netos.create')
-                ->withCamiones(\App\Models\Camion::all())
-                ->withOrigenes(\App\Models\Origen::all())
-                ->withTiros(\App\Models\Tiro::all())
-                ->withMateriales(\App\Models\Material::all())
+                ->withCamiones(Camion::all())
+                ->withOrigenes(Origen::all())
+                ->withTiros(Tiro::all())
+                ->withMateriales(Material::all())
                 ->withAction($request->get('action'));       
     }
 
@@ -110,9 +138,26 @@ class ViajesNetosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(Request $request, $id)
     {
-        //
+        $viaje = ViajeNeto::findOrFail($id);
+        if($request->get('action') == 'modificar') {
+            return response()->json([
+                'IdViajeNeto' => $viaje->IdViajeNeto,
+                'FechaLlegada' => $viaje->FechaLlegada,
+                'Tiro' => $viaje->tiro->Descripcion,
+                'IdTiro' => $viaje->tiro->IdTiro,
+                'Camion' => $viaje->camion->Economico,
+                'IdCamion' => $viaje->camion->IdCamion,
+                'HoraLlegada' => $viaje->HoraLlegada,
+                'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                'Origen' => $viaje->origen->Descripcion,
+                'IdOrigen' => $viaje->origen->IdOrigen,
+                'Material' => $viaje->material->Descripcion,
+                'IdMaterial' => $viaje->material->IdMaterial,
+                'ShowModal' => false
+            ]);
+        }
     }
 
     /**
@@ -132,6 +177,13 @@ class ViajesNetosController extends Controller
             return view('viajes.netos.edit')
                 ->withViajes(ViajeNeto::registradosManualmente()->get())
                 ->withAction('autorizar');
+        } else if($request->get('action') == 'modificar') {
+            return view('viajes.netos.edit')
+                    ->withOrigenes(Origen::all())
+                    ->withTiros(Tiro::all())
+                    ->withCamiones(Camion::all())
+                    ->withMateriales(Material::all())
+                    ->withAction('modificar');
         }
     }
 
@@ -151,6 +203,10 @@ class ViajesNetosController extends Controller
             $msg = ViajeNeto::autorizar($request->get('Estatus'));
             Flash::success($msg);
             return redirect()->back();
+        } else if($request->path() == 'viajes/netos/modificar') {
+            $viaje = $request->get('viaje');
+            $viaje_neto = ViajeNeto::findOrFail($viaje['IdViajeNeto']);
+            return response()->json($viaje_neto->modificar($request));
         }
     }
 

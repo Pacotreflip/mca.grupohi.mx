@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "014a1864759b7562ebc115d8628fcba0",
+    "content-hash": "cd0243969db0b72a3786fcfc17a30915",
     "packages": [
         {
             "name": "classpreloader/classpreloader",
@@ -349,6 +349,42 @@
                 "laravel"
             ],
             "time": "2015-09-14T18:42:24+00:00"
+        },
+        {
+            "name": "ghidev/fpdf",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ghidev/fpdf.git",
+                "reference": "40c45ad8ab019eb4f7b2b052f5c0d68d7e0ea0b7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ghidev/fpdf/zipball/40c45ad8ab019eb4f7b2b052f5c0d68d7e0ea0b7",
+                "reference": "40c45ad8ab019eb4f7b2b052f5c0d68d7e0ea0b7",
+                "shasum": ""
+            },
+            "require": {
+                "illuminate/support": "~5.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ghidev\\Fpdf\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Francisco Esquivel",
+                    "email": "jfesquivel@grupohi.mx"
+                }
+            ],
+            "description": "A package which provides FPDF class functionality to Laravel 5",
+            "time": "2016-02-26 20:21:36"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -3862,7 +3898,8 @@
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": {
-        "zizaco/entrust": 20
+        "zizaco/entrust": 20,
+        "ghidev/fpdf": 20
     },
     "prefer-stable": false,
     "prefer-lowest": false,
