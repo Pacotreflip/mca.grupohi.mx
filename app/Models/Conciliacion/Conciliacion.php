@@ -10,7 +10,8 @@ use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
-
+use App\Models\Empresa;
+use Ghi\Core\Models\User;
 class Conciliacion extends Model
 {
 
