@@ -3,11 +3,11 @@
 namespace App\Models\Conciliacion;
 
 use App\Models\Ruta;
-use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Sindicato;
 use App\Models\Empresa;
-
+use Ghi\Core\Models\User;
+use Illuminate\Support\Facades\DB;
 class Conciliacion extends Model
 {
 
@@ -48,24 +48,24 @@ class Conciliacion extends Model
     }
     
     public function getVolumenAttribute(){
-        $partidas = $this->partidas;
-        $volumen = 0;
-        foreach($partidas as $partida){
-            $volumen+= $partida->viaje->Volumen;
-        }
-        return $volumen;
+         $results = DB::connection("sca")->select("select sum(Volumen) as Volumen "
+                 . "from conciliacion "
+                 . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
+                 . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+                 . "group by conciliacion.idconciliacion limit 1");
+         return $results[0]->Volumen;
     }
     
     public function getImporteAttribute(){
-        $partidas = $this->partidas;
-        $importe = 0;
-        foreach($partidas as $partida){
-            $importe+= $partida->viaje->Importe;
-        }
-        return $importe;
+                 $results = DB::connection("sca")->select("select sum(Importe) as Importe "
+                 . "from conciliacion "
+                 . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
+                 . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+                 . "group by conciliacion.idconciliacion limit 1");
+         return $results[0]->Importe;
     }
     public function usuario(){
-        return $this->belongsTo(\Ghi\Core\Models\User::class, "IdRegistro");
+        return $this->belongsTo(User::class, "IdRegistro");
     }
      public function getVolumenFAttribute(){
         
