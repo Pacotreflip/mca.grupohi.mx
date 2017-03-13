@@ -16,7 +16,7 @@ use App\Models\TipoRuta;
 use App\Models\Cronometria;
 use App\Models\ArchivoRuta;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
 class ConciliacionesController extends Controller
 {
     
@@ -32,10 +32,32 @@ class ConciliacionesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $conciliaciones = $this->buscar($request->get('buscar'), 15);
         return view('conciliaciones.index')
-                ->withConciliaciones(Conciliacion::all());
+                ->withContador(1)
+                ->withConciliaciones($conciliaciones);
+    }
+    
+    public function buscar($busqueda, $howMany = 15, $except = [])
+    {//Venta::orderBy('idventa', 'DESC')->get(); $conciliaciones = Conciliacion::orderBy('idconciliacion', 'desc')            ->get();
+        return Conciliacion::whereNotIn('idconciliacion', $except)
+            ->leftJoin('empresas','empresas.IdEmpresa','=','conciliacion.idempresa')
+            ->leftJoin('sindicatos','sindicatos.IdSindicato','=','conciliacion.idsindicato')
+            ->where(function ($query) use($busqueda) {
+                $query->where('sindicatos.Descripcion', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('sindicatos.NombreCorto', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('empresas.razonSocial', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('empresas.RFC', 'LIKE', '%'.$busqueda.'%')
+                    ;
+            })
+            ->select(DB::raw("conciliacion.*"))
+            ->groupBy('conciliacion.idconciliacion')
+            ->orderBy('idconciliacion',"DESC")
+                    
+            ->paginate($howMany);
+            
     }
 
     /**

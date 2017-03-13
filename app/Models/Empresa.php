@@ -26,5 +26,7 @@ class Empresa extends Model
     public function __toString() {
         return $this->razonSocial;
     }
-
+    public function conciliaciones(){
+        return $this->hasMany(Conciliacion::class, "idempresa", "IdEmpresa");
+    }
 }

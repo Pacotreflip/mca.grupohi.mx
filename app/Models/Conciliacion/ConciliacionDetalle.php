@@ -23,4 +23,8 @@ class ConciliacionDetalle extends Model
     public function viaje() {
         return $this->belongsTo(Viaje::class, 'idviaje');
     }
+    
+    public function conciliacion() {
+        return $this->belongsTo(Conciliacion::class, 'idconciliacion');
+    }
 }

@@ -37,6 +37,10 @@ return [
     'rutas' => 'Rutas',
     'new_ruta' => 'Nueva Ruta',
     
+    //Conciliaciones
+    'conciliaciones' => 'Conciliaciones',
+    'new_conciliacion' => 'Nueva Conciliación',
+    
     //Camiones
     'camiones' => 'Camiones',
     'new_camion' => 'NUEVO CAMIÓN',

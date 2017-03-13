@@ -5,6 +5,8 @@ namespace App\Models\Conciliacion;
 use App\Models\Ruta;
 use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Sindicato;
+use App\Models\Empresa;
 
 class Conciliacion extends Model
 {
@@ -24,13 +26,56 @@ class Conciliacion extends Model
         'observaciones',
         'FirmadoPDF'
     ];
-
+    protected $dates = ['timestamp'];
     public function rutas() {
-        return $this->belongsToMany(Ruta::class, 'conciliacion_rutas', 'IdConciliacion', 'IdRuta');
+        return $this->belongsToMany(Ruta::class, 'conciliacion_rutas', 'idconciliacion', 'IdRuta');
     }
 
     public function conciliacionDetalle()
     {
-        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion', 'idconciliacion_detalle');
+        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion', 'idconciliacion');
+    }
+    
+    public function sindicato(){
+        return $this->belongsTo(Sindicato::class, "idsindicato");
+    }
+    public function empresa(){
+        return $this->belongsTo(Empresa::class, "idempresa");
+    }
+    
+    public function partidas(){
+        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion', 'idconciliacion');
+    }
+    
+    public function getVolumenAttribute(){
+        $partidas = $this->partidas;
+        $volumen = 0;
+        foreach($partidas as $partida){
+            $volumen+= $partida->viaje->Volumen;
+        }
+        return $volumen;
+    }
+    
+    public function getImporteAttribute(){
+        $partidas = $this->partidas;
+        $importe = 0;
+        foreach($partidas as $partida){
+            $importe+= $partida->viaje->Importe;
+        }
+        return $importe;
+    }
+    public function usuario(){
+        return $this->belongsTo(\Ghi\Core\Models\User::class, "IdRegistro");
+    }
+     public function getVolumenFAttribute(){
+        
+        return number_format($this->volumen, 2, ".",",");
+    }
+    public function getImporteFAttribute(){
+        
+        return number_format($this->importe, 2, ".",",");
+    }
+    public function getFechaHoraRegistroAttribute(){
+        return ucwords($this->timestamp->formatLocalized('%d %B %Y')).' ('.$this->timestamp->format("h:i:s").')';
     }
 }
