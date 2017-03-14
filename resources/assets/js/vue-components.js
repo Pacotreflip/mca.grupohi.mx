@@ -7,3 +7,4 @@ require('./vue-components/viajes-manual');
 require('./vue-components/viajes-completa');
 require('./vue-components/viajes-validar');
 require('./vue-components/viajes-modificar');
+require('./vue-components/conciliaciones-create');

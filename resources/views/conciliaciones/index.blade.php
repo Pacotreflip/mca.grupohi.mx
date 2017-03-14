@@ -54,11 +54,11 @@
             {{$conciliacion->idconciliacion}}
             </td>
             <td>{{$conciliacion->sindicato->Descripcion}}</td>
-            <td>{{$conciliacion->empresa->razonSocial}}</td>
+            <td>{{$conciliacion->empresa}}</td>
             <td style="text-align: right">{{$conciliacion->conciliacionDetalle->count()}}</td>
             <td style="text-align: right">{{$conciliacion->volumen_f}}</td>
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
-            <td>{{$conciliacion->usuario->present()->nombreCompleto}}</td>
+            <td>{{$conciliacion->usuario}}</td>
             <td>{{$conciliacion->fecha_hora_registro }}</td>
         </tr>
       @endforeach

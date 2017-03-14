@@ -14,7 +14,7 @@
   <body>
     @include('partials.nav')
 
-    <div class="container" style="width: 98%;">
+    <div class="container">
         @include('flash::message')
         @yield('content')
     </div>

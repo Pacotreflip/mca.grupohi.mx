@@ -94,6 +94,5 @@ Route::group(['prefix' => 'pdf'], function () {
         'uses' => 'PDFController@conciliacion'
     ]);
 });
-});
 
 Route::resource('conciliaciones', 'ConciliacionesController');

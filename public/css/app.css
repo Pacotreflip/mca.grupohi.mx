@@ -6454,11 +6454,11 @@ button.close {
   src: local("Roboto BlackItalic"), local("Roboto-BlackItalic"), url("../fonts/roboto/Roboto/Roboto-BlackItalic.eot?#iefix") format("embedded-opentype"), url("../fonts/roboto/Roboto/Roboto-BlackItalic.woff2") format("woff2"), url("../fonts/roboto/Roboto/Roboto-BlackItalic.woff") format("woff"), url("../fonts/roboto/Roboto/Roboto-BlackItalic.ttf") format("truetype"), url("../fonts/roboto/Roboto/Roboto-BlackItalic.svg#Roboto") format("svg"); }
 
 /*!
- * bootstrap-fileinput v4.3.3
+ * bootstrap-fileinput v4.3.8
  * http://plugins.krajee.com/file-input
  *
  * Author: Kartik Visweswaran
- * Copyright: 2014 - 2016, Kartik Visweswaran, Krajee.com
+ * Copyright: 2014 - 2017, Kartik Visweswaran, Krajee.com
  *
  * Licensed under the BSD 3-Clause
  * https://github.com/kartik-v/bootstrap-fileinput/blob/master/LICENSE.md
@@ -6545,7 +6545,8 @@ button.close {
     box-shadow: 3px 3px 5px 0 #333; }
 
 .file-preview-image {
-  vertical-align: middle; }
+  vertical-align: middle;
+  image-orientation: from-image; }
 
 .file-preview-text {
   display: block;
@@ -6592,6 +6593,16 @@ button.close {
 
 .file-input-ajax-new .fileinput-remove-button, .file-input-ajax-new .fileinput-upload-button {
   display: none; }
+
+.file-caption-main {
+  width: 100%; }
+
+.file-input-ajax-new .no-browse .input-group-btn, .file-input-new .no-browse .input-group-btn {
+  display: none; }
+
+.file-input-ajax-new .no-browse .form-control, .file-input-new .no-browse .form-control {
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px; }
 
 .file-thumb-loading {
   background: transparent url("../img/loading.gif") no-repeat scroll center center content-box !important; }
@@ -6641,8 +6652,21 @@ button.close {
 
 .file-drop-zone-title {
   color: #aaa;
-  font-size: 40px;
-  padding: 85px 10px; }
+  font-size: 1.6em;
+  padding: 85px 10px;
+  cursor: default; }
+
+.file-preview .clickable, .clickable .file-drop-zone-title {
+  cursor: pointer; }
+
+.file-drop-zone.clickable:hover {
+  border: 2px dashed #999; }
+
+.file-drop-zone.clickable:focus {
+  border: 2px solid #5acde2; }
+
+.file-drop-zone .file-preview-thumbnails {
+  cursor: default; }
 
 .file-highlighted {
   border: 2px dashed #999 !important;
@@ -6735,9 +6759,14 @@ button.close {
   display: inline;
   margin-right: 2px;
   font-size: 16px;
+  opacity: 0.6;
+  cursor: not-allowed; }
+
+.file-sortable .file-drag-handle {
   cursor: move;
-  cursor: -webkit-grabbing; }
-  .file-drag-handle:hover {
+  cursor: -webkit-grabbing;
+  opacity: 1; }
+  .file-sortable .file-drag-handle:hover {
     opacity: 0.7; }
 
 .file-zoom-content {

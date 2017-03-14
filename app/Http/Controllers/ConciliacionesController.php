@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Empresa;
+use App\Models\Sindicato;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -68,6 +70,8 @@ class ConciliacionesController extends Controller
     public function create()
     {
         return view('conciliaciones.create')
+            ->withEmpresas(Empresa::lists('razonSocial', 'IdEmpresa'))
+            ->withSindicatos(Sindicato::lists('nombreCorto', 'IdSindicato'))
                 ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
                 ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
                 ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));
