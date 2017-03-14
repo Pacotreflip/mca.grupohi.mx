@@ -23,12 +23,14 @@ class Conciliacion extends Model
     protected $fillable = [
         'fecha_conciliacion',
         'idsindicato',
+        'idempresa',
         'fecha_inicial',
         'fecha_final',
         'timestamp',
         'estado',
         'observaciones',
-        'FirmadoPDF'
+        'FirmadoPDF',
+        'IdRegistro'
     ];
     protected $dates = ['timestamp'];
     public function rutas() {

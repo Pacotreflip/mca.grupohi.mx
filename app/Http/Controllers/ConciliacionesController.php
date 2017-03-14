@@ -83,37 +83,18 @@ class ConciliacionesController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Requests\CreateRutaRequest $request)
+    public function store(Requests\CreateConciliacionRequest $request)
     {
-        $request->request->add(['IdProyecto' => $request->session()->get('id')]);
-        $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
-        $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
-        $request->request->add(['Registra' => auth()->user()->idusuario]);
+        $request->request->add(['fecha_conciliacion' => Carbon::now()->toDateString()]);
+        $request->request->add(['fecha_inicial' => Carbon::now()->toDateString()]);
+        $request->request->add(['fecha_final' => Carbon::now()->toDateString()]);
+        $request->request->add(['estado' => 0]);
+        $request->request->add(['IdRegistro' => auth()->user()->idusuario]);
 
-        $ruta = Ruta::create($request->all());
+        $conciliacion = Conciliacion::create($request->all());
         
-        $cronometria = new Cronometria();
-        $cronometria->IdRuta = $ruta->IdRuta;
-        $cronometria->TiempoMinimo = $request->get('TiempoMinimo');
-        $cronometria->Tolerancia = $request->get('Tolerancia');
-        $cronometria->FechaAlta = Carbon::now()->toDateString();
-        $cronometria->HoraAlta = Carbon::now()->toTimeString();
-        $cronometria->Registra = auth()->user()->idusuario;
-        $cronometria->save();
-                
-        if($request->hasFile('Croquis')) {
-            $croquis = $request->file('Croquis');
-            $archivo = new ArchivoRuta();
-            $nombre = $archivo->creaNombre($croquis, $ruta);
-            $croquis->move($archivo->baseDir(), $nombre);
-            $archivo->IdRuta = $ruta->IdRuta;
-            $archivo->Tipo = $croquis->getClientMimeType();
-            $archivo->Ruta = $archivo->baseDir().'/'.$nombre;
-            $archivo->save();
-        }
-
-        Flash::success('¡RUTA REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('conciliaciones.show', $ruta);
+        Flash::success('¡CONCILIACIÓN REGISTRADA CORRECTAMENTE!');
+        return redirect()->route('conciliaciones.edit', $conciliacion);
     }
 
     /**
@@ -137,10 +118,7 @@ class ConciliacionesController extends Controller
     public function edit($id)
     {
         return view('conciliaciones.edit')
-                ->withRuta(Ruta::findOrFail($id))
-                ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
-                ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
-                ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));    
+                ->withConciliacion(Conciliacion::findOrFail($id));    
     }
 
     /**

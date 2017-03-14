@@ -10,23 +10,29 @@
     <conciliaciones-create inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
-            <form>
+            {!! Form::open(['route' => 'conciliaciones.store', 'id' => 'create_conciliacion']) !!}
                 <!-- Empresa y Sindicato -->
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="Empresa">Empresa: </label>
-                            {!! Form::select('empresa', $empresas, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                            {!! Form::select('idempresa', $empresas, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
                         </div>
                     </div>
                     <div class="col-md-6">
                         <div class="form-group">
                             <label for="Empresa">Sindicato: </label>
-                            {!! Form::select('empresa', $sindicatos, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                            {!! Form::select('idsindicato', $sindicatos, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
                         </div>
                     </div>
+                    
                 </div>
-            </form>
+                <div class="row">
+                    <div class="col-md-12">
+                        {!! Form::submit('Registrar', ['class' => 'btn btn-success pull-right']) !!}
+                    </div>
+                </div>
+            {!! Form::close() !!}
         </section>
     </conciliaciones-create>
 @stop
