@@ -157,6 +157,8 @@ return [
         Ghidev\Fpdf\RotationServiceProvider::class,
         Ghidev\Fpdf\MC_TableServiceProvider::class,
 
+        Themsaid\Transformers\TransformersServiceProvider::class,
+
     ],
 
     /*

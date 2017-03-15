@@ -268,6 +268,22 @@ Breadcrumbs::register('viajes.netos.modificar', function($breadcrumbs) {
 });
 
 //Conciliaciones
+
+Breadcrumbs::register('conciliaciones.index', function($breadcrumbs) {
+    $breadcrumbs->push('CONCILIACIONES', route('conciliaciones.index'));
+});
+
+Breadcrumbs::register('conciliaciones.show', function($breadcrumbs, $conciliacion) {
+    $breadcrumbs->parent('conciliaciones.index');
+    $breadcrumbs->push($conciliacion->idconciliacion, route('conciliaciones.show', $conciliacion));
+});
+
 Breadcrumbs::register('conciliaciones.create', function($breadcrumbs) {
+    $breadcrumbs->parent('conciliaciones.index');
     $breadcrumbs->push('NUEVA CONCILIACIÓN', route('conciliaciones.create'));
+});
+
+Breadcrumbs::register('conciliaciones.edit', function($breadcrumbs, $conciliacion) {
+    $breadcrumbs->parent('conciliaciones.show', $conciliacion);
+    $breadcrumbs->push('EDITAR CONCILIACIÓN', route('conciliaciones.edit', $conciliacion));
 });

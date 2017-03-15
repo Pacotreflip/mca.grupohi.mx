@@ -33557,22 +33557,211 @@ require('./vue-components/viajes-completa');
 require('./vue-components/viajes-validar');
 require('./vue-components/viajes-modificar');
 require('./vue-components/conciliaciones-create');
+require('./vue-components/conciliaciones-edit');
 
-},{"./vue-components/conciliaciones-create":34,"./vue-components/errors":35,"./vue-components/fda-bancomaterial":36,"./vue-components/fda-material":37,"./vue-components/global-errors":38,"./vue-components/origenes-usuarios":39,"./vue-components/viajes-completa":43,"./vue-components/viajes-manual":44,"./vue-components/viajes-modificar":45,"./vue-components/viajes-validar":46}],34:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":34,"./vue-components/conciliaciones-edit":35,"./vue-components/errors":36,"./vue-components/fda-bancomaterial":37,"./vue-components/fda-material":38,"./vue-components/global-errors":39,"./vue-components/origenes-usuarios":40,"./vue-components/viajes-completa":44,"./vue-components/viajes-manual":45,"./vue-components/viajes-modificar":46,"./vue-components/viajes-validar":47}],34:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
     data: function data() {
         return {
-            'viajes': [],
+            'conciliacion': {
+                'idsindicato': '',
+                'idempresa': ''
+            },
             'form': {
                 'errors': []
             }
         };
+    },
+
+    methods: {
+        confirmarRegistro: function confirmarRegistro(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar con el registro?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this2.registrar();
+            });
+        },
+
+        registrar: function registrar() {
+            var _this3 = this;
+
+            var _this = this;
+            this.form.errors = [];
+            this.$http.post(App.host + '/conciliaciones', this.conciliacion).then(function (response) {
+                var conciliacion = response.body.conciliacion;
+                window.location.href = App.host + '/conciliaciones/' + conciliacion.idconciliacion + '/edit';
+            }, function (error) {
+                App.setErrorsOnForm(_this3.form, error.body);
+            });
+        }
     }
 });
 
 },{}],35:[function(require,module,exports){
+'use strict';
+
+function timeStamp(type) {
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1; //January is 0!
+    var yyyy = today.getFullYear();
+    var hh = today.getHours();
+    var min = today.getMinutes();
+
+    if (dd < 10) {
+        dd = '0' + dd;
+    }
+    if (mm < 10) {
+        mm = '0' + mm;
+    }
+    if (hh < 10) {
+        hh = '0' + hh;
+    }
+    if (min < 10) {
+        min = '0' + min;
+    }
+
+    var date = yyyy + '-' + mm + '-' + dd;
+    var time = hh + ":" + min;
+
+    return type == 1 ? date : time;
+}
+
+Vue.component('conciliaciones-edit', {
+    data: function data() {
+        return {
+            'tipo': '',
+            'resultados': [],
+            'conciliacion': {
+                'detalles': []
+            },
+            'form': {
+                'errors': []
+            }
+        };
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: true,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        }
+    },
+
+    created: function created() {
+        this.fetchDetalles();
+    },
+
+    methods: {
+
+        fetchDetalles: function fetchDetalles() {
+            var _this = this;
+            var url = $('.form_registrar').attr('action');
+
+            this.$http.get(url).then(function (response) {
+                _this.conciliacion.detalles = response.body.detalles;
+            }, function (error) {
+                App.setErrorsOnForm(_this.form, error.body);
+            });
+        },
+
+        confirmarRegistro: function confirmarRegistro(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar con el registro?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this2.registrar();
+            });
+        },
+
+        registrar: function registrar() {
+            var _this = this;
+            this.form.errors = [];
+            this.guardando = true;
+
+            var url = $('.form_registrar').attr('action');
+            var data = $('.form_registrar').serialize();
+
+            $.ajax({
+                url: url,
+                type: "POST",
+                data: data,
+                success: function success(data) {
+                    $('#resultados').modal('hide');
+                    _this.resultados = [];
+
+                    swal({
+                        type: 'success',
+                        title: '¡VIAJES ASIGNADOS CORRECTAMENTE!',
+                        text: data.registros + ' Viajes asignado s a la conciliación',
+                        showConfirmButton: true
+                    });
+
+                    _this.conciliacion.detalles = data.detalles;
+                },
+                error: function error(_error) {
+                    App.setErrorsOnForm(_this.form, _error.responseText);
+                }
+            });
+        },
+
+        agregar: function agregar(e) {
+            e.preventDefault();
+        },
+
+        validar: function validar() {},
+
+        buscar: function buscar(e) {
+            var _this3 = this;
+
+            e.preventDefault();
+
+            var _this = this;
+            this.form.errors = [];
+            this.cargando = true;
+
+            var data = $('.form_buscar').serialize();
+            this.$http.get(App.host + '/viajes?' + data).then(function (response) {
+                _this.resultados = response.body.data;
+                $('#resultados').modal('show');
+            }, function (error) {
+                App.setErrorsOnForm(_this3.form, error.body);
+            });
+            this.cargando = false;
+        }
+    }
+});
+
+},{}],36:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -33581,7 +33770,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":40}],36:[function(require,module,exports){
+},{"./templates/errors.html":41}],37:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -33687,7 +33876,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],37:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -33776,7 +33965,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],38:[function(require,module,exports){
+},{}],39:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -33802,7 +33991,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":41}],39:[function(require,module,exports){
+},{"./templates/global-errors.html":42}],40:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -33877,13 +34066,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":42}],40:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":43}],41:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],41:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],42:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],43:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],44:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -34103,7 +34292,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],44:[function(require,module,exports){
+},{}],45:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -34262,7 +34451,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -34433,7 +34622,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {

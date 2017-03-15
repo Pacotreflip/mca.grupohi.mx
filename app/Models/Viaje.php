@@ -27,4 +27,21 @@ class Viaje extends Model
     public function tiro() {
         return $this->belongsTo(Tiro::class, 'IdTiro');
     }
+
+    public function scopePorConciliar($query) {
+        return $query->leftJoin('conciliacion_detalle', 'viajes.IdViaje', '=', 'conciliacion_detalle.idviaje')
+            ->where(function($query){
+                $query->whereNull('conciliacion_detalle.idviaje')
+                    ->orWhere('conciliacion_detalle.estado', '=', '-1');
+            });
+    }
+
+    public function scopeconciliados($query) {
+        return $query->leftJoin('conciliacion_detalle', 'viajes.IdViaje', '=', 'conciliacion_detalle.idviaje')
+            ->whereNotNull('conciliacion_detalle.idviaje');
+    }
+
+    public function material() {
+        return $this->belongsTo(Material::class, 'IdMaterial');
+    }
 }

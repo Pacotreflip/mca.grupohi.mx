@@ -21,7 +21,7 @@ var paths = {
  */
 
 elixir(function(mix) {
-    mix.sass('app.scss', './resources/assets/css/sass.css')
+    /*mix.sass('app.scss', './resources/assets/css/sass.css')
             .less('app.less', './resources/assets/css/less.css')
             .styles(['*.css'], 'public/css/app.css')
             .copy(paths.roboto + 'fonts', 'public/build/fonts/roboto')
@@ -29,8 +29,8 @@ elixir(function(mix) {
             .copy(paths.fontawesome + 'fonts', 'public/build/fonts/font-awesome')
             .copy(paths.fileinput + 'img', 'public/build/img')
             .copy(paths.treegrid + 'img', 'public/build/img')
-            .copy(paths.tablefilter + 'dist/tablefilter', 'public/tablefilter')
-            .browserify('app.js')
+            .copy(paths.tablefilter + 'dist/tablefilter', 'public/tablefilter')*/
+            mix.browserify('app.js')
             .version([
                 'public/css/app.css',
                 'public/js/app.js'

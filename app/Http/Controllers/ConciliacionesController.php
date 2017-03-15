@@ -2,8 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Camion;
+use App\Models\Conciliacion\ConciliacionDetalle;
 use App\Models\Empresa;
 use App\Models\Sindicato;
+use App\Models\Transformers\ConciliacionDetalleTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -78,10 +81,8 @@ class ConciliacionesController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param Requests\CreateConciliacionRequest $request
+     * @return \Illuminate\Http\JsonResponse
      */
     public function store(Requests\CreateConciliacionRequest $request)
     {
@@ -91,34 +92,24 @@ class ConciliacionesController extends Controller
         $request->request->add(['estado' => 0]);
         $request->request->add(['IdRegistro' => auth()->user()->idusuario]);
 
-        $conciliacion = Conciliacion::create($request->all());
-        
-        Flash::success('¡CONCILIACIÓN REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('conciliaciones.edit', $conciliacion);
+        $conciliacion = Conciliacion::firstOrCreate($request->all());
+
+        return response()->json([
+            'message' => '¡CONCILIACIÓN REGISTRADA CORRECTAMENTE!',
+            'status_code' => 200,
+            'conciliacion' => $conciliacion
+        ]);
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        return view('conciliaciones.show')
-                ->withRuta(Ruta::findOrFail($id));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param $id
+     * @return mixed
      */
     public function edit($id)
     {
         return view('conciliaciones.edit')
-                ->withConciliacion(Conciliacion::findOrFail($id));    
+            ->withConciliacion(Conciliacion::findOrFail($id))
+            ->withCamiones(Camion::lists('Economico', 'IdCamion'));
     }
 
     /**
@@ -128,43 +119,9 @@ class ConciliacionesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Requests\EditRutaRequest $request, $id)
+    public function update(Request $request, $id)
     {
-        $ruta = Ruta::findOrFail($id);
-        $ruta->update($request->all());
-        
-        $cronometria = $ruta->cronometria;
-        $cronometria->TiempoMinimo = $request->get('TiempoMinimo');
-        $cronometria->Tolerancia = $request->get('Tolerancia');
-        $cronometria->save();
-        
-        if($request->hasFile('Croquis')) {
-            $croquis = $request->file('Croquis');
-            $tipo = $croquis->getClientMimeType();
-            $nombre = ArchivoRuta::creaNombre($croquis, $ruta);
-            $ruta_ = ArchivoRuta::baseDir().'/'.$nombre;
 
-            $archivo = ArchivoRuta::where(['IdRuta' => $ruta->IdRuta])->first();
-            if($archivo) {
-                $archivo->Tipo = $tipo;
-                $archivo->Ruta = $ruta_;
-                $archivo->save();
-            } else {
-                $archivo = ArchivoRuta::create([
-                    'IdRuta' => $ruta->IdRuta,
-                    'Tipo' => $tipo,
-                    'Ruta' => $ruta_
-                ]);
-            }
-            
-            if(Storage::disk('uploads')->has($archivo->Ruta)) {
-                Storage::disk('uploads')->delete($archivo->Ruta);
-            }
-            $croquis->move(ArchivoRuta::baseDir(), $nombre);
-        }
-        
-        Flash::success('¡RUTA ACTUALIZADA CORRECTAMENTE!');
-        return redirect()->route('conciliaciones.show', $ruta);
     }
 
     /**
@@ -188,5 +145,13 @@ class ConciliacionesController extends Controller
         $ruta->save();
                 
         return response()->json(['text' => $text]);
+    }
+
+    public function search(Request $request) {
+        dd($request);
+    }
+
+    public function show() {
+        
     }
 }

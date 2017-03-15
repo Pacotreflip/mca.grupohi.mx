@@ -96,3 +96,8 @@ Route::group(['prefix' => 'pdf'], function () {
 });
 
 Route::resource('conciliaciones', 'ConciliacionesController');
+
+Route::post('conciliacion/{conciliacion}/detalles', 'ConciliacionesDetallesController@store')->name('conciliaciones.detalles.store');
+Route::get('conciliacion/{conciliacion}/detalles', 'ConciliacionesDetallesController@index')->name('conciliaciones.detalles.index');
+
+Route::get('viajes', 'ViajesController@index');

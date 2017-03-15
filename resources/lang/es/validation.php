@@ -160,7 +160,11 @@ return [
         'FactorAbundamiento'    => 'FDA',
         'IdCamion'              => 'Camión',
         'FechaLlegada'          => 'Fecha',
-        'HoraLlegada'           => 'Hora'
+        'HoraLlegada'           => 'Hora',
+        'idsindicato'           => 'Sindicato',
+        'idempresa'             => 'Empresa',
+        'FechaInicial'          => 'Fecha Inicial',
+        'FechaFinal'           => 'Fecha Final'
     ],
 
 ];
