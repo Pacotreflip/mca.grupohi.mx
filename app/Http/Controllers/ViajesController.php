@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Collection;
 
 class ViajesController extends Controller
 {
@@ -33,7 +34,16 @@ class ViajesController extends Controller
         ]);
         $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
 
-        $data =ViajeTransformer::transform($viajes);
+        $viajes_collection = new Collection();
+
+        foreach ($viajes as $viaje) {
+            if ($viaje->disponible()){
+                $viajes_collection->push($viaje);
+            }
+
+        }
+
+        $data =ViajeTransformer::transform($viajes_collection);
 
         return response()->json([
             'status_code' => 200,

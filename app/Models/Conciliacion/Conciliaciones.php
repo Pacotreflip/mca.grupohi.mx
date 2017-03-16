@@ -52,14 +52,15 @@ class Conciliaciones
                 }
 
                 if($viaje) {
-                    ConciliacionDetalle::create([
-                        'idconciliacion' => $this->conciliacion->idconciliacion,
-                        'idviaje'        => $viaje->IdViaje,
-                        'timestamp'      => Carbon::now()->toDateTimeString(),
-                        'estado'         => 1
-                    ]);
-
-                    $i++;
+                    if($viaje->disponible()) {
+                        ConciliacionDetalle::create([
+                            'idconciliacion' => $this->conciliacion->idconciliacion,
+                            'idviaje'        => $viaje->IdViaje,
+                            'timestamp'      => Carbon::now()->toDateTimeString(),
+                            'estado'         => 1
+                        ]);
+                        $i++;
+                    }
                 }
             }
             DB::connection('sca')->commit();

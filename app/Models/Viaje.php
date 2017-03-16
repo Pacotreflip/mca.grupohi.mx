@@ -13,8 +13,8 @@ class Viaje extends Model
     protected $primaryKey = 'IdViaje';
     public $timestamps = false;
 
-    public function conciliacionDetalle() {
-        return $this->hasOne(ConciliacionDetalle::class, 'IdViaje');
+    public function conciliacionDetalles() {
+        return $this->hasMany(ConciliacionDetalle::class, 'IdViaje');
     }
 
     public function camion() {
@@ -42,9 +42,21 @@ class Viaje extends Model
             ->where(function($query){
                 $query->whereNotNull('conciliacion_detalle.idviaje')
                     ->orWhere('conciliacion_detalle.estado', '!=', '-1');
-            });    }
+            });
+    }
 
     public function material() {
         return $this->belongsTo(Material::class, 'IdMaterial');
+    }
+
+    public function disponible() {
+        $result = true;
+        foreach ($this->conciliacionDetalles as $conciliacionDetalle) {
+            if ($conciliacionDetalle->estado == 1) {
+                $result = false;
+            }
+        }
+
+        return $result;
     }
 }

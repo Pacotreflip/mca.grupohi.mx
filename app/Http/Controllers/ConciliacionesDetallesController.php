@@ -14,6 +14,7 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
+use Illuminate\Support\Facades\DB;
 
 class ConciliacionesDetallesController extends Controller
 {
@@ -73,14 +74,19 @@ class ConciliacionesDetallesController extends Controller
             if ($request->get('Tipo') == '1') {
                 $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
                 if($viaje) {
-                    $detalle = ConciliacionDetalle::create([
-                        'idconciliacion' => $id,
-                        'idviaje'        => $viaje->IdViaje,
-                        'timestamp'      => Carbon::now()->toDateTimeString(),
-                        'estado'         => 1
-                    ]);
-                    $i = 1;
-                    $detalles = ConciliacionDetalleTransformer::transform($detalle);
+                    if ($viaje->disponible()) {
+                        $detalle = ConciliacionDetalle::create([
+                            'idconciliacion' => $id,
+                            'idviaje' => $viaje[0]->IdViaje,
+                            'timestamp' => Carbon::now()->toDateTimeString(),
+                            'estado' => 1
+                        ]);
+                        $i = 1;
+                        $detalles = ConciliacionDetalleTransformer::transform($detalle);
+                    } else {
+                        $i = null;
+                        $detalles = null;
+                    }
                 } else {
                     $detalles = null;
                     $i = null;

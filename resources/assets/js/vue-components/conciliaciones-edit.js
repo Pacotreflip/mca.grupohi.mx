@@ -296,7 +296,7 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'success',
                             title: '¡Viaje Conciliado Correctamente!',
-                            text: data.registros + ' Viajes conciliados',
+                            text: response.registros + ' Viajes conciliados',
                             showConfirmButton: false,
                             timer: 500
                         });
