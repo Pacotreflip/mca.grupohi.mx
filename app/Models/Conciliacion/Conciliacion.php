@@ -43,8 +43,7 @@ class Conciliacion extends Model
 
     public function conciliacionDetalles()
     {
-        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion')
-            ->where('conciliacion_detalle.estado', '!=', -1);
+        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion');
     }
 
     public function sindicato() {

@@ -143,7 +143,7 @@ class ConciliacionesController extends Controller
     public function destroy(Request $request, $id)
     {
         $conciliacion = Conciliacion::findOrFail($id);
-        $conciliacion->estado = $request->get('estado') == 0 ? -1 : -2;
+        $conciliacion->estado = $conciliacion->estado == 0 ? -1 : -2;
         $conciliacion->save();
 
         ConciliacionCancelacion::create([

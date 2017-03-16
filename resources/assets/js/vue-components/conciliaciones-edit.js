@@ -45,6 +45,25 @@ Vue.component('conciliaciones-edit', {
                 });
             }
         },
+
+        fileinput: {
+            inserted: function (el) {
+                $(el).fileinput({
+                    language: 'es',
+                    theme: 'fa',
+                    showPreview: false,
+                    showUpload: true,
+                    uploadAsync: true,
+                    maxFileConut: 1,
+                    autoReplate: true,
+                    allowedFileExtensions: ['xls', 'xml', 'csv', 'xlsx'],
+                    layoutTemplates: {
+                        actionUpload: '',
+                        actionDelete: '',
+                    }
+                });
+            }
+        }
     },
 
     created: function () {
@@ -78,7 +97,7 @@ Vue.component('conciliaciones-edit', {
             }, () => this.registrar() );
         },
 
-        cancelar: function(previousStatus, e) {
+        cancelar: function(e) {
 
             e.preventDefault();
             var url = $(e.target).attr('href');
@@ -105,8 +124,7 @@ Vue.component('conciliaciones-edit', {
                     type : 'POST',
                     data : {
                         _method : 'DELETE',
-                        motivo : inputValue,
-                        estado: previousStatus
+                        motivo : inputValue
                     },
                     success: function(response) {
                         if(response.status_code = 200) {
@@ -133,44 +151,57 @@ Vue.component('conciliaciones-edit', {
         cerrar: function(e) {
             e.preventDefault();
             var url = $(e.target).attr('href');
-            swal({
-                title: "¡Cerrar Conciliación!",
-                text: "¿Desea cerrar la conciliación?",
-                type: "info",
-                showCancelButton: true,
-                closeOnConfirm: false,
-                confirmButtonText: "Si, Cerrar",
-                cancelButtonText: "No",
-                showLoaderOnConfirm: true
-            },
-            function(){
-                $.ajax({
-                    url: url,
-                    type : 'POST',
-                    data : {
-                        _method : 'PATCH',
-                        action : 'cerrar'
-                    },
-                    success: function(response) {
-                        if(response.status_code = 200) {
-                            swal({
-                                type: 'success',
-                                title: '¡Hecho!',
-                                text: 'Conciliación cerrada correctamente',
-                                showCancelButton: false,
-                                confirmButtonText: 'OK',
-                                closeOnConfirm: false
-                            },
-                            function () {
-                                location.reload();
-                            });
-                        }
-                    },
-                    error: function (error) {
-                        App.setErrorsOnForm(_this.form, error.responseText);
-                    }
+
+            if(! this.conciliacion.detalles.length) {
+                swal({
+                    type: 'warning',
+                    title: "¡Cerrar Conciliación!",
+                    text: 'No se puede cerrar la conciliación ya que no tiene viajes conciliados',
+                    closeOnConfirm: true,
+                    showCancelButton: false,
+                    confirmButtonText: "OK"
                 });
-            });
+
+            } else {
+                swal({
+                        title: "¡Cerrar Conciliación!",
+                        text: "¿Desea cerrar la conciliación?",
+                        type: "info",
+                        showCancelButton: true,
+                        closeOnConfirm: false,
+                        confirmButtonText: "Si, Cerrar",
+                        cancelButtonText: "No",
+                        showLoaderOnConfirm: true
+                    },
+                    function () {
+                        $.ajax({
+                            url: url,
+                            type: 'POST',
+                            data: {
+                                _method: 'PATCH',
+                                action: 'cerrar'
+                            },
+                            success: function (response) {
+                                if (response.status_code = 200) {
+                                    swal({
+                                            type: 'success',
+                                            title: '¡Hecho!',
+                                            text: 'Conciliación cerrada correctamente',
+                                            showCancelButton: false,
+                                            confirmButtonText: 'OK',
+                                            closeOnConfirm: false
+                                        },
+                                        function () {
+                                            location.reload();
+                                        });
+                                }
+                            },
+                            error: function (error) {
+                                App.setErrorsOnForm(_this.form, error.responseText);
+                            }
+                        });
+                    });
+            }
         },
 
         aprobar: function(e) {

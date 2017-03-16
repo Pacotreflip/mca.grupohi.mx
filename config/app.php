@@ -159,6 +159,8 @@ return [
 
         Themsaid\Transformers\TransformersServiceProvider::class,
 
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
     ],
 
     /*
@@ -214,8 +216,9 @@ return [
         'Image'     => Intervention\Image\Facades\Image::class,
         'Entrust'   => Zizaco\Entrust\EntrustFacade::class,
         'Fpdf'      => Ghidev\Fpdf\Facades\Fpdf::class,
-        'Rotation'    => Ghidev\Fpdf\Facades\Rotation::class,
+        'Rotation'  => Ghidev\Fpdf\Facades\Rotation::class,
         'MC_Table'  => Ghidev\Fpdf\Facades\MC_Table::class,
+        'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
 
     ],
 

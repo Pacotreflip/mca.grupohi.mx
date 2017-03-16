@@ -28,8 +28,8 @@
     </div>
   <br>
 </div>
-<div class="table-responsive col-md-10 col-md-offset-1">
-  <table class="table table-hover table-bordered">
+<div class="table-responsive">
+  <table class="table table-hover table-bordered small">
       <thead>
      
       <tr>
@@ -42,6 +42,8 @@
         <th>Importe</th>
         <th>Registró</th>
         <th>Fecha/Hora Registro</th>
+          <th>Editrar</th>
+          <th>Cancelar</th>
       </tr>
     </thead>
     <tbody>
@@ -60,10 +62,24 @@
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
             <td>{{$conciliacion->usuario}}</td>
             <td>{{$conciliacion->fecha_hora_registro }}</td>
+            <td>
+                <a href="{{route('conciliaciones.edit', $conciliacion)}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+            </td>
+            <td>
+                {!! Form::open(['route' => ['conciliaciones.destroy', $conciliacion]]) !!}
+                @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+                    <button disabled class="btn btn-danger btn-xs "><span class="glyphicon glyphicon-remove"></span></button>
+                @else
+                    <button class="btn btn-danger btn-xs cancelar_conciliacion"><span class="glyphicon glyphicon-remove"></span></button>
+                @endif
+                {!! Form::close() !!}
+            </td>
         </tr>
       @endforeach
     </tbody>
   </table>
-     {!! $conciliaciones->appends(['buscar' => Request::get('buscar')])->render() !!}
+    <div class="text-center">
+        {!! $conciliaciones->appends(['buscar' => Request::get('buscar')])->render() !!}
+    </div>
 </div>
 @stop

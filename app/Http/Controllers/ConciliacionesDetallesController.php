@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Conciliacion\Conciliacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
+use App\Models\Conciliacion\Conciliaciones;
 use App\Models\Transformers\ConciliacionDetalleTransformer;
 use App\Models\Transformers\ViajeTransformer;
 use App\Models\Viaje;
@@ -12,6 +13,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Laracasts\Flash\Flash;
 
 class ConciliacionesDetallesController extends Controller
 {
@@ -58,8 +60,17 @@ class ConciliacionesDetallesController extends Controller
      */
     public function store(Request $request, $id)
     {
+        if($request->get('Tipo') == '3') {
+            $conciliacion = Conciliacion::find($id);
+
+            $output = (new Conciliaciones($conciliacion))->cargarExcel($request->file('excel'));
+
+            Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['reg'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['no_reg'] . '</li>');
+            return redirect()->back();
+        }
+
         if($request->ajax()) {
-            if($request->has('code')) {
+            if ($request->get('Tipo') == '1') {
                 $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
                 if($viaje) {
                     $detalle = ConciliacionDetalle::create([
@@ -73,9 +84,8 @@ class ConciliacionesDetallesController extends Controller
                 } else {
                     $detalles = null;
                     $i = null;
-
                 }
-            } else {
+            } else if ($request->get('Tipo') == '2') {
                 $ids = $request->get('idviaje', []);
                 $i = 0;
                 foreach ($ids as $key => $id_viaje) {
@@ -88,8 +98,8 @@ class ConciliacionesDetallesController extends Controller
                     $i++;
                 }
                 $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
-
             }
+
             return response()->json([
                 'status_code' => 201,
                 'registros'   => $i,
