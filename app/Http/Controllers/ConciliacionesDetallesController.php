@@ -2,7 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Conciliacion\Conciliacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
+use App\Models\Transformers\ConciliacionDetalleTransformer;
+use App\Models\Transformers\ViajeTransformer;
+use App\Models\Viaje;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -26,9 +30,12 @@ class ConciliacionesDetallesController extends Controller
     public function index(Request $request, $id)
     {
         if($request->ajax()) {
+
+            $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+
             return response()->json([
                 'status_code' => 200,
-                'detalles'    => ConciliacionDetalle::where('idconciliacion', '=', $id)->get()
+                'detalles'    => $detalles
             ]);
         }
     }
@@ -52,22 +59,39 @@ class ConciliacionesDetallesController extends Controller
     public function store(Request $request, $id)
     {
         if($request->ajax()) {
-            $ids = $request->get('idviaje', []);
-            $i = 0;
-            foreach ($ids as $key => $id_viaje) {
-                ConciliacionDetalle::create([
-                    'idconciliacion' => $id,
-                    'idviaje'        => $id_viaje,
-                    'timestamp'      => Carbon::now()->toDateTimeString(),
-                    'estado'         => 1
-                ]);
-                $i++;
+            if($request->has('code')) {
+                $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
+                if($viaje) {
+                    $detalle = ConciliacionDetalle::create([
+                        'idconciliacion' => $id,
+                        'idviaje'        => $viaje->IdViaje,
+                        'timestamp'      => Carbon::now()->toDateTimeString(),
+                        'estado'         => 1
+                    ]);
+                    $i = 1;
+                    $detalles = ConciliacionDetalleTransformer::transform($detalle);
+                } else {
+                    $detalles = null;
+                    $i = null;
+
+                }
+            } else {
+                $ids = $request->get('idviaje', []);
+                $i = 0;
+                foreach ($ids as $key => $id_viaje) {
+                    ConciliacionDetalle::create([
+                        'idconciliacion' => $id,
+                        'idviaje'        => $id_viaje,
+                        'timestamp'      => Carbon::now()->toDateTimeString(),
+                        'estado'         => 1
+                    ]);
+                    $i++;
+                }
+                $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+
             }
-
-            $detalles = ConciliacionDetalle::where('idconciliacion', $id)->get();
-
             return response()->json([
-                'status_code' => 200,
+                'status_code' => 201,
                 'registros'   => $i,
                 'detalles'    => $detalles
             ]);

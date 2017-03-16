@@ -36,10 +36,12 @@ class Viaje extends Model
             });
     }
 
-    public function scopeconciliados($query) {
+    public function scopeConciliados($query) {
         return $query->leftJoin('conciliacion_detalle', 'viajes.IdViaje', '=', 'conciliacion_detalle.idviaje')
-            ->whereNotNull('conciliacion_detalle.idviaje');
-    }
+            ->where(function($query){
+                $query->whereNotNull('conciliacion_detalle.idviaje')
+                    ->orWhere('conciliacion_detalle.estado', '!=', '-1');
+            });    }
 
     public function material() {
         return $this->belongsTo(Material::class, 'IdMaterial');

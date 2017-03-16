@@ -68,7 +68,7 @@ Vue.component('conciliaciones-edit', {
             e.preventDefault();
 
             swal({
-                title: "¿Desea continuar con el registro?",
+                title: "¿Desea continuar con la conciliación?",
                 text: "¿Esta seguro de que la información es correcta?",
                 type: "warning",
                 showCancelButton: true,
@@ -76,6 +76,144 @@ Vue.component('conciliaciones-edit', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, () => this.registrar() );
+        },
+
+        cancelar: function(previousStatus, e) {
+
+            e.preventDefault();
+            var url = $(e.target).attr('href');
+            swal({
+                title: "¡Cancelar Conciliación!",
+                text: "¿Esta seguro de que deseas cancelar la conciliación?",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputPlaceholder: "Motivo de la cancelación.",
+                confirmButtonText: "Si, Cancelar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("Escriba el motivo de la cancelación!");
+                    return false
+                }
+                $.ajax({
+                    url: url,
+                    type : 'POST',
+                    data : {
+                        _method : 'DELETE',
+                        motivo : inputValue,
+                        estado: previousStatus
+                    },
+                    success: function(response) {
+                        if(response.status_code = 200) {
+                            swal({
+                                type: 'success',
+                                title: '¡Hecho!',
+                                text: 'Conciliación cancelada correctamente',
+                                showCancelButton: false,
+                                confirmButtonText: 'OK',
+                                closeOnConfirm: false
+                            },
+                            function () {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        App.setErrorsOnForm(_this.form, error.responseText);
+                    }
+                });
+            });
+        },
+
+        cerrar: function(e) {
+            e.preventDefault();
+            var url = $(e.target).attr('href');
+            swal({
+                title: "¡Cerrar Conciliación!",
+                text: "¿Desea cerrar la conciliación?",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Si, Terminar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+            },
+            function(){
+                $.ajax({
+                    url: url,
+                    type : 'POST',
+                    data : {
+                        _method : 'PATCH',
+                        action : 'cerrar'
+                    },
+                    success: function(response) {
+                        if(response.status_code = 200) {
+                            swal({
+                                type: 'success',
+                                title: '¡Hecho!',
+                                text: 'Conciliación cerrada correctamente',
+                                showCancelButton: false,
+                                confirmButtonText: 'OK',
+                                closeOnConfirm: false
+                            },
+                            function () {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        App.setErrorsOnForm(_this.form, error.responseText);
+                    }
+                });
+            });
+        },
+
+        aprobar: function(e) {
+            e.preventDefault();
+            var url = $(e.target).attr('href');
+            swal({
+                title: "¡Aprobar Conciliación!",
+                text: "¿Desea aprobar la conciliación?",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Si, Aprobar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+            },
+            function(){
+                $.ajax({
+                    url: url,
+                    type : 'POST',
+                    data : {
+                        _method : 'PATCH',
+                        action : 'aprobar'
+                    },
+                    success: function(response) {
+                        if(response.status_code = 200) {
+                            swal({
+                                type: 'success',
+                                title: '¡Hecho!',
+                                text: 'Conciliación aprobada correctamente',
+                                showCancelButton: false,
+                                confirmButtonText: 'OK',
+                                closeOnConfirm: false
+                            },
+                            function () {
+                                location.reload();
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        App.setErrorsOnForm(_this.form, error.responseText);
+                    }
+                });
+            });
         },
 
         registrar: function() {
@@ -90,19 +228,19 @@ Vue.component('conciliaciones-edit', {
                 url: url,
                 type: "POST",
                 data: data,
-                success: function (data)
+                success: function (response)
                 {
                     $('#resultados').modal('hide');
                     _this.resultados = [];
 
                     swal({
                         type: 'success',
-                        title: '¡VIAJES ASIGNADOS CORRECTAMENTE!',
-                        text: data.registros + ' Viajes asignado s a la conciliación',
+                        title: '¡Viajes Conciliados Correctamente!',
+                        text: response.registros + ' Viajes conciliados',
                         showConfirmButton: true
                     });
 
-                    _this.conciliacion.detalles = data.detalles;
+                    _this.conciliacion.detalles = response.detalles;
                 },
                 error: function(error) {
                     App.setErrorsOnForm(_this.form, error.responseText);
@@ -112,6 +250,39 @@ Vue.component('conciliaciones-edit', {
 
         agregar: function(e) {
             e.preventDefault();
+
+            this.form.errors = [];
+            var _this = this;
+            var url = $('.form_buscar').attr('action');
+            var data = $('.form_buscar').serialize();
+
+            $.ajax({
+                url  : url,
+                data : data,
+                type : 'POST',
+                success: function (response) {
+                    if(response.detalles != null) {
+                        swal({
+                            type: 'success',
+                            title: '¡Viaje Conciliado Correctamente!',
+                            text: data.registros + ' Viajes conciliados',
+                            showConfirmButton: false,
+                            timer: 500
+                        });
+                        _this.conciliacion.detalles.push(response.detalles);
+                    } else {
+                        swal({
+                            type: 'warning',
+                            title: '¡Error!',
+                            text: 'No se encontró el viaje o ya se encuentra conciliado.',
+                            showConfirmButton: true
+                        });
+                    }
+                },
+                error: function (error) {
+                    App.setErrorsOnForm(_this.form, error.responseText);
+                }
+            })
         },
 
         buscar: function(e) {
@@ -124,7 +295,16 @@ Vue.component('conciliaciones-edit', {
             var data = $('.form_buscar').serialize();
             this.$http.get(App.host + '/viajes?' + data).then((response) => {
                 _this.resultados = response.body.data;
-            $('#resultados').modal('show');
+                if(_this.resultados.length) {
+                    $('#resultados').modal('show');
+                } else {
+                    swal({
+                        type: 'warning',
+                        title: '¡Sin Resultados!',
+                        text: 'Ningún viaje coincide con los datos de consulta',
+                        showConfirmButton: true
+                    });
+                }
         }, (error) => {
                 App.setErrorsOnForm(this.form, error.body);
             });

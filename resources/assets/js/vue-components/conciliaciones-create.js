@@ -18,11 +18,10 @@ Vue.component('conciliaciones-create', {
             swal({
                 title: "¿Desea continuar con el registro?",
                 text: "¿Esta seguro de que la información es correcta?",
-                type: "warning",
+                type: "info",
                 showCancelButton: true,
                 confirmButtonText: "Si",
                 cancelButtonText: "No",
-                confirmButtonColor: "#ec6c62"
             }, () => this.registrar() );
         },
 

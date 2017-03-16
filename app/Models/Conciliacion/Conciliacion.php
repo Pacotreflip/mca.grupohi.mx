@@ -7,6 +7,7 @@ use App\Models\Material;
 use App\Models\Ruta;
 use App\Models\Sindicato;
 use App\Models\Viaje;
+use App\Presenters\ModelPresenter;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
@@ -14,6 +15,7 @@ use App\User;
 
 class Conciliacion extends Model
 {
+    use \Laracasts\Presenter\PresentableTrait;
 
     protected $connection = 'sca';
     protected $table = 'conciliacion';
@@ -33,13 +35,16 @@ class Conciliacion extends Model
         'IdRegistro'
     ];
     protected $dates = ['timestamp'];
+    protected $presenter = ModelPresenter::class;
+
     public function rutas() {
         return $this->belongsToMany(Ruta::class, 'conciliacion_rutas', 'idconciliacion', 'IdRuta');
     }
 
-    public function conciliacionDetalle()
+    public function conciliacionDetalles()
     {
-        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion');
+        return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion')
+            ->where('conciliacion_detalle.estado', '!=', -1);
     }
 
     public function sindicato() {
@@ -61,7 +66,7 @@ class Conciliacion extends Model
 
     public function viajes() {
         $viajes = new Collection();
-        foreach ($this->conciliacionDetalle as $cd) {
+        foreach ($this->conciliacionDetalles as $cd) {
             $viajes->push($cd->viaje);
         }
         return $viajes;
@@ -108,15 +113,22 @@ class Conciliacion extends Model
     public function usuario(){
         return $this->belongsTo(User::class, "IdRegistro");
     }
-     public function getVolumenFAttribute(){
+
+    public function getVolumenFAttribute(){
         
         return number_format($this->volumen, 2, ".",",");
     }
+
     public function getImporteFAttribute(){
         
         return number_format($this->importe, 2, ".",",");
     }
+
     public function getFechaHoraRegistroAttribute(){
         return ucwords($this->timestamp->formatLocalized('%d %B %Y')).' ('.$this->timestamp->format("h:i:s").')';
+    }
+
+    public function cancelacion() {
+        return $this->hasOne(ConciliacionCancelacion::class, 'idconciliacion');
     }
 }

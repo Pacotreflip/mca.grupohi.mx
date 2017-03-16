@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Camion;
+use App\Models\Conciliacion\ConciliacionCancelacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
 use App\Models\Empresa;
 use App\Models\Sindicato;
@@ -95,10 +96,10 @@ class ConciliacionesController extends Controller
         $conciliacion = Conciliacion::firstOrCreate($request->all());
 
         return response()->json([
-            'message' => '¡CONCILIACIÓN REGISTRADA CORRECTAMENTE!',
+            'success' => true,
             'status_code' => 200,
             'conciliacion' => $conciliacion
-        ]);
+        ], 200);
     }
 
     /**
@@ -121,7 +122,16 @@ class ConciliacionesController extends Controller
      */
     public function update(Request $request, $id)
     {
+        if($request->ajax()) {
+            $conciliacion = Conciliacion::findOrFail($id);
+            $conciliacion->estado = $request->get('action') == 'cerrar' ? 1 : 2;
+            $conciliacion->save();
 
+            return response()->json([
+                'status_code' => 200,
+                'success' => true
+            ], 200);
+        }
     }
 
     /**
@@ -130,25 +140,28 @@ class ConciliacionesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $ruta = Ruta::findOrFail($id);
-        if($ruta->Estatus == 1) {
-            $ruta->Estatus = 0;
-            $ruta->Elimina = auth()->user()->idusuario;
-            $ruta->FechaHoraElimina = Carbon::now()->toDateTimeString();
-            $text = '¡Ruta Inhabilitada!';
-        } else {
-            $ruta->Estatus = 1;
-            $text = '¡Ruta Habilitada!';
-        }
-        $ruta->save();
-                
-        return response()->json(['text' => $text]);
-    }
+        $conciliacion = Conciliacion::findOrFail($id);
+        $conciliacion->estado = $request->get('estado') == 0 ? -1 : -2;
+        $conciliacion->save();
 
-    public function search(Request $request) {
-        dd($request);
+        ConciliacionCancelacion::create([
+            'idconciliacion' => $id,
+            'motivo' => $request->get('motivo'),
+            'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
+            'idcancelo' => auth()->user()->idusuario
+        ]);
+
+        foreach ($conciliacion->conciliacionDetalles as $detalle) {
+            $detalle->estado = -1;
+            $detalle->save();
+        }
+
+        return response()->json([
+            'success' => true,
+            'status_code' => 200
+        ], 200);
     }
 
     public function show() {

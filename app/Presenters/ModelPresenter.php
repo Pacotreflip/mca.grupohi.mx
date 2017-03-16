@@ -40,4 +40,23 @@ class ModelPresenter extends Presenter
     public function claveTiro() {
         return $this->entity->Clave . $this->entity->IdTiro;
     }
+
+    public function conciliacionEstado() {
+        switch ($this->entity->estado) {
+            case 0 :
+                return "CREADA";
+                break;
+            case 1:
+                return "CERRADA";
+                break;
+            case 2:
+                return "APROBADA";
+                break;
+            case -1:
+                return "CANCELADA";
+                break;
+            case -2:
+                return "CANCELADA";
+        }
+    }
 }
