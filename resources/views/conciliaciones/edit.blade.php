@@ -19,7 +19,7 @@
             </h1>
             {!! Breadcrumbs::render('conciliaciones.edit', $conciliacion) !!}
 
-             @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+            @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
                 <section id="cancelada">
                     <hr>
                     <div class="row">

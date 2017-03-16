@@ -17,7 +17,7 @@ class PDFConciliacion extends Rotation
     /**
      * @var Conciliacion
      */
-    protected  $conciliacion;
+    protected $conciliacion;
 
     /**
      * @var Array
@@ -92,7 +92,7 @@ class PDFConciliacion extends Rotation
         $this->Ln(0.25);
 
 
-        $this->SetFont('Arial', 'B', $this->txtSeccionTam);
+        /*$this->SetFont('Arial', 'B', $this->txtSeccionTam);
         $this->Cell(0.55 * $this->WidthTotal, 0.7, utf8_decode('Rutas'), 0, 1, 'L');
 
         //Obtener Posiciones despues de title de rutas.
@@ -124,12 +124,13 @@ class PDFConciliacion extends Rotation
         $this->setY($y_inicial);
         $this->setX($x_inicial);
         $this->rutas();
+       */
 
         //Obtener Y despues de rutas
         $this->setY($y_final);
         $this->Ln(0.5);
 
-        if($this->encola != '') {
+        if ($this->encola != '') {
 
             $this->SetWidths(array($this->WidthTotal));
             $this->SetFont('Arial', '', 6);
@@ -156,12 +157,12 @@ class PDFConciliacion extends Rotation
             $this->SetRounds(array('', '', '', '', '', '', '', '', '', ''));
             $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
 
-            if ($this->encola == 'items'){
+            if ($this->encola == 'items') {
                 $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
                 $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
                 $this->SetHeights(array(0.35));
                 $this->SetAligns(array('L', 'L', 'L', 'L', 'C', 'R', 'R', 'R', 'R', 'R'));
-            } else if($this->encola == 'subtotal_camion') {
+            } else if ($this->encola == 'subtotal_camion') {
                 $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
                 $this->SetFills(array('221,221,221', '221,221,221', '221,221,221', '221,221,221', '221,221,221'));
                 $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
@@ -172,10 +173,10 @@ class PDFConciliacion extends Rotation
                 $this->SetFont('Arial', '', 6.5);
                 $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
                 $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-                $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0' ,'0,0,0'));
+                $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
                 $this->SetHeights(array(0.6));
                 $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
-            } else if($this->encola = 'total') {
+            } else if ($this->encola = 'total') {
                 $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
                 $this->SetFont('Arial', '', 6.5);
                 $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
@@ -185,17 +186,20 @@ class PDFConciliacion extends Rotation
                 $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
                 $this->SetRounds(array('', '', '', '', ''));
                 $this->SetRadius(array(0, 0, 0, 0, 0));
+
             }
         }
     }
 
 
-    private function title() {
+    private function title()
+    {
         $this->SetFont('Arial', 'B', $this->txtTitleTam - 3);
-        $this->CellFitScale(0.6 * $this->WidthTotal, 1.5, utf8_decode('REPORTE DE CONCILIACIÓN'), 0, 1, 'L', 0);
+        $this->CellFitScale(0.6 * $this->WidthTotal, 1.5, utf8_decode('CONCILIACIÓN #' . $this->conciliacion->idconciliacion), 0, 1, 'L', 0);
 
-        $this->SetFont('Arial', '', $this->txtSubtitleTam -1);
-        $this->CellFitScale(0.6 * $this->WidthTotal, 0.35, utf8_decode('Conciliación #'.$this->conciliacion->idconciliacion), 0, 1, 'L', 0);
+        /*$this->SetFont('Arial', '', $this->txtSubtitleTam - 1);
+        $this->CellFitScale(0.6 * $this->WidthTotal, 0.35, utf8_decode('Conciliación #' . $this->conciliacion->idconciliacion), 0, 1, 'L', 0);
+        */
         $this->Line(1, $this->GetY() + 0.2, $this->WidthTotal + 1, $this->GetY() + 0.2);
         $this->Ln(0.5);
 
@@ -204,11 +208,12 @@ class PDFConciliacion extends Rotation
         $this->Cell(0.55 * $this->WidthTotal, 0.7, utf8_decode('Detalles de la Conciliación'), 0, 1, 'L');
     }
 
-    private function logo() {
+    private function logo()
+    {
 
-        if(Proyecto::find(Context::getId())->tiene_logo == 2) {
-            $dataURI    = "data:image/jpg;base64,".Proyecto::find(Context::getId())->logo;
-            $dataPieces = explode(',',$dataURI);
+        if (Proyecto::find(Context::getId())->tiene_logo == 2) {
+            $dataURI = "data:image/jpg;base64," . Proyecto::find(Context::getId())->logo;
+            $dataPieces = explode(',', $dataURI);
             $encodedImg = $dataPieces[1];
             $decodedImg = base64_decode($encodedImg);
 
@@ -228,7 +233,8 @@ class PDFConciliacion extends Rotation
         }
     }
 
-    private function details() {
+    private function details()
+    {
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PROYECTO:'), '', 0, 'L');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
@@ -252,14 +258,14 @@ class PDFConciliacion extends Rotation
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PERIODO:'), '', 0, 'LB');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->fecha_inicial).' al '.$this->conciliacion->fecha_final, '', 1, 'L');
+        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->fecha_inicial) . ' al ' . $this->conciliacion->fecha_final, '', 1, 'L');
     }
 
     private function rutas()
     {
         $rutas = '';
         foreach ($this->conciliacion->rutas as $key => $ruta) {
-            $rutas .= $ruta->present()->descripcionRuta.($key == $this->conciliacion->rutas->count() -1 ? '' : '   //   ');
+            $rutas .= $ruta->present()->descripcionRuta . ($key == $this->conciliacion->rutas->count() - 1 ? '' : '   //   ');
 
         }
 
@@ -267,7 +273,8 @@ class PDFConciliacion extends Rotation
         $this->MultiCell($this->WidthTotal, 0.5, utf8_decode($rutas), '', 1, '');
     }
 
-    function items() {
+    function items()
+    {
 
         foreach ($this->conciliacion->materiales() as $material) {
 
@@ -321,9 +328,9 @@ class PDFConciliacion extends Rotation
 				sum(v.ImporteKMAdicionales) as ImpAdc,
 				sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje)
 			WHERE 
-				c.idconciliacion='.$this->conciliacion->idconciliacion.'
-                AND v.IdCamion='.$camion->IdCamion.'
-                AND v.idMaterial='.$material->IdMaterial.'	
+				c.idconciliacion=' . $this->conciliacion->idconciliacion . '
+                AND v.IdCamion=' . $camion->IdCamion . '
+                AND v.idMaterial=' . $material->IdMaterial . '	
 			GROUP BY 
 				v.FechaLlegada, 
 				v.CubicacionCamion,
@@ -342,8 +349,8 @@ class PDFConciliacion extends Rotation
 
                     $this->SetWidths(array(0.125 * $this->WidthTotal, 0.1 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
                     //for($cont = 0; $cont < 8; $cont++){
-                        $this->encola = "items";
-                        $this->Row(array($key == 0 ? $camion->Economico : '', $row->FechaLlegada, Origen::find($row->IdOrigen)->Descripcion, Tiro::find($row->IdTiro)->Descripcion, '1', $row->CubicacionCamion, $row->NumViajes, $row->Distancia, number_format(($row->Vol1KM + $row->VolSub + $row->VolAdic), 2, '.', ','), number_format(utf8_decode($row->Importe), 2, '.', ',')));
+                    $this->encola = "items";
+                    $this->Row(array($key == 0 ? $camion->Economico : '', $row->FechaLlegada, Origen::find($row->IdOrigen)->Descripcion, Tiro::find($row->IdTiro)->Descripcion, '1', $row->CubicacionCamion, $row->NumViajes, $row->Distancia, number_format(($row->Vol1KM + $row->VolSub + $row->VolAdic), 2, '.', ','), number_format(utf8_decode($row->Importe), 2, '.', ',')));
                     //}
                     $i++;
                 }
@@ -365,18 +372,19 @@ class PDFConciliacion extends Rotation
 						sum(v.Importe) as Importe 
 					FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) 
 					WHERE 
-						c.idconciliacion='.$this->conciliacion->idconciliacion.' 
-						and v.IdCamion='.$camion->IdCamion.' 
-						and v.IdMaterial='.$material->IdMaterial.'
+						c.idconciliacion=' . $this->conciliacion->idconciliacion . ' 
+						and v.IdCamion=' . $camion->IdCamion . ' 
+						and v.IdMaterial=' . $material->IdMaterial . '
 						GROUP BY v.IdCamion;'));
 
-                if( $subtotal_camion ) {
+                if ($subtotal_camion) {
                     $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
                     $this->SetFills(array('221,221,221', '221,221,221', '221,221,221', '221,221,221', '221,221,221'));
                     $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
                     $this->SetHeights(array(0.35));
-                    $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));                    $this->encola = "subtotal_camion";
-                    $this->Row(array(utf8_decode('SUBTOTAL CAMIÓN'),$subtotal_camion[0]->NumViajes, '', number_format(($subtotal_camion[0]->Vol1KM + $subtotal_camion[0]->VolSub + $subtotal_camion[0]->VolAdic), 2, '.', ','), number_format(utf8_decode($subtotal_camion[0]->Importe), 2, '.', ',')));
+                    $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
+                    $this->encola = "subtotal_camion";
+                    $this->Row(array(utf8_decode('SUBTOTAL CAMIÓN'), $subtotal_camion[0]->NumViajes, '', number_format(($subtotal_camion[0]->Vol1KM + $subtotal_camion[0]->VolSub + $subtotal_camion[0]->VolAdic), 2, '.', ','), number_format(utf8_decode($subtotal_camion[0]->Importe), 2, '.', ',')));
                 }
             }
 
@@ -399,8 +407,8 @@ class PDFConciliacion extends Rotation
 						FROM 
 							conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) 
 						WHERE 
-							c.idconciliacion='.$this->conciliacion->idconciliacion.'
-                        AND v.IdMaterial='.$material->IdMaterial.'
+							c.idconciliacion=' . $this->conciliacion->idconciliacion . '
+                        AND v.IdMaterial=' . $material->IdMaterial . '
 								
 						GROUP BY 
 							c.idconciliacion,
@@ -410,18 +418,18 @@ class PDFConciliacion extends Rotation
             $this->SetFont('Arial', '', 6.5);
             $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
             $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0' ,'0,0,0'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.6));
             $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
             $this->SetRounds(array('4', '', '', '', '3'));
             $this->SetRadius(array(0.2, 0, 0, 0, 0.2));
             $this->encola = 'subtotal_material';
-            $this->Row(array('SUBTOTAL MATERIAL : ' . utf8_decode($this->material->material), $subtotal_material->NumViajes, '', number_format(($subtotal_material->Vol1KM + $subtotal_material->VolSub + $subtotal_material->VolAdic), 2, '.', ','),number_format(utf8_decode($subtotal_material->Importe), 2, '.', ',')));
+            $this->Row(array('SUBTOTAL MATERIAL : ' . utf8_decode($this->material->material), $subtotal_material->NumViajes, '', number_format(($subtotal_material->Vol1KM + $subtotal_material->VolSub + $subtotal_material->VolAdic), 2, '.', ','), number_format(utf8_decode($subtotal_material->Importe), 2, '.', ',')));
             $this->ln(0.25);
         }
 
         //Total
-        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.idconciliacion='.$this->conciliacion->idconciliacion.' GROUP BY c.idconciliacion;'))[0];
+        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
         $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
         $this->SetFont('Arial', '', 6.5);
         $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
@@ -432,11 +440,12 @@ class PDFConciliacion extends Rotation
         $this->SetRounds(array('', '', '', '', ''));
         $this->SetRadius(array(0, 0, 0, 0, 0));
         $this->encola = 'total';
-        $this->Row(array('TOTAL', $total->NumViajes, '', number_format(($total->Vol1KM + $total->VolSub + $total->VolAdic), 2, '.', ','),number_format(utf8_decode($total->Importe), 2, '.', ',')));
+        $this->Row(array('TOTAL', $total->NumViajes, '', number_format(($total->Vol1KM + $total->VolSub + $total->VolAdic), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
 
     }
 
-    function Footer() {
+    function Footer()
+    {
         $this->SetY($this->GetPageHeight() - 1);
         $this->SetFont('Arial', '', $this->txtFooterTam);
         $this->SetTextColor('0', '0', '0');
@@ -447,6 +456,28 @@ class PDFConciliacion extends Rotation
         $this->SetY($this->GetPageHeight() - 1.3);
         $this->SetFont('Arial', 'B', $this->txtFooterTam);
         $this->Cell(6.5, .4, utf8_decode('Formato generado desde el módulo de Control de Acarreos.'), 0, 0, 'L');
+
+        if($this->conciliacion->estado == -1 || $this->conciliacion->estado == -2){
+            $this->SetFont('Arial','',80);
+            $this->SetTextColor(204,204,204);
+            $this->RotatedText(2,20,utf8_decode("CONCILIACIÓN"),45);
+            $this->RotatedText(7,20,"CANCELADA",45);
+            $this->SetTextColor('0,0,0');
+        } else if($this->conciliacion->estado == 0 || $this->conciliacion->estado == 1) {
+            $this->SetFont('Arial','',80);
+            $this->SetTextColor(204,204,204);
+            $this->RotatedText(2,20,utf8_decode("PENDIENTE DE"),45);
+            $this->RotatedText(7,20,utf8_decode("APROBACIÓN"),45);
+            $this->SetTextColor('0,0,0');
+        }
+
+    }
+
+    function RotatedText($x,$y,$txt,$angle)
+    {
+        $this->Rotate($angle,$x,$y);
+        $this->Text($x,$y,$txt);
+        $this->Rotate(0);
     }
 
     function create() {
