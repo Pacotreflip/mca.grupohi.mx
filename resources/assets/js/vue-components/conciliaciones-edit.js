@@ -139,7 +139,7 @@ Vue.component('conciliaciones-edit', {
                 type: "info",
                 showCancelButton: true,
                 closeOnConfirm: false,
-                confirmButtonText: "Si, Terminar",
+                confirmButtonText: "Si, Cerrar",
                 cancelButtonText: "No",
                 showLoaderOnConfirm: true
             },
