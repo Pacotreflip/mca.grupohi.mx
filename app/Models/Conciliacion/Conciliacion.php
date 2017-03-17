@@ -178,4 +178,16 @@ class Conciliacion extends Model
         $this->estado = 2;
         $this->save();
     }
+    public function getEstadoStrAttribute(){
+        if($this->estado == 0){
+            return 'Generada';
+        }else if($this->estado == 1){
+            return 'Cerrada';
+        }
+        else if($this->estado == 2){
+            return 'Aprobada';
+        }else if($this->estado < 0){
+            return 'Cancelada';
+        }
+    }
 }

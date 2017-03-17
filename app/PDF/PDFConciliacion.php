@@ -210,27 +210,27 @@ class PDFConciliacion extends Rotation
 
     private function logo()
     {
-
-        if (Proyecto::find(Context::getId())->tiene_logo == 2) {
-            $dataURI = "data:image/jpg;base64," . Proyecto::find(Context::getId())->logo;
-            $dataPieces = explode(',', $dataURI);
-            $encodedImg = $dataPieces[1];
-            $decodedImg = base64_decode($encodedImg);
-
-
-            //  Check if image was properly decoded
-            if ($decodedImg !== false) {
-                //  Save image to a temporary location
-                if (file_put_contents(public_path('img/logo_temp.jpg'), $decodedImg) !== false) {
-                    //  Open new PDF document and print image
-                    $this->image(public_path('img/logo_temp.jpg'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
-                    //  Delete image from server
-                    unlink(public_path('img/logo_temp.jpg'));
-                }
-            }
-        } else {
-            $this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
-        }
+$this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+//        if (Proyecto::find(Context::getId())->tiene_logo == 2) {
+//            $dataURI = "data:image/png;base64," . Proyecto::find(Context::getId())->logo;
+//            $dataPieces = explode(',', $dataURI);
+//            $encodedImg = $dataPieces[1];
+//            $decodedImg = base64_decode($encodedImg);
+//
+//
+//            //  Check if image was properly decoded
+//            if ($decodedImg !== false) {
+//                //  Save image to a temporary location
+//                if (file_put_contents(public_path('img/logo_temp.jpg'), $decodedImg) !== false) {
+//                    //  Open new PDF document and print image
+//                    $this->image(public_path('img/logo_temp.jpg'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+//                    //  Delete image from server
+//                    unlink(public_path('img/logo_temp.jpg'));
+//                }
+//            }
+//        } else {
+//            $this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+//        }
     }
 
     private function details()
