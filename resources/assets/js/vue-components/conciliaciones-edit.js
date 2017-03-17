@@ -287,14 +287,12 @@ Vue.component('conciliaciones-edit', {
         agregar: function(e) {
             e.preventDefault();
 
-            $('.ticket').val('');
-            $('.ticket').focus();
-
             this.form.errors = [];
             var _this = this;
             var url = $('.form_buscar').attr('action');
             var data = $('.form_buscar').serialize();
             this.guardando = true;
+
 
             $.ajax({
                 url  : url,
@@ -312,6 +310,9 @@ Vue.component('conciliaciones-edit', {
                             timer: 500
                         });
 
+                        $('.ticket').val('');
+                        $('.ticket').focus();
+
                     } else {
                         _this.guardando = false;
                         swal({
@@ -321,10 +322,15 @@ Vue.component('conciliaciones-edit', {
                             showConfirmButton: true,
                             timer: 1000
                         });
+
+                        $('.ticket').val('');
+                        $('.ticket').focus();
                     }
                 },
                 error: function (error) {
-                    _this.guardando = false;
+                    _this.guardando = false
+                    $('.ticket').val('');
+                    $('.ticket').focus();
                     App.setErrorsOnForm(_this.form, error.responseText);
                 }
             })

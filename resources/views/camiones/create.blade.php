@@ -7,7 +7,7 @@
 @include('partials.errors')
 
 {!! Form::open(['route' => 'camiones.store', 'files' => true, 'id' => 'create_camion']) !!}
-<div class="form-horizontal col-md-10 col-md-offset-1 rcorners">
+<div class="form-horizontal rcorners">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Básica</legend>
         <div class="form-group">
@@ -60,7 +60,7 @@
         </div>
     </fieldset>
 </div>
-<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px"> 
+<div class="form-horizontal rcorners" style="margin-top: 20px">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-info-circle"></i> Información Fotográfica</legend>
         <div class="form-group">
@@ -85,7 +85,7 @@
         </div>
     </fieldset>
 </div>
-<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px">
+<div class="form-horizontal rcorners" style="margin-top: 20px">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-lock"></i> Información de Seguro</legend>
         <div class="form-group">
@@ -104,7 +104,7 @@
         </div>
     </fieldset>
 </div>
-<div class="form-horizontal col-md-10 col-md-offset-1 rcorners" style="margin-top: 20px">
+<div class="form-horizontal rcorners" style="margin-top: 20px">
     <fieldset>
         <legend class="scheduler-border"><i class="fa fa-arrows"></i> Información de Cubicación</legend>
         <div class="form-group">
