@@ -93,7 +93,7 @@ class ConciliacionesController extends Controller
         $request->request->add(['estado' => 0]);
         $request->request->add(['IdRegistro' => auth()->user()->idusuario]);
 
-        $conciliacion = Conciliacion::firstOrCreate($request->all());
+        $conciliacion = Conciliacion::where('estado', 0)->firstOrCreate($request->all());
 
         return response()->json([
             'success' => true,
