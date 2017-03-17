@@ -34,17 +34,18 @@
      
       <tr>
         <th style="width: 20px">#</th>
-        <th>Folio</th>
-        <th>Sindicato</th>
-        <th>Empresa</th>
-        <th>Número de Viajes</th>
-        <th>Vólumen</th>
-        <th>Importe</th>
-        <th>Registró</th>
-        <th>Fecha/Hora Registro</th>
-          <th>Editrar</th>
-          <th>Cancelar</th>
-          <th>PDF</th>
+        <th style="text-align: center">Folio</th>
+        <th style="text-align: center">Sindicato</th>
+        <th style="text-align: center">Empresa</th>
+        <th style="text-align: center">Número de Viajes</th>
+        <th style="text-align: center">Vólumen</th>
+        <th style="text-align: center">Importe</th>
+        <th style="text-align: center">Registró</th>
+        <th style="text-align: center">Estado</th>
+        <th style="text-align: center">Fecha/Hora Registro</th>
+          <th style="text-align: center">Editar</th>
+          <th style="text-align: center">Cancelar</th>
+          <th style="text-align: center">PDF</th>
       </tr>
     </thead>
     <tbody>
@@ -62,6 +63,7 @@
             <td style="text-align: right">{{$conciliacion->volumen_f}}</td>
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
             <td>{{$conciliacion->usuario}}</td>
+            <td>{{$conciliacion->estado_str}}</td>
             <td>{{$conciliacion->fecha_hora_registro }}</td>
             <td>
                 <a href="{{route('conciliaciones.edit', $conciliacion)}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>

@@ -1,0 +1,1 @@
+[16-Mar-2017 20:15:22 America/Mexico_City] PHP Fatal error:  Class 'PHPExcel_Shared_Font' not found in C:\httpd\www\php56.loc\mca.grupohi.mx\config\excel.php on line 182
