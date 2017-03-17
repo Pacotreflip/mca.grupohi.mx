@@ -12,6 +12,8 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\User;
+use PhpParser\Node\Stmt\Throw_;
+use PhpSpec\Wrapper\Subject\Expectation\ThrowExpectation;
 
 class Conciliacion extends Model
 {
@@ -129,5 +131,51 @@ class Conciliacion extends Model
 
     public function cancelacion() {
         return $this->hasOne(ConciliacionCancelacion::class, 'idconciliacion');
+    }
+
+    public function cerrar() {
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            $this->estado = 1;
+            $this->save();
+
+            foreach ($this->viajes() as $v) {
+                $viaje = Viaje::find($v->IdViaje);
+                if ($viaje->IdSindicato != $this->idsindicato) {
+                    $sindicato_anterior = $viaje->IdSindicato;
+                    $viaje->IdSindicato = $this->idsindicato;
+                    $viaje->save();
+
+                    DB::connection('sca')->table('cambio_sindicato')->insertGetId([
+                        'IdViaje'             => $viaje->IdViaje,
+                        'IdSindicatoAnterior' => $sindicato_anterior,
+                        'IdSindicatoNuevo'    => $this->idsindicato,
+                        'Registro'            => auth()->user()->idusuario
+                    ]);
+                }
+                if ($viaje->IdEmpresa != $this->idempresa) {
+                    $empresa_anterior = $viaje->IdEmpresa;
+                    $viaje->IdEmpresa = $this->idempresa;
+                    $viaje->save();
+
+                    DB::connection('sca')->table('cambio_empresa')->insertGetId([
+                        'IdViaje'           => $viaje->IdViaje,
+                        'IdEmpresaAnterior' => $empresa_anterior,
+                        'IdEmpresaNuevo'    => $this->idempresa,
+                        'Registro'          => auth()->user()->idusuario
+                    ]);
+                }
+            }
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            DB::connection('sca')->rollback();
+        }
+    }
+
+    public function aprobar() {
+        $this->estado = 2;
+        $this->save();
     }
 }

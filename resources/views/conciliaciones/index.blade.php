@@ -44,6 +44,7 @@
         <th>Fecha/Hora Registro</th>
           <th>Editrar</th>
           <th>Cancelar</th>
+          <th>PDF</th>
       </tr>
     </thead>
     <tbody>
@@ -73,6 +74,13 @@
                     <button class="btn btn-danger btn-xs cancelar_conciliacion"><span class="glyphicon glyphicon-remove"></span></button>
                 @endif
                 {!! Form::close() !!}
+            </td>
+            <td>
+                @if(count($conciliacion->viajes()))
+                    <a href="{{ route('pfd.conciliacion', $conciliacion) }}" class="btn btn-default btn-xs"><i class="fa fa-file-pdf-o"></i></a>
+                @else
+                    <a class="btn btn-default btn-xs" disabled><i class="fa fa-file-pdf-o"></i></a>
+                @endif
             </td>
         </tr>
       @endforeach

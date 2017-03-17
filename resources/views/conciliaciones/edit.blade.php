@@ -61,7 +61,7 @@
                                     <input class="form-control ticket" type="text" name="code" placeholder="Código del Viaje">
                                     <span class="input-group-btn" style="padding-top: 25px">
                                         <button class="btn btn-primary" type="submit" @click="agregar">
-                                        <span v-show="guardando"><i class="fa fa-spinner fa-spin"></i></span>
+                                        <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
                                         <span v-else>Agregar</span>
                                         </button>
                                     </span>
@@ -102,7 +102,7 @@
                         </div>
                         <div class="form-group">
                             <button class="btn btn-primary" type="submit" @click="buscar">
-                            <span v-show="guardando"><i class="fa fa-spinner fa-spin"></i></span>
+                            <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
                             <span v-else>Buscar</span>
                             </button>
                         </div>

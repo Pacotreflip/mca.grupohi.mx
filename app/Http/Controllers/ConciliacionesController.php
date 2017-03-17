@@ -124,8 +124,12 @@ class ConciliacionesController extends Controller
     {
         if($request->ajax()) {
             $conciliacion = Conciliacion::findOrFail($id);
-            $conciliacion->estado = $request->get('action') == 'cerrar' ? 1 : 2;
-            $conciliacion->save();
+
+            if($request->get('action') == 'cerrar') {
+                $conciliacion->cerrar();
+            } else if ($request->get('action') == 'aprobar') {
+                $conciliacion->aprobar();
+            }
 
             return response()->json([
                 'status_code' => 200,

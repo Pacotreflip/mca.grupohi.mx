@@ -33830,6 +33830,8 @@ Vue.component('conciliaciones-edit', {
 
         cerrar: function cerrar(e) {
             e.preventDefault();
+
+            var _this = this;
             var url = $(e.target).attr('href');
 
             if (!this.conciliacion.detalles.length) {
@@ -33935,6 +33937,7 @@ Vue.component('conciliaciones-edit', {
                 type: "POST",
                 data: data,
                 success: function success(response) {
+                    _this.guardando = false;
                     $('#resultados').modal('hide');
                     _this.resultados = [];
 
@@ -33948,6 +33951,7 @@ Vue.component('conciliaciones-edit', {
                     _this.conciliacion.detalles = response.detalles;
                 },
                 error: function error(_error4) {
+                    _this.guardando = true;
                     App.setErrorsOnForm(_this.form, _error4.responseText);
                 }
             });
@@ -34011,8 +34015,10 @@ Vue.component('conciliaciones-edit', {
             this.$http.get(App.host + '/viajes?' + data).then(function (response) {
                 _this.resultados = response.body.data;
                 if (_this.resultados.length) {
+                    _this.guardando = false;
                     $('#resultados').modal('show');
                 } else {
+                    _this.guardando = false;
                     swal({
                         type: 'warning',
                         title: '¡Sin Resultados!',
@@ -34021,9 +34027,9 @@ Vue.component('conciliaciones-edit', {
                     });
                 }
             }, function (error) {
+                _this.guardando = false;
                 App.setErrorsOnForm(_this3.form, error.body);
             });
-            this.guardando = false;
         },
 
         cambiar_cubicacion: function cambiar_cubicacion(detalle) {
