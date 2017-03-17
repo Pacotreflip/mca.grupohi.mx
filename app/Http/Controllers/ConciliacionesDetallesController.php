@@ -77,7 +77,7 @@ class ConciliacionesDetallesController extends Controller
                     if ($viaje->disponible()) {
                         $detalle = ConciliacionDetalle::create([
                             'idconciliacion' => $id,
-                            'idviaje' => $viaje[0]->IdViaje,
+                            'idviaje' => $viaje->IdViaje,
                             'timestamp' => Carbon::now()->toDateTimeString(),
                             'estado' => 1
                         ]);

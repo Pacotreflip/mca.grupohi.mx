@@ -59,4 +59,30 @@ class Viaje extends Model
 
         return $result;
     }
+
+    public function cambiarCubicacion($cubicacion) {
+
+        DB::connection('sca')->beginTransaction();
+        try {
+
+            DB::connection('sca')->table('cambio_cubicacion')->insertGetId([
+                'IdViaje'      => $this->IdViaje,
+                'VolumenViejo' => $this->CubicacionCamion,
+                'VolumenNuevo' => $cubicacion
+            ]);
+
+            $this->CubicacionCamion = $cubicacion;
+            $this->save();
+
+            DB::connection("sca")->statement("call calcular_Volumen_Importe(".$this->IdViajeNeto.");");
+            DB::connection('sca')->commit();
+
+            return true;
+
+        } catch (\Exception $e) {
+            echo $e->getMessage();
+            DB::connection('sca')->rollback();
+        }
+
+    }
 }

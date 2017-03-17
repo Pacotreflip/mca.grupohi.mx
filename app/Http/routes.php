@@ -101,3 +101,4 @@ Route::post('conciliacion/{conciliacion}/detalles', 'ConciliacionesDetallesContr
 Route::get('conciliacion/{conciliacion}/detalles', 'ConciliacionesDetallesController@index')->name('conciliaciones.detalles.index');
 
 Route::get('viajes', 'ViajesController@index');
+Route::patch('viajes/{viaje}', 'ViajesController@update');

@@ -58,9 +58,12 @@
                             <div class="col-md-6">
                                 <div class="input-group">
                                     <label>CÓDIGO DEL VIAJE</label>
-                                    <input class="form-control" type="text" name="code" placeholder="Código del Viaje">
+                                    <input class="form-control ticket" type="text" name="code" placeholder="Código del Viaje">
                                     <span class="input-group-btn" style="padding-top: 25px">
-                                        <button class="btn btn-primary" type="submit" @click="agregar">Agregar</button>
+                                        <button class="btn btn-primary" type="submit" @click="agregar">
+                                        <span v-show="guardando"><i class="fa fa-spinner fa-spin"></i></span>
+                                        <span v-else>Agregar</span>
+                                        </button>
                                     </span>
                                 </div>
                             </div>
@@ -98,7 +101,10 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <input class="btn btn-primary" type="submit" value="Buscar" @click="buscar">
+                            <button class="btn btn-primary" type="submit" @click="buscar">
+                            <span v-show="guardando"><i class="fa fa-spinner fa-spin"></i></span>
+                            <span v-else>Buscar</span>
+                            </button>
                         </div>
                     </span>
                     {!! Form::close() !!}
@@ -126,9 +132,15 @@
                             <tr v-for="detalle in conciliacion.detalles">
                                 <td>@{{ detalle.timestamp_llegada }}</td>
                                 <td>@{{ detalle.camion }}</td>
-                                <td>@{{ detalle.cubicacion_camion }}</td>
+                                <td style="text-align: right">
+                                    @if($conciliacion->estado == 0)
+                                        <a href="#" @click="cambiar_cubicacion(detalle)">@{{ detalle.cubicacion_camion }}</a>
+                                    @else
+                                        @{{ detalle.cubicacion_camion }}
+                                    @endif
+                                </td>
                                 <td>@{{ detalle.material }}</td>
-                                <td>@{{ detalle.importe }}</td>
+                                <td style="text-align: right">@{{ detalle.importe }}</td>
                                 <td>@{{ detalle.code }}</td>
                             </tr>
                             </tbody>

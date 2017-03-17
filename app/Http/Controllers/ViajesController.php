@@ -6,9 +6,6 @@ use App\Models\Transformers\ViajeTransformer;
 use App\Models\Viaje;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Illuminate\Support\Collection;
 
 class ViajesController extends Controller
 {
@@ -34,16 +31,13 @@ class ViajesController extends Controller
         ]);
         $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
 
-        $viajes_collection = new Collection();
 
-        foreach ($viajes as $viaje) {
-            if ($viaje->disponible()){
-                $viajes_collection->push($viaje);
-            }
+        $filter = $viajes->filter(function ($viaje){
+            return $viaje->disponible();
+        });
 
-        }
 
-        $data =ViajeTransformer::transform($viajes_collection);
+        $data = ViajeTransformer::transform($filter);
 
         return response()->json([
             'status_code' => 200,
@@ -103,7 +97,18 @@ class ViajesController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        if($request->ajax()) {
+            if ($request->get('tipo') == 'cubicacion') {
+                $viaje = Viaje::find($id);
+                $succes = $viaje->cambiarCubicacion($request->get('cubicacion'));
+
+                return response() ->json([
+                    'status_code' => 200,
+                    'succes'      => $succes,
+                    'viaje'       => ViajeTransformer::transform(Viaje::find($id))
+                ]);
+            }
+        }
     }
 
     /**

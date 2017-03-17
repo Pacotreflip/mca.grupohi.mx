@@ -29,6 +29,7 @@ Vue.component('conciliaciones-edit', {
             'form' : {
                 'errors' : []
             },
+            'guardando'  : false
         }
     },
 
@@ -282,10 +283,14 @@ Vue.component('conciliaciones-edit', {
         agregar: function(e) {
             e.preventDefault();
 
+            $('.ticket').val('');
+            $('.ticket').focus();
+
             this.form.errors = [];
             var _this = this;
             var url = $('.form_buscar').attr('action');
             var data = $('.form_buscar').serialize();
+            this.guardando = true;
 
             $.ajax({
                 url  : url,
@@ -293,6 +298,8 @@ Vue.component('conciliaciones-edit', {
                 type : 'POST',
                 success: function (response) {
                     if(response.detalles != null) {
+                        _this.conciliacion.detalles.push(response.detalles);
+                        _this.guardando = false;
                         swal({
                             type: 'success',
                             title: '¡Viaje Conciliado Correctamente!',
@@ -300,17 +307,20 @@ Vue.component('conciliaciones-edit', {
                             showConfirmButton: false,
                             timer: 500
                         });
-                        _this.conciliacion.detalles.push(response.detalles);
+
                     } else {
+                        _this.guardando = false;
                         swal({
                             type: 'warning',
                             title: '¡Error!',
                             text: 'No se encontró el viaje o ya se encuentra conciliado.',
-                            showConfirmButton: true
+                            showConfirmButton: true,
+                            timer: 1000
                         });
                     }
                 },
                 error: function (error) {
+                    _this.guardando = false;
                     App.setErrorsOnForm(_this.form, error.responseText);
                 }
             })
@@ -321,7 +331,7 @@ Vue.component('conciliaciones-edit', {
 
             var _this = this;
             this.form.errors = [];
-            this.cargando = true;
+            this.guardando = true;
 
             var data = $('.form_buscar').serialize();
             this.$http.get(App.host + '/viajes?' + data).then((response) => {
@@ -336,10 +346,63 @@ Vue.component('conciliaciones-edit', {
                         showConfirmButton: true
                     });
                 }
-        }, (error) => {
+            }, (error) => {
                 App.setErrorsOnForm(this.form, error.body);
             });
-            this.cargando = false;
+            this.guardando = false;
+        },
+
+        cambiar_cubicacion: function (detalle) {
+
+            var _this = this;
+            swal({
+                title: "¡Cambiar Cubicación!",
+                text: "Cubicación Actual : " + detalle.cubicacion_camion,
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputPlaceholder: "Nueva Cubicación.",
+                confirmButtonText: "Si, Cambiar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("¡Escriba la nueva Cubicación!");
+                    return false
+                }
+                $.ajax({
+                    url: App.host + '/viajes/' + detalle.id ,
+                    type : 'POST',
+                    data : {
+                        _method : 'PATCH',
+                        cubicacion : inputValue,
+                        tipo : 'cubicacion'
+                    },
+                    success: function(response) {
+                        if(response.status_code = 200) {
+                            swal({
+                                type: 'success',
+                                title: '¡Hecho!',
+                                text: 'Cubicacion cambiada correctamente',
+                                showCancelButton: false,
+                                confirmButtonText: '' +
+                                'OK',
+                                closeOnConfirm: true
+                            },
+                            function () {
+                                detalle.cubicacion_camion = response.viaje.cubicacion_camion;
+                                detalle.importe = response.viaje.importe;
+
+                            });
+                        }
+                    },
+                    error: function (error) {
+                        App.setErrorsOnForm(_this.form, error.responseText);
+                    }
+                });
+            });
         }
     }
 });

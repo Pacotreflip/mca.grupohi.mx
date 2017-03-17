@@ -350,7 +350,7 @@ class PDFConciliacion extends Rotation
                     $this->SetWidths(array(0.125 * $this->WidthTotal, 0.1 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
                     //for($cont = 0; $cont < 8; $cont++){
                     $this->encola = "items";
-                    $this->Row(array($key == 0 ? $camion->Economico : '', $row->FechaLlegada, Origen::find($row->IdOrigen)->Descripcion, Tiro::find($row->IdTiro)->Descripcion, '1', $row->CubicacionCamion, $row->NumViajes, $row->Distancia, number_format(($row->Vol1KM + $row->VolSub + $row->VolAdic), 2, '.', ','), number_format(utf8_decode($row->Importe), 2, '.', ',')));
+                    $this->Row(array($key == 0 ? $camion->Economico : '', $row->FechaLlegada, utf8_decode(Origen::find($row->IdOrigen)->Descripcion), utf8_decode(Tiro::find($row->IdTiro)->Descripcion), '1', $row->CubicacionCamion, $row->NumViajes, $row->Distancia, number_format(($row->Vol1KM + $row->VolSub + $row->VolAdic), 2, '.', ','), number_format(utf8_decode($row->Importe), 2, '.', ',')));
                     //}
                     $i++;
                 }
