@@ -32,8 +32,6 @@ class Conciliacion extends Model
         'fecha_final',
         'timestamp',
         'estado',
-        'observaciones',
-        'FirmadoPDF',
         'IdRegistro'
     ];
     protected $dates = ['timestamp'];
