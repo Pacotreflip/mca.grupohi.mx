@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Camion;
 use App\Models\Conciliacion\ConciliacionCancelacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
+use App\Models\Conciliacion\Conciliaciones;
 use App\Models\Empresa;
 use App\Models\Sindicato;
 use App\Models\Transformers\ConciliacionDetalleTransformer;
@@ -74,11 +75,8 @@ class ConciliacionesController extends Controller
     public function create()
     {
         return view('conciliaciones.create')
-            ->withEmpresas(Empresa::lists('razonSocial', 'IdEmpresa'))
-            ->withSindicatos(Sindicato::lists('nombreCorto', 'IdSindicato'))
-                ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
-                ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
-                ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));
+            ->withEmpresas(Empresa::ORDERbY('razonSocial', 'ASC')->lists('razonSocial', 'IdEmpresa'))
+            ->withSindicatos(Sindicato::orderBy('nombreCorto', 'ASC')->lists('nombreCorto', 'IdSindicato'));
     }
 
     /**
@@ -87,16 +85,22 @@ class ConciliacionesController extends Controller
      */
     public function store(Requests\CreateConciliacionRequest $request)
     {
-        $conciliacion = Conciliacion::firstOrCreate([
-            'fecha_conciliacion' => Carbon::now()->toDateString(),
-            'idsindicato'        => $request->get('idsindicato'),
-            'idempresa'          => $request->get('idempresa'),
-            'fecha_inicial'      => Carbon::now()->toDateString(),
-            'fecha_final'        => Carbon::now()->toDateString(),
-            'estado'             => 0,
-            'IdRegistro'         => auth()->user()->idusuario
-        ]);
+        $result = Conciliacion::where('idsindicato', '=', $request->get('idsindicato'))->where('idempresa', '=', $request->get('idempresa'))->where('estado', '=', 0)->first();
 
+        if(! $result) {
+            $conciliacion = Conciliacion::create([
+                'fecha_conciliacion' => Carbon::now()->toDateString(),
+                'idsindicato'        => $request->get('idsindicato'),
+                'idempresa'          => $request->get('idempresa'),
+                'fecha_inicial'      => Carbon::now()->toDateString(),
+                'fecha_final'        => Carbon::now()->toDateString(),
+                'estado'             => 0,
+                'IdRegistro'         => auth()->user()->idusuario
+            ]);
+        } else {
+            $conciliacion = $result;
+        }
+        
         return response()->json([
             'success' => true,
             'status_code' => 200,
