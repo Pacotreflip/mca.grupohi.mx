@@ -6,6 +6,7 @@ use App\Models\Conciliacion\Conciliacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
 use App\Models\Conciliacion\Conciliaciones;
 use App\Models\Transformers\ConciliacionDetalleTransformer;
+use App\Models\Transformers\ConciliacionTransformer;
 use App\Models\Transformers\ViajeTransformer;
 use App\Models\Viaje;
 use Carbon\Carbon;
@@ -35,10 +36,17 @@ class ConciliacionesDetallesController extends Controller
         if($request->ajax()) {
 
             $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+            $conciliacion = Conciliacion::find($id);
 
             return response()->json([
                 'status_code' => 200,
-                'detalles'    => $detalles
+                'conciliacion' => [
+                    'id' => $id,
+                    'num_viajes' => $conciliacion->conciliacionDetalles->count(),
+                    'importe'    => $conciliacion->importe_f,
+                    'volumen'    => $conciliacion->volumen_f,
+                    'detalles'   => $detalles
+                ]
             ]);
         }
     }
@@ -106,10 +114,18 @@ class ConciliacionesDetallesController extends Controller
                 $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
             }
 
+            $conciliacion = Conciliacion::find($id);
+
             return response()->json([
                 'status_code' => 201,
                 'registros'   => $i,
-                'detalles'    => $detalles
+                'conciliacion' => [
+                    'id'      => $id,
+                    'importe' => $conciliacion->importe_f,
+                    'volumen' => $conciliacion->volumen_f,
+                    'num_viajes' => $conciliacion->conciliacionDetalles->count(),
+                    'detalles'   => $detalles
+                ]
             ]);
         }
     }
@@ -154,8 +170,31 @@ class ConciliacionesDetallesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id_conciliacion, $id_detalle)
     {
-        //
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            DB::connection('sca')->table('conciliacion_detalle_cancelacion')->insertGetId([
+                'idconciliaciondetalle'  => $id_detalle,
+                'motivo'                 => $request->get('motivo'),
+                'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
+                'idcancelo'              => auth()->user()->idusuario
+            ]);
+
+            $detalle =  ConciliacionDetalle::find($id_detalle);
+            $detalle->estado = -1;
+            $detalle->save();
+
+            DB::connection('sca')->commit();
+
+            return response()->json([
+                'status_code' => 200,
+                'conciliacion' => ConciliacionTransformer::transform(Conciliacion::find($id_conciliacion))
+            ]);
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollBack();
+            echo $e->getMessage();
+        }
     }
 }

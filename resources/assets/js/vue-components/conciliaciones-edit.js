@@ -71,15 +71,39 @@ Vue.component('conciliaciones-edit', {
         this.fetchDetalles();
     },
 
+    computed: {
+        cancelados: function() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function(detalle) {
+                if(detalle.estado === -1) {
+                    return true;
+                }
+                return false;
+            });
+        },
+
+        conciliados: function () {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                if(detalle.estado === 1) {
+                    return true;
+                }
+                return false;
+            });
+        }
+    },
+
     methods: {
 
         fetchDetalles: function() {
             var _this = this;
             var url = $('.form_registrar').attr('action');
-
+            this.guardando = true;
             this.$http.get(url).then(response => {
-                _this.conciliacion.detalles = response.body.detalles;
+                _this.conciliacion = response.body.conciliacion;
+                this.guardando = false;
             }, error => {
+                this.guardando = false;
                 App.setErrorsOnForm(_this.form, error.body);
             });
         },
@@ -275,7 +299,7 @@ Vue.component('conciliaciones-edit', {
                         showConfirmButton: true
                     });
 
-                    _this.conciliacion.detalles = response.detalles;
+                    _this.conciliacion = response.conciliacion;
                 },
                 error: function(error) {
                     _this.guardando = true;
@@ -299,8 +323,8 @@ Vue.component('conciliaciones-edit', {
                 data : data,
                 type : 'POST',
                 success: function (response) {
-                    if(response.detalles != null) {
-                        _this.conciliacion.detalles.push(response.detalles);
+                    if(response.conciliacion.detalles != null) {
+                        _this.conciliacion.detalles.push(response.conciliacion.detalles);
                         _this.guardando = false;
                         swal({
                             type: 'success',
@@ -395,6 +419,7 @@ Vue.component('conciliaciones-edit', {
                     },
                     success: function(response) {
                         if(response.status_code = 200) {
+                            _this.fetchDetalles();
                             swal({
                                 type: 'success',
                                 title: '¡Hecho!',
@@ -403,17 +428,54 @@ Vue.component('conciliaciones-edit', {
                                 confirmButtonText: '' +
                                 'OK',
                                 closeOnConfirm: true
-                            },
-                            function () {
-                                detalle.cubicacion_camion = response.viaje.cubicacion_camion;
-                                detalle.importe = response.viaje.importe;
-
                             });
                         }
                     },
                     error: function (error) {
                         App.setErrorsOnForm(_this.form, error.responseText);
                     }
+                });
+            });
+        },
+
+        eliminar_detalle: function (idconciliacion_detalle) {
+            var _this = this;
+            var url = App.host + '/conciliacion/' + this.conciliacion.id + '/detalles/' + idconciliacion_detalle;
+            swal({
+                title: "¡Quitar viaje Conciliación!",
+                text: "¿Esta seguro de que deseas quitar el viaje de la conciliación?",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputPlaceholder: "Motivo de la eliminación.",
+                confirmButtonText: "Si, Quitar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("Escriba el motivo de la eliminación!");
+                    return false
+                }
+                _this.guardando = true;
+                _this.$http.post(url, {_method : 'DELETE', motivo : inputValue}).then((response) => {
+                    if(response.body.status_code == 200) {
+                        _this.guardando = false;
+                        _this.conciliacion = response.body.conciliacion;
+                        swal({
+                            type: 'success',
+                            title: '¡Hecho!',
+                            text: 'Viaje removido correctamente',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
+                            closeOnConfirm: true
+                        });
+                    }
+                }, (error) => {
+                    _this.guardando = false;
+                    App.setErrorsOnForm(_this.form, error.body);
                 });
             });
         }

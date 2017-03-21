@@ -48,7 +48,11 @@ class Conciliaciones
                 if($row->codigo != '') {
                     $viaje = Viaje::porConciliar()->where('code', '=', $row->codigo)->first();
                 } else {
-                    $viaje = Viaje::porConciliar()->where('FechaLlegada', '=', $row->fecha_llegada)->where('HoraLlegada', '=', $row->hora_llegada)->first();
+                    $viaje = Viaje::with('camiones')->porConciliar()
+                        ->where('FechaLlegada', '=', $row->fecha_llegada)
+                        ->where('HoraLlegada', '=', $row->hora_llegada)
+                        ->where('camiones.economico', $row->camion)
+                        ->first();
                 }
 
                 if($viaje) {
