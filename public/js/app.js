@@ -34149,6 +34149,26 @@ Vue.component('conciliaciones-edit', {
                     App.setErrorsOnForm(_this.form, error.body);
                 });
             });
+        },
+
+        reabrir: function reabrir(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var url = $(e.target).attr('href');
+
+            swal({
+                title: "Re-abrir conciliación?",
+                text: "¿Esta seguro de que desea Re-abrir la conciliación?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                console.log('reabrir');
+                console.log(url);
+            });
         }
     }
 });

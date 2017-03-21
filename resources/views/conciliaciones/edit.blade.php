@@ -17,6 +17,7 @@
                     <a href="{{ route('conciliaciones.update', $conciliacion->idconciliacion) }}" class="btn btn-success btn-sm pull-right" style="margin-right: 5px" @click="cerrar"><i class="fa fa-check"></i> CERRAR</a>
                     @endif
                 @elseif($conciliacion->estado == 1)
+                    <a href="{{ route('conciliaciones.edit', [$conciliacion, 'action' => 'reabrir']) }}" class="btn btn-default btn-sm pull-right" style="margin-right: 5px" @click="reabrir"><i class="fa fa-undo"></i> RE-ABRIR</a>
                     @if (Auth::user()->can(['cancelar-conciliacion']))
                     <a href="{{ route('conciliaciones.destroy', $conciliacion->idconciliacion) }}" class="btn btn-danger btn-sm pull-right" @click="cancelar($event)"><i class="fa fa-close"></i> CANCELAR</a>
                     @endif
