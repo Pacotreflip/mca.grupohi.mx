@@ -158,7 +158,7 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="detalle in conciliacion.detalles">
+                            <tr v-for="detalle in conciliados">
                                 <td>@{{ detalle.timestamp_llegada }}</td>
                                 <td>@{{ detalle.camion }}</td>
                                 <td style="text-align: right">
