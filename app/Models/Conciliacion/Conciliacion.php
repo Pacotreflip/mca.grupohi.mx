@@ -112,6 +112,14 @@ class Conciliacion extends Model
     public function usuario(){
         return $this->belongsTo(User::class, "IdRegistro");
     }
+    
+    public function reviso(){
+        return $this->belongsTo(User::class, "IdRegistro");
+    }
+    
+    public function autorizo(){
+        return $this->belongsTo(User::class, "IdRegistro");
+    }
 
     public function getVolumenFAttribute(){
         

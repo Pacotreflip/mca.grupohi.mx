@@ -2,7 +2,9 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.conciliaciones')) }}
-  <a href="{{ route('conciliaciones.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_conciliacion') }}</a>
+    @if(Auth::user()->can(['generar-conciliacion']))
+    <a href="{{ route('conciliaciones.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_conciliacion') }}</a>
+    @endif
 </h1>
 <hr>
 <div >

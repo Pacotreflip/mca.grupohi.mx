@@ -7,7 +7,7 @@
         <li>{!! link_to_route('proyectos', 'Cambiar De Proyecto') !!}</li>
     </ul>
   </li>
-  
+  @if (Auth::user()->can(['control-catalogos'])) 
   <li class="dropdown">
     <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
         Catálogos <span class="caret"></span>
@@ -42,6 +42,7 @@
         </li>
     </ul>
   </li>
+  @endif
   <li class="dropdown">
     <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
         Operación<span class="caret"></span>
@@ -53,18 +54,28 @@
                 <li class="dropdown-submenu">
                     <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Carga Manual</a>
                     <ul class="dropdown-menu">
+                        @if(Auth::user()->can(['ingresar-viajes-manuales']))
                         <li><a tabindex="-1" href="{{ route('viajes.netos.create', ['action' => 'manual']) }}">Ingresar Viajes</a></li>
+                        @endif
+                        @if(Auth::user()->can(['autorizar-viajes-manuales']))
                         <li><a tabindex="-1" href="{{ route('viajes.netos.edit', ['action' => 'autorizar']) }}">Autorizar Viajes</a></li>
+                        @endif
                     </ul>
                 </li>
+                @if(Auth::user()->can(['ingresar-viajes-manuales-completos']))
                 <li><a href="{{ route('viajes.netos.create', ['action' => 'completa']) }}">Carga Manual Completa</a></li>
+                @endif
             </ul>
         </li>
+        @if(Auth::user()->can(['validar-viajes']))
         <li><a href="{{ route('viajes.netos.edit', ['action' => 'validar']) }}">Validar Viajes</a></li>
+        @endif
         @if (Auth::user()->can(['consultar-conciliacion'])) 
             <li><a href="{{ route('conciliaciones.index') }}">Conciliaciones</a></li>
         @endif
+        @if(Auth::user()->can(['modificar-viajes']))
         <li><a href="{{ route('viajes.netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>
+        @endif
     </ul>
   </li>
 @else
