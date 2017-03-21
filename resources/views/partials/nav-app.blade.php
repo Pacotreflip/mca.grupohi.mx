@@ -61,7 +61,7 @@
             </ul>
         </li>
         <li><a href="{{ route('viajes.netos.edit', ['action' => 'validar']) }}">Validar Viajes</a></li>
-        @if (Auth::user()->hasRole(['conciliacion'])) 
+        @if (Auth::user()->can(['consultar-conciliacion'])) 
             <li><a href="{{ route('conciliaciones.index') }}">Conciliaciones</a></li>
         @endif
         <li><a href="{{ route('viajes.netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>

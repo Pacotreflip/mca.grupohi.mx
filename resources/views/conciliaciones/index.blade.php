@@ -70,7 +70,7 @@
             </td>
             <td>
                 {!! Form::open(['route' => ['conciliaciones.destroy', $conciliacion]]) !!}
-                @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+                @if($conciliacion->estado == -1 || $conciliacion->estado == -2 || !Auth::user()->can(['cancelar-conciliacion']))
                     <button disabled class="btn btn-danger btn-xs "><span class="glyphicon glyphicon-remove"></span></button>
                 @else
                     <button class="btn btn-danger btn-xs cancelar_conciliacion"><span class="glyphicon glyphicon-remove"></span></button>
@@ -78,7 +78,7 @@
                 {!! Form::close() !!}
             </td>
             <td>
-                @if(count($conciliacion->viajes()))
+                @if(count($conciliacion->viajes()) && Auth::user()->can(['ver-pdf']))
                     <a href="{{ route('pfd.conciliacion', $conciliacion) }}" class="btn btn-default btn-xs"><i class="fa fa-file-pdf-o"></i></a>
                 @else
                     <a class="btn btn-default btn-xs" disabled><i class="fa fa-file-pdf-o"></i></a>
