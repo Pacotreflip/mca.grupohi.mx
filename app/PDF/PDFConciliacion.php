@@ -210,27 +210,31 @@ class PDFConciliacion extends Rotation
 
     private function logo()
     {
-$this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
-//        if (Proyecto::find(Context::getId())->tiene_logo == 2) {
-//            $dataURI = "data:image/png;base64," . Proyecto::find(Context::getId())->logo;
-//            $dataPieces = explode(',', $dataURI);
-//            $encodedImg = $dataPieces[1];
-//            $decodedImg = base64_decode($encodedImg);
-//
-//
-//            //  Check if image was properly decoded
-//            if ($decodedImg !== false) {
-//                //  Save image to a temporary location
-//                if (file_put_contents(public_path('img/logo_temp.jpg'), $decodedImg) !== false) {
-//                    //  Open new PDF document and print image
-//                    $this->image(public_path('img/logo_temp.jpg'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
-//                    //  Delete image from server
-//                    unlink(public_path('img/logo_temp.jpg'));
-//                }
-//            }
-//        } else {
-//            $this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
-//        }
+//$this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+        if (Proyecto::find(Context::getId())->tiene_logo == 2) {
+            $dataURI = "data:image/png;base64," . Proyecto::find(Context::getId())->logo;
+            $dataPieces = explode(',', $dataURI);
+            $encodedImg = $dataPieces[1];
+            $decodedImg = base64_decode($encodedImg);
+
+
+            //  Check if image was properly decoded
+            if ($decodedImg !== false) {
+                
+                //  Save image to a temporary location
+                if (file_put_contents(public_path('img/logo_temp.png'), $decodedImg) !== false) {
+                    
+                    //  Open new PDF document and print image
+                    //$this->image($dataURI, $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+                    $this->image(public_path('img/logo_temp.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+                    //dd("image");
+                    //  Delete image from server
+                    unlink(public_path('img/logo_temp.png'));
+                }
+            }
+        } else {
+            $this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33, 1.5);
+        }
     }
 
     private function details()
@@ -255,10 +259,10 @@ $this->image(public_path('img/logo_hc.png'), $this->WidthTotal - 1.3, 0.5, 2.33,
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->sindicato->NombreCorto), '', 1, 'L');
 
-        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PERIODO:'), '', 0, 'LB');
-        $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->fecha_inicial) . ' al ' . $this->conciliacion->fecha_final, '', 1, 'L');
+//        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+//        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PERIODO:'), '', 0, 'LB');
+//        $this->SetFont('Arial', '', $this->txtContenidoTam);
+//        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->fecha_inicial) . ' al ' . $this->conciliacion->fecha_final, '', 1, 'L');
     }
 
     private function rutas()
