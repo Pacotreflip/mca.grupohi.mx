@@ -29,4 +29,6 @@ class ConciliacionDetalle extends Model
     public function conciliacion() {
         return $this->belongsTo(Conciliacion::class, 'idconciliacion');
     }
+
+
 }
