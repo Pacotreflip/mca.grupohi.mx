@@ -127,7 +127,7 @@
                                 DETALLES DE LA CONCILIACIÓN
                             </div>
                             <div class="panel-body">
-                                <strong>Número de Viajes: </strong>@{{ conciliacion.num_viajes }}<br>
+                                <strong>Número de Viajes: </strong>@{{ conciliados.length }}<br>
                                 <strong>Volumen: </strong>@{{ conciliacion.volumen }}<br>
                                 <strong>Importe: </strong>@{{ conciliacion.importe }}<br>
                             </div>

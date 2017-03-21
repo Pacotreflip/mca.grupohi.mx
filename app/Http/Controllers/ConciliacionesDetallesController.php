@@ -186,11 +186,13 @@ class ConciliacionesDetallesController extends Controller
             $detalle->estado = -1;
             $detalle->save();
 
+            $conciliacion = ConciliacionTransformer::transform(Conciliacion::find($id_conciliacion));
+
             DB::connection('sca')->commit();
 
             return response()->json([
                 'status_code' => 200,
-                'conciliacion' => ConciliacionTransformer::transform(Conciliacion::find($id_conciliacion))
+                'conciliacion' => $conciliacion
             ]);
         } catch (\Exception $e) {
             DB::connection('sca')->rollBack();

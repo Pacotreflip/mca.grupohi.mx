@@ -19,7 +19,7 @@ class ConciliacionTransformer extends AbstractTransformer
     {
         $output = [
             'id'    => $conciliacion->idconciliacion,
-            'num_viajes' => $conciliacion->conciliacionDetalles->count(),
+            'num_viajes' => $conciliacion->conciliacionDetalles->where('estado', '=', 1)->count(),
             'importe'    => $conciliacion->importe_f,
             'volumen'    => $conciliacion->volumen_f,
             'detalles'   => ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', $conciliacion->idconciliacion)->get())
