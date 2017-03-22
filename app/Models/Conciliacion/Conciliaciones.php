@@ -45,6 +45,7 @@ class Conciliaciones
         try {
             $i = 0;
             foreach ($reader as $row) {
+                dd($row);
                 if($row->codigo != '') {
                     $viaje = Viaje::porConciliar()->where('code', '=', $row->codigo)->first();
                 } else {
