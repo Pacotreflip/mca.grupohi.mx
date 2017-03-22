@@ -465,8 +465,8 @@ class PDFConciliacion extends Rotation
                 $this->Ln();
                 //$this->SetFillColor(180, 180, 180);
                 $this->Cell(3.92, .4, $this->conciliacion->usuario->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
-                $this->Cell(3.92, .4, $this->conciliacion->reviso->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
-                $this->Cell(3.92, .4, $this->conciliacion->autorizo->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
+                $this->Cell(3.92, .4, $this->conciliacion->cerro->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
+                $this->Cell(3.92, .4, $this->conciliacion->aprobo->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
         
         $this->SetY($this->GetPageHeight() - 1);
         $this->SetFont('Arial', '', $this->txtFooterTam);
