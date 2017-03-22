@@ -94,7 +94,7 @@ class Conciliacion extends Model
     }
     
     public function getVolumenAttribute(){
-         $results = DB::connection("sca")->select("select sum(Volumen) as Volumen "
+         $results = DB::connection("sca")->select("select sum(CubicacionCamion) as Volumen "
                  . "from conciliacion "
                  . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
                  . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
