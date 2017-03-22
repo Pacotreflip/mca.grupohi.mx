@@ -113,8 +113,15 @@ class ConciliacionesController extends Controller
      * @param $id
      * @return mixed
      */
-    public function edit($id)
+    public function edit(Request $request, $id)
     {
+        if($request->has('file')) {
+            return view('conciliaciones.edit')
+                ->withConciliacion(Conciliacion::findOrFail($id))
+                ->withCamiones(Camion::lists('Economico', 'IdCamion'))
+                ->withFile($request->get('file'));
+        }
+
         return view('conciliaciones.edit')
             ->withConciliacion(Conciliacion::findOrFail($id))
             ->withCamiones(Camion::lists('Economico', 'IdCamion'));

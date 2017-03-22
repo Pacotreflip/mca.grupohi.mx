@@ -2,6 +2,11 @@
 
 @section('content')
 @include('partials.errors')
+@if(isset($file))
+<div class="alert alert-info">
+    <a href="{{ route('conciliacion.info', $file) }}"><strong>VER RESULTADO DE LA CARGA</strong></a>
+</div>
+@endif
 <div id="app">
     <global-errors></global-errors>
     <conciliaciones-edit inline-template>

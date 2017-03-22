@@ -310,4 +310,8 @@ class ViajeNeto extends Model
             DB::connection('sca')->rollback();
         }
     }
+
+    public function viaje() {
+        return$this->hasOne(Viaje::class, 'IdViajeNeto');
+    }
 }

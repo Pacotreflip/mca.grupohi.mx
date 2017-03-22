@@ -17,6 +17,7 @@ use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\DB;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ConciliacionesDetallesController extends Controller
 {
@@ -65,8 +66,10 @@ class ConciliacionesDetallesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
+     * @param $id
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function store(Request $request, $id)
     {
@@ -76,14 +79,12 @@ class ConciliacionesDetallesController extends Controller
             $output = (new Conciliaciones($conciliacion))->cargarExcel($request->file('excel'));
 
             Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['reg'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['no_reg'] . '</li>');
-            return redirect()->back();
+            return redirect()->route('conciliaciones.edit', [$conciliacion, 'file' => $output['file']]);
         }
 
         if($request->ajax()) {
             if ($request->get('Tipo') == '1') {
                 try {
-
-
                     $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
                     $v = Viaje::where('code', '=', $request->get('code'))->first();
                     $viaje_neto = ViajeNeto::where('Code', '=', $request->get('code'))->first();
@@ -91,7 +92,6 @@ class ConciliacionesDetallesController extends Controller
                         throw new \Exception("Viaje no encontrado");
                     } else if ($viaje_neto && !$v) {
                         throw new \Exception("Viaje no validado");
-
                     } else if ($viaje) {
                         if ($viaje->disponible()) {
                             $detalle = ConciliacionDetalle::create([
@@ -191,8 +191,11 @@ class ConciliacionesDetallesController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
+     * @param Request $request
+     * @param $id_conciliacion
+     * @param $id_detalle
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
     public function destroy(Request $request, $id_conciliacion, $id_detalle)
     {
@@ -222,5 +225,9 @@ class ConciliacionesDetallesController extends Controller
             DB::connection('sca')->rollBack();
             echo $e->getMessage();
         }
+    }
+
+    public function detalle_carga($filename) {
+        Excel::load(storage_path('exports/excel/') . $filename)->download('xls');
     }
 }

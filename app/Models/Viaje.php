@@ -83,4 +83,8 @@ class Viaje extends Model
         }
 
     }
+
+    public function viajeNeto() {
+        return $this->belongsTo(ViajeNeto::class, 'IdViajeNeto');
+    }
 }
