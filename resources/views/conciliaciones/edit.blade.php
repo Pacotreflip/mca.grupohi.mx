@@ -136,7 +136,7 @@
                             </div>
                             <div class="panel-body">
                                 <strong>Número de Viajes: </strong>@{{ conciliados.length }}<br>
-                                <strong>Volumen: </strong>@{{ conciliacion.volumen }}<br>
+                                <strong>Volúmen: </strong>@{{ conciliacion.volumen }}<br>
                                 <strong>Importe: </strong>@{{ conciliacion.importe }}<br>
                             </div>
                         </div>

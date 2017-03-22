@@ -107,9 +107,9 @@ class ConciliacionesDetallesController extends Controller
                             $cd = $v->conciliacionDetalles->where('estado', 1)->first();
                             $c = $cd->conciliacion;
                             if($c->idconciliacion == $id) {
-                                throw new \Exception("Viaje conciiado en ésta conciliación");
+                                throw new \Exception("Viaje conciliado en ésta conciliación");
                             } else {
-                                throw new \Exception("Viaje conciiado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "");
+                                throw new \Exception("Viaje conciliado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "");
                             }
                         }
                     } else {
