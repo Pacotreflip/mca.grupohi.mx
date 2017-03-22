@@ -334,7 +334,8 @@ class PDFConciliacion extends Rotation
 			WHERE 
 				c.idconciliacion=' . $this->conciliacion->idconciliacion . '
                 AND v.IdCamion=' . $camion->IdCamion . '
-                AND v.idMaterial=' . $material->IdMaterial . '	
+                AND v.idMaterial=' . $material->IdMaterial . '
+                AND c.estado=1' . " " . '
 			GROUP BY 
 				v.FechaLlegada, 
 				v.CubicacionCamion,
@@ -379,6 +380,7 @@ class PDFConciliacion extends Rotation
 						c.idconciliacion=' . $this->conciliacion->idconciliacion . ' 
 						and v.IdCamion=' . $camion->IdCamion . ' 
 						and v.IdMaterial=' . $material->IdMaterial . '
+                        and c.estado=1' . " " . '
 						GROUP BY v.IdCamion;'));
 
                 if ($subtotal_camion) {
@@ -413,6 +415,7 @@ class PDFConciliacion extends Rotation
 						WHERE 
 							c.idconciliacion=' . $this->conciliacion->idconciliacion . '
                         AND v.IdMaterial=' . $material->IdMaterial . '
+                        AND c.estado=1' . " " . '
 								
 						GROUP BY 
 							c.idconciliacion,
@@ -433,7 +436,7 @@ class PDFConciliacion extends Rotation
         }
 
         //Total
-        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
+        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
         $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
         $this->SetFont('Arial', '', 6.5);
         $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));

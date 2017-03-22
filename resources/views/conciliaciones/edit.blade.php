@@ -6,50 +6,35 @@
     <global-errors></global-errors>
     <conciliaciones-edit inline-template>
         <section>
-            <app-errors v-bind:form="form"></app-errors>
             <h1>
                 CONCILIACIONES
                 @if($conciliacion->estado == 0)
-                    @if (Auth::user()->can(['cancelar-conciliacion'])) 
+                    @if (Auth::user()->can(['cancelar-conciliacion']))
                     <a href="{{ route('conciliaciones.destroy', $conciliacion->idconciliacion) }}" class="btn btn-danger btn-sm pull-right" @click="cancelar($event)"><i class="fa fa-close"></i> CANCELAR</a>
                     @endif
-                    @if (Auth::user()->can(['cerrar-conciliacion'])) 
+                    @if (Auth::user()->can(['cerrar-conciliacion']))
                     <a href="{{ route('conciliaciones.update', $conciliacion->idconciliacion) }}" class="btn btn-success btn-sm pull-right" style="margin-right: 5px" @click="cerrar"><i class="fa fa-check"></i> CERRAR</a>
                     @endif
                 @elseif($conciliacion->estado == 1)
-                    @if (Auth::user()->can(['cancelar-conciliacion'])) 
+                    @if (Auth::user()->can(['reabrir-conciliacion']))
+                    <a href="{{ route('conciliaciones.edit', [$conciliacion, 'action' => 'reabrir']) }}" class="btn btn-default btn-sm pull-right" style="margin-right: 5px" @click="reabrir"><i class="fa fa-undo"></i> RE-ABRIR</a>
+                    @endif
+                    @if (Auth::user()->can(['cancelar-conciliacion']))
                     <a href="{{ route('conciliaciones.destroy', $conciliacion->idconciliacion) }}" class="btn btn-danger btn-sm pull-right" @click="cancelar($event)"><i class="fa fa-close"></i> CANCELAR</a>
                     @endif
-                    @if (Auth::user()->can(['aprobar-conciliacion'])) 
+                    @if (Auth::user()->can(['aprobar-conciliacion']))
                     <a href="{{ route('conciliaciones.update', $conciliacion->idconciliacion) }}" class="btn btn-success btn-sm pull-right" style="margin-right: 5px" @click="aprobar"><i class="fa fa-check"></i> APROBAR</a>
                     @endif
                 @elseif($conciliacion->estado == 2)
-                    @if (Auth::user()->can(['cancelar-conciliacion'])) 
+                    @if (Auth::user()->can(['cancelar-conciliacion']))
                     <a href="{{ route('conciliaciones.destroy', $conciliacion->idconciliacion) }}" class="btn btn-danger btn-sm pull-right" @click="cancelar($event)"><i class="fa fa-close"></i> CANCELAR</a>
                     @endif
                 @endif
             </h1>
             {!! Breadcrumbs::render('conciliaciones.edit', $conciliacion) !!}
+            <app-errors v-bind:form="form"></app-errors>
 
-            @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
-                <section id="cancelada">
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    DETALLES DE LA CANCELACIÓN
-                                </div>
-                                <div class="panel-body">
-                                    <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
-                                    <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
-                                    <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            @elseif($conciliacion->estado == 0)
+                @if($conciliacion->estado == 0)
                 <section id="conciliar">
                     <hr>
                     <h3>CONCILIAR VIAJES</h3>
@@ -122,31 +107,66 @@
                     {!! Form::close() !!}
                 </section>
             @endif
+            <section id="info">
+                <hr>
+                <div class="row">
+                    @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel-heading">
+                                    DETALLES DE LA CANCELACIÓN
+                                </div>
+                                <div class="panel-body">
+                                    <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
+                                    <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
+                                    <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
+                                </div>
+                            </div>
+                        </div>
+                    @endif
+                    <div class="col-md-6">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">
+                                DETALLES DE LA CONCILIACIÓN
+                            </div>
+                            <div class="panel-body">
+                                <strong>Número de Viajes: </strong>@{{ conciliados.length }}<br>
+                                <strong>Volumen: </strong>@{{ conciliacion.volumen }}<br>
+                                <strong>Importe: </strong>@{{ conciliacion.importe }}<br>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
             <section id="detalles" v-if="conciliacion.detalles.length">
                 <hr>
                 <ul id="detail-tabs" class="nav nav-tabs">
-                    <li class="active tab-conciliacion"><a href="#details" data-toggle="tab">DETALLE DE CONCILIACIÓN</a></li>
+                    <li v-if="conciliados.length" class="active tab-conciliacion"><a href="#details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
+                    <li v-if="cancelados.length" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
                 </ul>
                 <div class="tab-content">
-                    <div id="details" class="fade in active tab-pane table-responsive">
+                    <div id="details" v-if="conciliados.length" class="fade in active tab-pane table-responsive">
                         <table class="table table-striped table-bordered small">
                             <thead>
                             <tr>
-                                <th style="text-align: center">Fecha y Hora de Llegada</th>
-                                <th style="text-align: center">Camión</th>
-                                <th style="text-align: center">Cubicación</th>
-                                <th style="text-align: center">Material</th>
-                                <th style="text-align: center">Importe</th>
-                                <th style="text-align: center">Ticket (Código)</th>
+                                <th>Fecha y Hora de Llegada</th>
+                                <th>Camión</th>
+                                <th>Cubicación</th>
+                                <th>Material</th>
+                                <th>Importe</th>
+                                <th>Ticket (Código)</th>
+                                @if($conciliacion->estado == 0 && (Auth::user()->can(['eliminar-viaje-conciliacion'])))
+                                <th style="width: 30px"></th>
+                                @endif
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="detalle in conciliacion.detalles">
+                            <tr v-for="detalle in conciliados">
                                 <td>@{{ detalle.timestamp_llegada }}</td>
                                 <td>@{{ detalle.camion }}</td>
                                 <td style="text-align: right">
                                     @if($conciliacion->estado == 0)
-                                        <a href="#" @click="cambiar_cubicacion(detalle)">@{{ detalle.cubicacion_camion }}</a>
+                                    <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }}</a>
                                     @else
                                         @{{ detalle.cubicacion_camion }}
                                     @endif
@@ -154,6 +174,41 @@
                                 <td>@{{ detalle.material }}</td>
                                 <td style="text-align: right">@{{ detalle.importe }}</td>
                                 <td>@{{ detalle.code }}</td>
+                                @if($conciliacion->estado == 0 && (Auth::user()->can(['eliminar-viaje-conciliacion'])) )
+                                <td>
+                                    <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
+                                </td>
+                                @endif
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="cancelados" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + ' fade in tab-pane table-responsive'">
+                        <table class="table table-striped table-bordered small">
+                            <thead>
+                            <tr>
+                                <th>Fecha y Hora de Llegada</th>
+                                <th>Camión</th>
+                                <th>Cubicación</th>
+                                <th>Material</th>
+                                <th>Importe</th>
+                                <th>Ticket (Código)</th>
+                                <th>Fecha Cancelación</th>
+                                <th>Persona que Canceló</th>
+                                <th>Motivo de Cancelación</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="detalle in cancelados">
+                                <td>@{{ detalle.timestamp_llegada }}</td>
+                                <td>@{{ detalle.camion }}</td>
+                                <td style="text-align: right">@{{ detalle.cubicacion_camion }}</td>
+                                <td>@{{ detalle.material }}</td>
+                                <td style="text-align: right">@{{ detalle.importe }}</td>
+                                <td>@{{ detalle.code }}</td>
+                                <td>@{{ detalle.cancelacion.timestamp }}</td>
+                                <td>@{{ detalle.cancelacion.cancelo }}</td>
+                                <td>@{{ detalle.cancelacion.motivo }}</td>
                             </tr>
                             </tbody>
                         </table>
@@ -170,9 +225,9 @@
                             <h4 class="modal-title">Resultados de la Búsqueda</h4>
                         </div>
                         <div class="modal-body">
+                            {!! Form::open(['route' => ['conciliaciones.detalles.store', $conciliacion->idconciliacion], 'class' => 'form_registrar']) !!}
                             <span v-if="resultados.length">
                                 <div class="table-responsive" style="max-height: 300px;">
-                                    {!! Form::open(['route' => ['conciliaciones.detalles.store', $conciliacion->idconciliacion], 'class' => 'form_registrar']) !!}
                                     <input type="hidden" name="Tipo" value="2">
                                     <table class="table table-hover">
                                         <thead>

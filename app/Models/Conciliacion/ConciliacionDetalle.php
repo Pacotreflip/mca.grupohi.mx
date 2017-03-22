@@ -29,4 +29,8 @@ class ConciliacionDetalle extends Model
     public function conciliacion() {
         return $this->belongsTo(Conciliacion::class, 'idconciliacion');
     }
+
+    public function cancelacion() {
+        return $this->hasOne(ConciliacionDetalleCancelacion::class, 'idconciliaciondetalle');
+    }
 }

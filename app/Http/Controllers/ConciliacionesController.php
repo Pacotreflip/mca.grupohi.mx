@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Camion;
 use App\Models\Conciliacion\ConciliacionCancelacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
+use App\Models\Conciliacion\ConciliacionDetalleCancelacion;
 use App\Models\Conciliacion\Conciliaciones;
 use App\Models\Empresa;
 use App\Models\Sindicato;
@@ -164,6 +165,14 @@ class ConciliacionesController extends Controller
         ]);
 
         foreach ($conciliacion->conciliacionDetalles as $detalle) {
+
+            ConciliacionDetalleCancelacion::create([
+                'idconciliaciondetalle'  => $detalle->idconciliacion_detalle,
+                'motivo'                 => $request->get('motivo') ,
+                'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
+                'idcancelo'              => auth()->user()->idusuario
+            ]);
+
             $detalle->estado = -1;
             $detalle->save();
         }
