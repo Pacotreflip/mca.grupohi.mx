@@ -144,6 +144,8 @@ class Conciliacion extends Model
 
         try {
             $this->estado = 1;
+            $this->IdCerro = auth()->user()->idusuario;
+            $this->FechaHoraCierre = Carbon::now()->format('Y-m-d h:m:s');
             $this->save();
 
             foreach ($this->viajes() as $v) {
@@ -182,6 +184,8 @@ class Conciliacion extends Model
 
     public function aprobar() {
         $this->estado = 2;
+        $this->IdAprobo = auth()->user()->idusuario;
+        $this->FechaHoraAprobacion = Carbon::now()->format('Y-m-d h:m:s');
         $this->save();
     }
     public function getEstadoStrAttribute(){
