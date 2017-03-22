@@ -6,7 +6,6 @@
     <global-errors></global-errors>
     <conciliaciones-edit inline-template>
         <section>
-            <app-errors v-bind:form="form"></app-errors>
             <h1>
                 CONCILIACIONES
                 @if($conciliacion->estado == 0)
@@ -31,6 +30,7 @@
                 @endif
             </h1>
             {!! Breadcrumbs::render('conciliaciones.edit', $conciliacion) !!}
+            <app-errors v-bind:form="form"></app-errors>
 
                 @if($conciliacion->estado == 0)
                 <section id="conciliar">

@@ -9,6 +9,7 @@ use App\Models\Transformers\ConciliacionDetalleTransformer;
 use App\Models\Transformers\ConciliacionTransformer;
 use App\Models\Transformers\ViajeTransformer;
 use App\Models\Viaje;
+use App\Models\ViajeNeto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -80,24 +81,48 @@ class ConciliacionesDetallesController extends Controller
 
         if($request->ajax()) {
             if ($request->get('Tipo') == '1') {
-                $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
-                if($viaje) {
-                    if ($viaje->disponible()) {
-                        $detalle = ConciliacionDetalle::create([
-                            'idconciliacion' => $id,
-                            'idviaje' => $viaje->IdViaje,
-                            'timestamp' => Carbon::now()->toDateTimeString(),
-                            'estado' => 1
-                        ]);
-                        $i = 1;
-                        $detalles = ConciliacionDetalleTransformer::transform($detalle);
+                try {
+
+
+                    $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
+                    $v = Viaje::where('code', '=', $request->get('code'))->first();
+                    $viaje_neto = ViajeNeto::where('Code', '=', $request->get('code'))->first();
+
+                    if (!$viaje_neto) {
+                        throw new \Exception("Viaje no encontrado");
+                    } else if ($viaje_neto && !$v) {
+                        throw new \Exception("Viaje no validado");
+
+                    } else if ($viaje) {
+                        if ($viaje->disponible()) {
+                            $detalle = ConciliacionDetalle::create([
+                                'idconciliacion' => $id,
+                                'idviaje' => $viaje->IdViaje,
+                                'timestamp' => Carbon::now()->toDateTimeString(),
+                                'estado' => 1
+                            ]);
+                            $i = 1;
+                            $detalles = ConciliacionDetalleTransformer::transform($detalle);
+                            $msg = "Viaje Conciliado";
+                        } else {
+                            $cd = $v->conciliacionDetalles->where('estado', '=', 1)->first();
+                            $c = $cd->conciliacion;
+                            if($c->idconciliacion == $id) {
+                                throw new \Exception("Viaje conciiado en ésta conciliación");
+                            } else {
+                                throw new \Exception("Viaje conciiado en conciliación '" . $cd->idconciliacion . "' de la empresa '" . $c->empresa . "' y el sindicato '" . $c->sindicato . "'");
+                            }
+                        }
                     } else {
-                        $i = null;
-                        $detalles = null;
+                        $c = $v->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
+                        if($c->idconciliacion == $id) {
+                            throw new \Exception("Viaje conciiado en ésta conciliación");
+                        } else {
+                            throw new \Exception("Viaje conciiado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato );
+                        }
                     }
-                } else {
-                    $detalles = null;
-                    $i = null;
+                } catch (\Exception $e) {
+                    throw $e;
                 }
             } else if ($request->get('Tipo') == '2') {
                 $ids = $request->get('idviaje', []);

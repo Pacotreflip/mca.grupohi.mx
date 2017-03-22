@@ -33748,6 +33748,28 @@ Vue.component('conciliaciones-edit', {
         this.fetchDetalles();
     },
 
+    computed: {
+        cancelados: function cancelados() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                if (detalle.estado === -1) {
+                    return true;
+                }
+                return false;
+            });
+        },
+
+        conciliados: function conciliados() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                if (detalle.estado === 1) {
+                    return true;
+                }
+                return false;
+            });
+        }
+    },
+
     methods: {
 
         fetchDetalles: function fetchDetalles() {
@@ -33755,7 +33777,7 @@ Vue.component('conciliaciones-edit', {
 
             var _this = this;
             var url = $('.form_registrar').attr('action');
-            this.guardando = false;
+            this.guardando = true;
             this.$http.get(url).then(function (response) {
                 _this.conciliacion = response.body.conciliacion;
                 _this2.guardando = false;
@@ -33993,9 +34015,9 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'warning',
                             title: '¡Error!',
-                            text: 'No se encontró el viaje o ya se encuentra conciliado.',
+                            text: response.msg,
                             showConfirmButton: true,
-                            timer: 1000
+                            timer: 1500
                         });
 
                         $('.ticket').val('');
@@ -34085,6 +34107,67 @@ Vue.component('conciliaciones-edit', {
                         App.setErrorsOnForm(_this.form, _error6.responseText);
                     }
                 });
+            });
+        },
+
+        eliminar_detalle: function eliminar_detalle(idconciliacion_detalle) {
+            var _this = this;
+            var url = App.host + '/conciliacion/' + this.conciliacion.id + '/detalles/' + idconciliacion_detalle;
+            swal({
+                title: "¡Quitar viaje Conciliación!",
+                text: "¿Esta seguro de que deseas quitar el viaje de la conciliación?",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputPlaceholder: "Motivo de la eliminación.",
+                confirmButtonText: "Si, Quitar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("Escriba el motivo de la eliminación!");
+                    return false;
+                }
+                _this.guardando = true;
+                _this.$http.post(url, { _method: 'DELETE', motivo: inputValue }).then(function (response) {
+                    if (response.body.status_code == 200) {
+                        _this.guardando = false;
+                        _this.conciliacion = response.body.conciliacion;
+                        swal({
+                            type: 'success',
+                            title: '¡Hecho!',
+                            text: 'Viaje removido correctamente',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
+                            closeOnConfirm: true
+                        });
+                    }
+                }, function (error) {
+                    _this.guardando = false;
+                    App.setErrorsOnForm(_this.form, error.body);
+                });
+            });
+        },
+
+        reabrir: function reabrir(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var url = $(e.target).attr('href');
+
+            swal({
+                title: "Re-abrir conciliación?",
+                text: "¿Esta seguro de que desea Re-abrir la conciliación?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                console.log('reabrir');
+                console.log(url);
             });
         }
     }

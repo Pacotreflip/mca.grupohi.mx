@@ -34015,9 +34015,9 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'warning',
                             title: '¡Error!',
-                            text: 'No se encontró el viaje o ya se encuentra conciliado.',
+                            text: response.msg,
                             showConfirmButton: true,
-                            timer: 1000
+                            timer: 1500
                         });
 
                         $('.ticket').val('');
