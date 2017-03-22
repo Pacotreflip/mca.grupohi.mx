@@ -33,4 +33,19 @@ class ConciliacionDetalle extends Model
     public function cancelacion() {
         return $this->hasOne(ConciliacionDetalleCancelacion::class, 'idconciliaciondetalle');
     }
+    
+    public function save(array $options = array()) {
+        if($this->conciliacion->estado != 0){
+            throw new \Exception("No se pueden relacionar más viajes a la conciliación.");
+        }else{
+            parent::save($options);
+        }
+    }
+
+
+//    public function save(){
+//        throw new Exception("La conciliación se encuentra cerrada");
+//    }
+
+   
 }
