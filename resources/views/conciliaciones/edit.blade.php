@@ -39,111 +39,115 @@
             {!! Breadcrumbs::render('conciliaciones.edit', $conciliacion) !!}
             <app-errors v-bind:form="form"></app-errors>
 
+            <span v-if="fetching">
+                <div class="text-center"><i class="fa fa-spinner fa-pulse fa-2x"></i> <big>CARGANDO CONCILIACIÓN</big></div>
+            </span>
+            <span v-else>
                 @if($conciliacion->estado == 0)
                 <section id="conciliar">
-                    <hr>
-                    <h3>CONCILIAR VIAJES</h3>
-                    {!! Form::open(['route' => ['conciliaciones.detalles.store', $conciliacion->idconciliacion], 'class' => 'form_buscar', 'files' => true]) !!}
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group">
-                                <label>TIPO DE BÚSQUEDA</label>
-                                {!! Form::select('Tipo', [
-                                '' => '--SELECCIONE--',
-                                '1' => 'BÚSQUEDA POR CÓDIGO',
-                                '2' => 'BÚSQUEDA AVANZADA',
-                                '3' => 'CARGAR EXCEL'
-                                 ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
-                            </div>
-                        </div>
-                        <span v-show="tipo == '1'">
-                            <div class="col-md-6">
-                                <div class="input-group">
-                                    <label>CÓDIGO DEL VIAJE</label>
-                                    <input class="form-control ticket" type="text" name="code" placeholder="Código del Viaje">
-                                    <span class="input-group-btn" style="padding-top: 25px">
-                                        <button class="btn btn-primary" type="submit" @click="agregar">
-                                        <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
-                                        <span v-else>Agregar</span>
-                                        </button>
-                                    </span>
-                                </div>
-                            </div>
-                        </span>
-                        <span v-show="tipo == '2'">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>CAMIÓN</label>
-                                    {!! Form::select('IdCamion', $camiones, null, ['class' => 'form-control', 'placeholder' => '--SELECCIONE--']) !!}
-                                </div>
-                            </div>
-                        </span>
-                        <span v-show="tipo == '3'">
-                            <div class="col-md-6">
-                                <div class="form-group">
-                                    <label>CARGAR EXCEL</label>
-                                    <input v-fileinput type="file" name="excel" class="file-loading">
-                                </div>
-                            </div>
-                        </span>
-                    </div>
-                    <span v-if="tipo == '2'">
+                        <hr>
+                        <h3>CONCILIAR VIAJES</h3>
+                        {!! Form::open(['route' => ['conciliaciones.detalles.store', $conciliacion->idconciliacion], 'class' => 'form_buscar', 'files' => true]) !!}
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label for="FechaInicial">FECHA INICIAL</label>
-                                    <input name="FechaInicial" type="text" class="form-control"  v-datepicker >
+                                    <label>TIPO DE BÚSQUEDA</label>
+                                    {!! Form::select('Tipo', [
+                                    '' => '--SELECCIONE--',
+                                    '1' => 'BÚSQUEDA POR CÓDIGO',
+                                    '2' => 'BÚSQUEDA AVANZADA',
+                                    '3' => 'CARGAR EXCEL'
+                                     ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
                                 </div>
                             </div>
+                            <span v-show="tipo == '1'">
+                                <div class="col-md-6">
+                                    <div class="input-group">
+                                        <label>CÓDIGO DEL VIAJE</label>
+                                        <input class="form-control ticket" type="text" name="code" placeholder="Código del Viaje">
+                                        <span class="input-group-btn" style="padding-top: 25px">
+                                            <button class="btn btn-primary" type="submit" @click="agregar">
+                                            <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
+                                            <span v-else>Agregar</span>
+                                            </button>
+                                        </span>
+                                    </div>
+                                </div>
+                            </span>
+                            <span v-show="tipo == '2'">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>CAMIÓN</label>
+                                        {!! Form::select('IdCamion', $camiones, null, ['class' => 'form-control', 'placeholder' => '--SELECCIONE--']) !!}
+                                    </div>
+                                </div>
+                            </span>
+                            <span v-show="tipo == '3'">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>CARGAR EXCEL</label>
+                                        <input v-fileinput type="file" name="excel" class="file-loading">
+                                    </div>
+                                </div>
+                            </span>
+                        </div>
+                        <span v-if="tipo == '2'">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="FechaInicial">FECHA INICIAL</label>
+                                        <input name="FechaInicial" type="text" class="form-control"  v-datepicker >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label for="FechaFinal">FECHA FINAL</label>
+                                        <input name="FechaFinal" type="text" class="form-control" v-datepicker >
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <button class="btn btn-primary" type="submit" @click="buscar">
+                                <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
+                                <span v-else>Buscar</span>
+                                </button>
+                            </div>
+                        </span>
+                        {!! Form::close() !!}
+                    </section>
+                @endif
+                <section id="info">
+                    <hr>
+                    <div class="row">
+                        @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
                             <div class="col-md-6">
-                                <div class="form-group">
-                                    <label for="FechaFinal">FECHA FINAL</label>
-                                    <input name="FechaFinal" type="text" class="form-control" v-datepicker >
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        DETALLES DE LA CANCELACIÓN
+                                    </div>
+                                    <div class="panel-body">
+                                        <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
+                                        <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
+                                        <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="form-group">
-                            <button class="btn btn-primary" type="submit" @click="buscar">
-                            <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
-                            <span v-else>Buscar</span>
-                            </button>
-                        </div>
-                    </span>
-                    {!! Form::close() !!}
-                </section>
-            @endif
-            <section id="info">
-                <hr>
-                <div class="row">
-                    @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+                        @endif
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
-                                    DETALLES DE LA CANCELACIÓN
+                                    DETALLES DE LA CONCILIACIÓN
                                 </div>
                                 <div class="panel-body">
-                                    <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
-                                    <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
-                                    <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
+                                    <strong>Número de Viajes: </strong>@{{ conciliados.length }}<br>
+                                    <strong>Volúmen: </strong>@{{ conciliacion.volumen }}<br>
+                                    <strong>Importe: </strong>@{{ conciliacion.importe }}<br>
                                 </div>
-                            </div>
-                        </div>
-                    @endif
-                    <div class="col-md-6">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                DETALLES DE LA CONCILIACIÓN
-                            </div>
-                            <div class="panel-body">
-                                <strong>Número de Viajes: </strong>@{{ conciliados.length }}<br>
-                                <strong>Volúmen: </strong>@{{ conciliacion.volumen }}<br>
-                                <strong>Importe: </strong>@{{ conciliacion.importe }}<br>
                             </div>
                         </div>
                     </div>
-                </div>
-            </section>
-            <section id="detalles" v-if="conciliacion.detalles.length">
+                </section>
+                <section id="detalles" v-if="conciliacion.detalles.length">
                 <hr>
                 <ul id="detail-tabs" class="nav nav-tabs">
                     <li v-if="conciliados.length" class="active tab-conciliacion"><a href="#details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
@@ -220,7 +224,7 @@
                     </div>
                 </div>
             </section>
-
+            </span>
             <!-- MODAL RESULTADOS -->
             <div class="modal fade" id="resultados" tabindex="-1" role="dialog">
                 <div class="modal-dialog modal-lg" role="document">

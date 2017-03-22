@@ -29,7 +29,8 @@ Vue.component('conciliaciones-edit', {
             'form' : {
                 'errors' : []
             },
-            'guardando'  : false
+            'guardando'  : false,
+            'fetching'   : false
         }
     },
 
@@ -68,7 +69,9 @@ Vue.component('conciliaciones-edit', {
     },
 
     created: function () {
+        this.fetching = true;
         this.fetchDetalles();
+        this.fetching = false;
     },
 
     computed: {
@@ -167,8 +170,11 @@ Vue.component('conciliaciones-edit', {
                         }
                     },
                     error: function (error) {
-                        App.setErrorsOnForm(_this.form, error.responseText);
-                    }
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: error.responseText
+                        });                    }
                 });
             });
         },
@@ -177,7 +183,7 @@ Vue.component('conciliaciones-edit', {
             e.preventDefault();
 
             var _this = this;
-            var url = $(e.target).attr('href');
+            var url = App.host + '/conciliaciones/' + _this.conciliacion.id;
 
             if(! this.conciliacion.detalles.length) {
                 swal({
@@ -224,7 +230,11 @@ Vue.component('conciliaciones-edit', {
                                 }
                             },
                             error: function (error) {
-                                App.setErrorsOnForm(_this.form, error.responseText);
+                                swal({
+                                    type: 'error',
+                                    title: '¡Error!',
+                                    text: App.errorsToString(error.responseText)
+                                });
                             }
                         });
                     });
@@ -233,7 +243,7 @@ Vue.component('conciliaciones-edit', {
 
         aprobar: function(e) {
             e.preventDefault();
-            var url = $(e.target).attr('href');
+            var url = App.host + '/conciliaciones/' + _this.conciliacion.id;
             swal({
                 title: "¡Aprobar Conciliación!",
                 text: "¿Desea aprobar la conciliación?",
@@ -268,7 +278,11 @@ Vue.component('conciliaciones-edit', {
                         }
                     },
                     error: function (error) {
-                        App.setErrorsOnForm(_this.form, error.responseText);
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
                     }
                 });
             });
@@ -301,9 +315,12 @@ Vue.component('conciliaciones-edit', {
 
                     _this.conciliacion = response.conciliacion;
                 },
-                error: function(error) {
-                    _this.guardando = true;
-                    App.setErrorsOnForm(_this.form, error.responseText);
+                error: function (error) {
+                    swal({
+                        type: 'error',
+                        title: '¡Error!',
+                        text: App.errorsToString(error.responseText)
+                    });
                 }
             });
         },
@@ -355,7 +372,12 @@ Vue.component('conciliaciones-edit', {
                     _this.guardando = false
                     $('.ticket').val('');
                     $('.ticket').focus();
-                    App.setErrorsOnForm(_this.form, error.responseText);
+                    
+                    swal({
+                        type: 'error',
+                        title: '¡Error!',
+                        text: App.errorsToString(error.responseText)
+                    });
                 }
             })
         },
