@@ -45,15 +45,14 @@ class Conciliaciones
         try {
             $i = 0;
             foreach ($reader as $row) {
-                dd($row);
                 if($row->codigo != '') {
                     $viaje = Viaje::porConciliar()->where('code', '=', $row->codigo)->first();
                 } else {
-                    $viaje = Viaje::with('camiones')
-                        ->porConciliar()
+                    $camion = \App\Models\Camion::where('economico', $row->camion)->first();
+                    $viaje = Viaje::porConciliar()
                         ->where('FechaLlegada', '=', $row->fecha_llegada)
                         ->where('HoraLlegada', '=', $row->hora_llegada)
-                        ->where('camiones.economico', '=', $row->camion)
+                        ->where('idcamion', '=', $camion->IdCamion)
                         ->first();
                 }
 
