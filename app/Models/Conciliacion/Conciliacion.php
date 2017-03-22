@@ -115,7 +115,9 @@ class Conciliacion extends Model
     public function usuario(){
         return $this->belongsTo(User::class, "IdRegistro");
     }
-    
+    public function registro(){
+        return $this->belongsTo(User::class, "IdRegistro");
+    }
     public function cerro(){
         return $this->belongsTo(User::class, "IdCerro");
     }

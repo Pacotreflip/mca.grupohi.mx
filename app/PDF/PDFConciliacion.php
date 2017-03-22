@@ -457,22 +457,29 @@ class PDFConciliacion extends Rotation
     function Footer()
     {
         $this->SetY(-4);
-                $this->SetFont('Arial', '', 6);
-                $this->SetFillColor(180, 180, 180);
-                $this->Cell(3.92, .4, utf8_decode('Elaboró'), 'TRLB', 0, 'C', 1);
-                $this->Cell(3.92, .4, utf8_decode('Revisó'), 'TRLB', 0, 'C', 1);
-                $this->Cell(3.92, .4, utf8_decode('Autorizó'), 'TRLB', 0, 'C', 1);
-                $this->Ln();
-                
+        $this->SetTextColor('0', '0', '0');
+        $this->SetFont('Arial', '', 6);
+        $this->SetFillColor(180, 180, 180);
+        $this->Cell(3.92, .4, utf8_decode('Elaboró'), 'TRLB', 0, 'C', 1);
+        $this->Cell(3.915);
+        $this->Cell(3.92, .4, utf8_decode('Revisó'), 'TRLB', 0, 'C', 1);
+        $this->Cell(3.915);
+        $this->Cell(3.92, .4, utf8_decode('Autorizó'), 'TRLB', 0, 'C', 1);
+        $this->Ln();
 
-                $this->Cell(3.92, 1.2, '', 'TRLB', 0, 'C');
-                $this->Cell(3.92, 1.2, '', 'TRLB', 0, 'C');
-                $this->Cell(3.92, 1.2, '', 'TRLB', 0, 'C');
-                $this->Ln();
-                //$this->SetFillColor(180, 180, 180);
-                $this->Cell(3.92, .4, $this->conciliacion->usuario->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
-                $this->Cell(3.92, .4, $this->conciliacion->cerro->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
-                $this->Cell(3.92, .4, $this->conciliacion->aprobo->present()->nombreCompleto, 'TRLB', 0, 'C', 1);
+
+        $this->Cell(3.92, 1.2, '', 'TRLB', 0, 'C');
+        $this->Cell(3.915);
+        $this->Cell(3.92, 1.2, '', 'TRLB', 0, 'C');
+        $this->Cell(3.915);
+        $this->Cell(3.92, 1.2, '', 'TRLB', 0, 'C');
+        $this->Ln();
+        //$this->SetFillColor(180, 180, 180);
+        $this->Cell(3.92, .4, $this->conciliacion->registro, 'TRLB', 0, 'C', 1);
+        $this->Cell(3.915);
+        $this->Cell(3.92, .4, $this->conciliacion->cerro, 'TRLB', 0, 'C', 1);
+        $this->Cell(3.915);
+        $this->Cell(3.92, .4, $this->conciliacion->aprobo, 'TRLB', 0, 'C', 1);
         
         $this->SetY($this->GetPageHeight() - 1);
         $this->SetFont('Arial', '', $this->txtFooterTam);
