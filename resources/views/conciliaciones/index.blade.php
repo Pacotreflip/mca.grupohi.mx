@@ -40,11 +40,13 @@
         <th style="text-align: center">Sindicato</th>
         <th style="text-align: center">Empresa</th>
         <th style="text-align: center">Número de Viajes</th>
-        <th style="text-align: center">Vólumen</th>
+        <th style="text-align: center">Volumen</th>
         <th style="text-align: center">Importe</th>
         <th style="text-align: center">Registró</th>
+        <th style="text-align: center">Revisó</th>
+        <th style="text-align: center">Aprobó</th>
         <th style="text-align: center">Estado</th>
-        <th style="text-align: center">Fecha/Hora Registro</th>
+        
           <th style="text-align: center">Editar</th>
           <th style="text-align: center">Cancelar</th>
           <th style="text-align: center">PDF</th>
@@ -64,9 +66,17 @@
             <td style="text-align: right">{{$conciliacion->conciliacionDetalles->where('estado', 1)->count()}}</td>
             <td style="text-align: right">{{$conciliacion->volumen_f}}</td>
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
-            <td>{{$conciliacion->usuario}}</td>
+            <td>{{$conciliacion->registro }}<br>
+                {{$conciliacion->fecha_hora_registro}}
+            </td>
+            <td>
+            {{$conciliacion->cerro }}<br>
+            {{$conciliacion->fecha_hora_cierre_str}}
+            </td>
+            <td>{{$conciliacion->aprobo }}<br>
+            {{$conciliacion->fecha_hora_aprobacion_str}}</td>
             <td>{{$conciliacion->estado_str}}</td>
-            <td>{{$conciliacion->fecha_hora_registro }}</td>
+           
             <td>
                 <a href="{{route('conciliaciones.edit', $conciliacion)}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
             </td>

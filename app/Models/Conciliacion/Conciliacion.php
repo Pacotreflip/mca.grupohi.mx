@@ -35,7 +35,7 @@ class Conciliacion extends Model
         'estado',
         'IdRegistro'
     ];
-    protected $dates = ['timestamp'];
+    protected $dates = ['timestamp','FechaHoraCierre','FechaHoraAprobacion'];
     protected $presenter = ModelPresenter::class;
 
     public function rutas() {
@@ -139,6 +139,20 @@ class Conciliacion extends Model
     public function getFechaHoraRegistroAttribute(){
         return ucwords($this->timestamp->formatLocalized('%d %B %Y')).' ('.$this->timestamp->format("h:i:s").')';
     }
+    
+    public function getFechaHoraCierreStrAttribute(){
+        //dd($this->FechaHoraCierre());
+        if($this->FechaHoraCierre ){
+            return ucwords($this->FechaHoraCierre->formatLocalized('%d %B %Y')).' ('.$this->FechaHoraCierre->format("h:i:s").')';
+        }
+    }
+    
+    public function getFechaHoraAprobacionStrAttribute(){
+        //dd($this->FechaHoraCierre());
+        if($this->FechaHoraAprobacion ){
+            return ucwords($this->FechaHoraAprobacion->formatLocalized('%d %B %Y')).' ('.$this->FechaHoraAprobacion->format("h:i:s").')';
+        }
+    }
 
     public function cancelacion() {
         return $this->hasOne(ConciliacionCancelacion::class, 'idconciliacion');
@@ -150,7 +164,7 @@ class Conciliacion extends Model
         try {
             $this->estado = 1;
             $this->IdCerro = auth()->user()->idusuario;
-            $this->FechaHoraCierre = Carbon::now()->format('Y-m-d h:m:s');
+            $this->FechaHoraCierre = Carbon::now();
             $this->save();
 
             foreach ($this->viajes() as $v) {
@@ -190,7 +204,7 @@ class Conciliacion extends Model
     public function aprobar() {
         $this->estado = 2;
         $this->IdAprobo = auth()->user()->idusuario;
-        $this->FechaHoraAprobacion = Carbon::now()->format('Y-m-d h:m:s');
+        $this->FechaHoraAprobacion = Carbon::now();
         $this->save();
     }
     public function getEstadoStrAttribute(){
