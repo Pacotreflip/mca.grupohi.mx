@@ -16,7 +16,9 @@
                     <a href="{{ route('conciliaciones.update', $conciliacion->idconciliacion) }}" class="btn btn-success btn-sm pull-right" style="margin-right: 5px" @click="cerrar"><i class="fa fa-check"></i> CERRAR</a>
                     @endif
                 @elseif($conciliacion->estado == 1)
+                    @if (Auth::user()->can(['reabrir-conciliacion']))
                     <a href="{{ route('conciliaciones.edit', [$conciliacion, 'action' => 'reabrir']) }}" class="btn btn-default btn-sm pull-right" style="margin-right: 5px" @click="reabrir"><i class="fa fa-undo"></i> RE-ABRIR</a>
+                    @endif
                     @if (Auth::user()->can(['cancelar-conciliacion']))
                     <a href="{{ route('conciliaciones.destroy', $conciliacion->idconciliacion) }}" class="btn btn-danger btn-sm pull-right" @click="cancelar($event)"><i class="fa fa-close"></i> CANCELAR</a>
                     @endif
@@ -153,8 +155,8 @@
                                 <th>Material</th>
                                 <th>Importe</th>
                                 <th>Ticket (Código)</th>
-                                @if($conciliacion->estado == 0)
-                                <th>Quitar</th>
+                                @if($conciliacion->estado == 0 && (Auth::user()->can(['eliminar-viaje-conciliacion'])))
+                                <th style="width: 30px"></th>
                                 @endif
                             </tr>
                             </thead>
@@ -164,7 +166,7 @@
                                 <td>@{{ detalle.camion }}</td>
                                 <td style="text-align: right">
                                     @if($conciliacion->estado == 0)
-                                        <a href="#" @click="cambiar_cubicacion(detalle)">@{{ detalle.cubicacion_camion }}</a>
+                                    <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }}</a>
                                     @else
                                         @{{ detalle.cubicacion_camion }}
                                     @endif
@@ -172,7 +174,7 @@
                                 <td>@{{ detalle.material }}</td>
                                 <td style="text-align: right">@{{ detalle.importe }}</td>
                                 <td>@{{ detalle.code }}</td>
-                                @if($conciliacion->estado == 0)
+                                @if($conciliacion->estado == 0 && (Auth::user()->can(['eliminar-viaje-conciliacion'])) )
                                 <td>
                                     <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
                                 </td>

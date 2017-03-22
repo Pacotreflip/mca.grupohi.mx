@@ -87,7 +87,6 @@ class ConciliacionesDetallesController extends Controller
                     $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
                     $v = Viaje::where('code', '=', $request->get('code'))->first();
                     $viaje_neto = ViajeNeto::where('Code', '=', $request->get('code'))->first();
-
                     if (!$viaje_neto) {
                         throw new \Exception("Viaje no encontrado");
                     } else if ($viaje_neto && !$v) {
@@ -105,12 +104,12 @@ class ConciliacionesDetallesController extends Controller
                             $detalles = ConciliacionDetalleTransformer::transform($detalle);
                             $msg = "Viaje Conciliado";
                         } else {
-                            $cd = $v->conciliacionDetalles->where('estado', '=', 1)->first();
+                            $cd = $v->conciliacionDetalles->where('estado', 1)->first();
                             $c = $cd->conciliacion;
                             if($c->idconciliacion == $id) {
                                 throw new \Exception("Viaje conciiado en ésta conciliación");
                             } else {
-                                throw new \Exception("Viaje conciiado en conciliación '" . $cd->idconciliacion . "' de la empresa '" . $c->empresa . "' y el sindicato '" . $c->sindicato . "'");
+                                throw new \Exception("Viaje conciiado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "");
                             }
                         }
                     } else {

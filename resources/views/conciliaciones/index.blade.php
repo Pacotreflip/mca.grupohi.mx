@@ -59,7 +59,7 @@
             </td>
             <td>{{$conciliacion->sindicato->Descripcion}}</td>
             <td>{{$conciliacion->empresa}}</td>
-            <td style="text-align: right">{{$conciliacion->conciliacionDetalles->where('estado', '=', 1)->count()}}</td>
+            <td style="text-align: right">{{$conciliacion->conciliacionDetalles->where('estado', 1)->count()}}</td>
             <td style="text-align: right">{{$conciliacion->volumen_f}}</td>
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
             <td>{{$conciliacion->usuario}}</td>
@@ -78,7 +78,7 @@
                 {!! Form::close() !!}
             </td>
             <td>
-                @if(count($conciliacion->viajes()) && Auth::user()->can(['ver-pdf']))
+                @if($conciliacion->conciliacionDetalles->where('estado', 1)->count() && Auth::user()->can(['ver-pdf']))
                     <a href="{{ route('pfd.conciliacion', $conciliacion) }}" class="btn btn-default btn-xs"><i class="fa fa-file-pdf-o"></i></a>
                 @else
                     <a class="btn btn-default btn-xs" disabled><i class="fa fa-file-pdf-o"></i></a>
