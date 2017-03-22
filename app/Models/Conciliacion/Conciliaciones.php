@@ -9,11 +9,14 @@
 namespace App\Models\Conciliacion;
 
 
+use App\Models\Camion;
 use App\Models\Viaje;
+use App\Models\ViajeNeto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Maatwebsite\Excel\Facades\Excel;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class Conciliaciones
 {
@@ -38,17 +41,76 @@ class Conciliaciones
         $this->conciliacion = $conciliacion;
     }
 
-    public function cargarExcel($data) {
+    public function cargarExcel(UploadedFile $data) {
         $reader = Excel::load($data->getRealPath())->get();
 
         DB::connection('sca')->beginTransaction();
         try {
             $i = 0;
-            foreach ($reader as $row) {
-                if($row->codigo != '') {
+            $j = 1;
+            $filename = Carbon::now()->timestamp;
+
+            Excel::create($filename, function($excel) use ($data, $reader, $i, $j){
+                $excel->setTitle('Resultados');
+                $excel->setCreator('Control de Acarreos')
+                    ->setCompany('GHI');
+                $excel->setDescription('Resultados de la carga del archivo ' . $data->getClientOriginalName());
+                $excel->sheet('Resultados de la Carga', function ($sheet) use ($reader, $i, $j) {
+                    $sheet->appendRow(['Número', 'Resultado', 'Causa/Motivo', 'Camion', 'Fecha Llegada', 'Hora Llegada', 'Codigo']);
+                    $sheet->setAutoFilter();
+
+                    foreach ($reader as $row) {
+                        if ($row->codigo != null) {
+                            $viaje_neto = ViajeNeto::where('Code', $row->codigo)->first();
+                            $viaje = $viaje_neto ? $viaje_neto->viaje : null;
+                            $viaje_conciliar = Viaje::porConciliar()->where('code', '=', $row->codigo)->first();
+                        } else {
+                            $camion = Camion::where('economico', $row->camion)->first();
+                            $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $row->fecha_llegada)->where('HoraLlegada', $row->hora_llegada)->first();
+                            $viaje = $viaje_neto ? $viaje_neto->viaje : null;
+                            $viaje_conciliar = Viaje::porConciliar()->where('FechaLlegada', '=', $row->fecha_llegada)->where('HoraLlegada', '=', $row->hora_llegada)->where('idcamion', $camion ? $camion->IdCamion : null)->first();
+                        }
+
+                        /* --------------------*/
+                        if (!$viaje_neto) {
+                            $resultado = "NO CONCILIADO";
+                            $causa = "Viaje no encontrado";
+                        } else if ($viaje_neto && !$viaje) {
+                            $resultado = "NO CONCILIADO";
+                            $causa = "Viaje no validado";
+                        } else if ($viaje_conciliar) {
+                            if ($viaje_conciliar->disponible()) {
+                                ConciliacionDetalle::create([
+                                    'idconciliacion' => $this->conciliacion->idconciliacion,
+                                    'idviaje' => $viaje_conciliar->IdViaje,
+                                    'timestamp' => Carbon::now()->toDateTimeString(),
+                                    'estado' => 1
+                                ]);
+                                $i++;
+                                $resultado = "CONCILIADO";
+                                $causa = "";
+                            } else {
+                                $cd = $viaje->conciliacionDetalles->where('estado', 1)->first();
+                                $c = $cd->conciliacion;
+                                $resultado = "NO CONCILIADO";
+                                $causa = "Viaje conciiado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato;
+                            }
+                        } else {
+                            $c = $viaje->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
+                            $resultado = "NO CONCILIADO";
+                            $causa = "Viaje conciiado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato;
+                        }
+                        $sheet->appendRow([$j, $resultado, $causa, $row->camion, $row->fecha_llegada, $row->hora_llegada, $row->codigo]);
+                        $j++;
+                    }
+                });
+            })->store('xls', storage_path('/exports/excel'));
+
+            /*foreach ($reader as $row) {
+                if($row->codigo != null) {
                     $viaje = Viaje::porConciliar()->where('code', '=', $row->codigo)->first();
                 } else {
-                    $camion = \App\Models\Camion::where('economico', $row->camion)->first();
+                    $camion = Camion::where('economico', $row->camion)->first();
                     $viaje = Viaje::porConciliar()
                         ->where('FechaLlegada', '=', $row->fecha_llegada)
                         ->where('HoraLlegada', '=', $row->hora_llegada)
@@ -67,16 +129,18 @@ class Conciliaciones
                         $i++;
                     }
                 }
-            }
+            }*/
             DB::connection('sca')->commit();
 
             return [
                 'succes' => true,
                 'reg'    => $i,
-                'no_reg' => count($reader) - $i
+                'no_reg' => count($reader) - $i,
+                'file'   => $filename.'.xls'
             ];
 
         } catch (\Exception $e) {
+            throw $e;
             DB::connection('sca')->rollback();
         }
     }

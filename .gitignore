@@ -6,3 +6,4 @@ Homestead.json
 .env
 /public/uploads
 /public/php_errors.log
+/storage/exports
