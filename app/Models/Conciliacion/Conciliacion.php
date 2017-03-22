@@ -65,7 +65,7 @@ class Conciliacion extends Model
 
     public function viajes() {
         $viajes = new Collection();
-        foreach ($this->conciliacionDetalles as $cd) {
+        foreach ($this->conciliacionDetalles->where('estado', '=', 1) as $cd) {
             $viajes->push($cd->viaje);
         }
         return $viajes;
@@ -97,8 +97,9 @@ class Conciliacion extends Model
                  . "from conciliacion "
                  . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
                  . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+                 . "and conciliacion_detalle.estado = 1 "
                  . "group by conciliacion.idconciliacion limit 1");
-         return $results[0]->Volumen;
+         return $results ? $results[0]->Volumen : 0;
     }
     
     public function getImporteAttribute(){
@@ -106,8 +107,9 @@ class Conciliacion extends Model
                  . "from conciliacion "
                  . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
                  . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+                 . "and conciliacion_detalle.estado = 1 "
                  . "group by conciliacion.idconciliacion limit 1");
-         return $results[0]->Importe;
+         return $results ?  $results[0]->Importe : 0;
     }
     public function usuario(){
         return $this->belongsTo(User::class, "IdRegistro");

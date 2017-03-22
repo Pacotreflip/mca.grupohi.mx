@@ -59,7 +59,7 @@
             </td>
             <td>{{$conciliacion->sindicato->Descripcion}}</td>
             <td>{{$conciliacion->empresa}}</td>
-            <td style="text-align: right">{{$conciliacion->conciliacionDetalles->count()}}</td>
+            <td style="text-align: right">{{$conciliacion->conciliacionDetalles->where('estado', '=', 1)->count()}}</td>
             <td style="text-align: right">{{$conciliacion->volumen_f}}</td>
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
             <td>{{$conciliacion->usuario}}</td>

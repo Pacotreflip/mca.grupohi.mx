@@ -33748,21 +33748,47 @@ Vue.component('conciliaciones-edit', {
         this.fetchDetalles();
     },
 
+    computed: {
+        cancelados: function cancelados() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                if (detalle.estado === -1) {
+                    return true;
+                }
+                return false;
+            });
+        },
+
+        conciliados: function conciliados() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                if (detalle.estado === 1) {
+                    return true;
+                }
+                return false;
+            });
+        }
+    },
+
     methods: {
 
         fetchDetalles: function fetchDetalles() {
+            var _this2 = this;
+
             var _this = this;
             var url = $('.form_registrar').attr('action');
-
+            this.guardando = true;
             this.$http.get(url).then(function (response) {
-                _this.conciliacion.detalles = response.body.detalles;
+                _this.conciliacion = response.body.conciliacion;
+                _this2.guardando = false;
             }, function (error) {
+                _this2.guardando = false;
                 App.setErrorsOnForm(_this.form, error.body);
             });
         },
 
         confirmarRegistro: function confirmarRegistro(e) {
-            var _this2 = this;
+            var _this3 = this;
 
             e.preventDefault();
 
@@ -33775,7 +33801,7 @@ Vue.component('conciliaciones-edit', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, function () {
-                return _this2.registrar();
+                return _this3.registrar();
             });
         },
 
@@ -33948,7 +33974,7 @@ Vue.component('conciliaciones-edit', {
                         showConfirmButton: true
                     });
 
-                    _this.conciliacion.detalles = response.detalles;
+                    _this.conciliacion = response.conciliacion;
                 },
                 error: function error(_error4) {
                     _this.guardando = true;
@@ -33971,8 +33997,8 @@ Vue.component('conciliaciones-edit', {
                 data: data,
                 type: 'POST',
                 success: function success(response) {
-                    if (response.detalles != null) {
-                        _this.conciliacion.detalles.push(response.detalles);
+                    if (response.conciliacion.detalles != null) {
+                        _this.conciliacion.detalles.push(response.conciliacion.detalles);
                         _this.guardando = false;
                         swal({
                             type: 'success',
@@ -33989,9 +34015,9 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'warning',
                             title: '¡Error!',
-                            text: 'No se encontró el viaje o ya se encuentra conciliado.',
+                            text: response.msg,
                             showConfirmButton: true,
-                            timer: 1000
+                            timer: 1500
                         });
 
                         $('.ticket').val('');
@@ -34008,7 +34034,7 @@ Vue.component('conciliaciones-edit', {
         },
 
         buscar: function buscar(e) {
-            var _this3 = this;
+            var _this4 = this;
 
             e.preventDefault();
 
@@ -34033,7 +34059,7 @@ Vue.component('conciliaciones-edit', {
                 }
             }, function (error) {
                 _this.guardando = false;
-                App.setErrorsOnForm(_this3.form, error.body);
+                App.setErrorsOnForm(_this4.form, error.body);
             });
         },
 
@@ -34066,6 +34092,7 @@ Vue.component('conciliaciones-edit', {
                     },
                     success: function success(response) {
                         if (response.status_code = 200) {
+                            _this.fetchDetalles();
                             swal({
                                 type: 'success',
                                 title: '¡Hecho!',
@@ -34073,9 +34100,6 @@ Vue.component('conciliaciones-edit', {
                                 showCancelButton: false,
                                 confirmButtonText: '' + 'OK',
                                 closeOnConfirm: true
-                            }, function () {
-                                detalle.cubicacion_camion = response.viaje.cubicacion_camion;
-                                detalle.importe = response.viaje.importe;
                             });
                         }
                     },
@@ -34083,6 +34107,67 @@ Vue.component('conciliaciones-edit', {
                         App.setErrorsOnForm(_this.form, _error6.responseText);
                     }
                 });
+            });
+        },
+
+        eliminar_detalle: function eliminar_detalle(idconciliacion_detalle) {
+            var _this = this;
+            var url = App.host + '/conciliacion/' + this.conciliacion.id + '/detalles/' + idconciliacion_detalle;
+            swal({
+                title: "¡Quitar viaje Conciliación!",
+                text: "¿Esta seguro de que deseas quitar el viaje de la conciliación?",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputPlaceholder: "Motivo de la eliminación.",
+                confirmButtonText: "Si, Quitar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("Escriba el motivo de la eliminación!");
+                    return false;
+                }
+                _this.guardando = true;
+                _this.$http.post(url, { _method: 'DELETE', motivo: inputValue }).then(function (response) {
+                    if (response.body.status_code == 200) {
+                        _this.guardando = false;
+                        _this.conciliacion = response.body.conciliacion;
+                        swal({
+                            type: 'success',
+                            title: '¡Hecho!',
+                            text: 'Viaje removido correctamente',
+                            showCancelButton: false,
+                            confirmButtonText: 'OK',
+                            closeOnConfirm: true
+                        });
+                    }
+                }, function (error) {
+                    _this.guardando = false;
+                    App.setErrorsOnForm(_this.form, error.body);
+                });
+            });
+        },
+
+        reabrir: function reabrir(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var url = $(e.target).attr('href');
+
+            swal({
+                title: "Re-abrir conciliación?",
+                text: "¿Esta seguro de que desea Re-abrir la conciliación?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                console.log('reabrir');
+                console.log(url);
             });
         }
     }

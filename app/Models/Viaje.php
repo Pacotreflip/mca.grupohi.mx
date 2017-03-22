@@ -50,14 +50,12 @@ class Viaje extends Model
     }
 
     public function disponible() {
-        $result = true;
         foreach ($this->conciliacionDetalles as $conciliacionDetalle) {
             if ($conciliacionDetalle->estado == 1) {
-                $result = false;
+                return false;
             }
         }
-
-        return $result;
+        return true;
     }
 
     public function cambiarCubicacion($cubicacion) {
