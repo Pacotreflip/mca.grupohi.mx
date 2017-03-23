@@ -94,12 +94,12 @@ class Conciliaciones
                                 $cd = $viaje->conciliacionDetalles->where('estado', 1)->first();
                                 $c = $cd->conciliacion;
                                 $resultado = "NO CONCILIADO";
-                                $causa = "Viaje conciiado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato;
+                                $causa = "Viaje incluido en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato;
                             }
                         } else {
                             $c = $viaje->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
                             $resultado = "NO CONCILIADO";
-                            $causa = "Viaje conciiado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato;
+                            $causa = "Viaje incluido en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato;
                         }
                         $sheet->appendRow([$j, $resultado, $causa, $row->camion, $row->fecha_llegada, $row->hora_llegada, $row->codigo, $row->cubicacion, $viaje ? $viaje->CubicacionCamion : null]);
                         $j++;

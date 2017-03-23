@@ -78,7 +78,11 @@
             <td>{{$conciliacion->estado_str}}</td>
            
             <td>
+                @if (Auth::user()->can(['generar-conciliacion', 'cerrar-conciliacion', 'aprobar-conciliacion', 'cancelar-conciliacion', 'abrir-conciliacion' ])) 
                 <a href="{{route('conciliaciones.edit', $conciliacion)}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
+                @else
+                 <button disabled class="btn btn-primary btn-xs "><span class="glyphicon glyphicon-pencil"></span></button>
+                @endif
             </td>
             <td>
                 {!! Form::open(['route' => ['conciliaciones.destroy', $conciliacion]]) !!}
