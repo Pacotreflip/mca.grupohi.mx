@@ -7,14 +7,10 @@ use App\Models\Conciliacion\ConciliacionDetalle;
 use App\Models\Conciliacion\Conciliaciones;
 use App\Models\Transformers\ConciliacionDetalleTransformer;
 use App\Models\Transformers\ConciliacionTransformer;
-use App\Models\Transformers\ViajeTransformer;
 use App\Models\Viaje;
 use App\Models\ViajeNeto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
@@ -195,6 +191,7 @@ class ConciliacionesDetallesController extends Controller
      * @param $id_conciliacion
      * @param $id_detalle
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      * @internal param int $id
      */
     public function destroy(Request $request, $id_conciliacion, $id_detalle)
@@ -202,6 +199,11 @@ class ConciliacionesDetallesController extends Controller
         DB::connection('sca')->beginTransaction();
 
         try {
+            $detalle = ConciliacionDetalle::find($id_detalle);
+            if($detalle->estado == -1) {
+                throw new \Exception("El viaje ya ha sido cancelado anteriormente");
+            }
+
             DB::connection('sca')->table('conciliacion_detalle_cancelacion')->insertGetId([
                 'idconciliaciondetalle'  => $id_detalle,
                 'motivo'                 => $request->get('motivo'),
@@ -223,7 +225,7 @@ class ConciliacionesDetallesController extends Controller
             ]);
         } catch (\Exception $e) {
             DB::connection('sca')->rollBack();
-            echo $e->getMessage();
+            throw $e;
         }
     }
 

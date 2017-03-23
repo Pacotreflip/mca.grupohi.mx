@@ -44,7 +44,7 @@ class ModelPresenter extends Presenter
     public function conciliacionEstado() {
         switch ($this->entity->estado) {
             case 0 :
-                return "CREADA";
+                return "GENERADA";
                 break;
             case 1:
                 return "CERRADA";

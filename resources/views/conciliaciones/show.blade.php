@@ -32,6 +32,7 @@
                     DETALLES DE LA CONCILIACIÓN
                 </div>
                 <div class="panel-body">
+                    <strong>Estado: </strong>{{  $conciliacion->present()->conciliacionEstado }}<br>
                     <strong>Número de Viajes: </strong>{{ count($conciliacion->conciliacionDetalles->where('estado', 1)) }}<br>
                     <strong>Volúmen: </strong>{{ $conciliacion->volumen_f }}<br>
                     <strong>Importe: </strong>{{ $conciliacion->importe_f }}<br>

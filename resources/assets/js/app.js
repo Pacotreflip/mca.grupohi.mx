@@ -9,7 +9,12 @@ require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
 window._ = require('underscore');
 require('./scripts');
-window.Vue = require('vue/dist/vue.min.js');
+// Production
+// window.Vue = require('vue/dist/vue.min.js');
+
+// Development
+window.Vue = require('vue/dist/vue.js');
+
 require('vue-resource');
 Vue.http.headers.common['X-CSRF-TOKEN'] = App.csrfToken;
 //require('./vue-directives');

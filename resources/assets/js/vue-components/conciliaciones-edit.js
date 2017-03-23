@@ -174,7 +174,8 @@ Vue.component('conciliaciones-edit', {
                             type: 'error',
                             title: '¡Error!',
                             text: error.responseText
-                        });                    }
+                        });
+                    }
                 });
             });
         },
@@ -430,6 +431,9 @@ Vue.component('conciliaciones-edit', {
                 if (inputValue === "") {
                     swal.showInputError("¡Escriba la nueva Cubicación!");
                     return false
+                } if (! $.isNumeric(inputValue)) {
+                    swal.showInputError("¡Por favor introduzca sólo números!");
+                    return false;
                 }
                 $.ajax({
                     url: App.host + '/viajes/' + detalle.id ,
@@ -454,7 +458,11 @@ Vue.component('conciliaciones-edit', {
                         }
                     },
                     error: function (error) {
-                        App.setErrorsOnForm(_this.form, error.responseText);
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
                     }
                 });
             });
@@ -464,12 +472,12 @@ Vue.component('conciliaciones-edit', {
             var _this = this;
             var url = App.host + '/conciliacion/' + this.conciliacion.id + '/detalles/' + idconciliacion_detalle;
             swal({
-                title: "¡Quitar viaje Conciliación!",
+                title: "¡Cancelar viaje de la Conciliación!",
                 text: "¿Esta seguro de que deseas quitar el viaje de la conciliación?",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
-                inputPlaceholder: "Motivo de la eliminación.",
+                inputPlaceholder: "Motivo de la cancelación.",
                 confirmButtonText: "Si, Quitar",
                 cancelButtonText: "No",
                 showLoaderOnConfirm: true
@@ -478,7 +486,7 @@ Vue.component('conciliaciones-edit', {
             function(inputValue){
                 if (inputValue === false) return false;
                 if (inputValue === "") {
-                    swal.showInputError("Escriba el motivo de la eliminación!");
+                    swal.showInputError("Escriba el motivo de la cancelación!");
                     return false
                 }
                 _this.guardando = true;
@@ -489,7 +497,7 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'success',
                             title: '¡Hecho!',
-                            text: 'Viaje removido correctamente',
+                            text: 'Viaje cancelado correctamente',
                             showCancelButton: false,
                             confirmButtonText: 'OK',
                             closeOnConfirm: true
@@ -497,7 +505,11 @@ Vue.component('conciliaciones-edit', {
                     }
                 }, (error) => {
                     _this.guardando = false;
-                    App.setErrorsOnForm(_this.form, error.body);
+                    swal({
+                        type: 'error',
+                        title: '¡Error!',
+                        text: App.errorsToString(error.body)
+                    });
                 });
             });
         },

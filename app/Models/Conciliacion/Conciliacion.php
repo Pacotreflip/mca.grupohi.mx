@@ -8,7 +8,7 @@ use App\Models\Sindicato;
 use App\Models\Viaje;
 use App\Presenters\ModelPresenter;
 use Illuminate\Database\Eloquent\Model;
-use App\Http\Requests\Request;
+use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\User;
@@ -234,7 +234,6 @@ class Conciliacion extends Model
             }
 
             $this->estado = $this->estado == 0 ? -1 : -2;
-            $this->save();
 
             ConciliacionCancelacion::create([
                 'idconciliacion' => $this->idconciliacion,
@@ -255,6 +254,7 @@ class Conciliacion extends Model
                 $detalle->estado = -1;
                 $detalle->save();
             }
+            $this->save();
 
             DB::connection('sca')->commit();
         } catch (\Exception $e) {

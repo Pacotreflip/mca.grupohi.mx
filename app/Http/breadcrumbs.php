@@ -275,7 +275,7 @@ Breadcrumbs::register('conciliaciones.index', function($breadcrumbs) {
 
 Breadcrumbs::register('conciliaciones.show', function($breadcrumbs, $conciliacion) {
     $breadcrumbs->parent('conciliaciones.index');
-    $breadcrumbs->push($conciliacion->idconciliacion . ' (' . $conciliacion->present()->conciliacionEstado . ')', route('conciliaciones.show', $conciliacion));
+    $breadcrumbs->push($conciliacion->idconciliacion, route('conciliaciones.show', $conciliacion));
 });
 
 Breadcrumbs::register('conciliaciones.create', function($breadcrumbs) {

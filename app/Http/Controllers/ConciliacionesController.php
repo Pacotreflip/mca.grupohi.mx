@@ -141,7 +141,7 @@ class ConciliacionesController extends Controller
     public function destroy(Request $request, $id)
     {
         $conciliacion = Conciliacion::findOrFail($id);
-        $conciliacion->cancelar();
+        $conciliacion->cancelar($request);
 
         return response()->json([
             'success' => true,
