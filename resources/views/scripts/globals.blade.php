@@ -23,7 +23,21 @@
                 }else{
                     form.errors.push('Un error grave ocurrió. Por favor intente otra vez.');
                 }
-                
+            }
+        },
+        errorsToString: function(errors) {
+            if (typeof errors === 'object') {
+                return _.flatten(_.toArray(errors));
+            } else {
+                var ind1 = errors.indexOf('<span class="exception_message">');
+                var cad1 = errors.substring(ind1);
+                var ind2 = cad1.indexOf('</span>');
+                var cad2 = cad1.substring(32,ind2);
+                if(cad2 != ""){
+                    return cad2;
+                }else{
+                    return 'Un error grave ocurrió. Por favor intente otra vez.';
+                }
             }
         }
     }

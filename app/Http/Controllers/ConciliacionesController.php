@@ -3,28 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Camion;
-use App\Models\Conciliacion\ConciliacionCancelacion;
-use App\Models\Conciliacion\ConciliacionDetalle;
-use App\Models\Conciliacion\ConciliacionDetalleCancelacion;
-use App\Models\Conciliacion\Conciliaciones;
 use App\Models\Empresa;
 use App\Models\Sindicato;
-use App\Models\Transformers\ConciliacionDetalleTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
-use Laracasts\Flash\Flash;
 use Carbon\Carbon;
 use App\Models\Conciliacion\Conciliacion;
-use App\Models\ProyectoLocal;
-use App\Models\Origen;
-use App\Models\Tiro;
-use App\Models\TipoRuta;
-use App\Models\Cronometria;
-use App\Models\ArchivoRuta;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+
 class ConciliacionesController extends Controller
 {
     
@@ -115,13 +102,6 @@ class ConciliacionesController extends Controller
      */
     public function edit(Request $request, $id)
     {
-        if($request->has('file')) {
-            return view('conciliaciones.edit')
-                ->withConciliacion(Conciliacion::findOrFail($id))
-                ->withCamiones(Camion::lists('Economico', 'IdCamion'))
-                ->withFile($request->get('file'));
-        }
-
         return view('conciliaciones.edit')
             ->withConciliacion(Conciliacion::findOrFail($id))
             ->withCamiones(Camion::lists('Economico', 'IdCamion'));
@@ -161,28 +141,7 @@ class ConciliacionesController extends Controller
     public function destroy(Request $request, $id)
     {
         $conciliacion = Conciliacion::findOrFail($id);
-        $conciliacion->estado = $conciliacion->estado == 0 ? -1 : -2;
-        $conciliacion->save();
-
-        ConciliacionCancelacion::create([
-            'idconciliacion' => $id,
-            'motivo' => $request->get('motivo'),
-            'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
-            'idcancelo' => auth()->user()->idusuario
-        ]);
-
-        foreach ($conciliacion->conciliacionDetalles as $detalle) {
-
-            ConciliacionDetalleCancelacion::create([
-                'idconciliaciondetalle'  => $detalle->idconciliacion_detalle,
-                'motivo'                 => $request->get('motivo') ,
-                'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
-                'idcancelo'              => auth()->user()->idusuario
-            ]);
-
-            $detalle->estado = -1;
-            $detalle->save();
-        }
+        $conciliacion->cancelar();
 
         return response()->json([
             'success' => true,
@@ -191,6 +150,6 @@ class ConciliacionesController extends Controller
     }
 
     public function show() {
-        
+
     }
 }

@@ -3,17 +3,15 @@
 namespace App\Models\Conciliacion;
 
 use App\Models\Empresa;
-use App\Models\Material;
 use App\Models\Ruta;
 use App\Models\Sindicato;
 use App\Models\Viaje;
 use App\Presenters\ModelPresenter;
 use Illuminate\Database\Eloquent\Model;
+use App\Http\Requests\Request;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\User;
-use PhpParser\Node\Stmt\Throw_;
-use PhpSpec\Wrapper\Subject\Expectation\ThrowExpectation;
 use Carbon\Carbon;
 
 class Conciliacion extends Model
@@ -162,6 +160,9 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
+            if ($this->estado != 0) {
+                throw new \Exception("No se puede cerrar la conciliación ya que su estado actual es " .$this->estado_str);
+            }
             $this->estado = 1;
             $this->IdCerro = auth()->user()->idusuario;
             $this->FechaHoraCierre = Carbon::now();
@@ -196,17 +197,72 @@ class Conciliacion extends Model
             }
             DB::connection('sca')->commit();
         } catch (\Exception $e) {
-            echo $e->getMessage();
             DB::connection('sca')->rollback();
+            throw $e;
         }
     }
 
     public function aprobar() {
-        $this->estado = 2;
-        $this->IdAprobo = auth()->user()->idusuario;
-        $this->FechaHoraAprobacion = Carbon::now();
-        $this->save();
+
+        DB::connection('sca')->beginTransaction();
+
+        try {
+
+            if($this->estado != 1) {
+                throw new \Exception("No se puede aprobar la conciliación ya que su estado actual es " .$this->estado_str);
+            }
+
+            $this->estado = 2;
+            $this->IdAprobo = auth()->user()->idusuario;
+            $this->FechaHoraAprobacion = Carbon::now()->format('Y-m-d h:m:s');
+            $this->save();
+
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
     }
+
+    public function cancelar(Request $request) {
+
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            if($this->estado == -1 || $this->estado == -2) {
+                throw new \Exception("Ésta conciliación ya ha sido cancelada anteriormente");
+            }
+
+            $this->estado = $this->estado == 0 ? -1 : -2;
+            $this->save();
+
+            ConciliacionCancelacion::create([
+                'idconciliacion' => $this->idconciliacion,
+                'motivo' => $request->get('motivo'),
+                'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
+                'idcancelo' => auth()->user()->idusuario
+            ]);
+
+            foreach ($this->conciliacionDetalles as $detalle) {
+
+                ConciliacionDetalleCancelacion::create([
+                    'idconciliaciondetalle'  => $detalle->idconciliacion_detalle,
+                    'motivo'                 => $request->get('motivo') ,
+                    'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
+                    'idcancelo'              => auth()->user()->idusuario
+                ]);
+
+                $detalle->estado = -1;
+                $detalle->save();
+            }
+
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
+    }
+
     public function getEstadoStrAttribute(){
         if($this->estado == 0){
             return 'Generada';
