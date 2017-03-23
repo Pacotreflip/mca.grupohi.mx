@@ -70,9 +70,7 @@ Vue.component('conciliaciones-edit', {
     },
 
     created: function () {
-        this.fetching = true;
         this.fetchConciliacion();
-        this.fetching = false;
     },
 
     computed: {
@@ -100,14 +98,14 @@ Vue.component('conciliaciones-edit', {
     methods: {
 
         fetchConciliacion: function() {
+            this.fetching = true;
             var _this = this;
             var url = $('#id_conciliacion').val();
-            this.guardando = true;
             this.$http.get(url).then(response => {
                 _this.conciliacion = response.body.conciliacion;
-                this.guardando = false;
+                this.fetching = false;
             }, error => {
-                this.guardando = false;
+                this.fetching = false;
                 App.setErrorsOnForm(_this.form, error.body);
             });
         },

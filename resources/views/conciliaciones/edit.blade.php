@@ -38,10 +38,10 @@
             {!! Breadcrumbs::render('conciliaciones.edit', $conciliacion) !!}
             <app-errors v-bind:form="form"></app-errors>
 
-            <span v-if="fetching">
+            <span v-show="fetching">
                 <div class="text-center"><i class="fa fa-spinner fa-pulse fa-2x"></i> <big>CARGANDO CONCILIACIÓN</big></div>
             </span>
-            <span v-else>
+            <span v-show="!fetching">
                 @if($conciliacion->estado == 0)
                 <section id="conciliar">
                         <hr>
@@ -118,20 +118,6 @@
                 <section id="info">
                     <hr>
                     <div class="row">
-                        @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
-                            <div class="col-md-6">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading">
-                                        DETALLES DE LA CANCELACIÓN
-                                    </div>
-                                    <div class="panel-body">
-                                        <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
-                                        <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
-                                        <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
-                                    </div>
-                                </div>
-                            </div>
-                        @endif
                         <div class="col-md-6">
                             <div class="panel panel-default">
                                 <div class="panel-heading">
@@ -146,6 +132,20 @@
                                 </div>
                             </div>
                         </div>
+                        @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+                            <div class="col-md-6">
+                                <div class="panel panel-default">
+                                    <div class="panel-heading">
+                                        DETALLES DE LA CANCELACIÓN
+                                    </div>
+                                    <div class="panel-body">
+                                        <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
+                                        <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
+                                        <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 </section>
                 <section id="detalles" v-if="conciliacion.detalles.length">

@@ -12,20 +12,6 @@
 <section id="info">
     <hr>
     <div class="row">
-        @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
-            <div class="col-md-6">
-                <div class="panel panel-default">
-                    <div class="panel-heading">
-                        DETALLES DE LA CANCELACIÓN
-                    </div>
-                    <div class="panel-body">
-                        <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
-                        <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
-                        <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
-                    </div>
-                </div>
-            </div>
-        @endif
         <div class="col-md-6">
             <div class="panel panel-default">
                 <div class="panel-heading">
@@ -41,6 +27,20 @@
                 </div>
             </div>
         </div>
+        @if($conciliacion->estado == -1 || $conciliacion->estado == -2)
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        DETALLES DE LA CANCELACIÓN
+                    </div>
+                    <div class="panel-body">
+                        <strong>Fecha y hora de cancelación: </strong>{{ $conciliacion->cancelacion->timestamp_cancelacion }}<br>
+                        <strong>Persona que canceló: </strong>{{ $conciliacion->cancelacion->user->present()->nombreCompleto }}<br>
+                        <strong>Motivo de la cancelación: </strong>{{ $conciliacion->cancelacion->motivo }}<br>
+                    </div>
+                </div>
+            </div>
+        @endif
     </div>
 </section>
 @if(count($conciliacion->conciliacionDetalles))
