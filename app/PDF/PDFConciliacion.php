@@ -240,6 +240,11 @@ class PDFConciliacion extends Rotation
     private function details()
     {
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('FECHA:'), '', 0, 'LB');
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, $this->conciliacion->fecha_conciliacion, '', 1, 'L');
+        
+        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PROYECTO:'), '', 0, 'L');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode(Proyecto::find(Context::getId())->descripcion), '', 1, 'L');
@@ -258,11 +263,7 @@ class PDFConciliacion extends Rotation
         $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('SINDICATO:'), '', 0, 'LB');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->sindicato->NombreCorto), '', 1, 'L');
-
-//        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-//        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PERIODO:'), '', 0, 'LB');
-//        $this->SetFont('Arial', '', $this->txtContenidoTam);
-//        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->fecha_inicial) . ' al ' . $this->conciliacion->fecha_final, '', 1, 'L');
+        
     }
 
     private function rutas()
