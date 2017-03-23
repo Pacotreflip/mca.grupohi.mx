@@ -59,7 +59,7 @@
             {{$contador++}}
             </td>
              <td>
-            {{$conciliacion->idconciliacion}}
+            {!! link_to_route('conciliaciones.show', $conciliacion->idconciliacion, $conciliacion->idconciliacion) !!}
             </td>
             <td>{{$conciliacion->sindicato->Descripcion}}</td>
             <td>{{$conciliacion->empresa}}</td>
