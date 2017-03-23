@@ -33,18 +33,11 @@ class ConciliacionesDetallesController extends Controller
     {
         if($request->ajax()) {
 
-            $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
-            $conciliacion = Conciliacion::find($id);
+            $conciliacion = ConciliacionTransformer::transform(Conciliacion::find($id));
 
             return response()->json([
                 'status_code' => 200,
-                'conciliacion' => [
-                    'id' => $id,
-                    'num_viajes' => $conciliacion->conciliacionDetalles->count(),
-                    'importe'    => $conciliacion->importe_f,
-                    'volumen'    => $conciliacion->volumen_f,
-                    'detalles'   => $detalles
-                ]
+                'conciliacion' => $conciliacion
             ]);
         }
     }

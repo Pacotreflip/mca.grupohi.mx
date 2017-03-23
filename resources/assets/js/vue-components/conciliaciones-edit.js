@@ -24,6 +24,7 @@ Vue.component('conciliaciones-edit', {
             'tipo'         : '',
             'resultados'   : [],
             'conciliacion' : {
+                'id'       : '',
                 'detalles' : []
             },
             'form' : {
@@ -70,7 +71,7 @@ Vue.component('conciliaciones-edit', {
 
     created: function () {
         this.fetching = true;
-        this.fetchDetalles();
+        this.fetchConciliacion();
         this.fetching = false;
     },
 
@@ -98,9 +99,9 @@ Vue.component('conciliaciones-edit', {
 
     methods: {
 
-        fetchDetalles: function() {
+        fetchConciliacion: function() {
             var _this = this;
-            var url = $('.form_registrar').attr('action');
+            var url = $('#id_conciliacion').val();
             this.guardando = true;
             this.$http.get(url).then(response => {
                 _this.conciliacion = response.body.conciliacion;

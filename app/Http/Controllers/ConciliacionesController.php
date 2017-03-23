@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Camion;
 use App\Models\Empresa;
 use App\Models\Sindicato;
+use App\Models\Transformers\ConciliacionTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -149,8 +150,18 @@ class ConciliacionesController extends Controller
         ], 200);
     }
 
-    public function show($id) {
+    public function show(Request $request, $id) {
+        if($request->ajax()) {
+            $conciliacion = ConciliacionTransformer::transform(Conciliacion::find($id));
+
+            return response()->json([
+                'status_code' => 200,
+                'conciliacion' => $conciliacion
+            ]);
+        }
+
         $conciliacion = Conciliacion::find($id);
-        return view('conciliaciones.show')->withConciliacion($conciliacion);
+        return view('conciliaciones.show')
+            ->withConciliacion($conciliacion);
     }
 }

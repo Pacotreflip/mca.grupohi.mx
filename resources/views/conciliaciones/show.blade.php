@@ -32,6 +32,8 @@
                     DETALLES DE LA CONCILIACIÓN
                 </div>
                 <div class="panel-body">
+                    <strong>Empresa: </strong>{{ $conciliacion->empresa->razonSocial }}<br>
+                    <strong>Sindicato: </strong>{{ $conciliacion->sindicato->NombreCorto }}<br>
                     <strong>Estado: </strong>{{  $conciliacion->present()->conciliacionEstado }}<br>
                     <strong>Número de Viajes: </strong>{{ count($conciliacion->conciliacionDetalles->where('estado', 1)) }}<br>
                     <strong>Volúmen: </strong>{{ $conciliacion->volumen_f }}<br>

@@ -6,6 +6,7 @@
     <global-errors></global-errors>
     <conciliaciones-edit inline-template>
         <section>
+            <input name="id_conciliacion" type="hidden" id="id_conciliacion"  value="{{ route('conciliaciones.show', $conciliacion) }}">
             <h1>
                 CONCILIACIONES
                 @if(count($conciliacion->conciliacionDetalles->where('estado', 1)) && Auth::user()->can(['ver-pdf']))
@@ -137,6 +138,8 @@
                                     DETALLES DE LA CONCILIACIÓN
                                 </div>
                                 <div class="panel-body">
+                                    <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
+                                    <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
                                     <strong>Número de Viajes: </strong>@{{ conciliados.length }}<br>
                                     <strong>Volúmen: </strong>@{{ conciliacion.volumen }}<br>
                                     <strong>Importe: </strong>@{{ conciliacion.importe }}<br>

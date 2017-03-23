@@ -22,7 +22,9 @@ class ConciliacionTransformer extends AbstractTransformer
             'num_viajes' => $conciliacion->conciliacionDetalles->where('estado', '=', 1)->count(),
             'importe'    => $conciliacion->importe_f,
             'volumen'    => $conciliacion->volumen_f,
-            'detalles'   => ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', $conciliacion->idconciliacion)->get())
+            'detalles'   => ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', $conciliacion->idconciliacion)->get()),
+            'empresa'    => $conciliacion->empresa ? $conciliacion->empresa->razonSocial : '',
+            'sindicato'  => $conciliacion->sindicato ? $conciliacion->sindicato->NombreCorto : '',
         ];
 
         return $output;
