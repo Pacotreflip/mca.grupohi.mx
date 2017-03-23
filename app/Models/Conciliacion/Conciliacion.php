@@ -214,7 +214,7 @@ class Conciliacion extends Model
 
             $this->estado = 2;
             $this->IdAprobo = auth()->user()->idusuario;
-            $this->FechaHoraAprobacion = Carbon::now()->format('Y-m-d h:m:s');
+            $this->FechaHoraAprobacion = Carbon::now();
             $this->save();
 
             DB::connection('sca')->commit();
@@ -239,7 +239,7 @@ class Conciliacion extends Model
             ConciliacionCancelacion::create([
                 'idconciliacion' => $this->idconciliacion,
                 'motivo' => $request->get('motivo'),
-                'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
+                'fecha_hora_cancelacion' => Carbon::now(),
                 'idcancelo' => auth()->user()->idusuario
             ]);
 
