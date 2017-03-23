@@ -149,7 +149,8 @@ class ConciliacionesController extends Controller
         ], 200);
     }
 
-    public function show() {
-
+    public function show($id) {
+        $conciliacion = Conciliacion::find($id);
+        return view('conciliaciones.show')->withConciliacion($conciliacion);
     }
 }
