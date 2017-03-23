@@ -173,7 +173,7 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'error',
                             title: '¡Error!',
-                            text: error.responseText
+                            text: App.errorsToString(error.responseText)
                         });
                     }
                 });
