@@ -57,7 +57,7 @@ class Conciliaciones
                     ->setCompany('GHI');
                 $excel->setDescription('Resultados de la carga del archivo ' . $data->getClientOriginalName());
                 $excel->sheet('Resultados de la Carga', function ($sheet) use ($reader, $j) {
-                    $sheet->appendRow(['Número', 'Resultado', 'Causa/Motivo', 'Camion', 'Fecha Llegada', 'Hora Llegada', 'Codigo']);
+                    $sheet->appendRow(['Número', 'Resultado', 'Causa/Motivo', 'Camion', 'Fecha Llegada', 'Hora Llegada', 'Codigo', 'Cubicación Cargada', 'Cubicación en Viaje']);
                     $sheet->setAutoFilter();
 
                     foreach ($reader as $row) {
@@ -101,7 +101,7 @@ class Conciliaciones
                             $resultado = "NO CONCILIADO";
                             $causa = "Viaje conciiado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato;
                         }
-                        $sheet->appendRow([$j, $resultado, $causa, $row->camion, $row->fecha_llegada, $row->hora_llegada, $row->codigo]);
+                        $sheet->appendRow([$j, $resultado, $causa, $row->camion, $row->fecha_llegada, $row->hora_llegada, $row->codigo, $row->cubicacion, $viaje ? $viaje->CubicacionCamion : null]);
                         $j++;
                     }
                 });
