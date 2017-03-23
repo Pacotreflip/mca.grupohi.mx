@@ -31,10 +31,12 @@ class Conciliaciones
      */
     protected $data;
 
+    protected $i = 0;
+
     /**
      * Conciliaciones constructor.
-     * @param $data
      * @param Conciliacion $conciliacion
+     * @internal param $data
      */
     public function __construct(Conciliacion $conciliacion)
     {
@@ -46,7 +48,6 @@ class Conciliaciones
 
         DB::connection('sca')->beginTransaction();
         try {
-            $i = 0;
             $j = 1;
             $filename = Carbon::now()->timestamp;
 
@@ -86,7 +87,7 @@ class Conciliaciones
                                     'timestamp' => Carbon::now()->toDateTimeString(),
                                     'estado' => 1
                                 ]);
-                                $i++;
+                                $this->i++;
                                 $resultado = "CONCILIADO";
                                 $causa = "";
                             } else {
@@ -134,8 +135,8 @@ class Conciliaciones
 
             return [
                 'succes' => true,
-                'reg'    => $i,
-                'no_reg' => count($reader) - $i,
+                'reg'    => $this->i,
+                'no_reg' => count($reader) - $this->i,
                 'file'   => $filename.'.xls'
             ];
 
