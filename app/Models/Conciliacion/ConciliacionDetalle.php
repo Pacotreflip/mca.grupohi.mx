@@ -35,7 +35,7 @@ class ConciliacionDetalle extends Model
     }
     
     public function save(array $options = array()) {
-        if($this->conciliacion->estado != 0){
+        if($this->conciliacion->estado != 0 && $this->estado != -1 ){
             throw new \Exception("No se pueden relacionar más viajes a la conciliación.");
         }else{
             parent::save($options);
