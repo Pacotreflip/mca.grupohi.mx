@@ -28,21 +28,23 @@ class ViajesNetosController extends Controller
        
         parent::__construct();
     }
-    
+
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function index(Request $request)
     {
         if($request->ajax()) {
             $data = [];
-           
+
             $viajes = ViajeNeto::porValidar()
                 ->whereBetween('FechaLlegada', [$request->get('fechaInicial'), $request->get('fechaFinal')])
                 ->get();
-            
+
             if($request->get('action') == 'modificar') {
 
                 foreach ($viajes as $viaje) {
@@ -120,7 +122,7 @@ class ViajesNetosController extends Controller
     /**
      * Store newly created resources in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\CreateViajeNetoRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateViajeNetoRequest $request)

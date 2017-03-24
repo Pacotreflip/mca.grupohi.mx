@@ -22,7 +22,7 @@ class Viaje extends Model
     }
 
     public function origen() {
-        return $this->belongsTo(Destino::class, 'IdDestino');
+        return $this->belongsTo(Origen::class, 'IdOrigen');
     }
 
     public function tiro() {
@@ -86,5 +86,9 @@ class Viaje extends Model
 
     public function viajeNeto() {
         return $this->belongsTo(ViajeNeto::class, 'IdViajeNeto');
+    }
+
+    public function scopeRevertir($query) {
+        return $query->whereIn('Estatus', [0,10,20]);
     }
 }

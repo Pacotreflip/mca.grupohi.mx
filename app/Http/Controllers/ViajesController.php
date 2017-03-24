@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transformers\ViajeTransformer;
+use App\Models\Transformers\ViajeTransformerRevertir;
 use App\Models\Viaje;
 use Illuminate\Http\Request;
 
@@ -37,16 +38,21 @@ class ViajesController extends Controller
                 return $viaje->disponible();
             });
 
-
             $data = ViajeTransformer::transform($filter);
 
-            return response()->json([
-                'status_code' => 200,
-                'data' => $data
-            ]);
         } else if ($request->get('tipo') == 'revertir') {
-
+            $this->validate($request, [
+                'FechaInicial' => 'required|date_format:"Y-m-d"',
+                'FechaFinal' => 'required|date_format:"Y-m-d"',
+            ]);
+            $viajes = Viaje::revertir()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+            $data = ViajeTransformerRevertir::transform($viajes);
         }
+
+        return response()->json([
+            'status_code' => 200,
+            'data' => $data
+        ]);
     }
 
     /**

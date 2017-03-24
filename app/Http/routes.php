@@ -102,6 +102,6 @@ Route::get('conciliacion/{conciliacion}/detalles', 'ConciliacionesDetallesContro
 Route::delete('conciliacion/{conciliacion}/detalles/{detalle}', 'ConciliacionesDetallesController@destroy')->name('conciliaciones.detalles.destroy');
 Route::get('conciliacion_info_carga/{filename}', 'ConciliacionesDetallesController@detalle_carga')->name('conciliacion.info');
 
-Route::get('viajes', 'ViajesController@index');
+Route::get('viajes', 'ViajesController@index')->name('viajes.index');
 Route::patch('viajes/{viaje}', 'ViajesController@update');
 Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');
