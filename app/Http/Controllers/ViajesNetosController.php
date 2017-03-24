@@ -179,10 +179,10 @@ class ViajesNetosController extends Controller
                 ->withAction('autorizar');
         } else if($request->get('action') == 'modificar') {
             return view('viajes.netos.edit')
-                    ->withOrigenes(Origen::all())
-                    ->withTiros(Tiro::all())
+                    ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->get())
+                    ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->get())
                     ->withCamiones(Camion::all())
-                    ->withMateriales(Material::all())
+                    ->withMateriales(Material::orderBy('Descripcion', 'ASC')->get())
                     ->withAction('modificar');
         }
     }

@@ -33,28 +33,29 @@
                     <thead>
                         <tr>
                             <th rowspan="2">Fecha de Llegada</th>
+                            <th rowspan="2">Origen</th>
                             <th rowspan="2">Tiro</th>
                             <th rowspan="2">Camión</th>
                             <th rowspan="2">Cubic.</th>
                             <th rowspan="2">Material</th>
-                            <th rowspan="2">Origen</th>
                             <th rowspan="2">Modificar</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr v-for="viaje in viajes">
                             <td>@{{ viaje.FechaLlegada }}</td>
+                            <td>@{{ viaje.Origen }}</td>
                             <td>@{{ viaje.Tiro }}</td>
                             <td>@{{ viaje.Camion }}</td>
                             <td>@{{ viaje.Cubicacion }}</td>
                             <td>@{{ viaje.Material }}</td>
-                            <td>@{{ viaje.Origen }}</td>
+                            
                             <td>
                                 <a id="show-modal" @click="viaje.ShowModal = true">
                                     Modificar     
                                 </a>
                                 <modal-modificar v-if="viaje.ShowModal" @close="viaje.ShowModal = false">
-                                    <h3 slot="header">Modificar Viaje</h3>
+                                    <h3 slot="header">Modificar Viaje Neto</h3>
                                     <div slot="body" class="form-horizontal">
                                         <div class="row">
                                             <div class="form-group">
@@ -75,17 +76,12 @@
                                                     @endforeach
                                                 </select>
                                             </div>
+<!--                                            <div class="form-group">
+                                                <label>Cubicación Viaje:</label>
+                                                <input type="text" v-model="viaje.Cubicacion"  class="form-control input-sm"  >
+                                            </div>-->
                                             <div class="form-group">
-                                                <label>Camión:</label>
-                                                <select v-model="viaje.IdCamion" class="form-control input-sm">
-                                                    <option value>--SELECCIONE--</option>
-                                                    @foreach($camiones as $camion)
-                                                    <option value="{{ $camion->IdCamion }}">{{ $camion->Economico }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                            <div class="form-group">
-                                                <label>Camión:</label>
+                                                <label>Material:</label>
                                                 <select v-model="viaje.IdMaterial" class="form-control input-sm">
                                                     <option value>--SELECCIONE--</option>
                                                     @foreach($materiales as $material)

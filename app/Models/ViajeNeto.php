@@ -283,6 +283,9 @@ class ViajeNeto extends Model
     
     public function modificar($request) {
         $viaje = $request->get('viaje');
+        $viaje_aprobado = $this->viaje;
+        if($viaje_aprobado)
+        throw new \Exception("El viaje no puede ser modificado porque ya se encuentra validado.");
         DB::connection('sca')->beginTransaction();
         try {
             $this->IdCamion = $viaje['IdCamion'];
