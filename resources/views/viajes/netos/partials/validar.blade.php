@@ -1,4 +1,4 @@
-<h1>VIAJES MANUALES</h1>
+<h1>VIAJES</h1>
 {!! Breadcrumbs::render('viajes.netos.validar') !!}
 <hr>
 <div id="app">
