@@ -285,5 +285,5 @@ Breadcrumbs::register('conciliaciones.create', function($breadcrumbs) {
 
 Breadcrumbs::register('conciliaciones.edit', function($breadcrumbs, $conciliacion) {
     $breadcrumbs->parent('conciliaciones.show', $conciliacion);
-    $breadcrumbs->push('EDITAR CONCILIACIÓN (' . $conciliacion->present()->conciliacionEstado . ')', route('conciliaciones.edit', $conciliacion));
+    $breadcrumbs->push('EDITAR CONCILIACIÓN', route('conciliaciones.edit', $conciliacion));
 });

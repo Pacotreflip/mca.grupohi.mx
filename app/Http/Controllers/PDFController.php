@@ -27,6 +27,9 @@ class PDFController extends Controller
     public function conciliacion($id)
     {
         $conciliacion = Conciliacion::findOrFail($id);
+        if(count(!$conciliacion->conciliacionDetalles->where('estado', 1))) {
+            return redirect()->back();
+        }
         $pdf = new PDFConciliacion('p', 'cm', 'Letter', $conciliacion);
         $pdf->create();
     }

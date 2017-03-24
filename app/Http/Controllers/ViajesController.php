@@ -24,25 +24,30 @@ class ViajesController extends Controller
      */
     public function index(Request $request)
     {
-        $this->validate($request, [
-            'IdCamion' => 'required|exists:sca.camiones,IdCamion',
-            'FechaInicial' => 'required|date_format:"Y-m-d"',
-            'FechaFinal' => 'required|date_format:"Y-m-d"',
-        ]);
-        $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+
+        if($request->get('tipo') == 'conciliar') {
+            $this->validate($request, [
+                'IdCamion' => 'required|exists:sca.camiones,IdCamion',
+                'FechaInicial' => 'required|date_format:"Y-m-d"',
+                'FechaFinal' => 'required|date_format:"Y-m-d"',
+            ]);
+            $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
 
 
-        $filter = $viajes->filter(function ($viaje){
-            return $viaje->disponible();
-        });
+            $filter = $viajes->filter(function ($viaje){
+                return $viaje->disponible();
+            });
 
 
-        $data = ViajeTransformer::transform($filter);
+            $data = ViajeTransformer::transform($filter);
 
-        return response()->json([
-            'status_code' => 200,
-            'data' => $data
-        ]);
+            return response()->json([
+                'status_code' => 200,
+                'data' => $data
+            ]);
+        } else if ($request->get('tipo') == 'revertir') {
+
+        }
     }
 
     /**
@@ -98,15 +103,19 @@ class ViajesController extends Controller
     public function update(Request $request, $id)
     {
         if($request->ajax()) {
-            if ($request->get('tipo') == 'cubicacion') {
-                $viaje = Viaje::find($id);
-                $succes = $viaje->cambiarCubicacion($request->get('cubicacion'));
 
-                return response() ->json([
+            $viaje = Viaje::find($id);
+            if ($request->get('tipo') == 'cubicacion') {
+                $succes = $viaje->cambiarCubicacion($request);
+
+                return response()->json([
                     'status_code' => 200,
-                    'succes'      => $succes,
-                    'viaje'       => ViajeTransformer::transform(Viaje::find($id))
+                    'succes' => $succes,
+                    'viaje' => ViajeTransformer::transform(Viaje::find($id))
                 ]);
+            }
+            else if ($request->get('tipo') == 'revertir') {
+                $succes = $viaje->revertit();
             }
         }
     }

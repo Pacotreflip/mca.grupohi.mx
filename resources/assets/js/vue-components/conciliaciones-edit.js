@@ -1,23 +1,3 @@
-function timeStamp(type) {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    var hh = today.getHours();
-    var min = today.getMinutes();
-
-    if(dd < 10) {dd = '0' + dd}
-    if(mm < 10) {mm = '0' + mm}
-    if(hh < 10) {hh = '0' + hh}
-    if(min < 10) {min = '0' + min}
-
-    var date = yyyy + '-' + mm + '-' + dd;
-    var time = hh + ":" + min;
-
-    return type == 1 ? date : time;
-}
-
-
 Vue.component('conciliaciones-edit', {
     data: function() {
         return {
@@ -46,6 +26,7 @@ Vue.component('conciliaciones-edit', {
                     todayHighlight: true,
                     endDate: '0d'
                 });
+                $(el).val(App.timeStamp(1));
             }
         },
 
@@ -125,8 +106,8 @@ Vue.component('conciliaciones-edit', {
         },
 
         cancelar: function(e) {
-
             e.preventDefault();
+            var _this = this;
             var url = $(e.target).attr('href');
             swal({
                 title: "¡Cancelar Conciliación!",
@@ -161,10 +142,10 @@ Vue.component('conciliaciones-edit', {
                                 text: 'Conciliación cancelada correctamente',
                                 showCancelButton: false,
                                 confirmButtonText: 'OK',
-                                closeOnConfirm: false
+                                closeOnConfirm: true
                             },
                             function () {
-                                location.reload();
+                                _this.fetchConciliacion();
                             });
                         }
                     },
@@ -174,6 +155,7 @@ Vue.component('conciliaciones-edit', {
                             title: '¡Error!',
                             text: App.errorsToString(error.responseText)
                         });
+                        _this.fetchConciliacion();
                     }
                 });
             });
@@ -185,7 +167,7 @@ Vue.component('conciliaciones-edit', {
             var _this = this;
             var url = App.host + '/conciliaciones/' + _this.conciliacion.id;
 
-            if(! this.conciliacion.detalles.length) {
+            if(! this.conciliados.length) {
                 swal({
                     type: 'warning',
                     title: "¡Cerrar Conciliación!",
@@ -222,10 +204,10 @@ Vue.component('conciliaciones-edit', {
                                             text: 'Conciliación cerrada correctamente',
                                             showCancelButton: false,
                                             confirmButtonText: 'OK',
-                                            closeOnConfirm: false
+                                            closeOnConfirm: true
                                         },
                                         function () {
-                                            location.reload();
+                                            _this.fetchConciliacion();
                                         });
                                 }
                             },
@@ -235,6 +217,7 @@ Vue.component('conciliaciones-edit', {
                                     title: '¡Error!',
                                     text: App.errorsToString(error.responseText)
                                 });
+                                _this.fetchConciliacion();
                             }
                         });
                     });
@@ -271,10 +254,10 @@ Vue.component('conciliaciones-edit', {
                                 text: 'Conciliación aprobada correctamente',
                                 showCancelButton: false,
                                 confirmButtonText: 'OK',
-                                closeOnConfirm: false
+                                closeOnConfirm: true
                             },
                             function () {
-                                location.reload();
+                                _this.fetchConciliacion();
                             });
                         }
                     },
@@ -284,6 +267,7 @@ Vue.component('conciliaciones-edit', {
                             title: '¡Error!',
                             text: App.errorsToString(error.responseText)
                         });
+                        _this.fetchConciliacion();
                     }
                 });
             });
@@ -314,7 +298,7 @@ Vue.component('conciliaciones-edit', {
                         showConfirmButton: true
                     });
 
-                    _this.conciliacion = response.conciliacion;
+                    _this.fetchConciliacion();
                 },
                 error: function (error) {
                     swal({
@@ -322,6 +306,7 @@ Vue.component('conciliaciones-edit', {
                         title: '¡Error!',
                         text: App.errorsToString(error.responseText)
                     });
+                    _this.fetchConciliacion();
                 }
             });
         },
@@ -391,7 +376,7 @@ Vue.component('conciliaciones-edit', {
             this.guardando = true;
 
             var data = $('.form_buscar').serialize();
-            this.$http.get(App.host + '/viajes?' + data).then((response) => {
+            this.$http.get(App.host + '/viajes?tipo=conciliar&' + data).then((response) => {
                 _this.resultados = response.body.data;
                 if(_this.resultados.length) {
                     _this.guardando = false;
@@ -441,11 +426,12 @@ Vue.component('conciliaciones-edit', {
                     data : {
                         _method : 'PATCH',
                         cubicacion : inputValue,
-                        tipo : 'cubicacion'
+                        tipo : 'cubicacion',
+                        id_conciliacion: _this.conciliacion.id
                     },
                     success: function(response) {
                         if(response.status_code = 200) {
-                            _this.fetchDetalles();
+                            _this.fetchConciliacion();
                             swal({
                                 type: 'success',
                                 title: '¡Hecho!',
@@ -463,6 +449,7 @@ Vue.component('conciliaciones-edit', {
                             title: '¡Error!',
                             text: App.errorsToString(error.responseText)
                         });
+                        _this.fetchConciliacion();
                     }
                 });
             });
@@ -493,7 +480,7 @@ Vue.component('conciliaciones-edit', {
                 _this.$http.post(url, {_method : 'DELETE', motivo : inputValue}).then((response) => {
                     if(response.body.status_code == 200) {
                         _this.guardando = false;
-                        _this.conciliacion = response.body.conciliacion;
+                        _this.fetchConciliacion();
                         swal({
                             type: 'success',
                             title: '¡Hecho!',
@@ -510,6 +497,7 @@ Vue.component('conciliaciones-edit', {
                         title: '¡Error!',
                         text: App.errorsToString(error.body)
                     });
+                    _this.fetchConciliacion();
                 });
             });
         },
