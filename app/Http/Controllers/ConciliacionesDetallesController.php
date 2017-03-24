@@ -192,9 +192,13 @@ class ConciliacionesDetallesController extends Controller
         DB::connection('sca')->beginTransaction();
 
         try {
+            $conciliacion = Conciliacion::find($id_conciliacion);
             $detalle = ConciliacionDetalle::find($id_detalle);
             if($detalle->estado == -1) {
                 throw new \Exception("El viaje ya ha sido cancelado anteriormente");
+            }
+            if($conciliacion->estado != 0) {
+                throw new \Exception("No se puede cancelar el viaje ya que el estado actual de la conciliación es " . $conciliacion->estado_str);
             }
 
             DB::connection('sca')->table('conciliacion_detalle_cancelacion')->insertGetId([
