@@ -76,6 +76,7 @@
         @if(Auth::user()->can(['modificar-viajes']))
         <li><a href="{{ route('viajes.netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>
         @endif
+        <li><a href="{{ route('viajes.revertir') }}">Revertir Viajes</a> </li>
     </ul>
   </li>
 @else
