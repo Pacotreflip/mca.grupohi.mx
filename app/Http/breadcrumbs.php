@@ -287,3 +287,7 @@ Breadcrumbs::register('conciliaciones.edit', function($breadcrumbs, $conciliacio
     $breadcrumbs->parent('conciliaciones.show', $conciliacion);
     $breadcrumbs->push('EDITAR CONCILIACIÓN (' . $conciliacion->present()->conciliacionEstado . ')', route('conciliaciones.edit', $conciliacion));
 });
+
+Breadcrumbs::register('viajes.revertir', function($breadcrumbs) {
+    $breadcrumbs->push('REVERTIR VIAJES', route('viajes.edit', ['action' => 'revertir']));
+});

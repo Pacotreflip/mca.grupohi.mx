@@ -104,4 +104,4 @@ Route::get('conciliacion_info_carga/{filename}', 'ConciliacionesDetallesControll
 
 Route::get('viajes', 'ViajesController@index');
 Route::patch('viajes/{viaje}', 'ViajesController@update');
-Route::get('viajes/revertir', 'ViajesController@revertir')->name('viajes.revertir');
+Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');

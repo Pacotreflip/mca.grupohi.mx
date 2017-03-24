@@ -87,9 +87,11 @@ class ViajesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(Request $request)
     {
-        //
+        if($request->get('action') == 'revertir') {
+            return view('viajes.edit')->withAction('revertir');
+        }
     }
 
     /**
