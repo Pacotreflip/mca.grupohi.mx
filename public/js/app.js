@@ -24723,6 +24723,7 @@ Vue.component('conciliaciones-edit', {
 
         aprobar: function aprobar(e) {
             e.preventDefault();
+            var _this = this;
             var url = App.host + '/conciliaciones/' + _this.conciliacion.id;
             swal({
                 title: "¡Aprobar Conciliación!",
