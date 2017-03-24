@@ -292,6 +292,7 @@ class ViajeNeto extends Model
             $this->IdTiro = $viaje['IdTiro'];
             $this->IdMaterial = $viaje['IdMaterial'];
             $this->IdOrigen = $viaje['IdOrigen'];
+            $this->CubicacionCamion = $viaje['CubicacionCamion'];
             $this->save();
             
             DB::connection('sca')->commit();

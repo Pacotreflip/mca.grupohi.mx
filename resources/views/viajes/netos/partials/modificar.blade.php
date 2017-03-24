@@ -76,10 +76,10 @@
                                                     @endforeach
                                                 </select>
                                             </div>
-<!--                                            <div class="form-group">
+                                            <div class="form-group">
                                                 <label>Cubicación Viaje:</label>
                                                 <input type="text" v-model="viaje.Cubicacion"  class="form-control input-sm"  >
-                                            </div>-->
+                                            </div>
                                             <div class="form-group">
                                                 <label>Material:</label>
                                                 <select v-model="viaje.IdMaterial" class="form-control input-sm">

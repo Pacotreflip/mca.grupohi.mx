@@ -54,7 +54,7 @@ class ViajesNetosController extends Controller
                         'Camion' => $viaje->camion->Economico,
                         'IdCamion' => $viaje->camion->IdCamion,
                         'HoraLlegada' => $viaje->HoraLlegada,
-                        'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                        'Cubicacion' => $viaje->CubicacionCamion,
                         'Origen' => $viaje->origen->Descripcion,
                         'IdOrigen' => $viaje->origen->IdOrigen,
                         'Material' => $viaje->material->Descripcion,
