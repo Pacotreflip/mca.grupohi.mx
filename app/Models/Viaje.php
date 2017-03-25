@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\Models\Conciliacion\Conciliacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
+use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -24,7 +25,7 @@ class Viaje extends Model
     }
 
     public function origen() {
-        return $this->belongsTo(Destino::class, 'IdDestino');
+        return $this->belongsTo(Origen::class, 'IdOrigen');
     }
 
     public function tiro() {
@@ -85,13 +86,35 @@ class Viaje extends Model
             return true;
 
         } catch (\Exception $e) {
-            throw $e;
             DB::connection('sca')->rollback();
+            throw $e;
         }
 
     }
 
     public function viajeNeto() {
         return $this->belongsTo(ViajeNeto::class, 'IdViajeNeto');
+    }
+
+    public function scopeParaRevertir($query) {
+        return $query->whereIn('Estatus', [0,10,20]);
+    }
+
+    public function revertir() {
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            if(count($this->conciliacionDetalles->where('estado', 1))) {
+                $conciliacion = $this->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
+                throw new \Exception('No se puede revertir el viaje ya que se encuentra conciliado en la conciliación ' . $conciliacion->idconciliacion);
+            }
+
+            $this->delete();
+
+            DB::connection('sca')->commit();
+        } catch (Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
     }
 }
