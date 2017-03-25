@@ -45,7 +45,7 @@ class ViajesController extends Controller
                 'FechaInicial' => 'required|date_format:"Y-m-d"',
                 'FechaFinal' => 'required|date_format:"Y-m-d"',
             ]);
-            $viajes = Viaje::revertir()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+            $viajes = Viaje::ParaRevertir()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
             $data = ViajeTransformerRevertir::transform($viajes);
         }
 
@@ -90,8 +90,9 @@ class ViajesController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int  $id
+     * @param Request $request
      * @return \Illuminate\Http\Response
+     * @internal param int $id
      */
     public function edit(Request $request)
     {
@@ -114,10 +115,18 @@ class ViajesController extends Controller
                 $viaje = Viaje::find($id);
                 $succes = $viaje->cambiarCubicacion($request->get('cubicacion'));
 
-                return response() ->json([
+                return response()->json([
                     'status_code' => 200,
                     'succes'      => $succes,
                     'viaje'       => ViajeTransformer::transform(Viaje::find($id))
+                ]);
+            } else if ($request->get('action') == 'revertir') {
+                $viaje = Viaje::find($id);
+                $success = $viaje->revertir();
+
+                return response()->json([
+                    'status_code' => 200,
+                    'success' => $success
                 ]);
             }
         }

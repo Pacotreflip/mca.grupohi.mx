@@ -16,9 +16,11 @@ class ViajeTransformerRevertir extends AbstractTransformer
             'Tiro' => $viaje->tiro->Descripcion,
             'Camion' => $viaje->camion->Economico,
             'HoraLlegada' => $viaje->HoraLlegada,
-            'Cubicacion' => $viaje->camion->CubicacionParaPago,
+            'Cubicacion' => $viaje->CubicacionCamion,
             'Origen' => $viaje->origen->Descripcion,
             'Material' => $viaje->material->Descripcion,
+            'Estatus' => $viaje->Estatus,
+            'Codigo' => $viaje->code
         ];
 
         return $output;

@@ -37,7 +37,7 @@
             <span v-if="viajes.length">
                 <hr>
                 <div class="table-responsive">
-                    <table class="table table-hover">
+                    <table id="viajes_revertir" class="table table-hover small" v-tablefilter>
                         <thead>
                         <tr>
                             <th>Fecha de Llegada</th>
@@ -47,6 +47,7 @@
                             <th>Camión</th>
                             <th>Cubic.</th>
                             <th>Material</th>
+                            <th>Código (Ticket)</th>
                             <th>Modificar</th>
                         </tr>
                         </thead>
@@ -59,8 +60,14 @@
                             <td>@{{ viaje.Camion  }}</td>
                             <td>@{{ viaje.Cubicacion  }}</td>
                             <td>@{{ viaje.Material }}</td>
+                            <td>@{{ viaje.Codigo }}</td>
                             <td>
-                                <a href="#" @click="revertir(viaje.IdViaje)" style="text-decoration: underline">Revertir</a>
+                                <span v-if="viaje.Estatus != -1">
+                                <a href="#" @click="revertir(viaje)" style="text-decoration: underline">Revertir</a>
+                                </span>
+                                <span v-else>
+                                    <p style="color: #ff0000;">Revertido</p>
+                                </span>
                             </td>
                         </tr>
                         </tbody>

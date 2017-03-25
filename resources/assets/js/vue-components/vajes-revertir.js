@@ -30,20 +30,22 @@ Vue.component('viajes-revertir', {
                 var val_config = {
                     auto_filter: true,
                     watermark: [
-                        'Fecha Llegada',
+                        'Fecha de Llegada',
+                        'Hora de Llegada',
+                        'Origen',
                         'Tiro',
-                        'Camion',
+                        'Camión',
                         'Cubic.',
                         'Material',
-                        'Origen',
+                        'Código (Ticket)',
                         'Modificar'
                     ],
                     col_0: 'select',
-                    col_1: 'select',
                     col_2: 'select',
+                    col_3: 'select',
                     col_4: 'select',
-                    col_5: 'select',
-                    col_6: 'none',
+                    col_6: 'select',
+                    col_8: 'none',
 
                     base_path: App.tablefilterBasePath,
                     paging: false,
@@ -56,7 +58,7 @@ Vue.component('viajes-revertir', {
                     help_instructions: false,
                     extensions: [{ name: 'sort' }]
                 };
-                var tf = new TableFilter('viajes_netos_modificar', val_config);
+                var tf = new TableFilter('viajes_revertir', val_config);
                 tf.init();
             }
         }
@@ -69,6 +71,7 @@ Vue.component('viajes-revertir', {
             var _this = this;
             this.form.errors = [];
             this.cargando = true;
+            this.viajes = [];
 
             var data = $('.form_buscar').serialize();
             this.$http.get(App.host + '/viajes?tipo=revertir&' + data).then((response) => {
@@ -90,8 +93,52 @@ Vue.component('viajes-revertir', {
             });
         },
 
-        revertir: function(id) {
-            console.log(id);
-        }
+        revertir: function(viaje) {
+
+            var _this = this;
+            var url = App.host + '/viajes/' + viaje.IdViaje;
+            swal({
+                    title: "¡Revertir Viaje!",
+                    text: "¿Desea revertir el viaje?",
+                    type: "info",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Si, Revertir",
+                    cancelButtonText: "No",
+                    showLoaderOnConfirm: true
+                },
+                function(){
+                    $.ajax({
+                        url: url,
+                        type : 'POST',
+                        data : {
+                            _method : 'PATCH',
+                            action : 'revertir'
+                        },
+                        success: function(response) {
+                            if(response.status_code = 200) {
+                                swal({
+                                        type: 'success',
+                                        title: '¡Hecho!',
+                                        text: 'Viaje Revertido Correctamente',
+                                        showCancelButton: false,
+                                        confirmButtonText: 'OK',
+                                        closeOnConfirm: true
+                                    },
+                                    function () {
+                                        viaje.Estatus = -1;
+                                    });
+                            }
+                        },
+                        error: function (error) {
+                            swal({
+                                type: 'error',
+                                title: '¡Error!',
+                                text: App.errorsToString(error.responseText)
+                            });
+                        }
+                    });
+                });
+        },
     }
 });
