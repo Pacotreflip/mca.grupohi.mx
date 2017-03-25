@@ -24916,11 +24916,12 @@ Vue.component('conciliaciones-edit', {
                     data: {
                         _method: 'PATCH',
                         cubicacion: inputValue,
-                        tipo: 'cubicacion'
+                        tipo: 'cubicacion',
+                        id_conciliacion: _this.conciliacion.id
                     },
                     success: function success(response) {
                         if (response.status_code = 200) {
-                            _this.fetchDetalles();
+                            _this.fetchConciliacion();
                             swal({
                                 type: 'success',
                                 title: '¡Hecho!',

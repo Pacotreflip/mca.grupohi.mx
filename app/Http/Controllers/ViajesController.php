@@ -100,7 +100,7 @@ class ViajesController extends Controller
         if($request->ajax()) {
             if ($request->get('tipo') == 'cubicacion') {
                 $viaje = Viaje::find($id);
-                $succes = $viaje->cambiarCubicacion($request->get('cubicacion'));
+                $succes = $viaje->cambiarCubicacion($request);
 
                 return response() ->json([
                     'status_code' => 200,
