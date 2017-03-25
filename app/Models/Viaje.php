@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Models\Conciliacion\Conciliacion;
 use App\Models\Conciliacion\ConciliacionDetalle;
 use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Viaje extends Model
@@ -59,18 +61,23 @@ class Viaje extends Model
         return true;
     }
 
-    public function cambiarCubicacion($cubicacion) {
+    public function cambiarCubicacion(Request $request) {
 
         DB::connection('sca')->beginTransaction();
         try {
 
+            $conciliacion = Conciliacion::find($request->get('id_conciliacion'));
+            if($conciliacion->estado != 0) {
+                throw  new \Exception("No se puede cambiar la cubicación del viaje debido al estdo de la conciliación (" . $this->conciliacionDetalles->where('estado', 1)->first()->conciliacion->estado_str . ")");
+            }
+
             DB::connection('sca')->table('cambio_cubicacion')->insertGetId([
                 'IdViaje'      => $this->IdViaje,
                 'VolumenViejo' => $this->CubicacionCamion,
-                'VolumenNuevo' => $cubicacion
+                'VolumenNuevo' => $request->get('cubicacion')
             ]);
 
-            $this->CubicacionCamion = $cubicacion;
+            $this->CubicacionCamion = $request->get('cubicacion');
             $this->save();
 
             DB::connection("sca")->statement("call calcular_Volumen_Importe(".$this->IdViajeNeto.");");
