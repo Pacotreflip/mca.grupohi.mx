@@ -24417,8 +24417,9 @@ require('./vue-components/viajes-validar');
 require('./vue-components/viajes-modificar');
 require('./vue-components/conciliaciones-create');
 require('./vue-components/conciliaciones-edit');
+require('./vue-components/vajes-revertir');
 
-},{"./vue-components/conciliaciones-create":35,"./vue-components/conciliaciones-edit":36,"./vue-components/errors":37,"./vue-components/fda-bancomaterial":38,"./vue-components/fda-material":39,"./vue-components/global-errors":40,"./vue-components/origenes-usuarios":41,"./vue-components/viajes-completa":45,"./vue-components/viajes-manual":46,"./vue-components/viajes-modificar":47,"./vue-components/viajes-validar":48}],35:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":35,"./vue-components/conciliaciones-edit":36,"./vue-components/errors":37,"./vue-components/fda-bancomaterial":38,"./vue-components/fda-material":39,"./vue-components/global-errors":40,"./vue-components/origenes-usuarios":41,"./vue-components/vajes-revertir":45,"./vue-components/viajes-completa":46,"./vue-components/viajes-manual":47,"./vue-components/viajes-modificar":48,"./vue-components/viajes-validar":49}],35:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
@@ -24868,7 +24869,7 @@ Vue.component('conciliaciones-edit', {
             this.guardando = true;
 
             var data = $('.form_buscar').serialize();
-            this.$http.get(App.host + '/viajes?' + data).then(function (response) {
+            this.$http.get(App.host + '/viajes?tipo=conciliar&' + data).then(function (response) {
                 _this.resultados = response.body.data;
                 if (_this.resultados.length) {
                     _this.guardando = false;
@@ -25324,6 +25325,143 @@ module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <
 },{}],45:[function(require,module,exports){
 'use strict';
 
+Vue.component('viajes-revertir', {
+    data: function data() {
+        return {
+            'viajes': [],
+            'cargando': false,
+            'guardando': false,
+            'form': {
+                'errors': []
+            }
+        };
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: true,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+                $(el).val(App.timeStamp(1));
+            }
+        },
+
+        tablefilter: {
+            inserted: function inserted(el) {
+                var val_config = {
+                    auto_filter: true,
+                    watermark: ['Fecha de Llegada', 'Hora de Llegada', 'Origen', 'Tiro', 'Camión', 'Cubic.', 'Material', 'Código (Ticket)', 'Modificar'],
+                    col_0: 'select',
+                    col_2: 'select',
+                    col_3: 'select',
+                    col_4: 'select',
+                    col_6: 'select',
+                    col_8: 'none',
+
+                    base_path: App.tablefilterBasePath,
+                    paging: false,
+                    rows_counter: false,
+                    rows_counter_text: 'Viajes: ',
+                    btn_reset: true,
+                    btn_reset_text: 'Limpiar',
+                    clear_filter_text: 'Limpiar',
+                    loader: true,
+                    help_instructions: false,
+                    extensions: [{ name: 'sort' }]
+                };
+                var tf = new TableFilter('viajes_revertir', val_config);
+                tf.init();
+            }
+        }
+    },
+
+    methods: {
+        buscar: function buscar(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+
+            var _this = this;
+            this.form.errors = [];
+            this.cargando = true;
+            this.viajes = [];
+
+            var data = $('.form_buscar').serialize();
+            this.$http.get(App.host + '/viajes?tipo=revertir&' + data).then(function (response) {
+                _this.viajes = response.body.data;
+                _this.cargando = false;
+
+                if (!_this.viajes.length) {
+                    swal({
+                        type: 'warning',
+                        title: '¡Sin Resultados!',
+                        text: 'Ningún viaje coincide con los datos de consulta',
+                        showConfirmButton: true
+                    });
+                }
+            }, function (error) {
+                _this.cargando = false;
+                App.setErrorsOnForm(_this2.form, error.body);
+            });
+        },
+
+        revertir: function revertir(viaje) {
+
+            var _this = this;
+            var url = App.host + '/viajes/' + viaje.IdViaje;
+            swal({
+                title: "¡Revertir Viaje!",
+                text: "¿Desea revertir el viaje?",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Si, Revertir",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+            }, function () {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _method: 'PATCH',
+                        action: 'revertir'
+                    },
+                    success: function success(response) {
+                        if (response.status_code = 200) {
+                            swal({
+                                type: 'success',
+                                title: '¡Hecho!',
+                                text: 'Viaje Revertido Correctamente',
+                                showCancelButton: false,
+                                confirmButtonText: 'OK',
+                                closeOnConfirm: true
+                            }, function () {
+                                viaje.Estatus = -1;
+                            });
+                        }
+                    },
+                    error: function error(_error) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error.responseText)
+                        });
+                    }
+                });
+            });
+        }
+    }
+});
+
+},{}],46:[function(require,module,exports){
+'use strict';
+
 function timeStamp(type) {
     var today = new Date();
     var dd = today.getDate();
@@ -25541,7 +25679,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -25700,7 +25838,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],47:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -25871,7 +26009,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],48:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
