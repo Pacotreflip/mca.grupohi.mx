@@ -106,9 +106,13 @@ class Viaje extends Model
         try {
             if(count($this->conciliacionDetalles->where('estado', 1))) {
                 $conciliacion = $this->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
-                throw new \Exception('No se puede revertir el viaje ya que se encuentra conciliado en la conciliación ' . $conciliacion->idconciliacion);
+                throw new \Exception('No se puede revertir el viaje ya que se encuentra relacionado en la conciliación ' . $conciliacion->idconciliacion);
             }
-
+//            if(count($this->conciliacionDetalles->where('estado', -1))) {
+//               $this->conciliacionDetalles('estado',-1)->delete();
+//            }
+            $this->Elimino = auth()->user()->idusuario;
+            $this->save();
             $this->delete();
 
             DB::connection('sca')->commit();
