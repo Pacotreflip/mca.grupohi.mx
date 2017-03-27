@@ -10,10 +10,10 @@ require('jquery-treegrid/js/jquery.treegrid.js');
 window._ = require('underscore');
 require('./scripts');
 // Production
-window.Vue = require('vue/dist/vue.min.js');
+//window.Vue = require('vue/dist/vue.min.js');
 
 // Development
-//window.Vue = require('vue/dist/vue.js');
+window.Vue = require('vue/dist/vue.js');
 
 require('vue-resource');
 Vue.http.headers.common['X-CSRF-TOKEN'] = App.csrfToken;
@@ -22,6 +22,5 @@ if ($('#app').length) {
     new Vue({
         el: '#app',
         components: require('./vue-components')
-    });   
-    
+    });
 }

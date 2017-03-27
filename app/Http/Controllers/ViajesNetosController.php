@@ -41,8 +41,13 @@ class ViajesNetosController extends Controller
         if($request->ajax()) {
             $data = [];
 
+            $this->validate($request, [
+                'FechaInicial' => 'required|date_format:"Y-m-d"',
+                'FechaFinal' => 'required|date_format:"Y-m-d"',
+            ]);
+
             $viajes = ViajeNeto::porValidar()
-                ->whereBetween('FechaLlegada', [$request->get('fechaInicial'), $request->get('fechaFinal')])
+                ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
                 ->get();
 
             if($request->get('action') == 'modificar') {
@@ -64,6 +69,7 @@ class ViajesNetosController extends Controller
                         'ShowModal' => false
                     ];
                 }
+                return response()->json($data);
 
             } else if ($request->get('action') == 'validar') {
 
@@ -75,11 +81,11 @@ class ViajesNetosController extends Controller
                         'Tiro' => $viaje->tiro->Descripcion,
                         'Camion' => $viaje->camion->Economico,
                         'HoraLlegada' => $viaje->HoraLlegada,
-                        'Cubicacion' => $viaje->camion->CubicacionParaPago,
+                        'Cubicacion' => $viaje->CubicacionCamion,
                         'Origen' => $viaje->origen->Descripcion,
                         'IdOrigen' => $viaje->origen->IdOrigen,
-                        'Sindicato' => isset($viaje->camion->sindicato->IdSindicato) ? $viaje->camion->sindicato->IdSindicato : '',
-                        'Empresa' => isset($viaje->camion->empresa->IdEmpresa) ? $viaje->camion->empresa->IdEmpresa : '',
+                        'Sindicato' => isset($viaje->IdSindicato) ? $viaje->IdSindicato : '',
+                        'Empresa' => isset($viaje->IdEmpresa) ? $viaje->IdEmpresa : '',
                         'Material' => $viaje->material->Descripcion,
                         'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
                         'Ruta' => isset($viaje->ruta) ?  $viaje->ruta->present()->claveRuta : "",
@@ -98,9 +104,9 @@ class ViajesNetosController extends Controller
                         'TipoFDA' => 'm',
                         'Imagenes' => $viaje->imagenes
                     ]; 
-                 }
+                }
+                return response()->json(['viajes_netos' => $data]);
             }
-            return response()->json($data);
         }
     }
 
@@ -197,7 +203,7 @@ class ViajesNetosController extends Controller
      */
     public function update(Request $request)
     {
-        if($request->path() == 'viajes/netos/validar') {
+        if($request->get('type') == 'validar') {
             $viaje = $request->get('viaje');
             $viaje_neto = ViajeNeto::findOrFail($viaje['IdViajeNeto']);
             return response()->json($viaje_neto->validar($request));
