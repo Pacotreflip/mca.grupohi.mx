@@ -26012,32 +26012,6 @@ Vue.component('viajes-modificar', {
 },{}],49:[function(require,module,exports){
 'use strict';
 
-function timeStamp(type) {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    var hh = today.getHours();
-    var min = today.getMinutes();
-
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-    if (hh < 10) {
-        hh = '0' + hh;
-    }
-    if (min < 10) {
-        min = '0' + min;
-    }
-
-    var date = yyyy + '-' + mm + '-' + dd;
-    var time = hh + ":" + min;
-
-    return type == 1 ? date : time;
-}
 // register modal component
 Vue.component('modal-validar', {
     template: '#modal-template'
@@ -26046,11 +26020,7 @@ Vue.component('modal-validar', {
 Vue.component('viajes-validar', {
     data: function data() {
         return {
-            'datosConsulta': {
-                'fechaInicial': timeStamp(1),
-                'fechaFinal': timeStamp(1)
-            },
-            'viajes': [],
+            'viajes_netos': [],
             'cargando': false,
             'guardando': false,
             'form': {
@@ -26080,11 +26050,12 @@ Vue.component('viajes-validar', {
                 $(el).datepicker({
                     format: 'yyyy-mm-dd',
                     language: 'es',
-                    autoclose: false,
+                    autoclose: true,
                     clearBtn: true,
                     todayHighlight: true,
                     endDate: '0d'
                 });
+                $(el).val(App.timeStamp(1));
             }
         },
 
@@ -26124,35 +26095,37 @@ Vue.component('viajes-validar', {
     },
 
     methods: {
-        setFechaInicial: function setFechaInicial(event) {
-            this.datosConsulta.fechaInicial = event.currentTarget.value;
+
+        buscar: function buscar(e) {
+
+            e.preventDefault();
+
+            var _this = this;
+
+            this.cargando = true;
+            this.form.errors = [];
+
+            var data = $('.form_buscar').serialize();
+            var url = App.host + '/viajes/netos?action=validar&' + data;
+
+            this.$http.get(url).then(function (response) {
+                _this.cargando = false;
+                if (!response.body.viajes_netos.length) {
+                    swal('¡Sin Resultados!', 'Ningún viaje coincide con los datos de consulta', 'warning');
+                } else {
+                    _this.viajes_netos = response.body.viajes_netos;
+                }
+            }, function (error) {
+                _this.cargando = false;
+                swal('¡Error!', App.errorsToString(error.body), 'error');
+            });
         },
 
-        setFechaFinal: function setFechaFinal(event) {
-            this.datosConsulta.fechaFinal = event.currentTarget.value;
-        },
+        validar: function validar(viaje) {
 
-        fetchViajes: function fetchViajes() {
-            var _this2 = this;
-
-            if (!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
-                swal('', 'Por favor introduzca el rango de fechas a consultar', 'warning');
-            } else {
-                this.viajes = [];
-                this.cargando = true;
-                this.form.errors = [];
-                this.$http.get(App.host + '/viajes/netos', { 'params': { 'action': 'validar', 'fechaInicial': this.datosConsulta.fechaInicial, 'fechaFinal': this.datosConsulta.fechaFinal } }).then(function (response) {
-                    _this2.viajes = response.body;
-                    _this2.cargando = false;
-                }, function (error) {
-                    App.setErrorsOnForm(_this2.form, error.body);
-                    _this2.cargando = false;
-                });
-            }
-        },
-
-        confirmarValidacion: function confirmarValidacion(index) {
-            var _this3 = this;
+            var _this = this;
+            this.guardando = true;
+            this.form.errors = [];
 
             swal({
                 title: "¿Desea continuar con la validación?",
@@ -26163,33 +26136,25 @@ Vue.component('viajes-validar', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, function () {
-                return _this3.validar(index);
-            });
-        },
+                _this.$http.post(App.host + '/viajes/netos', { 'type': 'validar', '_method': 'PATCH', viaje: viaje }).then(function (response) {
+                    swal({
+                        type: response.body.tipo,
+                        title: '',
+                        text: response.body.message,
+                        showConfirmButton: true
+                    });
 
-        validar: function validar(index) {
-            var _this = this;
-            this.guardando = true;
-            this.form.errors = [];
-            var viaje = this.viajes[index];
-            this.$http.post(App.host + '/viajes/netos/validar', { '_method': 'PATCH', viaje: viaje }).then(function (response) {
-                swal({
-                    type: response.body.tipo,
-                    title: '',
-                    text: response.body.message,
-                    showConfirmButton: true
+                    if (response.body.tipo == 'success' || response.body.tipo == 'info') {
+                        viaje.ShowModal = false;
+                        _this.viajes_netos.splice(_this.viajes_netos.indexOf(viaje), 1);
+                    }
+
+                    _this.guardando = false;
+                }, function (error) {
+                    _this.guardando = false;
+                    viaje.ShowModal = false;
+                    swal('¡Error!', App.errorsToString(error.body), 'error');
                 });
-
-                if (response.body.tipo == 'success' || response.body.tipo == 'info') {
-                    _this.viajes[index].ShowModal = false;
-                    _this.viajes.splice(index, 1);
-                }
-
-                _this.guardando = false;
-            }, function (response) {
-                _this.guardando = false;
-                _this.viajes[index].ShowModal = false;
-                App.setErrorsOnForm(_this.form, response.body);
             });
         },
 

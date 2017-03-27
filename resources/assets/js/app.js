@@ -22,6 +22,5 @@ if ($('#app').length) {
     new Vue({
         el: '#app',
         components: require('./vue-components')
-    });   
-    
+    });
 }

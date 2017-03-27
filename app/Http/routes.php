@@ -80,9 +80,9 @@ Route::group(['prefix' => 'viajes/netos'], function() {
     Route::post('manual', 'ViajesNetosController@store');
 });
 Route::get('viajes/netos/edit' , 'ViajesNetosController@edit')->name('viajes.netos.edit');
+Route::patch('viajes/netos', 'ViajesNetosController@update')->name('viajes.netos.update');
 Route::group(['prefix' => 'viajes/netos'], function() {
     Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes.netos.autorizar');
-    Route::patch('validar', 'ViajesNetosController@update')->name('viajes.netos.validar');
     Route::patch('modificar', 'ViajesNetosController@update')->name('viajes.netos.modificar');
 });
 

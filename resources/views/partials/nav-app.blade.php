@@ -52,13 +52,13 @@
             <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Registrar Viajes</a>  
             <ul class="dropdown-menu">
                 <li class="dropdown-submenu">
-                    <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Carga Manual</a>
+                    <a tabindex="-1" class="dropdown-toggle" data-toggle="dropdown">Carga Manual</a>
                     <ul class="dropdown-menu">
                         @if(Auth::user()->can(['ingresar-viajes-manuales']))
-                        <li><a tabindex="-1" href="{{ route('viajes.netos.create', ['action' => 'manual']) }}">Ingresar Viajes</a></li>
+                        <li><a tabindex="-2" href="{{ route('viajes.netos.create', ['action' => 'manual']) }}">Ingresar Viajes</a></li>
                         @endif
                         @if(Auth::user()->can(['autorizar-viajes-manuales']))
-                        <li><a tabindex="-1" href="{{ route('viajes.netos.edit', ['action' => 'autorizar']) }}">Autorizar Viajes</a></li>
+                        <li><a tabindex="-2" href="{{ route('viajes.netos.edit', ['action' => 'autorizar']) }}">Autorizar Viajes</a></li>
                         @endif
                     </ul>
                 </li>

@@ -6,30 +6,38 @@
     <viajes-validar inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
+            <h3>BUSCAR VIAJES</h3>
+            {!! Form::open(['class' => 'form_buscar']) !!}
             <div class="row">
-                <div class="col-md-12">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <label>Inicio</label>
-                            <input type="text" v-model="datosConsulta.fechaInicial" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Inicio" @blur="setFechaInicial($event)">
-                        </div>
-                        <div class="form-group">
-                            <label>Fin</label>
-                            <input type="text" v-model="datosConsulta.fechaFinal" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Fin" @blur="setFechaFinal($event)">
-                        </div>
-                        <button v-on:click="fetchViajes" class="btn btn-sm btn-primary" >Consultar</button>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>FECHA INICIAL</label>
+                        <input type="text" name="FechaInicial" v-datepicker class="fecha form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>FECHA FINAL</label>
+                        <input type="text" name="FechaFinal" v-datepicker class="fecha form-control">
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" @click="buscar">
+                <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i></span>
+                <span v-else>Buscar</span>
+                </button>
+            </div>
+            {!! Form::close() !!}
+
             <hr>
-            <br>
             <div class="table-responsive">
                 <span v-if="cargando">
                     <div class="text-center">
-                        <i class="fa fa-2x fa-spinner fa-spin"></i> Cargando Viajes...
+                        <i class="fa fa-2x fa-spinner fa-spin"></i><big>Cargando Viajes...</big>
                     </div>
                 </span>
-                <table id="viajes_netos_validar" v-tablefilter v-if="viajes.length" class="table table-condensed table-bordered table-hover">
+                <table id="viajes_netos_validar" v-tablefilter v-if="viajes_netos.length" class="table table-condensed table-bordered table-hover small">
                     <thead>
                         <tr>
                             <th rowspan="2">Código</th>
@@ -55,7 +63,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="viaje in viajes">
+                        <tr v-for="viaje in viajes_netos">
                             <td>@{{ viaje.Code }}</td>
                             <td>@{{ viaje.FechaLlegada }}</td>
                             <td>@{{ viaje.HoraLlegada }}</td>                            
@@ -72,10 +80,10 @@
                             <td>@{{ viaje.Importe }}</td>
                             <td>
                                 <span v-if='viaje.Valido'>
-                                    <i class="fa fa-flag" style="color: green"></i>
+                                    <i class="fa fa-flag" style="color: green" v-bind:title="viaje.Estado"></i>
                                 </span>
                                 <span v-else>
-                                    <i class="fa fa-flag" style="color: red"></i>
+                                    <i class="fa fa-exclamation-triangle" style="color: red" v-bind:title="viaje.Estado"></i>
                                 </span>
                             </td>
                             <td>
@@ -161,7 +169,7 @@
                                     </div>
                                     <div class="form-group" slot="footer">
                                         <button class="btn btn-info btn-sm" @click="viaje.ShowModal = false">Cerrar</button>        
-                                        <button class="btn btn-success btn-sm" @click="confirmarValidacion(viajes.indexOf(viaje))">
+                                        <button class="btn btn-success btn-sm" @click="validar(viaje)">
                                             <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
                                             <span v-else>Validar</span>
                                         </button>

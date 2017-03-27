@@ -64,6 +64,10 @@ class ViajeNeto extends Model
     public function imagenes() {
         return $this->hasMany(ImagenViajeNeto::class, 'idviaje_neto')->where('estado', 1);
     }
+
+    public function deductiva() {
+        return $this->hasOne(Deductiva::class, 'id_viaje_neto', 'IdViajeNeto');
+    }
     
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
@@ -252,15 +256,19 @@ class ViajeNeto extends Model
                 ."0".","
                 ."0".","
                 .$this->origen->IdOrigen.","
-                .($viaje["Sindicato"] ? $viaje["Sindicato"] : 'NULL').","
-                .($viaje["Empresa"] ? $viaje["Empresa"] : 'NULL').","
+                .$this->IdSindicato.","
+                .$viaje["Sindicato"].","
+                .$this->IdEmpresa.","
+                .$viaje["Empresa"].","
                 .auth()->user()->idusuario.",'"
                 .$viaje["TipoTarifa"]."','"
                 .$viaje["TipoFDA"]."',"
                 .$viaje["Tara"].","
                 .$viaje["Bruto"].","
                 .$viaje["Cubicacion"].","
-                .$this->camion->CubicacionParaPago.
+                .$this->CubicacionCamion. ","
+                .($this->deductiva ? $this->deductiva->id : 'NULL'). ","
+                .($this->deductiva ? $this->deductiva->estatus : 'NULL') .
                  ",@a);"
             );  
             
@@ -276,8 +284,9 @@ class ViajeNeto extends Model
             DB::connection('sca')->commit();
             return ['message' => $msg,
                 'tipo' => $tipo];
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
             DB::connection('sca')->rollback();
+            throw $e;
         }
     }
     
@@ -310,8 +319,9 @@ class ViajeNeto extends Model
                     'IdMaterial' => $this->material->IdMaterial
                 ]
             ];
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
             DB::connection('sca')->rollback();
+            throw $e;
         }
     }
 
