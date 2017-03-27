@@ -291,32 +291,30 @@ class ViajeNeto extends Model
     }
     
     public function modificar($request) {
-        $viaje = $request->get('viaje');
+        $data = $request->get('data');
         $viaje_aprobado = $this->viaje;
         if($viaje_aprobado)
         throw new \Exception("El viaje no puede ser modificado porque ya se encuentra validado.");
+
         DB::connection('sca')->beginTransaction();
         try {
-            $this->IdCamion = $viaje['IdCamion'];
-            $this->IdTiro = $viaje['IdTiro'];
-            $this->IdMaterial = $viaje['IdMaterial'];
-            $this->IdOrigen = $viaje['IdOrigen'];
-            $this->CubicacionCamion = $viaje['CubicacionCamion'];
+            $this->IdTiro = $data['IdTiro'];
+            $this->IdMaterial = $data['IdMaterial'];
+            $this->IdOrigen = $data['IdOrigen'];
+            $this->CubicacionCamion = $data['CubicacionCamion'];
             $this->save();
             
             DB::connection('sca')->commit();
             return ['message' => 'Viaje Modificado Correctamente',
                 'tipo' => 'success',
                 'viaje' => [
-                    'Camion' => $this->camion->Economico,
-                    'IdCamion' => $this->camion->IdCamion,
-                    'Cubicacion' => $this->camion->CubicacionParaPago,
-                    'IdOrigen' => $this->origen->IdOrigen,
+                    'CubicacionCamion' => $this->CubicacionCamion,
+                    'IdOrigen' => $this->IdOrigen,
                     'Origen' => $this->origen->Descripcion,
-                    'IdTiro' => $this->tiro->IdTiro,
+                    'IdTiro' => $this->IdTiro,
                     'Tiro' => $this->tiro->Descripcion,
                     'Material' => $this->material->Descripcion,
-                    'IdMaterial' => $this->material->IdMaterial
+                    'IdMaterial' => $this->IdMaterial
                 ]
             ];
         } catch (Exception $e) {

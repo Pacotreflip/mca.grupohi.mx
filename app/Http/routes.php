@@ -83,7 +83,6 @@ Route::get('viajes/netos/edit' , 'ViajesNetosController@edit')->name('viajes.net
 Route::patch('viajes/netos', 'ViajesNetosController@update')->name('viajes.netos.update');
 Route::group(['prefix' => 'viajes/netos'], function() {
     Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes.netos.autorizar');
-    Route::patch('modificar', 'ViajesNetosController@update')->name('viajes.netos.modificar');
 });
 
 //PDF Routes

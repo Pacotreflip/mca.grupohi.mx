@@ -127,8 +127,6 @@ Vue.component('viajes-validar', {
         validar: function(viaje) {
 
             var _this = this;
-            this.guardando = true;
-            this.form.errors = [];
 
             swal({
                 title: "¿Desea continuar con la validación?",
@@ -140,20 +138,23 @@ Vue.component('viajes-validar', {
                 confirmButtonColor: "#ec6c62"
             },
             function () {
+                _this.guardando = true;
+                _this.form.errors = [];
+
                 _this.$http.post(App.host + '/viajes/netos', {'type' : 'validar', '_method' : 'PATCH',  viaje}).then((response) => {
                     swal({
                         type: response.body.tipo,
-                    title: '',
-                    text: response.body.message,
-                    showConfirmButton: true
-                });
+                        title: '',
+                        text: response.body.message,
+                        showConfirmButton: true
+                    });
 
-                if(response.body.tipo == 'success' || response.body.tipo == 'info') {
-                   viaje.ShowModal = false;
-                    _this.viajes_netos.splice(_this.viajes_netos.indexOf(viaje), 1);
-                }
+                    if(response.body.tipo == 'success' || response.body.tipo == 'info') {
+                       viaje.ShowModal = false;
+                        _this.viajes_netos.splice(_this.viajes_netos.indexOf(viaje), 1);
+                    }
 
-                _this.guardando = false;
+                    _this.guardando = false;
                 }, (error) => {
                     _this.guardando = false;
                     viaje.ShowModal = false;

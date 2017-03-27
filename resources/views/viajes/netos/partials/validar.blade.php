@@ -34,10 +34,12 @@
             <div class="table-responsive">
                 <span v-if="cargando">
                     <div class="text-center">
-                        <i class="fa fa-2x fa-spinner fa-spin"></i><big>Cargando Viajes...</big>
+                        <i class="fa fa-2x fa-spinner fa-spin"></i> Cargando Viajes...
                     </div>
                 </span>
-                <table id="viajes_netos_validar" v-tablefilter v-if="viajes_netos.length" class="table table-condensed table-bordered table-hover small">
+                <span v-if="viajes_netos.length">
+                    <h3>RESULTADOS DE LA BÚSQUEDA</h3>
+                    <table id="viajes_netos_validar" v-tablefilter class="table table-condensed table-bordered table-hover small">
                     <thead>
                         <tr>
                             <th rowspan="2">Código</th>
@@ -209,6 +211,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </span>
             </div>
         </section>
     </viajes-validar>

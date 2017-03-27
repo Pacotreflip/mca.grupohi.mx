@@ -59,9 +59,9 @@ class ViajesNetosController extends Controller
                         'Tiro' => $viaje->tiro->Descripcion,
                         'IdTiro' => $viaje->tiro->IdTiro,
                         'Camion' => $viaje->camion->Economico,
-                        'IdCamion' => $viaje->camion->IdCamion,
+                        'IdCamion' => $viaje->IdCamion,
                         'HoraLlegada' => $viaje->HoraLlegada,
-                        'Cubicacion' => $viaje->CubicacionCamion,
+                        'CubicacionCamion' => $viaje->CubicacionCamion,
                         'Origen' => $viaje->origen->Descripcion,
                         'IdOrigen' => $viaje->origen->IdOrigen,
                         'Material' => $viaje->material->Descripcion,
@@ -69,7 +69,6 @@ class ViajesNetosController extends Controller
                         'ShowModal' => false
                     ];
                 }
-                return response()->json($data);
 
             } else if ($request->get('action') == 'validar') {
 
@@ -105,8 +104,8 @@ class ViajesNetosController extends Controller
                         'Imagenes' => $viaje->imagenes
                     ]; 
                 }
-                return response()->json(['viajes_netos' => $data]);
             }
+            return response()->json(['viajes_netos' => $data]);
         }
     }
 
@@ -211,9 +210,9 @@ class ViajesNetosController extends Controller
             $msg = ViajeNeto::autorizar($request->get('Estatus'));
             Flash::success($msg);
             return redirect()->back();
-        } else if($request->path() == 'viajes/netos/modificar') {
-            $viaje = $request->get('viaje');
-            $viaje_neto = ViajeNeto::findOrFail($viaje['IdViajeNeto']);
+        } else if($request->get('type') == 'modificar') {
+
+            $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
             return response()->json($viaje_neto->modificar($request));
         }
     }
