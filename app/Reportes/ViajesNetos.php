@@ -25,7 +25,7 @@ class ViajesNetos
                 $inicial=$request->get("inicial");
                 $final=$request->get("final");
 
-                switch ($request->get("estatus")) {
+                switch ($request->get("Estatus")) {
                     case 0:
                         $estatus = 'in (0,10,20,30)';
                         break;

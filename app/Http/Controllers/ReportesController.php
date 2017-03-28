@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ViajeNeto;
 use App\Reportes\ViajesNetos;
 use Illuminate\Http\Request;
 
@@ -29,6 +30,8 @@ class ReportesController extends Controller
      * @param Request $request
      */
     public function viajes_netos_show(Request $request) {
+
+        return redirect()->back()->withInput();
         return (new ViajesNetos())->create($request);
     }
 }

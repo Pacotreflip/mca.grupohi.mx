@@ -10,13 +10,13 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label>FECHA INICIAL</label>
-                <input type="text" class="date start form-control" name="FechaInicial" />
+                <input type="text" class="date start form-control" name="FechaInicial" value="{{ old('FechaInicial') }}" />
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label>HORA INICIAL</label>
-                <input type="text" class="time start form-control" name="HoraInicial" />
+                <input type="text" class="time start form-control" name="HoraInicial" value="{{ old('HoraInicial') }}" />
             </div>
         </div>
     </div>
@@ -24,19 +24,30 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label>FECHA FINAL</label>
-                <input type="text" class="date end form-control" name="FechaFinal" />
+                <input type="text" class="date end form-control" name="FechaFinal" value="{{ old('FechaFinal') }}" />
             </div>
         </div>
         <div class="col-md-6">
             <div class="form-group">
                 <label>HORA FINAL</label>
-                <input type="text" class="time end form-control" name="HoraFinal" />
+                <input type="text" class="time end form-control" name="HoraFinal" value="{{ old('HoraFinal') }}" />
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label>ESTATUS</label>
+                    {!! Form::select('Estatus', [0 => 'TODOS', 1 => 'VALIDADOS', 2 => 'SIN VALIDAR'], old('Estatus'), ['class' => 'form-control']) !!}
+                </div>
             </div>
         </div>
     </div>
     <div class="form-group">
         <button type="submit" class="btn btn-success submit">GENERAR REPORTE</button>
     </div>
+
     {!! Form::close() !!}
 @endsection
 @section('scripts')
@@ -59,27 +70,5 @@
         // initialize datepair
         var form_reporte_viajes_netos = document.getElementById('form_reporte_viajes_netos');
         new Datepair(form_reporte_viajes_netos);
-
-        $('.submit').off().on('click', function(e) {
-            e.preventDefault();
-
-            var url = $('#form_reporte_viajes_netos').attr('action');
-            var data = $('#form_reporte_viajes_netos').serializeArray();
-
-            console.log(url);
-            console.log(data);
-
-            $.ajax({
-                type: 'GET',
-                url: url,
-                data: data,
-                success: function (response) {
-                    $('#reporte_viajes_netos').html(response);
-                },
-                error: function (error) {
-
-                }
-            });
-        });
     </script>
 @endsection
