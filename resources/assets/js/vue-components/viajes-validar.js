@@ -10,6 +10,16 @@ Vue.component('viajes-validar', {
             'cargando' : false,
             'guardando' : false,
             'form' : {
+                'data' : {
+                    'Accion' : '',
+                    'IdSindicato' : '',
+                    'IdEmpresa' : '',
+                    'TipoTarifa' : '',
+                    'TipoFDA' : '',
+                    'Tara' : '',
+                    'Bruto' : '',
+                    'Cubicacion' : ''
+                },
                 'errors' : []
             },
         }
@@ -127,8 +137,6 @@ Vue.component('viajes-validar', {
         validar: function(viaje) {
 
             var _this = this;
-            this.guardando = true;
-            this.form.errors = [];
 
             swal({
                 title: "¿Desea continuar con la validación?",
@@ -140,20 +148,24 @@ Vue.component('viajes-validar', {
                 confirmButtonColor: "#ec6c62"
             },
             function () {
-                _this.$http.post(App.host + '/viajes/netos', {'type' : 'validar', '_method' : 'PATCH',  viaje}).then((response) => {
+                _this.guardando = true;
+                _this.form.errors = [];
+                var data = _this.form.data;
+
+                _this.$http.post(App.host + '/viajes/netos', {'type' : 'validar', '_method' : 'PATCH', 'IdViajeNeto' : viaje.IdViajeNeto,  data}).then((response) => {
                     swal({
                         type: response.body.tipo,
-                    title: '',
-                    text: response.body.message,
-                    showConfirmButton: true
-                });
+                        title: '',
+                        text: response.body.message,
+                        showConfirmButton: true
+                    });
 
-                if(response.body.tipo == 'success' || response.body.tipo == 'info') {
-                   viaje.ShowModal = false;
-                    _this.viajes_netos.splice(_this.viajes_netos.indexOf(viaje), 1);
-                }
+                    if(response.body.tipo == 'success' || response.body.tipo == 'info') {
+                       viaje.ShowModal = false;
+                        _this.viajes_netos.splice(_this.viajes_netos.indexOf(viaje), 1);
+                    }
 
-                _this.guardando = false;
+                    _this.guardando = false;
                 }, (error) => {
                     _this.guardando = false;
                     viaje.ShowModal = false;
@@ -168,6 +180,23 @@ Vue.component('viajes-validar', {
             } else {
                 return 'item';
             }
+        },
+
+        showModal: function(viaje) {
+            viaje.ShowModal = true;
+            this.initializeData(viaje);
+        },
+
+        initializeData: function(viaje) {
+
+            this.form.data.Accion = viaje.Accion;
+            this.form.data.IdSindicato = viaje.IdSindicato;
+            this.form.data.IdEmpresa = viaje.IdEmpresa;
+            this.form.data.TipoTarifa = viaje.TipoTarifa;
+            this.form.data.TipoFDA = viaje.TipoFDA;
+            this.form.data.Tara = viaje.Tara;
+            this.form.data.Bruto = viaje.Bruto;
+            this.form.data.Cubicacion = viaje.Cubicacion;
         }
     }
 });

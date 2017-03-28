@@ -22,7 +22,10 @@ class Empresa extends Model
     public function camiones() {
         return $this->hasMany(Camion::class, 'IdEmpresa');
     }
-    
+
+    /**
+     * @return mixed
+     */
     public function __toString() {
         return $this->razonSocial;
     }
