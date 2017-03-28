@@ -1,4 +1,7 @@
 window.$ = window.jQuery = require('jquery')
+require('jquery-ui');
+require('jquery-timepicker/jquery.timepicker.js');
+require('datepair.js');
 require('bootstrap-sass');
 require('bootstrap-submenu');
 require('bootstrap-datepicker');

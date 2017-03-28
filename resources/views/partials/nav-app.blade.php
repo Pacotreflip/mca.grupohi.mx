@@ -81,6 +81,15 @@
         @endif
     </ul>
   </li>
+
+    <li class="dropdown">
+        <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
+            Reportes<span class="caret"></span>
+        </a>
+        <ul class="dropdown-menu" role="menu">
+            <li><a href="{{ route('reportes.viajes_netos.create') }}">Viajes Netos</a></li>
+        </ul>
+    </li>
 @else
   <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
 @endif
