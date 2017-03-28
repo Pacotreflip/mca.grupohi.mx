@@ -33,10 +33,20 @@ class ViajesController extends Controller
             ]);
 
             if($request->has('IdCamion')) {
-                $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
-
+                $viajes  = Viaje::porConciliar()
+                    ->where('IdCamion', '=', $request->get('IdCamion'))
+                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->orderBy('IdCamion', 'ASC')
+                    ->orderBy('FechaLlegada', 'ASC')
+                    ->orderBy('HoraLlegada', 'ASC')
+                    ->get();
             } else {
-                $viajes  = Viaje::porConciliar()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+                $viajes  = Viaje::porConciliar()
+                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->orderBy('IdCamion', 'ASC')
+                    ->orderBy('FechaLlegada', 'ASC')
+                    ->orderBy('HoraLlegada', 'ASC')
+                    ->get();
             }
 
             $filter = $viajes->filter(function ($viaje){
