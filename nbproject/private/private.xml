@@ -3,19 +3,9 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/assets/js/vue-components/viajes-modificar.js</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ConciliacionesController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/partials/nav-app.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/viajes/netos/partials/modificar.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Transformers/ViajeTransformer.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/vendor/ghidev/fpdf/src/Fpdf.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Viaje.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ViajesController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/viajes/netos/edit.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ViajesNetosController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/composer.json</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/PDF/PDFConciliacion.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/routes.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/ViajeNeto.php</file>
         </group>
     </open-files>
 </project-private>
