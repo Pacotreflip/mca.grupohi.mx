@@ -50,7 +50,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>TIPO DE BÚSQUEDA</label>
+                                    <label>TIPO DE BÚSQUEDA (*)</label>
                                     {!! Form::select('Tipo', [
                                     '' => '--SELECCIONE--',
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
@@ -62,7 +62,7 @@
                             <span v-show="tipo == '1'">
                                 <div class="col-md-6">
                                     <div class="input-group">
-                                        <label>CÓDIGO DEL VIAJE</label>
+                                        <label>CÓDIGO DEL VIAJE (*)</label>
                                         <input class="form-control ticket" type="text" name="code" placeholder="Código del Viaje">
                                         <span class="input-group-btn" style="padding-top: 25px">
                                             <button class="btn btn-primary" type="submit" @click="agregar">
@@ -84,7 +84,7 @@
                             <span v-show="tipo == '3'">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label>CARGAR EXCEL</label>
+                                        <label>CARGAR EXCEL (*)</label>
                                         <input v-fileinput type="file" name="excel" class="file-loading">
                                     </div>
                                 </div>
@@ -94,13 +94,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="FechaInicial">FECHA INICIAL</label>
+                                        <label for="FechaInicial">FECHA INICIAL (*)</label>
                                         <input name="FechaInicial" type="text" class="form-control"  v-datepicker >
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="FechaFinal">FECHA FINAL</label>
+                                        <label for="FechaFinal">FECHA FINAL (*)</label>
                                         <input name="FechaFinal" type="text" class="form-control" v-datepicker >
                                     </div>
                                 </div>
@@ -112,7 +112,8 @@
                                 </button>
                             </div>
                         </span>
-                        {!! Form::close() !!}
+                    <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
+                    {!! Form::close() !!}
                     </section>
                 @endif
                 <section id="info">

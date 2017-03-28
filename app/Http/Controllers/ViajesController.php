@@ -27,12 +27,17 @@ class ViajesController extends Controller
     {
         if($request->get('tipo') == 'conciliar') {
             $this->validate($request, [
-                'IdCamion' => 'required|exists:sca.camiones,IdCamion',
+                'IdCamion' => 'exists:sca.camiones,IdCamion',
                 'FechaInicial' => 'required|date_format:"Y-m-d"',
                 'FechaFinal' => 'required|date_format:"Y-m-d"',
             ]);
-            $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
 
+            if($request->has('IdCamion')) {
+                $viajes  = Viaje::porConciliar()->where('IdCamion', '=', $request->get('IdCamion'))->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+
+            } else {
+                $viajes  = Viaje::porConciliar()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+            }
 
             $filter = $viajes->filter(function ($viaje){
                 return $viaje->disponible();
