@@ -300,7 +300,6 @@ class ViajeNeto extends Model
         try {
 
             if($this->IdEmpresa != $data['IdEmpresa']){
-                $this->IdEmpresa = $data['IdEmpresa'];
                 DB::connection('sca')->table('cambio_empresa')->insert([
                     'IdViajeNeto'       => $this->IdViajeNeto,
                     'IdEmpresaAnterior' => $this->IdEmpresa,
@@ -308,10 +307,10 @@ class ViajeNeto extends Model
                     'FechaRegistro'     => Carbon::now()->toDateTimeString(),
                     'Registro'          => auth()->user()->idusuario
                 ]);
+                $this->IdEmpresa = $data['IdEmpresa'];
             }
 
             if($this->IdSindicato != $data['IdSindicato']) {
-                $this->IdSindicato = $data['IdSindicato'];
                 DB::connection('sca')->table('cambio_sindicato')->insert([
                     'IdViajeNeto'       => $this->IdViajeNeto,
                     'IdSindicatoAnterior' => $this->IdSindicato,
@@ -319,10 +318,10 @@ class ViajeNeto extends Model
                     'FechaRegistro'     => Carbon::now()->toDateTimeString(),
                     'Registro'          => auth()->user()->idusuario
                 ]);
+                $this->IdSindicato = $data['IdSindicato'];
             }
 
             if($this->IdMaterial != $data['IdMaterial']) {
-                $this->IdMaterial = $data['IdMaterial'];
                 DB::connection('sca')->table('cambio_material')->insert([
                     'IdViajeNeto'        => $this->IdViajeNeto ,
                     'IdMaterialAnterior' => $this->IdMaterial,
@@ -330,10 +329,10 @@ class ViajeNeto extends Model
                     'FechaRegistro'      => Carbon::now()->toDateTimeString(),
                     'Registro'           => auth()->user()->idusuario
                 ]);
+                $this->IdMaterial = $data['IdMaterial'];
             }
 
             if($this->IdTiro != $data['IdTiro']) {
-                $this->IdTiro = $data['IdTiro'];
                 DB::connection('sca')->table('cambio_tiro')->insert([
                     'IdViajeNeto'    => $this->IdViajeNeto ,
                     'IdTiroAnterior' => $this->IdTiro,
@@ -341,10 +340,10 @@ class ViajeNeto extends Model
                     'FechaRegistro'  => Carbon::now()->toDateTimeString(),
                     'Registro'       => auth()->user()->idusuario
                 ]);
+                $this->IdTiro = $data['IdTiro'];
             }
 
             if($this->IdOrigen != $data['IdOrigen']) {
-                $this->IdOrigen = $data['IdOrigen'];
                 DB::connection('sca')->table('cambio_origen')->insert([
                     'IdViajeNeto'      => $this->IdViajeNeto ,
                     'IdOrigenAnterior' => $this->IdOrigen,
@@ -352,16 +351,17 @@ class ViajeNeto extends Model
                     'FechaRegistro'    => Carbon::now()->toDateTimeString(),
                     'Registro'         => auth()->user()->idusuario
                 ]);
+                $this->IdOrigen = $data['IdOrigen'];
             }
 
             if($this->CubicacionCamion != $data['CubicacionCamion']) {
-                $this->CubicacionCamion = $data['CubicacionCamion'];
                 DB::connection('sca')->table('cambio_cubicacion')->insert([
                     'IdViajeNeto'   => $this->IdViajeNeto,
                     'FechaRegistro' => Carbon::now()->toDateTimeString(),
                     'VolumenViejo'  => $this->CubicacionCamion,
                     'VolumenNuevo'  => $data['CubicacionCamion']
                 ]);
+                $this->CubicacionCamion = $data['CubicacionCamion'];
             }
 
             $this->save();

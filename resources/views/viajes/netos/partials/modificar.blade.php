@@ -43,6 +43,9 @@
                         <thead>
                             <tr>
                                 <th rowspan="2">Fecha de Llegada</th>
+                                <th rowspan="2">HoraLlgada</th>
+                                <th rowspan="2">Sindicato</th>
+                                <th rowspan="2">Empresa</th>
                                 <th rowspan="2">Origen</th>
                                 <th rowspan="2">Tiro</th>
                                 <th rowspan="2">Camión</th>
@@ -54,6 +57,9 @@
                         <tbody>
                             <tr v-for="viaje in viajes_netos">
                                 <td>@{{ viaje.FechaLlegada }}</td>
+                                <td>@{{ viaje.HoraLlegada }}</td>
+                                <td>@{{ viaje.Sindicato }}</td>
+                                <td>@{{ viaje.Empresa }}</td>
                                 <td>@{{ viaje.Origen }}</td>
                                 <td>@{{ viaje.Tiro }}</td>
                                 <td>@{{ viaje.Camion }}</td>
