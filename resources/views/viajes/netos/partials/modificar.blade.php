@@ -66,36 +66,69 @@
                                     </a>
                                     <modal-modificar v-if="viaje.ShowModal" @close="viaje.ShowModal = false">
                                         <h3 slot="header">Modificar Viaje Neto</h3>
-                                        <div slot="body" class="form-horizontal">
+                                        <div slot="body">
+
                                             <div class="row">
-                                                <div class="form-group">
-                                                    <label>Origen:</label>
-                                                    <select v-model="form.data.IdOrigen" class="form-control input-sm">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>EMPRESA</label>
+                                                        <select v-model="form.data.IdEmpresa" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        @foreach($origenes as $origen)
-                                                        <option value="{{ $origen->IdOrigen }}">{{ $origen->Descripcion }}</option>
+                                                            @foreach($empresas as $key => $empresa)
+                                                                <option value="{{ $key }}">{{ $empresa }}</option>
+                                                            @endforeach
+                                                    </select>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>SINDICATO</label>
+                                                    <select v-model="form.data.IdSindicato" class="form-control input-sm">
+                                                        <option value>--SELECCIONE--</option>
+                                                        @foreach($sindicatos as $key => $sindicato)
+                                                            <option value="{{ $key }}">{{ $sindicato }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Destino:</label>
-                                                    <select v-model="form.data.IdTiro" class="form-control input-sm">
-                                                        <option value>--SELECCIONE--</option>
-                                                        @foreach($tiros as $tiro)
-                                                        <option value="{{ $tiro->IdTiro }}">{{ $tiro->Descripcion }}</option>
-                                                        @endforeach
-                                                    </select>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>ORIGEN</label>
+                                                        <select v-model="form.data.IdOrigen" class="form-control input-sm">
+                                                            <option value>--SELECCIONE--</option>
+                                                            @foreach($origenes as $key => $origen)
+                                                                <option value="{{ $key }}">{{ $origen }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Cubicación Viaje:</label>
-                                                    <input type="text" v-model="form.data.CubicacionCamion"  class="form-control input-sm"  >
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>DESTINO</label>
+                                                        <select v-model="form.data.IdTiro" class="form-control input-sm">
+                                                            <option value>--SELECCIONE--</option>
+                                                            @foreach($tiros as $key => $tiro)
+                                                                <option value="{{ $key }}">{{ $tiro }}</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label>Material:</label>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <label>CUBICACIÓN</label>
+                                                        <input type="text" v-model="form.data.CubicacionCamion"  class="form-control input-sm"  >
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label>MATERIAL</label>
                                                     <select v-model="form.data.IdMaterial" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        @foreach($materiales as $material)
-                                                        <option value="{{ $material->IdMaterial }}">{{ $material->Descripcion }}</option>
+                                                        @foreach($materiales as $key => $material)
+                                                            <option value="{{ $key }}">{{ $material }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>

@@ -298,13 +298,76 @@ class ViajeNeto extends Model
 
         DB::connection('sca')->beginTransaction();
         try {
-            $this->IdTiro = $data['IdTiro'];
-            $this->IdMaterial = $data['IdMaterial'];
-            $this->IdOrigen = $data['IdOrigen'];
-            $this->CubicacionCamion = $data['CubicacionCamion'];
+
+            if($this->IdEmpresa != $data['IdEmpresa']){
+                $this->IdEmpresa = $data['IdEmpresa'];
+                DB::connection('sca')->table('cambio_empresa')->insert([
+                    'IdViajeNeto'       => $this->IdViajeNeto,
+                    'IdEmpresaAnterior' => $this->IdEmpresa,
+                    'IdEmpresaNuevo'    => $data['IdEmpresa'],
+                    'FechaRegistro'     => Carbon::now()->toDateTimeString(),
+                    'Registro'          => auth()->user()->idusuario
+                ]);
+            }
+
+            if($this->IdSindicato != $data['IdSindicato']) {
+                $this->IdSindicato = $data['IdSindicato'];
+                DB::connection('sca')->table('cambio_sindicato')->insert([
+                    'IdViajeNeto'       => $this->IdViajeNeto,
+                    'IdSindicatoAnterior' => $this->IdSindicato,
+                    'IdSindicatoNuevo'    => $data['IdSindicato'],
+                    'FechaRegistro'     => Carbon::now()->toDateTimeString(),
+                    'Registro'          => auth()->user()->idusuario
+                ]);
+            }
+
+            if($this->IdMaterial != $data['IdMaterial']) {
+                $this->IdMaterial = $data['IdMaterial'];
+                DB::connection('sca')->table('cambio_material')->insert([
+                    'IdViajeNeto'        => $this->IdViajeNeto ,
+                    'IdMaterialAnterior' => $this->IdMaterial,
+                    'IdMaterialNuevo'    => $data['IdMaterial'],
+                    'FechaRegistro'      => Carbon::now()->toDateTimeString(),
+                    'Registro'           => auth()->user()->idusuario
+                ]);
+            }
+
+            if($this->IdTiro != $data['IdTiro']) {
+                $this->IdTiro = $data['IdTiro'];
+                DB::connection('sca')->table('cambio_tiro')->insert([
+                    'IdViajeNeto'    => $this->IdViajeNeto ,
+                    'IdTiroAnterior' => $this->IdTiro,
+                    'IdTiroNuevo'    => $data['IdTiro'],
+                    'FechaRegistro'  => Carbon::now()->toDateTimeString(),
+                    'Registro'       => auth()->user()->idusuario
+                ]);
+            }
+
+            if($this->IdOrigen != $data['IdOrigen']) {
+                $this->IdOrigen = $data['IdOrigen'];
+                DB::connection('sca')->table('cambio_origen')->insert([
+                    'IdViajeNeto'      => $this->IdViajeNeto ,
+                    'IdOrigenAnterior' => $this->IdOrigen,
+                    'IdOrigenNuevo'    => $data['IdOrigen'],
+                    'FechaRegistro'    => Carbon::now()->toDateTimeString(),
+                    'Registro'         => auth()->user()->idusuario
+                ]);
+            }
+
+            if($this->CubicacionCamion != $data['CubicacionCamion']) {
+                $this->CubicacionCamion = $data['CubicacionCamion'];
+                DB::connection('sca')->table('cambio_cubicacion')->insert([
+                    'IdViajeNeto'   => $this->IdViajeNeto,
+                    'FechaRegistro' => Carbon::now()->toDateTimeString(),
+                    'VolumenViejo'  => $this->CubicacionCamion,
+                    'VolumenNuevo'  => $data['CubicacionCamion']
+                ]);
+            }
+
             $this->save();
             
             DB::connection('sca')->commit();
+
             return ['message' => 'Viaje Modificado Correctamente',
                 'tipo' => 'success',
                 'viaje' => [
@@ -314,7 +377,11 @@ class ViajeNeto extends Model
                     'IdTiro' => $this->IdTiro,
                     'Tiro' => $this->tiro->Descripcion,
                     'Material' => $this->material->Descripcion,
-                    'IdMaterial' => $this->IdMaterial
+                    'IdMaterial' => $this->IdMaterial,
+                    'IdSindicato' => $this->IdSindicato,
+                    'Sindicato' => (String) $this->sindicato,
+                    'IdEmpresa' => $this->IdEmpresa,
+                    'Empresa' => (String) $this->empresa
                 ]
             ];
         } catch (Exception $e) {
@@ -325,5 +392,13 @@ class ViajeNeto extends Model
 
     public function viaje() {
         return$this->hasOne(Viaje::class, 'IdViajeNeto');
+    }
+
+    public function empresa () {
+        return $this->belongsTo(Empresa::class, 'IdEmpresa');
+    }
+
+    public function sindicato () {
+        return $this->belongsTo(Sindicato::class, 'IdSindicato');
     }
 }

@@ -14,7 +14,9 @@ Vue.component('viajes-modificar', {
                     'CubicacionCamion' : '',
                     'IdOrigen' : '',
                     'IdTiro' : '',
-                    'IdMaterial' : ''
+                    'IdMaterial' : '',
+                    'IdSindicato' : '',
+                    'IdEmpresa' : '',
                 },
                 'errors' : []
             },
@@ -133,6 +135,10 @@ Vue.component('viajes-modificar', {
                     viaje.IdOrigen = response.body.viaje.IdOrigen;
                     viaje.Material = response.body.viaje.Material;
                     viaje.IdMaterial = response.body.viaje.IdMaterial;
+                    viaje.IdSindicato = response.body.viaje.IdSindicato;
+                    viaje.Sindicato = response.body.viaje.Sindicato;
+                    viaje.IdEmpresa = response.body.viaje.IdEmpresa;
+                    viaje.Empresa = response.body.viaje.Empresa;
 
                     viaje.ShowModal = false;
                     _this.guardando = false;
@@ -154,6 +160,8 @@ Vue.component('viajes-modificar', {
             this.form.data.IdOrigen = viaje.IdOrigen;
             this.form.data.IdTiro = viaje.IdTiro;
             this.form.data.IdMaterial = viaje.IdMaterial;
+            this.form.data.IdSindicato = viaje.IdSindicato;
+            this.form.data.IdEmpresa = viaje.IdEmpresa;
         }
     }
 });

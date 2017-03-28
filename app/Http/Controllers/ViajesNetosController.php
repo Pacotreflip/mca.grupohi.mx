@@ -5,11 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Carbon\Carbon;
 use Laracasts\Flash\Flash;
-use App\Models\Ruta;
-use App\Models\ProyectoLocal;
 use App\Models\ViajeNeto;
 use App\Models\Empresa;
 use App\Models\Sindicato;
@@ -17,6 +14,7 @@ use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\Camion;
 use App\Models\Material;
+use phpDocumentor\Reflection\Types\String_;
 
 
 class ViajesNetosController extends Controller
@@ -66,7 +64,11 @@ class ViajesNetosController extends Controller
                         'IdOrigen' => $viaje->origen->IdOrigen,
                         'Material' => $viaje->material->Descripcion,
                         'IdMaterial' => $viaje->material->IdMaterial,
-                        'ShowModal' => false
+                        'ShowModal' => false,
+                        'IdSindicato' => $viaje->IdSindicato,
+                        'IdEmpresa' => $viaje->IdEmpresa,
+                        'Sindicato' => (String) $viaje->sindicato,
+                        'Empresa' => (String) $viaje->empresa
                     ];
                 }
 
@@ -186,10 +188,12 @@ class ViajesNetosController extends Controller
                 ->withAction('autorizar');
         } else if($request->get('action') == 'modificar') {
             return view('viajes.netos.edit')
-                    ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->get())
-                    ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->get())
-                    ->withCamiones(Camion::all())
-                    ->withMateriales(Material::orderBy('Descripcion', 'ASC')->get())
+                    ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
+                    ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdTiro'))
+                    ->withCamiones(Camion::orderBy('Economico', 'ASC')->lists('Economico', 'IdCamion'))
+                    ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'))
+                    ->withEmpresas(Empresa::orderBy('razonSocial', 'ASC')->lists('razonSocial', 'IdEmpresa'))
+                    ->withSindicatos(Sindicato::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdSindicato'))
                     ->withAction('modificar');
         }
     }
