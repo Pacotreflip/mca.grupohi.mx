@@ -85,17 +85,17 @@ class ViajesNetosController extends Controller
                         'Cubicacion' => $viaje->CubicacionCamion,
                         'Origen' => $viaje->origen->Descripcion,
                         'IdOrigen' => $viaje->origen->IdOrigen,
-                        'Sindicato' => isset($viaje->IdSindicato) ? $viaje->IdSindicato : '',
-                        'Empresa' => isset($viaje->IdEmpresa) ? $viaje->IdEmpresa : '',
+                        'IdSindicato' => isset($viaje->IdSindicato) ? $viaje->IdSindicato : '',
+                        'IdEmpresa' => isset($viaje->IdEmpresa) ? $viaje->IdEmpresa : '',
                         'Material' => $viaje->material->Descripcion,
                         'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
                         'Ruta' => isset($viaje->ruta) ?  $viaje->ruta->present()->claveRuta : "",
                         'Code' => isset($viaje->Code) ? $viaje->Code : "",
                         'Valido' => $viaje->valido(),
                         'ShowModal' => false,
-                        'Distancia' => $viaje->ruta->TotalKM,
+                        'Distancia' => $viaje->ruta ? $viaje->ruta->TotalKM : null,
                         'Estado' => $viaje->estado(),
-                        'Importe' => $viaje->getImporte(),
+                        'Importe' => $viaje->ruta ? $viaje->getImporte() : null,
                         'PrimerKM' => $viaje->material->tarifaMaterial->PrimerKM,
                         'KMSubsecuente' => $viaje->material->tarifaMaterial->KMSubsecuente,
                         'KMAdicional' => $viaje->material->tarifaMaterial->KMAdicional,
@@ -179,8 +179,8 @@ class ViajesNetosController extends Controller
     {
         if($request->get('action') == 'validar') {
             return view('viajes.netos.edit')
-                    ->withSindicatos(Sindicato::all())
-                    ->withEmpresas(Empresa::all())
+                    ->withSindicatos(Sindicato::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdSindicato'))
+                    ->withEmpresas(Empresa::orderBy('razonSocial', 'ASC')->lists('razonSocial', 'IdEmpresa'))
                     ->withAction('validar');
         } else if($request->get('action') == 'autorizar') {
             return view('viajes.netos.edit')
@@ -207,8 +207,7 @@ class ViajesNetosController extends Controller
     public function update(Request $request)
     {
         if($request->get('type') == 'validar') {
-            $viaje = $request->get('viaje');
-            $viaje_neto = ViajeNeto::findOrFail($viaje['IdViajeNeto']);
+            $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
             return response()->json($viaje_neto->validar($request));
         } else if($request->path() == 'viajes/netos/autorizar') {
             $msg = ViajeNeto::autorizar($request->get('Estatus'));

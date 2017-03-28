@@ -228,8 +228,8 @@ class ViajeNeto extends Model
     }
     
     public function estado() {
-        $min = $this->ruta->cronometria->TiempoMinimo;
-        $tol = $this->ruta->cronometria->Tolerancia;
+        $min = $this->ruta ? $this->ruta->cronometria->TiempoMinimo : null;
+        $tol = $this->ruta ? $this->ruta->cronometria->Tolerancia : null;
         
         if($this->getTiempo() == 0 && $this->Estatus == 0) {
             return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
@@ -247,25 +247,27 @@ class ViajeNeto extends Model
     }
     
     public function validar($request) {
-        $viaje = $request->get('viaje');
+
+        $data = $request->get('data');
+
         DB::connection('sca')->beginTransaction();
         try {
             DB::connection("sca")->statement("call sca_sp_registra_viaje_fda("
-                .$viaje["Accion"].","
+                .$data["Accion"].","
                 .$this->IdViajeNeto.","
                 ."0".","
                 ."0".","
                 .$this->origen->IdOrigen.","
                 .$this->IdSindicato.","
-                .$viaje["Sindicato"].","
+                .$data["IdSindicato"].","
                 .$this->IdEmpresa.","
-                .$viaje["Empresa"].","
+                .$data["IdEmpresa"].","
                 .auth()->user()->idusuario.",'"
-                .$viaje["TipoTarifa"]."','"
-                .$viaje["TipoFDA"]."',"
-                .$viaje["Tara"].","
-                .$viaje["Bruto"].","
-                .$viaje["Cubicacion"].","
+                .$data["TipoTarifa"]."','"
+                .$data["TipoFDA"]."',"
+                .$data["Tara"].","
+                .$data["Bruto"].","
+                .$data["Cubicacion"].","
                 .$this->CubicacionCamion. ","
                 .($this->deductiva ? $this->deductiva->id : 'NULL'). ","
                 .($this->deductiva ? $this->deductiva->estatus : 'NULL') .
@@ -274,8 +276,8 @@ class ViajeNeto extends Model
             
             $result = DB::connection('sca')->select('SELECT @a');
             if($result[0]->{'@a'} == 'ok') {
-                $msg = $viaje['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
-                $tipo = $viaje['Accion'] == 1 ? 'success' : 'info';
+                $msg = $data['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
+                $tipo = $data['Accion'] == 1 ? 'success' : 'info';
             } else {
                 $msg = 'Error al procesar el viaje';
                 $tipo = 'error';

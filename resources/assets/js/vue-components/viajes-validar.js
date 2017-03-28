@@ -10,6 +10,16 @@ Vue.component('viajes-validar', {
             'cargando' : false,
             'guardando' : false,
             'form' : {
+                'data' : {
+                    'Accion' : '',
+                    'IdSindicato' : '',
+                    'IdEmpresa' : '',
+                    'TipoTarifa' : '',
+                    'TipoFDA' : '',
+                    'Tara' : '',
+                    'Bruto' : '',
+                    'Cubicacion' : ''
+                },
                 'errors' : []
             },
         }
@@ -140,8 +150,9 @@ Vue.component('viajes-validar', {
             function () {
                 _this.guardando = true;
                 _this.form.errors = [];
+                var data = _this.form.data;
 
-                _this.$http.post(App.host + '/viajes/netos', {'type' : 'validar', '_method' : 'PATCH',  viaje}).then((response) => {
+                _this.$http.post(App.host + '/viajes/netos', {'type' : 'validar', '_method' : 'PATCH', 'IdViajeNeto' : viaje.IdViajeNeto,  data}).then((response) => {
                     swal({
                         type: response.body.tipo,
                         title: '',
@@ -169,6 +180,23 @@ Vue.component('viajes-validar', {
             } else {
                 return 'item';
             }
+        },
+
+        showModal: function(viaje) {
+            viaje.ShowModal = true;
+            this.initializeData(viaje);
+        },
+
+        initializeData: function(viaje) {
+
+            this.form.data.Accion = viaje.Accion;
+            this.form.data.IdSindicato = viaje.IdSindicato;
+            this.form.data.IdEmpresa = viaje.IdEmpresa;
+            this.form.data.TipoTarifa = viaje.TipoTarifa;
+            this.form.data.TipoFDA = viaje.TipoFDA;
+            this.form.data.Tara = viaje.Tara;
+            this.form.data.Bruto = viaje.Bruto;
+            this.form.data.Cubicacion = viaje.Cubicacion;
         }
     }
 });

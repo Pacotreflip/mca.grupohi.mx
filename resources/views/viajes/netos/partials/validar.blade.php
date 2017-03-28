@@ -89,7 +89,7 @@
                                 </span>
                             </td>
                             <td>
-                                <a id="show-modal" @click="viaje.ShowModal = true">
+                                <a id="show-modal" @click="showModal(viaje)">
                                     Validar     
                                 </a>
                                 <modal-validar v-if="viaje.ShowModal" @close="viaje.ShowModal = false">
@@ -99,26 +99,26 @@
                                             <div class="col-md-7">
                                                 <div class="form-group">
                                                     <label>Sindicato:</label>
-                                                    <select v-model="viaje.Sindicato" class="form-control input-sm">
+                                                    <select v-model="form.data.IdSindicato" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        @foreach($sindicatos as $sindicato)
-                                                        <option value="{{ $sindicato->IdSindicato}}">{{ $sindicato->NombreCorto }}</option>
+                                                        @foreach($sindicatos as $key => $sindicato)
+                                                        <option value="{{ $key }}">{{ $sindicato }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Empresa:</label>
-                                                    <select v-model="viaje.Empresa" class="form-control input-sm">
+                                                    <select v-model="form.data.IdEmpresa" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        @foreach($empresas as $empresa)
-                                                        <option value="{{ $empresa->IdEmpresa }}">{{ $empresa->razonSocial }}</option>
+                                                        @foreach($empresas as $key => $empresa)
+                                                        <option value="{{ $key }}">{{ $empresa }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <hr>
                                                 <div class="form-group">
                                                     <label>Tipo Tarifa:</label>
-                                                    <select v-model="viaje.TipoTarifa" class="form-control input-sm">
+                                                    <select v-model="form.data.TipoTarifa" class="form-control input-sm">
                                                         <option value="m">Material</option>
                                                         <option value="r">Ruta</option>
                                                         <option value="p">Peso</option>
@@ -126,7 +126,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Tipo FDA:</label>
-                                                    <select v-model="viaje.TipoFDA" class="form-control input-sm">
+                                                    <select v-model="form.data.TipoFDA" class="form-control input-sm">
                                                         <option value="m">Material</option>
                                                         <option value="bm">Ban-Mat</option>
                                                     </select>
@@ -135,35 +135,35 @@
                                             <div class="col-md-4 col-md-offset-1">
                                                 <div class="form-group">
                                                     <label>Cubicación:</label>
-                                                    <input type="number" step="any" class="form-control input-sm" v-model="viaje.Cubicacion">
+                                                    <input type="number" step="any" class="form-control input-sm" v-model="form.data.Cubicacion">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Tara:</label>
-                                                    <input type="number" step="any" class="form-control input-sm" v-model="viaje.Tara">
+                                                    <input type="number" step="any" class="form-control input-sm" v-model="form.data.Tara">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Bruto:</label>
-                                                    <input type="number" step="any" class="form-control input-sm" v-model="viaje.Bruto">
+                                                    <input type="number" step="any" class="form-control input-sm" v-model="form.data.Bruto">
                                                 </div>
                                                 <hr>
                                                 <span v-if="viaje.Valido">
                                                     <div >
                                                         <label><i class="fa fa-check" style="color: green"></i> Validar:</label>
-                                                        <input type="radio" value="1" v-model="viaje.Accion">
+                                                        <input type="radio" value="1" v-model="form.data.Accion">
                                                     </div>
                                                     <div>
                                                         <label><i class="fa fa-close" style="color: red"></i> Denegar:</label>
-                                                        <input type="radio" value="0" v-model="viaje.Accion">
+                                                        <input type="radio" value="0" v-model="form.data.Accion">
                                                     </div>   
                                                 </span>
                                                 <span v-else>
                                                     <div >
                                                         <label><i class="fa fa-check" style="color: green"></i> Validar:</label>
-                                                        <input type="radio" value="1" v-model="viaje.Accion" disabled="disabled">
+                                                        <input type="radio" value="1" v-model="form.data.Accion" disabled="disabled">
                                                     </div>
                                                     <div>
                                                         <label><i class="fa fa-close" style="color: red"></i> Denegar:</label>
-                                                        <input type="radio" value="0" v-model="viaje.Accion">
+                                                        <input type="radio" value="0" v-model="form.data.Accion">
                                                     </div>   
                                                 </span>
                                             </div>
