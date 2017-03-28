@@ -74,9 +74,13 @@ class ViajeNeto extends Model
     }
     
     public function scopePorValidar($query) {
-        return $query->whereIn('Estatus', [0, 10, 20]);
+        return $query->whereIn('Estatus', [0, 10, 20, 30]);
     }
-        
+
+    public function scopeValidados($query) {
+        return $query->whereIn('Estatus', [1, 11, 21, 31]);
+    }
+
     public static function autorizar($data) {
         $autorizados = 0;
         DB::connection('sca')->beginTransaction();
