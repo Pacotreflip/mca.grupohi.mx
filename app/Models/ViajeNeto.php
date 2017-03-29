@@ -258,10 +258,10 @@ class ViajeNeto extends Model
                 ."0".","
                 ."0".","
                 .$this->origen->IdOrigen.","
-                .$this->IdSindicato.","
-                .$data["IdSindicato"].","
-                .$this->IdEmpresa.","
-                .$data["IdEmpresa"].","
+                .($this->IdSindicato ? $this->IdSindicato : 'NULL').","
+                .($data["IdSindicato"] ? $data['IdSindicato'] : 'NULL').","
+                .($this->IdEmpresa ? $this->IdEmpresa : 'NULL').","
+                .($data["IdEmpresa"] ? $data['IdEmpresa'] : 'NULL').","
                 .auth()->user()->idusuario.",'"
                 .$data["TipoTarifa"]."','"
                 .$data["TipoFDA"]."',"
@@ -271,7 +271,7 @@ class ViajeNeto extends Model
                 .$this->CubicacionCamion. ","
                 .($this->deductiva ? $this->deductiva->id : 'NULL'). ","
                 .($this->deductiva ? $this->deductiva->estatus : 'NULL') .
-                 ",@a);"
+                ",@a);"
             );  
             
             $result = DB::connection('sca')->select('SELECT @a');

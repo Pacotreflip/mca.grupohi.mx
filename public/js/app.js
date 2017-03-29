@@ -28089,6 +28089,7 @@ Vue.component('viajes-validar', {
 
                     if (response.body.tipo == 'success' || response.body.tipo == 'info') {
                         viaje.ShowModal = false;
+                        delete _this.viajes_netos[viaje];
                         _this.viajes_netos.splice(_this.viajes_netos.indexOf(viaje), 1);
                     }
 
