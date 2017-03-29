@@ -30,9 +30,16 @@ class ReportesController extends Controller
 
     /**
      * @param Request $request
+     * @return $this|void
      */
     public function viajes_netos_show(Request $request) {
 
+        $this->validate($request, [
+            'FechaInicial' => 'required|date_format:"Y-m-d"',
+            'FechaFinal'   => 'required|date_format:"Y-m-d"',
+            'HoraInicial'  => 'required|date_format:"g:i:s a"',
+            'HoraFinal'    => 'required|date_format:"g:i:s a"'
+        ]);
 
         $horaInicial = Carbon::createFromFormat('g:i:s a', $request->get('HoraInicial'))->toTimeString();
         $horaFinal = Carbon::createFromFormat('g:i:s a', $request->get('HoraFinal'))->toTimeString();

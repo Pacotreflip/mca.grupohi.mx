@@ -21,9 +21,12 @@ class ViajeNetoReporteTransformer extends AbstractTransformer
      */
     public function transformModel(Model $model) {
         $output = [
-            'Creo Primer Toque'      => User::find($model->CreoPrimerToque) ? User::find($model->CreoPrimerToque)->present()->nombreCompleto : '',
-            'Creo Segundo Toque'     => User::find($model->Creo) ? User::find($model->Creo)->present()->nombreCompleto : '',
-            'Cubicación Camión (m3)' =>
+            'Estatus'                    => (String) $model->Estatus,
+            'Creo Primer Toque'          => User::find($model->CreoPrimerToque) ? User::find($model->CreoPrimerToque)->present()->nombreCompleto : (String) $model->CreoPrimerToque,
+            'Creo Segundo Toque'         => User::find($model->Creo) ? User::find($model->Creo)->present()->nombreCompleto : (String) $model->Creo,
+            'Cubicación Camión (m3)'     => $model->camion ? (String)$model->camion->CubicacionParaPago : '',
+            'Cubicación Viaje Neto (m3)' => (String) $model->CubicacionCamion,
+            'Cubicación Viaje (m3)'      => $model->viaje ? (String) $model->viaje->CubicacionCamion : '',
         ];
         return $output;
     }

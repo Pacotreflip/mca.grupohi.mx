@@ -5,6 +5,7 @@
     {!! Breadcrumbs::render('reportes.viajes_netos')  !!}
     <hr>
     <h3>BUSCAR VIAJES</h3>
+    @include('partials.errors')
     {!! Form::open(['method' => 'GET', 'route' => ['reportes.viajes_netos.show'], 'id' => 'form_reporte_viajes_netos']) !!}
     <div class="row">
         <div class="col-md-6">
@@ -49,7 +50,7 @@
     </div>
 
     {!! Form::close() !!}
-@endsection
+@stop
 @section('scripts')
     <script>
         // initialize input widgets first
@@ -71,4 +72,4 @@
         var form_reporte_viajes_netos = document.getElementById('form_reporte_viajes_netos');
         new Datepair(form_reporte_viajes_netos);
     </script>
-@endsection
+@stop
