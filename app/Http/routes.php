@@ -94,18 +94,6 @@ Route::group(['prefix' => 'pdf'], function () {
     ]);
 });
 
-//Reportes Routes
-Route::group(['prefix' => 'reportes'], function () {
-    Route::get('viajes_netos/create', [
-        'as'   => 'reportes.viajes_netos.create',
-        'uses' => 'ReportesController@viajes_netos_create'
-    ]);
-    Route::get('vianes_netos/show', [
-        'as'   => 'reportes.viajes_netos.show',
-        'uses' => 'ReportesController@viajes_netos_show'
-    ]);
-});
-
 Route::resource('conciliaciones', 'ConciliacionesController');
 
 Route::post('conciliacion/{conciliacion}/detalles', 'ConciliacionesDetallesController@store')->name('conciliaciones.detalles.store');
