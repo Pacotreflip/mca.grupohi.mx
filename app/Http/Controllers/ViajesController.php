@@ -43,6 +43,7 @@ class ViajesController extends Controller
                 return $viaje->disponible();
             });
 
+
             $data = ViajeTransformer::transform($filter);
 
         } else if ($request->get('tipo') == 'revertir') {

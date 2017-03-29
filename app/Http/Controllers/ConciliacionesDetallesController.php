@@ -131,14 +131,7 @@ class ConciliacionesDetallesController extends Controller
 
             return response()->json([
                 'status_code' => 201,
-                'registros'   => $i,
-                'conciliacion' => [
-                    'id'      => $id,
-                    'importe' => $conciliacion->importe_f,
-                    'volumen' => $conciliacion->volumen_f,
-                    'num_viajes' => $conciliacion->conciliacionDetalles->count(),
-                    'detalles'   => $detalles
-                ]
+                'registros'   => $i
             ]);
         }
     }
