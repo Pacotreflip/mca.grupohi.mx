@@ -58,6 +58,7 @@ class Conciliacion extends Model
                 RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
 				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
 			  WHERE (conciliacion_detalle.idconciliacion = '.$this->idconciliacion.') 
+			  AND(conciliacion_detalle.estado = 1)
 			  GROUP BY materiales.Descripcion
 			  ORDER BY materiales.Descripcion ASC;'));
     }
@@ -79,6 +80,7 @@ class Conciliacion extends Model
                 RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
 				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
 			  WHERE (conciliacion_detalle.idconciliacion = '.$this->idconciliacion.') 
+			  AND(conciliacion_detalle.estado = 1)
 			  GROUP BY camiones.Economico
 			  ORDER BY camiones.Economico ASC;'));
     }
