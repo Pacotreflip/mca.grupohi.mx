@@ -7,6 +7,7 @@
     <h3>BUSCAR VIAJES</h3>
     @include('partials.errors')
     {!! Form::open(['method' => 'GET', 'route' => ['reportes.viajes_netos.show'], 'id' => 'form_reporte_viajes_netos']) !!}
+    <input type="hidden" name="action" value />
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -46,13 +47,25 @@
         </div>
     </div>
     <div class="form-group">
-        <button type="submit" class="btn btn-success submit">GENERAR REPORTE</button>
+        <button type="submit" class="btn btn-success excel">GENERAR REPORTE</button>
+        <button type="submit" class="btn btn-primary view">VISTA PREVIA</button>
     </div>
 
     {!! Form::close() !!}
 @stop
 @section('scripts')
     <script>
+        $('.view').off().on('click', function (e) {
+            e.preventDefault();
+            $('input[name=action]').val('view');
+            $('form').submit();
+        });
+
+        $('.excel').off().on('click', function (e) {
+            e.preventDefault();
+            $('input[name=action]').val('excel');
+            $('form').submit();
+        });
         // initialize input widgets first
         $('#form_reporte_viajes_netos .time').timepicker({
             'timeFormat' : 'hh:mm:ss a',
