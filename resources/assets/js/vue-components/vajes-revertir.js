@@ -113,7 +113,7 @@ Vue.component('viajes-revertir', {
                         type : 'POST',
                         data : {
                             _method : 'PATCH',
-                            action : 'revertir'
+                            tipo : 'revertir'
                         },
                         success: function(response) {
                             if(response.status_code = 200) {
