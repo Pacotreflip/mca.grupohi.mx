@@ -126,7 +126,7 @@ class ViajesController extends Controller
                     'succes'      => $succes,
                     'viaje'       => ViajeTransformer::transform(Viaje::find($id))
                 ]);
-            } else if ($request->get('action') == 'revertir') {
+            } else if ($request->get('tipo') == 'revertir') {
                 $viaje = Viaje::find($id);
                 $success = $viaje->revertir();
 
