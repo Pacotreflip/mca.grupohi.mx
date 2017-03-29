@@ -67,9 +67,8 @@
             todayHighlight: true,
             endDate: '0d'
         });
-
-        // initialize datepair
-        var form_reporte_viajes_netos = document.getElementById('form_reporte_viajes_netos');
-        new Datepair(form_reporte_viajes_netos);
+        $('#form_reporte_viajes_netos .date').val(App.timeStamp(1));
+        $('#form_reporte_viajes_netos .time.start').val('12:00:00 am');
+        $('#form_reporte_viajes_netos .time.end').val('11:59:59 pm');
     </script>
 @stop
