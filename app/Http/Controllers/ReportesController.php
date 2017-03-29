@@ -46,17 +46,20 @@ class ReportesController extends Controller
 
         switch ($request->get('Estatus')) {
             case '0':
+                $estatus = 'in (0,1,10,11,20,21,30,31)';
                 $viajesNetos = ViajeNeto::whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
                     ->whereBetween('HoraLlegada', [$horaInicial, $horaFinal])
                     ->get();
                 break;
             case '1':
+                $estatus = 'in (1,11,21,31)';
                 $viajesNetos = ViajeNeto::validados()
                     ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
                     ->whereBetween('HoraLlegada', [$horaInicial, $horaFinal])
                     ->get();
                 break;
             case '2':
+                $estatus = 'in (0,10,20,30)';
                 $viajesNetos = ViajeNeto::porValidar()
                     ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
                     ->whereBetween('HoraLlegada', [$horaInicial, $horaFinal])
@@ -67,6 +70,6 @@ class ReportesController extends Controller
             Flash::error("Ningún viaje coincide con los datos de consulta");
             return redirect()->back()->withInput();
         }
-        return (new ViajesNetos())->create($viajesNetos);
+        return (new ViajesNetos())->create($request, $horaInicial, $horaFinal, $estatus);
     }
 }

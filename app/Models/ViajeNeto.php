@@ -407,4 +407,18 @@ class ViajeNeto extends Model
     public function sindicato () {
         return $this->belongsTo(Sindicato::class, 'IdSindicato');
     }
+
+    public function getSindicatoConciliadoAttribute() {
+        if($this->viaje) {
+            if($this->viaje->conciliacionDetalles->where('estado', 1)->first()) {
+                $detalle = $this->viaje->conciliacionDetalles->where('estado', 1)->first();
+                if($detalle->conciliacion->sinicato) {
+                    return (String) $detalle->conciliacion->sindicato;
+                }
+                return '';
+            }
+            return '';
+        }
+        return '';
+    }
 }

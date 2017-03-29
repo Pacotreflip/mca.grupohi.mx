@@ -100,7 +100,7 @@ Route::group(['prefix' => 'reportes'], function () {
         'as'   => 'reportes.viajes_netos.create',
         'uses' => 'ReportesController@viajes_netos_create'
     ]);
-    Route::get('vianes_netos/show', [
+    Route::get('viajes_netos/show', [
         'as'   => 'reportes.viajes_netos.show',
         'uses' => 'ReportesController@viajes_netos_show'
     ]);
