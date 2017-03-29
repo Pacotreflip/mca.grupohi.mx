@@ -26756,8 +26756,8 @@ Vue.component('conciliaciones-edit', {
                 data: data,
                 type: 'POST',
                 success: function success(response) {
-                    if (response.conciliacion.detalles != null) {
-                        _this.conciliacion.detalles.push(response.conciliacion.detalles);
+                    if (response.detalles != null) {
+                        _this.conciliacion.detalles.push(response.detalles);
                         _this.guardando = false;
                         swal({
                             type: 'success',
