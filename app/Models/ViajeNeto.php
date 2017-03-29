@@ -64,6 +64,10 @@ class ViajeNeto extends Model
     public function imagenes() {
         return $this->hasMany(ImagenViajeNeto::class, 'idviaje_neto')->where('estado', 1);
     }
+
+    public function deductiva() {
+        return $this->hasOne(Deductiva::class, 'id_viaje_neto', 'IdViajeNeto');
+    }
     
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
@@ -224,8 +228,8 @@ class ViajeNeto extends Model
     }
     
     public function estado() {
-        $min = $this->ruta->cronometria->TiempoMinimo;
-        $tol = $this->ruta->cronometria->Tolerancia;
+        $min = $this->ruta ? $this->ruta->cronometria->TiempoMinimo : null;
+        $tol = $this->ruta ? $this->ruta->cronometria->Tolerancia : null;
         
         if($this->getTiempo() == 0 && $this->Estatus == 0) {
             return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
@@ -243,31 +247,37 @@ class ViajeNeto extends Model
     }
     
     public function validar($request) {
-        $viaje = $request->get('viaje');
+
+        $data = $request->get('data');
+
         DB::connection('sca')->beginTransaction();
         try {
             DB::connection("sca")->statement("call sca_sp_registra_viaje_fda("
-                .$viaje["Accion"].","
+                .$data["Accion"].","
                 .$this->IdViajeNeto.","
                 ."0".","
                 ."0".","
                 .$this->origen->IdOrigen.","
-                .($viaje["Sindicato"] ? $viaje["Sindicato"] : 'NULL').","
-                .($viaje["Empresa"] ? $viaje["Empresa"] : 'NULL').","
+                .$this->IdSindicato.","
+                .$data["IdSindicato"].","
+                .$this->IdEmpresa.","
+                .$data["IdEmpresa"].","
                 .auth()->user()->idusuario.",'"
-                .$viaje["TipoTarifa"]."','"
-                .$viaje["TipoFDA"]."',"
-                .$viaje["Tara"].","
-                .$viaje["Bruto"].","
-                .$viaje["Cubicacion"].","
-                .$this->camion->CubicacionParaPago.
+                .$data["TipoTarifa"]."','"
+                .$data["TipoFDA"]."',"
+                .$data["Tara"].","
+                .$data["Bruto"].","
+                .$data["Cubicacion"].","
+                .$this->CubicacionCamion. ","
+                .($this->deductiva ? $this->deductiva->id : 'NULL'). ","
+                .($this->deductiva ? $this->deductiva->estatus : 'NULL') .
                  ",@a);"
             );  
             
             $result = DB::connection('sca')->select('SELECT @a');
             if($result[0]->{'@a'} == 'ok') {
-                $msg = $viaje['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
-                $tipo = $viaje['Accion'] == 1 ? 'success' : 'info';
+                $msg = $data['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
+                $tipo = $data['Accion'] == 1 ? 'success' : 'info';
             } else {
                 $msg = 'Error al procesar el viaje';
                 $tipo = 'error';
@@ -276,45 +286,121 @@ class ViajeNeto extends Model
             DB::connection('sca')->commit();
             return ['message' => $msg,
                 'tipo' => $tipo];
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
             DB::connection('sca')->rollback();
+            throw $e;
         }
     }
     
     public function modificar($request) {
-        $viaje = $request->get('viaje');
+        $data = $request->get('data');
         $viaje_aprobado = $this->viaje;
         if($viaje_aprobado)
         throw new \Exception("El viaje no puede ser modificado porque ya se encuentra validado.");
+
         DB::connection('sca')->beginTransaction();
         try {
-            $this->IdCamion = $viaje['IdCamion'];
-            $this->IdTiro = $viaje['IdTiro'];
-            $this->IdMaterial = $viaje['IdMaterial'];
-            $this->IdOrigen = $viaje['IdOrigen'];
+
+            if($this->IdEmpresa != $data['IdEmpresa']){
+                DB::connection('sca')->table('cambio_empresa')->insert([
+                    'IdViajeNeto'       => $this->IdViajeNeto,
+                    'IdEmpresaAnterior' => $this->IdEmpresa,
+                    'IdEmpresaNuevo'    => $data['IdEmpresa'],
+                    'FechaRegistro'     => Carbon::now()->toDateTimeString(),
+                    'Registro'          => auth()->user()->idusuario
+                ]);
+                $this->IdEmpresa = $data['IdEmpresa'];
+            }
+
+            if($this->IdSindicato != $data['IdSindicato']) {
+                DB::connection('sca')->table('cambio_sindicato')->insert([
+                    'IdViajeNeto'       => $this->IdViajeNeto,
+                    'IdSindicatoAnterior' => $this->IdSindicato,
+                    'IdSindicatoNuevo'    => $data['IdSindicato'],
+                    'FechaRegistro'     => Carbon::now()->toDateTimeString(),
+                    'Registro'          => auth()->user()->idusuario
+                ]);
+                $this->IdSindicato = $data['IdSindicato'];
+            }
+
+            if($this->IdMaterial != $data['IdMaterial']) {
+                DB::connection('sca')->table('cambio_material')->insert([
+                    'IdViajeNeto'        => $this->IdViajeNeto ,
+                    'IdMaterialAnterior' => $this->IdMaterial,
+                    'IdMaterialNuevo'    => $data['IdMaterial'],
+                    'FechaRegistro'      => Carbon::now()->toDateTimeString(),
+                    'Registro'           => auth()->user()->idusuario
+                ]);
+                $this->IdMaterial = $data['IdMaterial'];
+            }
+
+            if($this->IdTiro != $data['IdTiro']) {
+                DB::connection('sca')->table('cambio_tiro')->insert([
+                    'IdViajeNeto'    => $this->IdViajeNeto ,
+                    'IdTiroAnterior' => $this->IdTiro,
+                    'IdTiroNuevo'    => $data['IdTiro'],
+                    'FechaRegistro'  => Carbon::now()->toDateTimeString(),
+                    'Registro'       => auth()->user()->idusuario
+                ]);
+                $this->IdTiro = $data['IdTiro'];
+            }
+
+            if($this->IdOrigen != $data['IdOrigen']) {
+                DB::connection('sca')->table('cambio_origen')->insert([
+                    'IdViajeNeto'      => $this->IdViajeNeto ,
+                    'IdOrigenAnterior' => $this->IdOrigen,
+                    'IdOrigenNuevo'    => $data['IdOrigen'],
+                    'FechaRegistro'    => Carbon::now()->toDateTimeString(),
+                    'Registro'         => auth()->user()->idusuario
+                ]);
+                $this->IdOrigen = $data['IdOrigen'];
+            }
+
+            if($this->CubicacionCamion != $data['CubicacionCamion']) {
+                DB::connection('sca')->table('cambio_cubicacion')->insert([
+                    'IdViajeNeto'   => $this->IdViajeNeto,
+                    'FechaRegistro' => Carbon::now()->toDateTimeString(),
+                    'VolumenViejo'  => $this->CubicacionCamion,
+                    'VolumenNuevo'  => $data['CubicacionCamion']
+                ]);
+                $this->CubicacionCamion = $data['CubicacionCamion'];
+            }
+
             $this->save();
             
             DB::connection('sca')->commit();
+
             return ['message' => 'Viaje Modificado Correctamente',
                 'tipo' => 'success',
                 'viaje' => [
-                    'Camion' => $this->camion->Economico,
-                    'IdCamion' => $this->camion->IdCamion,
-                    'Cubicacion' => $this->camion->CubicacionParaPago,
-                    'IdOrigen' => $this->origen->IdOrigen,
+                    'CubicacionCamion' => $this->CubicacionCamion,
+                    'IdOrigen' => $this->IdOrigen,
                     'Origen' => $this->origen->Descripcion,
-                    'IdTiro' => $this->tiro->IdTiro,
+                    'IdTiro' => $this->IdTiro,
                     'Tiro' => $this->tiro->Descripcion,
                     'Material' => $this->material->Descripcion,
-                    'IdMaterial' => $this->material->IdMaterial
+                    'IdMaterial' => $this->IdMaterial,
+                    'IdSindicato' => $this->IdSindicato,
+                    'Sindicato' => (String) $this->sindicato,
+                    'IdEmpresa' => $this->IdEmpresa,
+                    'Empresa' => (String) $this->empresa
                 ]
             ];
-        } catch (Exception $ex) {
+        } catch (Exception $e) {
             DB::connection('sca')->rollback();
+            throw $e;
         }
     }
 
     public function viaje() {
         return$this->hasOne(Viaje::class, 'IdViajeNeto');
+    }
+
+    public function empresa () {
+        return $this->belongsTo(Empresa::class, 'IdEmpresa');
+    }
+
+    public function sindicato () {
+        return $this->belongsTo(Sindicato::class, 'IdSindicato');
     }
 }

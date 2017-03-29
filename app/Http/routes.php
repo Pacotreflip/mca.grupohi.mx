@@ -80,10 +80,9 @@ Route::group(['prefix' => 'viajes/netos'], function() {
     Route::post('manual', 'ViajesNetosController@store');
 });
 Route::get('viajes/netos/edit' , 'ViajesNetosController@edit')->name('viajes.netos.edit');
+Route::patch('viajes/netos', 'ViajesNetosController@update')->name('viajes.netos.update');
 Route::group(['prefix' => 'viajes/netos'], function() {
     Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes.netos.autorizar');
-    Route::patch('validar', 'ViajesNetosController@update')->name('viajes.netos.validar');
-    Route::patch('modificar', 'ViajesNetosController@update')->name('viajes.netos.modificar');
 });
 
 //PDF Routes
@@ -92,6 +91,18 @@ Route::group(['prefix' => 'pdf'], function () {
     Route::get('conciliacion/{id}', [
         'as'   => 'pfd.conciliacion',
         'uses' => 'PDFController@conciliacion'
+    ]);
+});
+
+//Reportes Routes
+Route::group(['prefix' => 'reportes'], function () {
+    Route::get('viajes_netos/create', [
+        'as'   => 'reportes.viajes_netos.create',
+        'uses' => 'ReportesController@viajes_netos_create'
+    ]);
+    Route::get('vianes_netos/show', [
+        'as'   => 'reportes.viajes_netos.show',
+        'uses' => 'ReportesController@viajes_netos_show'
     ]);
 });
 

@@ -1,22 +1,3 @@
-function timeStamp(type) {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    var hh = today.getHours();
-    var min = today.getMinutes();
-
-    if(dd < 10) {dd = '0' + dd} 
-    if(mm < 10) {mm = '0' + mm} 
-    if(hh < 10) {hh = '0' + hh}
-    if(min < 10) {min = '0' + min}
-
-    var date = yyyy + '-' + mm + '-' + dd;
-    var time = hh + ":" + min;
-
-    return type == 1 ? date : time;
-}
-
 // register modal component
 Vue.component('modal-modificar', {
   template: '#modal-template'
@@ -25,14 +6,18 @@ Vue.component('modal-modificar', {
 Vue.component('viajes-modificar', {
     data : function() {
         return {
-            'datosConsulta' : {
-                'fechaInicial' : timeStamp(1),
-                'fechaFinal' : timeStamp(1)
-            },
-            'viajes' : [],
+            'viajes_netos' : [],
             'cargando' : false,
             'guardando' : false,
             'form' : {
+                'data' : {
+                    'CubicacionCamion' : '',
+                    'IdOrigen' : '',
+                    'IdTiro' : '',
+                    'IdMaterial' : '',
+                    'IdSindicato' : '',
+                    'IdEmpresa' : '',
+                },
                 'errors' : []
             },
         }
@@ -44,11 +29,12 @@ Vue.component('viajes-modificar', {
                 $(el).datepicker({
                     format: 'yyyy-mm-dd',
                     language: 'es',
-                    autoclose: false,
+                    autoclose: true,
                     clearBtn: true,
                     todayHighlight: true,
                     endDate: '0d'
                 });
+                $(el).val(App.timeStamp(1));
             }
         },
         
@@ -90,72 +76,92 @@ Vue.component('viajes-modificar', {
     },
     
     methods: {
-        setFechaInicial: function(event) {
-            this.datosConsulta.fechaInicial = event.currentTarget.value;
-        },
-        
-        setFechaFinal: function(event) {
-            this.datosConsulta.fechaFinal = event.currentTarget.value;
-        },
-        
-        fetchViajes: function() {
-            if(!this.datosConsulta.fechaInicial || !this.datosConsulta.fechaFinal) {
-                swal('', 'Por favor introduzca el rango de fechas a consultar', 'warning');
+
+        buscar: function(e) {
+
+            e.preventDefault();
+
+            var _this = this;
+
+            this.cargando = true;
+            this.form.errors = [];
+
+            var data = $('.form_buscar').serialize();
+            var url = App.host + '/viajes/netos?action=modificar&' + data;
+
+            this.$http.get(url).then((response) => {
+                _this.cargando = false;
+            if(! response.body.viajes_netos.length) {
+                swal('¡Sin Resultados!', 'Ningún viaje coincide con los datos de consulta', 'warning');
             } else {
-                this.viajes = [];
-                this.cargando = true;
-                this.form.errors = [];
-                this.$http.get(App.host + '/viajes/netos', {'params' : {'action' : 'modificar', 'fechaInicial' : this.datosConsulta.fechaInicial, 'fechaFinal' : this.datosConsulta.fechaFinal}}).then((response) => {
-                    this.viajes = response.body;                    
-                    this.cargando = false;
-                }, (error) => {
-                    App.setErrorsOnForm(this.form, error.body);
-                    this.cargando = false;
-                });
+                _this.viajes_netos = response.body.viajes_netos;
             }
+        }, (error) => {
+                _this.cargando = false;
+                swal('¡Error!', App.errorsToString(error.body), 'error');
+            });
         },
-        
-        confirmarModificacion: function(index) {
+
+        modificar: function(viaje) {
+
+            var _this = this;
+
             swal({
-                title: "¿Desea continuar con la modificación?", 
-                text: "¿Esta seguro de que la información es correcta?", 
+                title: "¿Desea continuar con la modificación?",
+                text: "¿Esta seguro de que la información es correcta?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Si",
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
-            }, () => this.modificar(index));
-        },
-        
-        modificar: function(index) {
-            var _this = this;
-            this.guardando = true;
-            this.form.errors = [];
-            var viaje = this.viajes[index];
-            this.$http.post(App.host + '/viajes/netos/modificar', {'_method' : 'PATCH',  viaje}).then((response) => {
-                swal({
-                    type: response.body.tipo,
-                    title: '',
-                    text: response.body.message,
-                    showConfirmButton: true
+            },
+            function () {
+                _this.guardando = true;
+                _this.form.errors = [];
+                var data = _this.form.data;
+
+                _this.$http.post(App.host + '/viajes/netos', {'type' : 'modificar', '_method' : 'PATCH', 'IdViajeNeto' : viaje.IdViajeNeto,  data}).then((response) => {
+                    swal({
+                        type: response.body.tipo,
+                        title : '',
+                        text: response.body.message,
+                        showConfirmButton: true
+                    });
+
+                    viaje.CubicacionCamion = response.body.viaje.CubicacionCamion;
+                    viaje.Tiro = response.body.viaje.Tiro;
+                    viaje.IdTiro = response.body.viaje.IdTiro;
+                    viaje.Origen = response.body.viaje.Origen;
+                    viaje.IdOrigen = response.body.viaje.IdOrigen;
+                    viaje.Material = response.body.viaje.Material;
+                    viaje.IdMaterial = response.body.viaje.IdMaterial;
+                    viaje.IdSindicato = response.body.viaje.IdSindicato;
+                    viaje.Sindicato = response.body.viaje.Sindicato;
+                    viaje.IdEmpresa = response.body.viaje.IdEmpresa;
+                    viaje.Empresa = response.body.viaje.Empresa;
+
+                    viaje.ShowModal = false;
+                    _this.guardando = false;
+                }, (error) => {
+                    _this.guardando = false;
+                    viaje.ShowModal = false;
+                    swal('¡Error!', App.errorsToString(error.body), 'error');
                 });
-                _this.viajes[index].Camion = response.body.viaje.Camion;
-                _this.viajes[index].IdCamion = response.body.viaje.IdCamion;
-                _this.viajes[index].Cubicacion = response.body.viaje.Cubicacion;
-                _this.viajes[index].Tiro = response.body.viaje.Tiro;
-                _this.viajes[index].IdTiro = response.body.viaje.IdTiro;
-                _this.viajes[index].Origen = response.body.viaje.Origen;
-                _this.viajes[index].IdOrigen = response.body.viaje.IdOrigen;
-                _this.viajes[index].Material = response.body.viaje.Material;
-                _this.viajes[index].IdMaterial = response.body.viaje.IdMaterial;
-          
-                _this.viajes[index].ShowModal = false;      
-                _this.guardando = false;
-            }, (response) => {
-                _this.guardando = false;
-                _this.viajes[index].ShowModal = false;
-                App.setErrorsOnForm(_this.form, response.body);
             });
         },
+
+        showModal: function(viaje) {
+            viaje.ShowModal = true;
+            this.initializeData(viaje);
+        },
+
+        initializeData: function(viaje) {
+            this.form.data.CubicacionCamion = viaje.CubicacionCamion;
+            this.form.data.IdOrigen = viaje.IdOrigen;
+            this.form.data.IdTiro = viaje.IdTiro;
+            this.form.data.IdMaterial = viaje.IdMaterial;
+            this.form.data.IdSindicato = viaje.IdSindicato;
+            this.form.data.IdEmpresa = viaje.IdEmpresa;
+        }
     }
 });

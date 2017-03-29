@@ -6,30 +6,40 @@
     <viajes-validar inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
+            <h3>BUSCAR VIAJES</h3>
+            {!! Form::open(['class' => 'form_buscar']) !!}
             <div class="row">
-                <div class="col-md-12">
-                    <div class="form-inline">
-                        <div class="form-group">
-                            <label>Inicio</label>
-                            <input type="text" v-model="datosConsulta.fechaInicial" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Inicio" @blur="setFechaInicial($event)">
-                        </div>
-                        <div class="form-group">
-                            <label>Fin</label>
-                            <input type="text" v-model="datosConsulta.fechaFinal" v-datepicker class="fecha form-control input-sm" placeholder="Fecha de Fin" @blur="setFechaFinal($event)">
-                        </div>
-                        <button v-on:click="fetchViajes" class="btn btn-sm btn-primary" >Consultar</button>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>FECHA INICIAL</label>
+                        <input type="text" name="FechaInicial" v-datepicker class="fecha form-control">
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>FECHA FINAL</label>
+                        <input type="text" name="FechaFinal" v-datepicker class="fecha form-control">
                     </div>
                 </div>
             </div>
+            <div class="form-group">
+                <button class="btn btn-primary" type="submit" @click="buscar">
+                <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i></span>
+                <span v-else>Buscar</span>
+                </button>
+            </div>
+            {!! Form::close() !!}
+
             <hr>
-            <br>
             <div class="table-responsive">
                 <span v-if="cargando">
                     <div class="text-center">
                         <i class="fa fa-2x fa-spinner fa-spin"></i> Cargando Viajes...
                     </div>
                 </span>
-                <table id="viajes_netos_validar" v-tablefilter v-if="viajes.length" class="table table-condensed table-bordered table-hover">
+                <span v-if="viajes_netos.length">
+                    <h3>RESULTADOS DE LA BÚSQUEDA</h3>
+                    <table id="viajes_netos_validar" v-tablefilter class="table table-condensed table-bordered table-hover small">
                     <thead>
                         <tr>
                             <th rowspan="2">Código</th>
@@ -55,7 +65,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr v-for="viaje in viajes">
+                        <tr v-for="viaje in viajes_netos">
                             <td>@{{ viaje.Code }}</td>
                             <td>@{{ viaje.FechaLlegada }}</td>
                             <td>@{{ viaje.HoraLlegada }}</td>                            
@@ -72,14 +82,14 @@
                             <td>@{{ viaje.Importe }}</td>
                             <td>
                                 <span v-if='viaje.Valido'>
-                                    <i class="fa fa-flag" style="color: green"></i>
+                                    <i class="fa fa-flag" style="color: green" v-bind:title="viaje.Estado"></i>
                                 </span>
                                 <span v-else>
-                                    <i class="fa fa-flag" style="color: red"></i>
+                                    <i class="fa fa-exclamation-triangle" style="color: red" v-bind:title="viaje.Estado"></i>
                                 </span>
                             </td>
                             <td>
-                                <a id="show-modal" @click="viaje.ShowModal = true">
+                                <a id="show-modal" @click="showModal(viaje)">
                                     Validar     
                                 </a>
                                 <modal-validar v-if="viaje.ShowModal" @close="viaje.ShowModal = false">
@@ -89,26 +99,26 @@
                                             <div class="col-md-7">
                                                 <div class="form-group">
                                                     <label>Sindicato:</label>
-                                                    <select v-model="viaje.Sindicato" class="form-control input-sm">
+                                                    <select v-model="form.data.IdSindicato" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        @foreach($sindicatos as $sindicato)
-                                                        <option value="{{ $sindicato->IdSindicato}}">{{ $sindicato->NombreCorto }}</option>
+                                                        @foreach($sindicatos as $key => $sindicato)
+                                                        <option value="{{ $key }}">{{ $sindicato }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Empresa:</label>
-                                                    <select v-model="viaje.Empresa" class="form-control input-sm">
+                                                    <select v-model="form.data.IdEmpresa" class="form-control input-sm">
                                                         <option value>--SELECCIONE--</option>
-                                                        @foreach($empresas as $empresa)
-                                                        <option value="{{ $empresa->IdEmpresa }}">{{ $empresa->razonSocial }}</option>
+                                                        @foreach($empresas as $key => $empresa)
+                                                        <option value="{{ $key }}">{{ $empresa }}</option>
                                                         @endforeach
                                                     </select>
                                                 </div>
                                                 <hr>
                                                 <div class="form-group">
                                                     <label>Tipo Tarifa:</label>
-                                                    <select v-model="viaje.TipoTarifa" class="form-control input-sm">
+                                                    <select v-model="form.data.TipoTarifa" class="form-control input-sm">
                                                         <option value="m">Material</option>
                                                         <option value="r">Ruta</option>
                                                         <option value="p">Peso</option>
@@ -116,7 +126,7 @@
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Tipo FDA:</label>
-                                                    <select v-model="viaje.TipoFDA" class="form-control input-sm">
+                                                    <select v-model="form.data.TipoFDA" class="form-control input-sm">
                                                         <option value="m">Material</option>
                                                         <option value="bm">Ban-Mat</option>
                                                     </select>
@@ -125,35 +135,35 @@
                                             <div class="col-md-4 col-md-offset-1">
                                                 <div class="form-group">
                                                     <label>Cubicación:</label>
-                                                    <input type="number" step="any" class="form-control input-sm" v-model="viaje.Cubicacion">
+                                                    <input type="number" step="any" class="form-control input-sm" v-model="form.data.Cubicacion">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Tara:</label>
-                                                    <input type="number" step="any" class="form-control input-sm" v-model="viaje.Tara">
+                                                    <input type="number" step="any" class="form-control input-sm" v-model="form.data.Tara">
                                                 </div>
                                                 <div class="form-group">
                                                     <label>Bruto:</label>
-                                                    <input type="number" step="any" class="form-control input-sm" v-model="viaje.Bruto">
+                                                    <input type="number" step="any" class="form-control input-sm" v-model="form.data.Bruto">
                                                 </div>
                                                 <hr>
                                                 <span v-if="viaje.Valido">
                                                     <div >
                                                         <label><i class="fa fa-check" style="color: green"></i> Validar:</label>
-                                                        <input type="radio" value="1" v-model="viaje.Accion">
+                                                        <input type="radio" value="1" v-model="form.data.Accion">
                                                     </div>
                                                     <div>
                                                         <label><i class="fa fa-close" style="color: red"></i> Denegar:</label>
-                                                        <input type="radio" value="0" v-model="viaje.Accion">
+                                                        <input type="radio" value="0" v-model="form.data.Accion">
                                                     </div>   
                                                 </span>
                                                 <span v-else>
                                                     <div >
                                                         <label><i class="fa fa-check" style="color: green"></i> Validar:</label>
-                                                        <input type="radio" value="1" v-model="viaje.Accion" disabled="disabled">
+                                                        <input type="radio" value="1" v-model="form.data.Accion" disabled="disabled">
                                                     </div>
                                                     <div>
                                                         <label><i class="fa fa-close" style="color: red"></i> Denegar:</label>
-                                                        <input type="radio" value="0" v-model="viaje.Accion">
+                                                        <input type="radio" value="0" v-model="form.data.Accion">
                                                     </div>   
                                                 </span>
                                             </div>
@@ -161,7 +171,7 @@
                                     </div>
                                     <div class="form-group" slot="footer">
                                         <button class="btn btn-info btn-sm" @click="viaje.ShowModal = false">Cerrar</button>        
-                                        <button class="btn btn-success btn-sm" @click="confirmarValidacion(viajes.indexOf(viaje))">
+                                        <button class="btn btn-success btn-sm" @click="validar(viaje)">
                                             <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
                                             <span v-else>Validar</span>
                                         </button>
@@ -201,6 +211,7 @@
                         </tr>
                     </tbody>
                 </table>
+                </span>
             </div>
         </section>
     </viajes-validar>

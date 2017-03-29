@@ -291,3 +291,8 @@ Breadcrumbs::register('conciliaciones.edit', function($breadcrumbs, $conciliacio
 Breadcrumbs::register('viajes.revertir', function($breadcrumbs) {
     $breadcrumbs->push('REVERTIR VIAJES', route('viajes.edit', ['action' => 'revertir']));
 });
+
+//Reportes
+Breadcrumbs::register('reportes.viajes_netos', function($breadcrumbs) {
+    $breadcrumbs->push('VIAJES NETOS', route('reportes.viajes_netos.create'));
+});

@@ -1,3 +1,4 @@
+
 function timeStamp(type) {
     var today = new Date();
     var dd = today.getDate();

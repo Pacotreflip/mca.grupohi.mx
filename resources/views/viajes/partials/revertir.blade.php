@@ -8,7 +8,7 @@
             <app-errors v-bind:form="form"></app-errors>
             <hr>
             <h3>BUSCAR VIAJES</h3>
-            {!! Form::open(['route' => ['viajes.index'], 'class' => 'form_buscar']) !!}
+            {!! Form::open(['class' => 'form_buscar']) !!}
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -29,6 +29,7 @@
                 <span v-else>Buscar</span>
                 </button>
             </div>
+            {!! Form::close() !!}
             <span v-if="cargando">
                 <div class="text-center">
                     <i class="fa fa-2x fa-spinner fa-spin"></i> Cargando Viajes...
