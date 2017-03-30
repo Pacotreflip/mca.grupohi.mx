@@ -1,15 +1,40 @@
 <div class="table-responsive">
+    <table class="table table-striped">
+        <tr>
+            <td colspan="32"><div align="right"><font color="#000000" style="font-family:'Trebuchet MS'; font-weight:bold;font-size:14px;"><?PHP echo 'FECHA DE CONSULTA '.date("d-m-Y")."/".date("H:i:s",time()); ?></font></div></td>
+        </tr>
+        <tr>
+            <td colspan="32"  align="center">
+                <div align="left">
+                    <font color="#000000" style="font-family:'Trebuchet MS'; font-weight:bold;font-size:14px;">VIAJES NETOS DEL PERIODO (</font>
+                    <font color="#666666" style="font-family:'Trebuchet MS'; font-weight:bold;font-size:14px;"><?PHP echo $request['FechaInicial'] . ' ' . $request['HoraInicial']; ?></font>
+                    <font color="#000000" style="font-family:'Trebuchet MS'; font-weight:bold;font-size:14px;"> AL </font><font color="#666666" style="font-family:'Trebuchet MS'; font-weight:bold;font-size:14px;"><?PHP echo $request['FechaFinal'] . ' ' . $request['HoraFinal']; ?>)</font></div></td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td colspan="2"><font color="#000000" face="Trebuchet MS" style="font-size:12px; ">OBRA:</font>&nbsp;<font color="#666666" face="Trebuchet MS" style="font-size:12px; "><?php echo \App\Models\Proyecto::find(\App\Facades\Context::getId())->descripcion ?></font></td>
+        </tr>
+
+        <tr>
+            <td colspan="2"><font color="#000000" face="Trebuchet MS" style="font-size:12px; ">FECHA:</font> &nbsp;<font color="#666666" face="Trebuchet MS" style="font-size:12px; "><?php echo date("d-m-Y"); ?></font></td>
+        </tr>
+    </table>
+</div>
+<hr/>
+<div class="table-responsive">
     <table class="table table-striped table-hover small">
         <thead>
         <tr>
             <th>#</th>
             <th>Creo Primer Toque</th>
             <th>Creo Segundo Toque</th>
-            <th>Cubicación Camión (m3)</th>
-            <th>Cubicación Viaje Neto (m3)</th>
-            <th>Cubicación Viaje (m3)</th>
-            <th>Camión</th>
-            <th>Placas Camión</th>
+            <th>Cubicaci&oacute;n Cami&oacute;n m<sup>3</sup></th>
+            <th>Cubicaci&oacute;n Viaje Neto m<sup>3</sup></th>
+            <th>Cubicaci&oacute;n Viaje m<sup>3</sup></th>
+            <th>Cami&oacute;n</th>
+            <th>Placas Cami&oacute;n</th>
             <th>Placas Caja</th>
             <th>Sindicato Camion</th>
             <th>Sindicato Viaje</th>
@@ -19,7 +44,7 @@
             <th>Fecha Llegada</th>
             <th>Hora Llegada</th>
             <th>Turno</th>
-            <th>Día de aplicación</th>
+            <th>D&iacute;a de aplicación</th>
             <th>Orígen</th>
             <th>Destino</th>
             <th>Material</th>
@@ -32,8 +57,8 @@
             <th>Importe</th>
             <th>Estatus</th>
             <th>Ticket</th>
-            <th>Folio Conciliación</th>
-            <th>Fecha Conciliación</th>
+            <th>Folio Conciliaci&oacute;n</th>
+            <th>Fecha Conciliaci&oacute;n</th>
         </tr>
         </thead>
         <tbody>
@@ -90,3 +115,5 @@
         </tbody>
     </table>
 </div>
+</body>
+</html>

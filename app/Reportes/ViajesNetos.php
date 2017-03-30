@@ -21,8 +21,6 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class ViajesNetos
 {
-
-
     protected $estatus;
     protected $horaInicial;
     protected $horaFinal;
@@ -63,12 +61,17 @@ class ViajesNetos
             return redirect()->back()->withInput();
         }
 
-        Excel::create('Acarreos Ejecutados por Material '.date("d-m-Y").'_'.date("H.i.s",time()), function ($excel) {
+        return response()->view('reportes.viajes_netos.partials.table', ['data' => $this->data, 'request' => $this->request])
+            ->header('Content-type','text/csv')
+            ->header('Content-Disposition' , 'filename=Acarreos Ejecutados por Material '.date("d-m-Y").'_'.date("H.i.s",time()).'.cvs');
+
+        /*Excel::create('Acarreos Ejecutados por Material '.date("d-m-Y").'_'.date("H.i.s",time()), function ($excel) {
             $excel->sheet('Información', function ($sheet) {
                 $sheet->loadView('reportes.viajes_netos.partials.table', ['data' => $this->data, 'request' => $this->request->all()]);
             });
-        })->download('xls');
-        /*Excel::create('Acarreos Ejecutados por Material '.date("d-m-Y").'_'.date("H.i.s",time()), function ($excel) use ($data, $request) {
+        })->download('csv');
+
+        Excel::create('Acarreos Ejecutados por Material '.date("d-m-Y").'_'.date("H.i.s",time()), function ($excel) use ($data, $request) {
             $excel->sheet('Información', function ($sheet) use ($data, $request) {
                 $filters = [
                     '#',
@@ -170,6 +173,8 @@ class ViajesNetos
     }
 
     public function show() {
-        return view('reportes.viajes_netos.show')->withData($this->data)->withRequest($this->request->all());
+        return view('reportes.viajes_netos.show')
+            ->withData($this->data)
+            ->withRequest($this->request->all());
     }
 }
