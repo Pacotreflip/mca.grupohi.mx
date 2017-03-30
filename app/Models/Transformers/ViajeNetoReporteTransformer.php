@@ -19,6 +19,10 @@ use Illuminate\Database\Eloquent\Model;
 class ViajeNetoReporteTransformer extends AbstractTransformer
 {
     public static function toArray(Request $request, $horaInicial, $horaFinal, $estatus) {
+
+        $timestamp_inicial = $request->get('FechaInicial') . ' ' . $horaInicial;
+        $timestamp_final = $request->get('FechaFinal') . ' ' . $horaFinal;
+
         return DB::connection('sca')->select(DB::raw(
             "SELECT DATE_FORMAT(v.FechaLlegada, '%d-%m-%Y') AS Fecha,
       t.IdTiro,
@@ -83,9 +87,10 @@ class ViajeNetoReporteTransformer extends AbstractTransformer
       left join sindicatos as sincon on sincon.IdSindicato = conci.IdSindicato
       left join empresas as empcon on empcon.IdEmpresa = conci.IdEmpresa
       WHERE
-          v.Estatus  IN (1,11,21,31)
-      AND v.FechaLlegada between '{$request->get('FechaInicial')}' and  '{$request->get('FechaFinal')}'
-      AND v.HoraLlegada BETWEEN '{$horaInicial}' AND  '{$horaFinal}'
+      CAST(CONCAT(v.FechaLlegada,
+                    ' ',
+                    v.HoraLlegada)
+            AS DATETIME) between '{$timestamp_inicial}' and '{$timestamp_final}'
       AND v.IdViajeNeto not in (select IdViajeNeto from viajesrechazados)
       AND v.Estatus {$estatus}
       group by IdViajeNeto
