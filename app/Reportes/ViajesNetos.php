@@ -173,6 +173,11 @@ class ViajesNetos
     }
 
     public function show() {
+
+        if(! $this->data) {
+            Flash::error('Ningún viaje neto coincide con los datos de consulta');
+            return redirect()->back()->withInput();
+        }
         return view('reportes.viajes_netos.show')
             ->withData($this->data)
             ->withRequest($this->request->all());

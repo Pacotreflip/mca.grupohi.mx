@@ -44,8 +44,8 @@
             <th>Fecha Llegada</th>
             <th>Hora Llegada</th>
             <th>Turno</th>
-            <th>D&iacute;a de aplicación</th>
-            <th>Orígen</th>
+            <th>D&iacute;a de aplicaci&oacute;n</th>
+            <th>Or&iacute;gen</th>
             <th>Destino</th>
             <th>Material</th>
             <th>Tiempo</th>
