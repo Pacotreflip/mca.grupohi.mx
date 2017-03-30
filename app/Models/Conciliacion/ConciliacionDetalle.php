@@ -17,6 +17,7 @@ class ConciliacionDetalle extends Model
 
     protected $fillable = [
         'idconciliacion',
+        'idviaje_neto',
         'idviaje',
         'timestamp',
         'estado'

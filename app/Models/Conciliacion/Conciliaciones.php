@@ -65,6 +65,12 @@ class Conciliaciones
                             $viaje_neto = ViajeNeto::where('Code', $row->codigo)->first();
                             $viaje = $viaje_neto ? $viaje_neto->viaje : null;
                             $viaje_conciliar = Viaje::porConciliar()->where('code', '=', $row->codigo)->first();
+                            if(!$viaje_conciliar){
+                                $camion = Camion::where('economico', $row->camion)->first();
+                                $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $row->fecha_llegada)->where('HoraLlegada', $row->hora_llegada)->first();
+                                $viaje = $viaje_neto ? $viaje_neto->viaje : null;
+                                $viaje_conciliar = Viaje::porConciliar()->where('FechaLlegada', '=', $row->fecha_llegada)->where('HoraLlegada', '=', $row->hora_llegada)->where('idcamion', $camion ? $camion->IdCamion : null)->first();
+                            }
                         } else {
                             $camion = Camion::where('economico', $row->camion)->first();
                             $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $row->fecha_llegada)->where('HoraLlegada', $row->hora_llegada)->first();
@@ -83,6 +89,7 @@ class Conciliaciones
                             if ($viaje_conciliar->disponible()) {
                                 ConciliacionDetalle::create([
                                     'idconciliacion' => $this->conciliacion->idconciliacion,
+                                    'idviaje_neto' => $viaje_conciliar->IdViajeNeto,
                                     'idviaje' => $viaje_conciliar->IdViaje,
                                     'timestamp' => Carbon::now()->toDateTimeString(),
                                     'estado' => 1

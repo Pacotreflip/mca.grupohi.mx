@@ -85,6 +85,7 @@ class ConciliacionesDetallesController extends Controller
                         if ($viaje->disponible()) {
                             $detalle = ConciliacionDetalle::create([
                                 'idconciliacion' => $id,
+                                'idviaje_neto' => $viaje_neto->IdViajeNeto,
                                 'idviaje' => $viaje->IdViaje,
                                 'timestamp' => Carbon::now()->toDateTimeString(),
                                 'estado' => 1
@@ -116,8 +117,10 @@ class ConciliacionesDetallesController extends Controller
                 $ids = $request->get('idviaje', []);
                 $i = 0;
                 foreach ($ids as $key => $id_viaje) {
+                    $v_ba = Viaje::where('IdViaje', '=', $id)->first();
                     ConciliacionDetalle::create([
                         'idconciliacion' => $id,
+                        'idviaje_neto' => $v_ba->IdViajeNeto,
                         'idviaje'        => $id_viaje,
                         'timestamp'      => Carbon::now()->toDateTimeString(),
                         'estado'         => 1
