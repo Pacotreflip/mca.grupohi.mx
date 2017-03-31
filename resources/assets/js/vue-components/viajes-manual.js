@@ -12,6 +12,7 @@ Vue.component('viajes-manual', {
             'num_viajes' : 1,
             'form': {
                 'viajes' : [{
+                    Codigo       : '',
                     FechaLlegada : App.timeStamp(1),
                     HoraLlegada  : App.timeStamp(2),
                     IdCamion     : '',
@@ -74,8 +75,11 @@ Vue.component('viajes-manual', {
             }
         },
 
-        addViaje: function() {
+        addViaje: function(e) {
+            e.preventDefault();
+
             this.form.viajes.push({
+                Codigo       : '',
                 FechaLlegada : App.timeStamp(1),
                 HoraLlegada  : App.timeStamp(2),
                 IdCamion     : '',
@@ -88,7 +92,8 @@ Vue.component('viajes-manual', {
             });
         },
         
-        removeViaje: function(index) {
+        removeViaje: function(index, e) {
+            e.preventDefault();
             if(index != (this.form.viajes.length -1)) {
                 var last_val = $('.FechaLlegada' + (this.form.viajes.length - 1)).val();
                 for (var i = index; i < (this.form.viajes.length - 1); i++) {
@@ -103,13 +108,12 @@ Vue.component('viajes-manual', {
         },
         
         registrar: function() {
+
+            var _this = this;
             this.guardando = true;
             this.form.errors = [];
             var data = $('.form_carga_manual').serialize();
             var url = App.host + '/viajes/netos/manual';
-
-            console.log(data);
-            console.log(url);
 
             $.ajax({
                 url : url,
@@ -122,11 +126,12 @@ Vue.component('viajes-manual', {
                         text: response.message,
                         showConfirmButton: true
                     });
-                    this.guardando = false;
+                    _this.guardando = false;
                 },
-                error: function (error) {
-                    this.guardando = false;
-                    App.setErrorsOnForm(this.form, error.responseText);
+                error: function(error) {
+                    _this.guardando = false;
+                    console.log(error);
+                    App.setErrorsOnForm(_this.form, error.responseJSON);
                 }
             });
         },

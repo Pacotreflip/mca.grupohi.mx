@@ -1,4 +1,4 @@
-<h1>VIAJES MANUALES</h1>
+<h1>VIAJES</h1>
 {!! Breadcrumbs::render('viajes.netos.carga_manual') !!}
 <hr>
 <div id="app">
@@ -7,13 +7,15 @@
         <section>
             <app-errors v-bind:form="form"></app-errors>
             {!! Form::open(['route' => ['viajes.netos.manual.store'], 'class' => 'form_carga_manual']) !!}
+            <h3>INGRESAR VIAJES</h3>
             <div v-if="!cargando" class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed">
                     <thead>
                         <tr>
                             <th>#</th>
-                            <th>Fecha</th>
-                            <th>Hora</th>
+                            <th>Código</th>
+                            <th>Fecha Salida</th>
+                            <th>Hora Salida</th>
                             <th>Camión</th>
                             <th>Cubicación</th>
                             <th>Origen</th>
@@ -26,10 +28,13 @@
                         <tr>
                             <td>@{{ index + 1 }}</td>
                             <td>
-                                <input v-bind:name="'viajes[' + (index + 1) + '][FechaLlegada]'" type="text" v-bind:class="'form-control input-sm FechaLlegada' + index" v-datepicker>
+                                <input v-bind:name="'viajes[' + (index + 1) + '][Codigo]'" type="text" class="form-control input-sm" v-model="viaje.Codigo">
                             </td>
                             <td>
-                                <input v-bind:name="'viajes[' + (index + 1) + '][HoraLlegada]'" type="time" class="form-control input-sm" v-model="viaje.HoraLlegada">
+                                <input v-bind:name="'viajes[' + (index + 1) + '][FechaSalida]'" type="text" v-bind:class="'form-control input-sm FechaLlegada' + index" v-datepicker>
+                            </td>
+                            <td>
+                                <input v-bind:name="'viajes[' + (index + 1) + '][HoraSalida]'" type="time" class="form-control input-sm" v-model="viaje.HoraLlegada">
                             </td>
                             <td>
                                 <select v-bind:name="'viajes[' + (index + 1) + '][IdCamion]'" class="form-control input-sm" v-on:change="setCamion(viaje)" v-model="viaje.IdCamion">
@@ -65,13 +70,13 @@
                                 </select>
                             </td>
                             <td>
-                                <button class="btn btn-xs btn-danger" @click="removeViaje(form.viajes.indexOf(viaje))"><i class="fa fa-minus-circle"></i></button>
+                                <button class="btn btn-xs btn-danger" @click="removeViaje(form.viajes.indexOf(viaje), $event)"><i class="fa fa-minus-circle"></i></button>
                             </td>
                         </tr>
                         <tr>
                             <td><strong>Motivo</strong></td>
-                            <td colspan="7">
-                                <input v-bind:name="'viajes[' + (index + 1) + '][motivo]'" type="text" class="form-control input-sm" v-model="viaje.Motivo">
+                            <td colspan="9">
+                                <input v-bind:name="'viajes[' + (index + 1) + '][Motivo]'" type="text" class="form-control input-sm" v-model="viaje.Motivo">
                             </td>
                         </tr>
                     </tbody>

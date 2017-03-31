@@ -132,9 +132,8 @@ class ViajesNetosController extends Controller
      * @param Requests\CreateViajeNetoRequest|Request $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Requests\CreateViajeNetoRequest $request)
     {
-        dd($request->all());
         if($request->path() == 'viajes/netos/manual') {
             return response()->json(ViajeNeto::cargaManual($request));
         } else if($request->path() == 'viajes/netos/completa') {

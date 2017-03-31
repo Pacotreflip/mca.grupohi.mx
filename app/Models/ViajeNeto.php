@@ -28,7 +28,10 @@ class ViajeNeto extends Model
         'IdMaterial', 
         'Observaciones', 
         'Creo',
-        'Estatus'
+        'Estatus',
+        'Code',
+        'CubicacionCamion'
+
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
@@ -126,7 +129,7 @@ class ViajeNeto extends Model
                 $ruta = Ruta::where('IdOrigen', $viaje['IdOrigen'])
                         ->where('IdTiro', $viaje['IdTiro'])
                         ->first();
-                $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaLlegada'].' '.$viaje['HoraLlegada'])
+                $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaSalida'].' '.$viaje['HoraSalida'])
                         ->subMinutes($ruta->cronometria->TiempoMinimo); 
 
                 $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
@@ -136,8 +139,11 @@ class ViajeNeto extends Model
                     'FechaSalida' => $fecha_salida->toDateString(),
                     'HoraSalida' => $fecha_salida->toTimeString(),
                     'IdProyecto' => $proyecto_local->IdProyecto,
-                    'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
+                    'Creo' => auth()->user()->idusuario,
                     'Estatus' => 29,
+                    'Code' => $viaje['Codigo'],
+                    'CubicacionCamion' => $viaje['Cubicacion'],
+                    'Observaciones' => $viaje['Motivo']
                 ];
 
                 ViajeNeto::create(array_merge($viaje, $extra));
