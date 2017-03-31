@@ -35,10 +35,11 @@ class Conciliacion extends Model
         'IdRegistro',
         'Folio'
     ];
-    protected $dates = ['timestamp','FechaHoraCierre','FechaHoraAprobacion'];
+    protected $dates = ['timestamp', 'FechaHoraCierre', 'FechaHoraAprobacion'];
     protected $presenter = ModelPresenter::class;
 
-    public function rutas() {
+    public function rutas()
+    {
         return $this->belongsToMany(Ruta::class, 'conciliacion_rutas', 'idconciliacion', 'IdRuta');
     }
 
@@ -47,11 +48,13 @@ class Conciliacion extends Model
         return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion');
     }
 
-    public function sindicato() {
+    public function sindicato()
+    {
         return $this->belongsTo(Sindicato::class, 'idsindicato');
     }
 
-    public function materiales() {
+    public function materiales()
+    {
         return DB::connection($this->connection)->select(DB::raw('
             SELECT viajes.IdMaterial, materiales.Descripcion as material 
               FROM (viajes viajes 
@@ -59,13 +62,14 @@ class Conciliacion extends Model
                   ON (viajes.IdMaterial = materiales.IdMaterial))
                 RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
 				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
-			  WHERE (conciliacion_detalle.idconciliacion = '.$this->idconciliacion.') 
+			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
 			  AND(conciliacion_detalle.estado = 1)
 			  GROUP BY materiales.Descripcion
 			  ORDER BY materiales.Descripcion ASC;'));
     }
 
-    public function viajes() {
+    public function viajes()
+    {
         $viajes = new Collection();
         foreach ($this->conciliacionDetalles->where('estado', 1) as $cd) {
             $viajes->push($cd->viaje);
@@ -73,7 +77,8 @@ class Conciliacion extends Model
         return $viajes;
     }
 
-    public function camiones() {
+    public function camiones()
+    {
         return DB::connection($this->connection)->select(DB::raw('
             SELECT viajes.IdCamion, camiones.Economico as Economico 
               FROM (viajes viajes 
@@ -81,91 +86,110 @@ class Conciliacion extends Model
                   ON (viajes.IdCamion = camiones.IdCamion))
                 RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
 				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
-			  WHERE (conciliacion_detalle.idconciliacion = '.$this->idconciliacion.') 
+			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
 			  AND(conciliacion_detalle.estado = 1)
 			  GROUP BY camiones.Economico
 			  ORDER BY camiones.Economico ASC;'));
     }
 
-    public function empresa() {
+    public function empresa()
+    {
         return $this->belongsTo(Empresa::class, 'idempresa');
 
     }
-    public function partidas(){
+
+    public function partidas()
+    {
         return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion', 'idconciliacion');
     }
-    
-    public function getVolumenAttribute(){
-         $results = DB::connection("sca")->select("select sum(CubicacionCamion) as Volumen "
-                 . "from conciliacion "
-                 . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
-                 . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
-                 . "and conciliacion_detalle.estado = 1 "
-                 . "group by conciliacion.idconciliacion limit 1");
-         return $results ? $results[0]->Volumen : 0;
+
+    public function getVolumenAttribute()
+    {
+        $results = DB::connection("sca")->select("select sum(CubicacionCamion) as Volumen "
+            . "from conciliacion "
+            . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
+            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = " . $this->idconciliacion . " "
+            . "and conciliacion_detalle.estado = 1 "
+            . "group by conciliacion.idconciliacion limit 1");
+        return $results ? $results[0]->Volumen : 0;
     }
-    
-    public function getImporteAttribute(){
-                 $results = DB::connection("sca")->select("select sum(Importe) as Importe "
-                 . "from conciliacion "
-                 . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
-                 . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
-                 . "and conciliacion_detalle.estado = 1 "
-                 . "group by conciliacion.idconciliacion limit 1");
-         return $results ?  $results[0]->Importe : 0;
+
+    public function getImporteAttribute()
+    {
+        $results = DB::connection("sca")->select("select sum(Importe) as Importe "
+            . "from conciliacion "
+            . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
+            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = " . $this->idconciliacion . " "
+            . "and conciliacion_detalle.estado = 1 "
+            . "group by conciliacion.idconciliacion limit 1");
+        return $results ? $results[0]->Importe : 0;
     }
-    public function usuario(){
+
+    public function usuario()
+    {
         return $this->belongsTo(User::class, "IdRegistro");
     }
-    public function registro(){
+
+    public function registro()
+    {
         return $this->belongsTo(User::class, "IdRegistro");
     }
-    public function cerro(){
+
+    public function cerro()
+    {
         return $this->belongsTo(User::class, "IdCerro");
     }
-    
-    public function aprobo(){
+
+    public function aprobo()
+    {
         return $this->belongsTo(User::class, "IdAprobo");
     }
 
-    public function getVolumenFAttribute(){
-        
-        return number_format($this->volumen, 2, ".",",");
+    public function getVolumenFAttribute()
+    {
+
+        return number_format($this->volumen, 2, ".", ",");
     }
 
-    public function getImporteFAttribute(){
-        
-        return number_format($this->importe, 2, ".",",");
+    public function getImporteFAttribute()
+    {
+
+        return number_format($this->importe, 2, ".", ",");
     }
 
-    public function getFechaHoraRegistroAttribute(){
-        return ucwords($this->timestamp->formatLocalized('%d %B %Y')).' ('.$this->timestamp->format("h:i:s").')';
+    public function getFechaHoraRegistroAttribute()
+    {
+        return ucwords($this->timestamp->formatLocalized('%d %B %Y')) . ' (' . $this->timestamp->format("h:i:s") . ')';
     }
-    
-    public function getFechaHoraCierreStrAttribute(){
+
+    public function getFechaHoraCierreStrAttribute()
+    {
         //dd($this->FechaHoraCierre());
-        if($this->FechaHoraCierre ){
-            return ucwords($this->FechaHoraCierre->formatLocalized('%d %B %Y')).' ('.$this->FechaHoraCierre->format("h:i:s").')';
-        }
-    }
-    
-    public function getFechaHoraAprobacionStrAttribute(){
-        //dd($this->FechaHoraCierre());
-        if($this->FechaHoraAprobacion ){
-            return ucwords($this->FechaHoraAprobacion->formatLocalized('%d %B %Y')).' ('.$this->FechaHoraAprobacion->format("h:i:s").')';
+        if ($this->FechaHoraCierre) {
+            return ucwords($this->FechaHoraCierre->formatLocalized('%d %B %Y')) . ' (' . $this->FechaHoraCierre->format("h:i:s") . ')';
         }
     }
 
-    public function cancelacion() {
+    public function getFechaHoraAprobacionStrAttribute()
+    {
+        //dd($this->FechaHoraCierre());
+        if ($this->FechaHoraAprobacion) {
+            return ucwords($this->FechaHoraAprobacion->formatLocalized('%d %B %Y')) . ' (' . $this->FechaHoraAprobacion->format("h:i:s") . ')';
+        }
+    }
+
+    public function cancelacion()
+    {
         return $this->hasOne(ConciliacionCancelacion::class, 'idconciliacion');
     }
 
-    public function cerrar() {
+    public function cerrar()
+    {
         DB::connection('sca')->beginTransaction();
 
         try {
             if ($this->estado != 0) {
-                throw new \Exception("No se puede cerrar la conciliación ya que su estado actual es " .$this->estado_str);
+                throw new \Exception("No se puede cerrar la conciliación ya que su estado actual es " . $this->estado_str);
             }
             $this->estado = 1;
             $this->IdCerro = auth()->user()->idusuario;
@@ -180,10 +204,10 @@ class Conciliacion extends Model
                     $viaje->save();
 
                     DB::connection('sca')->table('cambio_sindicato')->insertGetId([
-                        'IdViaje'             => $viaje->IdViaje,
+                        'IdViaje' => $viaje->IdViaje,
                         'IdSindicatoAnterior' => $sindicato_anterior,
-                        'IdSindicatoNuevo'    => $this->idsindicato,
-                        'Registro'            => auth()->user()->idusuario
+                        'IdSindicatoNuevo' => $this->idsindicato,
+                        'Registro' => auth()->user()->idusuario
                     ]);
                 }
                 if ($viaje->IdEmpresa != $this->idempresa) {
@@ -192,10 +216,10 @@ class Conciliacion extends Model
                     $viaje->save();
 
                     DB::connection('sca')->table('cambio_empresa')->insertGetId([
-                        'IdViaje'           => $viaje->IdViaje,
+                        'IdViaje' => $viaje->IdViaje,
                         'IdEmpresaAnterior' => $empresa_anterior,
-                        'IdEmpresaNuevo'    => $this->idempresa,
-                        'Registro'          => auth()->user()->idusuario
+                        'IdEmpresaNuevo' => $this->idempresa,
+                        'Registro' => auth()->user()->idusuario
                     ]);
                 }
             }
@@ -206,14 +230,15 @@ class Conciliacion extends Model
         }
     }
 
-    public function aprobar() {
+    public function aprobar()
+    {
 
         DB::connection('sca')->beginTransaction();
 
         try {
 
-            if($this->estado != 1) {
-                throw new \Exception("No se puede aprobar la conciliación ya que su estado actual es " .$this->estado_str);
+            if ($this->estado != 1) {
+                throw new \Exception("No se puede aprobar la conciliación ya que su estado actual es " . $this->estado_str);
             }
 
             $this->estado = 2;
@@ -228,12 +253,13 @@ class Conciliacion extends Model
         }
     }
 
-    public function cancelar(Request $request) {
+    public function cancelar(Request $request)
+    {
 
         DB::connection('sca')->beginTransaction();
 
         try {
-            if($this->estado == -1 || $this->estado == -2) {
+            if ($this->estado == -1 || $this->estado == -2) {
                 throw new \Exception("Ésta conciliación ya ha sido cancelada anteriormente");
             }
 
@@ -249,10 +275,10 @@ class Conciliacion extends Model
             foreach ($this->conciliacionDetalles as $detalle) {
 
                 ConciliacionDetalleCancelacion::create([
-                    'idconciliaciondetalle'  => $detalle->idconciliacion_detalle,
-                    'motivo'                 => $request->get('motivo') ,
+                    'idconciliaciondetalle' => $detalle->idconciliacion_detalle,
+                    'motivo' => $request->get('motivo'),
                     'fecha_hora_cancelacion' => Carbon::now()->toDateTimeString(),
-                    'idcancelo'              => auth()->user()->idusuario
+                    'idcancelo' => auth()->user()->idusuario
                 ]);
 
                 $detalle->estado = -1;
@@ -267,28 +293,29 @@ class Conciliacion extends Model
         }
     }
 
-    public function getEstadoStrAttribute(){
-        if($this->estado == 0){
+    public function getEstadoStrAttribute()
+    {
+        if ($this->estado == 0) {
             return 'Generada';
-        }else if($this->estado == 1){
+        } else if ($this->estado == 1) {
             return 'Cerrada';
-        }
-        else if($this->estado == 2){
+        } else if ($this->estado == 2) {
             return 'Aprobada';
-        }else if($this->estado < 0){
+        } else if ($this->estado < 0) {
             return 'Cancelada';
         }
     }
 
-    public function getFechaInicialAttribute() {
-        if($this->viajes()->count()) {
+    public function getFechaInicialAttribute()
+    {
+        if ($this->viajes()->count()) {
             $result = DB::connection('sca')->select(DB::raw("
                 SELECT min(v.FechaLlegada) as fecha_inicial FROM conciliacion c 
                 join conciliacion_detalle cd on (c.idconciliacion = cd.idconciliacion and cd.estado = 1)
                 join viajes v on (cd.idviaje = v.IdViaje)
                 where c.idconciliacion = {$this->idconciliacion} "))[0]->fecha_inicial;
             return Carbon::createFromFormat('Y-m-d', $result)->format('d-m-Y');
-        } else{
+        } else {
             return "";
         }
     }
@@ -307,45 +334,60 @@ class Conciliacion extends Model
         }
     }
 
-    public function getRangoAttribute() {
+    public function getRangoAttribute()
+    {
         return "DEL (" . $this->fecha_inicial . ") AL (" . $this->fecha_final . ")";
     }
 
-    public function getImporteViajesManualesAttribute() {
+    public function getImporteViajesManualesAttribute()
+    {
         $results = DB::connection("sca")->select("select sum(Importe) as importe_viajes_manuales "
             . "from conciliacion "
             . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
-            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = " . $this->idconciliacion . " "
             . "and conciliacion_detalle.estado = 1 "
             . "and viajes.Estatus = 20 "
             . "group by conciliacion.idconciliacion limit 1");
-        return $results  ?  $results[0]->importe_viajes_manuales : 0;
+        return $results ? $results[0]->importe_viajes_manuales : 0;
     }
 
-    public function getVolumenViajesManualesAttribute(){
+    public function getVolumenViajesManualesAttribute()
+    {
         $results = DB::connection("sca")->select("select sum(CubicacionCamion) as Volumen "
             . "from conciliacion "
             . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
-            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = " . $this->idconciliacion . " "
             . "and conciliacion_detalle.estado = 1 "
             . "and viajes.Estatus = 20 "
             . "group by conciliacion.idconciliacion limit 1");
         return $results ? $results[0]->Volumen : 0;
     }
 
-    public function getVolumenViajesManualesFAttribute(){
-        return number_format($this->volumen_viajes_manuales, 2, ".",",");
+    public function getVolumenViajesManualesFAttribute()
+    {
+        return number_format($this->volumen_viajes_manuales, 2, ".", ",");
     }
 
-    public function getImporteViajesManualesFAttribute(){
-        return number_format($this->importe_viajes_manuales, 2, ".",",");
+    public function getImporteViajesManualesFAttribute()
+    {
+        return number_format($this->importe_viajes_manuales, 2, ".", ",");
     }
 
-    public function getPorcentajeImporteViajesManualesAttribute() {
-        return round(($this->importe_viajes_manuales * 100) / $this->importe, 2);
+    public function getPorcentajeImporteViajesManualesAttribute()
+    {
+        if ($this->importe != 0) {
+            return round(($this->importe_viajes_manuales * 100) / $this->importe, 2);
+        } else {
+            return 0;
+        }
     }
 
-    public function getPorcentajeVolumenViajesManualesAttribute() {
-        return round(($this->volumen_viajes_manuales * 100) / $this->volumen, 2);
+    public function getPorcentajeVolumenViajesManualesAttribute()
+    {
+        if ($this->volumen != 0) {
+            return round(($this->volumen_viajes_manuales * 100) / $this->volumen, 2);
+        } else {
+            return 0;
+        }
     }
 }
