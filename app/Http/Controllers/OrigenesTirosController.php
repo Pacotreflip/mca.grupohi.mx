@@ -16,15 +16,18 @@ class OrigenesTirosController extends Controller
        
         parent::__construct();
     }
+
     /**
      * Display a listing of the resource.
      *
+     * @param Request $request
+     * @param $id_origen
      * @return \Illuminate\Http\Response
      */
     public function index(Request $request, $id_origen)
     {
         if($request->ajax()) {
-            return response()->json(Origen::findOrFail($id_origen)->tiros);
+            return response()->json(Origen::findOrFail($id_origen)->tiros->lists('Descripcion', 'IdTiro'));
         }
     }
 

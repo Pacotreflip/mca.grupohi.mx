@@ -77,7 +77,10 @@ Route::get('viajes/netos', 'ViajesNetosController@index')->name('viajes.netos.in
 Route::get('viajes/netos/create', 'ViajesNetosController@create')->name('viajes.netos.create');
 Route::group(['prefix' => 'viajes/netos'], function() {
     Route::post('completa', 'ViajesNetosController@store');
-    Route::post('manual', 'ViajesNetosController@store');
+    Route::post('manual', [
+        'as' => 'viajes.netos.manual.store',
+        'uses' => 'ViajesNetosController@store'
+    ]);
 });
 Route::get('viajes/netos/edit' , 'ViajesNetosController@edit')->name('viajes.netos.edit');
 Route::patch('viajes/netos', 'ViajesNetosController@update')->name('viajes.netos.update');
