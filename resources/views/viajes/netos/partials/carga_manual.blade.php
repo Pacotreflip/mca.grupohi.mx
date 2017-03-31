@@ -14,8 +14,8 @@
                         <tr>
                             <th>#</th>
                             <th>Código</th>
-                            <th>Fecha Salida</th>
-                            <th>Hora Salida</th>
+                            <th>Fecha Llegada</th>
+                            <th>Hora Llegada</th>
                             <th>Camión</th>
                             <th>Cubicación</th>
                             <th>Origen</th>
@@ -31,10 +31,10 @@
                                 <input v-bind:name="'viajes[' + (index + 1) + '][Codigo]'" type="text" class="form-control input-sm" v-model="viaje.Codigo">
                             </td>
                             <td>
-                                <input v-bind:name="'viajes[' + (index + 1) + '][FechaSalida]'" type="text" v-bind:class="'form-control input-sm FechaLlegada' + index" v-datepicker>
+                                <input v-bind:name="'viajes[' + (index + 1) + '][FechaLlegada]'" type="text" v-bind:class="'form-control input-sm FechaLlegada' + index" v-datepicker>
                             </td>
                             <td>
-                                <input v-bind:name="'viajes[' + (index + 1) + '][HoraSalida]'" type="time" class="form-control input-sm" v-model="viaje.HoraLlegada">
+                                <input v-bind:name="'viajes[' + (index + 1) + '][HoraLlegada]'" type="time" class="form-control input-sm" v-model="viaje.HoraLlegada">
                             </td>
                             <td>
                                 <select v-bind:name="'viajes[' + (index + 1) + '][IdCamion]'" class="form-control input-sm" v-on:change="setCamion(viaje)" v-model="viaje.IdCamion">

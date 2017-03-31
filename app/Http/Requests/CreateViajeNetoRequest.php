@@ -29,8 +29,8 @@ class CreateViajeNetoRequest extends Request
             foreach($this->get('viajes', []) as $key => $viaje) {
                 $rules['viajes.'.$key.'.Codigo']        = 'required|unique:sca.viajesnetos,Code';
                 $rules['viajes.'.$key.'.Cubicacion']    = 'required|numeric';
-                $rules['viajes.'.$key.'.FechaSalida']   = 'required|date_format:"Y-m-d"';
-                $rules['viajes.'.$key.'.HoraSalida']    = 'required|date_format:H:i';
+                $rules['viajes.'.$key.'.FechaLlegada']   = 'required|date_format:"Y-m-d"';
+                $rules['viajes.'.$key.'.HoraLlegada']    = 'required|date_format:H:i';
                 $rules['viajes.'.$key.'.IdCamion']      = 'required|exists:sca.camiones,IdCamion';
                 $rules['viajes.'.$key.'.IdOrigen']      = 'required|exists:sca.origenes,IdOrigen';
                 $rules['viajes.'.$key.'.IdTiro']        = 'required|exists:sca.tiros,IdTiro';
@@ -61,11 +61,11 @@ class CreateViajeNetoRequest extends Request
         $messages = [];
         if($this->path() == 'viajes/netos/manual') {
             foreach($this->get('viajes', []) as $key => $viaje) {
-                $messages['viajes.'.$key.'.FechaSalida.required'] = '(Viaje: '.$key.') El campo Fecha Salida es obligatorio';
-                $messages['viajes.'.$key.'.FechaSalida.date_format'] = '(Viaje: '.$key.') La Fecha Salida no corresponde al formato :format.';
+                $messages['viajes.'.$key.'.FechaLlegada.required'] = '(Viaje: '.$key.') El campo Fecha Llegada es obligatorio';
+                $messages['viajes.'.$key.'.FechaLlegada.date_format'] = '(Viaje: '.$key.') La Fecha Llegada no corresponde al formato :format.';
 
-                $messages['viajes.'.$key.'.HoraSalida.required'] = '(Viaje: '.$key.') El campo Hora Salida es obligatorio';
-                $messages['viajes.'.$key.'.HoraSalida.required'] = '(Viaje: '.$key.') La Hora Salida no corresponde al formato :format.';
+                $messages['viajes.'.$key.'.HoraLlegada.required'] = '(Viaje: '.$key.') El campo Hora Llegada es obligatorio';
+                $messages['viajes.'.$key.'.HoraLlegada.required'] = '(Viaje: '.$key.') La Hora Llegada no corresponde al formato :format.';
 
                 $messages['viajes.'.$key.'.IdCamion.required'] = '(Viaje: '.$key.') El campo Camión es obligatorio';
                 $messages['viajes.'.$key.'.IdCamion.exists'] = '(Viaje: '.$key.') El Camión es inválido.';

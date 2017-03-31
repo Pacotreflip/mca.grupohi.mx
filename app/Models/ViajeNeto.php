@@ -31,7 +31,6 @@ class ViajeNeto extends Model
         'Estatus',
         'Code',
         'CubicacionCamion'
-
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
@@ -94,6 +93,8 @@ class ViajeNeto extends Model
                 foreach($data as $key => $estatus) {
                     $viaje = ViajeNeto::findOrFail($key);
                     $viaje->Estatus = $estatus;
+                    $viaje->Aprobo = auth()->user()->idusuario;
+                    $viaje->FechaHoraAprobacion = Carbon::now()->toDateTimeString();
                     $viaje->save();
                     if($estatus == "20") {
                         $autorizados += 1;    
@@ -129,13 +130,15 @@ class ViajeNeto extends Model
                 $ruta = Ruta::where('IdOrigen', $viaje['IdOrigen'])
                         ->where('IdTiro', $viaje['IdTiro'])
                         ->first();
-                $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaSalida'].' '.$viaje['HoraSalida'])
+                $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaLlegada'].' '.$viaje['HoraLlegada'])
                         ->subMinutes($ruta->cronometria->TiempoMinimo); 
 
                 $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
                 $extra = [
                     'FechaCarga' => Carbon::now()->toDateString(),
                     'HoraCarga' => Carbon::now()->toTimeString(),
+                    'FechaLlegada' => $viaje['FechaLlegada'],
+                    'HoraLlegada' => $viaje['HoraLlegada'],
                     'FechaSalida' => $fecha_salida->toDateString(),
                     'HoraSalida' => $fecha_salida->toTimeString(),
                     'IdProyecto' => $proyecto_local->IdProyecto,
