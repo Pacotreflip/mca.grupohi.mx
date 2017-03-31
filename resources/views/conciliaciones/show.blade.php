@@ -18,12 +18,26 @@
                     DETALLES DE LA CONCILIACIÓN
                 </div>
                 <div class="panel-body">
+                    <strong>Fecha: </strong>{{ $conciliacion->fecha_conciliacion }}<br>
+                    <strong>Folio: </strong>{{ $conciliacion->Folio }}<br>
+                    <strong>Rango de Fechas: </strong>{{ $conciliacion->rango }}<br>
                     <strong>Empresa: </strong>{{ $conciliacion->empresa->razonSocial }}<br>
                     <strong>Sindicato: </strong>{{ $conciliacion->sindicato->NombreCorto }}<br>
                     <strong>Estado: </strong>{{  $conciliacion->present()->conciliacionEstado }}<br>
                     <strong>Número de Viajes: </strong>{{ count($conciliacion->conciliacionDetalles->where('estado', 1)) }}<br>
-                    <strong>Volúmen: </strong>{{ $conciliacion->volumen_f }}<br>
-                    <strong>Importe: </strong>{{ $conciliacion->importe_f }}<br>
+                    <strong>Volúmen: </strong>{{ $conciliacion->volumen_f }} m<sup>3</sup><br>
+                    <strong>Importe: </strong>$ {{ $conciliacion->importe_f }}<br>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel panel-heading">
+                    DETALLES DE VIAJES MANUALES
+                </div>
+                <div class="panel-body">
+                    <strong>Importe de viajes manuales: </strong>$ {{ $conciliacion->importe_viajes_manuales_f }}<br>
+                    <strong>Volúmen de viajes manuales: </strong>{{ $conciliacion->volumen_viajes_manuales_f }} m<sup>3</sup><br>
                 </div>
             </div>
         </div>

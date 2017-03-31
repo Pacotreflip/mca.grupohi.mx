@@ -29,8 +29,8 @@ class CreateViajeNetoRequest extends Request
             foreach($this->get('viajes', []) as $key => $viaje) {
                 $rules['viajes.'.$key.'.Codigo']        = 'required|unique:sca.viajesnetos,Code';
                 $rules['viajes.'.$key.'.Cubicacion']    = 'required|numeric';
-                $rules['viajes.'.$key.'.FechaLlegada']   = 'required|date_format:"Y-m-d"';
-                $rules['viajes.'.$key.'.HoraLlegada']    = 'required|date_format:H:i';
+                $rules['viajes.'.$key.'.FechaLlegada']  = 'required|date_format:"Y-m-d"';
+                $rules['viajes.'.$key.'.HoraLlegada']   = 'required|date_format:H:i';
                 $rules['viajes.'.$key.'.IdCamion']      = 'required|exists:sca.camiones,IdCamion';
                 $rules['viajes.'.$key.'.IdOrigen']      = 'required|exists:sca.origenes,IdOrigen';
                 $rules['viajes.'.$key.'.IdTiro']        = 'required|exists:sca.tiros,IdTiro';

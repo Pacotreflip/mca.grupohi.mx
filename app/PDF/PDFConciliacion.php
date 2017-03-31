@@ -68,6 +68,13 @@ class PDFConciliacion extends Rotation
         //Posiciones despues de details
         $y_final = $this->getY();
         $this->setY($y_inicial);
+
+        //Tabla de Detalles de Viajes Manuales
+        $this->details_manuales($x_inicial);
+
+        //Posiciones despues de Detalles de Viajes Manuales
+        $y_final_2 = $this->getY();
+
         $alto = abs($y_final - $y_inicial);
 
         //Round Detalis.
@@ -87,10 +94,27 @@ class PDFConciliacion extends Rotation
         $this->setX($x_inicial);
         $this->details();
 
-        //Establecer Y despues de  details.
-        $this->setY($y_final);
-        $this->Ln(0.25);
+        //Round Details Manuales
+        $this->SetWidths(array(0.45  * $this->WidthTotal));
+        $this->SetRounds(array('1234'));
+        $this->SetRadius(array(0.2));
+        $this->SetFills(array('255,255,255'));
+        $this->SetTextColors(array('0,0,0'));
+        $this->SetHeights(array($alto));
+        $this->SetStyles(array('DF'));
+        $this->SetAligns("L");
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->setY($y_inicial);
+        $this->setX($x_inicial+ 0.45 * $this->WidthTotal + 2);
+        $this->Row(array(""));
 
+        //Tabla de detalles de viajes manuales
+        $this->setY($y_inicial);
+        $this->details_manuales($x_inicial);
+
+        //obtener Y despues de las dos tablas
+        $this->setY($y_final > $y_final_2 ? $y_final : $y_final_2 );
+        $this->Ln(0.5);
 
         /*$this->SetFont('Arial', 'B', $this->txtSeccionTam);
         $this->Cell(0.55 * $this->WidthTotal, 0.7, utf8_decode('Rutas'), 0, 1, 'L');
@@ -125,10 +149,6 @@ class PDFConciliacion extends Rotation
         $this->setX($x_inicial);
         $this->rutas();
        */
-
-        //Obtener Y despues de rutas
-        $this->setY($y_final);
-        $this->Ln(0.5);
 
         if ($this->encola != '') {
 
@@ -205,7 +225,9 @@ class PDFConciliacion extends Rotation
 
         //Detalles de la Asignación (Titulo)
         $this->SetFont('Arial', 'B', $this->txtSeccionTam);
-        $this->Cell(0.55 * $this->WidthTotal, 0.7, utf8_decode('Detalles de la Conciliación'), 0, 1, 'L');
+        $this->Cell(0.45 * $this->WidthTotal, 0.7, utf8_decode('Detalles de la Conciliación'), 0, 0, 'L');
+        $this->Cell(2);
+        $this->Cell(0.45 * $this->WidthTotal, .7, 'Detalles de Viajes Manuales', 0, 1, 'L');
     }
 
     private function logo()
@@ -240,30 +262,52 @@ class PDFConciliacion extends Rotation
     private function details()
     {
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('FECHA:'), '', 0, 'LB');
+        $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('FECHA:'), '', 0, 'LB');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, $this->conciliacion->fecha_conciliacion, '', 1, 'L');
-        
+
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('PROYECTO:'), '', 0, 'L');
+        $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('FOLIO:'), '', 0, 'LB');
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, $this->conciliacion->Folio, '', 1, 'L');
+
+        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+        $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('RANGO DE FECHAS:'), '', 0, 'L');
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, "DEL " . $this->conciliacion->fecha_inicial . " AL " . $this->conciliacion->fecha_final, '', 1, 'L');
+
+
+        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+        $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('PROYECTO:'), '', 0, 'L');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode(Proyecto::find(Context::getId())->descripcion), '', 1, 'L');
 
-        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('FOLIO:'), '', 0, 'L');
-        $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->idconciliacion), '', 1, 'L');
+
 
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('EMPRESA:'), '', 0, 'LB');
+        $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('EMPRESA:'), '', 0, 'LB');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->empresa), '', 1, 'L');
 
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.1 * $this->WidthTotal, 0.5, utf8_decode('SINDICATO:'), '', 0, 'LB');
+        $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('SINDICATO:'), '', 0, 'LB');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, utf8_decode($this->conciliacion->sindicato->NombreCorto), '', 1, 'L');
-        
+
+    }
+
+    private function details_manuales($x_inicial) {
+        $this->setX($x_inicial + 0.45 * $this->WidthTotal + 2);
+        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+        $this->Cell(0.24 * $this->WidthTotal, 0.5, utf8_decode('IMPORTE DE VIAJES MANUALES:'), '', 0, 'L');
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->CellFitScale(0.26 * $this->WidthTotal, 0.5, "$ ". $this->conciliacion->importe_viajes_manuales_f . " (" . $this->conciliacion->porcentaje_importe_viajes_manuales . "%)"   , '', 1, 'L');
+
+        $this->setX($x_inicial + 0.45 * $this->WidthTotal + 2);
+        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+        $this->Cell(0.24 * $this->WidthTotal, 0.5, utf8_decode('VOLÚMEN DE VIAJES MANUALES:'), '', 0, 'L');
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->CellFitScale(0.26 * $this->WidthTotal, 0.5, $this->conciliacion->volumen_viajes_manuales_f . " M3 (" . $this->conciliacion->porcentaje_volumen_viajes_manuales . "%)", '', 1, 'L');
     }
 
     private function rutas()

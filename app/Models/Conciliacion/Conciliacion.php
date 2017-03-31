@@ -282,25 +282,70 @@ class Conciliacion extends Model
 
     public function getFechaInicialAttribute() {
         if($this->viajes()->count()) {
-            return DB::connection('sca')->select(DB::raw("
+            $result = DB::connection('sca')->select(DB::raw("
                 SELECT min(v.FechaLlegada) as fecha_inicial FROM conciliacion c 
                 join conciliacion_detalle cd on (c.idconciliacion = cd.idconciliacion and cd.estado = 1)
                 join viajes v on (cd.idviaje = v.IdViaje)
                 where c.idconciliacion = {$this->idconciliacion} "))[0]->fecha_inicial;
+            return Carbon::createFromFormat('Y-m-d', $result)->format('d-m-Y');
         } else{
             return "";
         }
     }
 
-    public function getFechaFinalAttribute() {
-        if($this->viajes()->count()) {
-            return DB::connection('sca')->select(DB::raw("
+    public function getFechaFinalAttribute()
+    {
+        if ($this->viajes()->count()) {
+            $result = DB::connection('sca')->select(DB::raw("
                 SELECT max(v.FechaLlegada) as fecha_final FROM conciliacion c 
                 join conciliacion_detalle cd on (c.idconciliacion = cd.idconciliacion and cd.estado = 1)
                 join viajes v on (cd.idviaje = v.IdViaje)
                 where c.idconciliacion = {$this->idconciliacion} "))[0]->fecha_final;
-        } else{
+            return Carbon::createFromFormat('Y-m-d', $result)->format('d-m-Y');
+        } else {
             return "";
         }
+    }
+
+    public function getRangoAttribute() {
+        return "DEL (" . $this->fecha_inicial . ") AL (" . $this->fecha_final . ")";
+    }
+
+    public function getImporteViajesManualesAttribute() {
+        $results = DB::connection("sca")->select("select sum(Importe) as importe_viajes_manuales "
+            . "from conciliacion "
+            . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
+            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+            . "and conciliacion_detalle.estado = 1 "
+            . "and viajes.Estatus = 20 "
+            . "group by conciliacion.idconciliacion limit 1");
+        return $results  ?  $results[0]->importe_viajes_manuales : 0;
+    }
+
+    public function getVolumenViajesManualesAttribute(){
+        $results = DB::connection("sca")->select("select sum(CubicacionCamion) as Volumen "
+            . "from conciliacion "
+            . "left join conciliacion_detalle on conciliacion.idconciliacion = conciliacion_detalle.idconciliacion "
+            . "left join viajes on conciliacion_detalle.idviaje = viajes.IdViaje where conciliacion.idconciliacion = ".$this->idconciliacion." "
+            . "and conciliacion_detalle.estado = 1 "
+            . "and viajes.Estatus = 20 "
+            . "group by conciliacion.idconciliacion limit 1");
+        return $results ? $results[0]->Volumen : 0;
+    }
+
+    public function getVolumenViajesManualesFAttribute(){
+        return number_format($this->volumen_viajes_manuales, 2, ".",",");
+    }
+
+    public function getImporteViajesManualesFAttribute(){
+        return number_format($this->importe_viajes_manuales, 2, ".",",");
+    }
+
+    public function getPorcentajeImporteViajesManualesAttribute() {
+        return round(($this->importe_viajes_manuales * 100) / $this->importe, 2);
+    }
+
+    public function getPorcentajeVolumenViajesManualesAttribute() {
+        return round(($this->volumen_viajes_manuales * 100) / $this->volumen, 2);
     }
 }

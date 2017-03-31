@@ -171,6 +171,7 @@ class ConciliacionesController extends Controller
         }
 
         $conciliacion = Conciliacion::find($id);
+
         return view('conciliaciones.show')
             ->withConciliacion($conciliacion);
     }

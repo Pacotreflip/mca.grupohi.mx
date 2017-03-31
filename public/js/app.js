@@ -26788,6 +26788,11 @@ Vue.component('conciliaciones-edit', {
                         _this.conciliacion.importe = response.importe;
                         _this.conciliacion.volumen = response.volumen;
                         _this.conciliacion.num_viajes += 1;
+                        _this.conciliacion.rango = response.rango;
+                        _this.conciliacion.importe_viajes_manuales = response.importe_viajes_manuales;
+                        _this.conciliacion.volumen_viajes_manuales = response.volumen_viajes_manuales;
+                        _this.conciliacion.porcentaje_importe_viajes_manuales = response.porcentaje_importe_viajes_manuales;
+                        _this.conciliacion.porcentaje_volumen_viajes_manuales = response.porcentaje_volumen_viajes_manuales;
 
                         $('.ticket').val('');
                         $('.ticket').focus();

@@ -128,11 +128,25 @@
                                     DETALLES DE LA CONCILIACIÓN
                                 </div>
                                 <div class="panel-body">
-                                    <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
-                                    <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
-                                    <strong>Número de Viajes: </strong>@{{ conciliados ? conciliados.length : 0 }}<br>
-                                    <strong>Volúmen: </strong>@{{ conciliacion.volumen }}<br>
-                                    <strong>Importe: </strong>@{{ conciliacion.importe }}<br>
+                                        <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
+                                        <strong>Folio: </strong>@{{ conciliacion.folio }}<br>
+                                        <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
+                                        <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
+                                        <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
+                                        <strong>Número de Viajes: </strong>@{{ conciliados ? conciliados.length : 0 }}<br>
+                                        <strong>Volúmen: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
+                                        <strong>Importe: </strong>$ @{{ conciliacion.importe }}<br>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="panel panel-default">
+                                <div class="panel panel-heading">
+                                    DETALLES DE VIAJES MANUALES
+                                </div>
+                                <div class="panel-body">
+                                    <strong>Importe de viajes manuales: </strong>$ @{{ conciliacion.importe_viajes_manuales }} (@{{ conciliacion.porcentaje_importe_viajes_manuales }}%)<br>
+                                    <strong>Volúmen de viajes manuales: </strong>@{{ conciliacion.volumen_viajes_manuales }} m<sup>3</sup> (@{{ conciliacion.porcentaje_volumen_viajes_manuales }}%)<br>
                                 </div>
                             </div>
                         </div>

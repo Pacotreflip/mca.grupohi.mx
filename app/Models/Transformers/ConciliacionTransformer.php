@@ -32,8 +32,14 @@ class ConciliacionTransformer extends AbstractTransformer
                 'motivo' => $conciliacion->cancelacion->motivo,
                 'cancelo' => User::find($conciliacion->cancelacion->idcancelo)->present()->nombreCompleto,
                 'timestamp' => $conciliacion->cancelacion->timestamp_cancelacion
-            ]
-        ];
+            ],
+            'fecha'     => $conciliacion->fecha_conciliacion,
+            'folio'     => $conciliacion->Folio,
+            'rango'     => $conciliacion->rango,
+            'importe_viajes_manuales' => $conciliacion->importe_viajes_manuales_f,
+            'volumen_viajes_manuales' => $conciliacion->volumen_viajes_manuales_f,
+            'porcentaje_importe_viajes_manuales' => $conciliacion->porcentaje_importe_viajes_manuales,
+            'porcentaje_volumen_viajes_manuales' => $conciliacion->porcentaje_volumen_viajes_manuales];
 
         return $output;
     }

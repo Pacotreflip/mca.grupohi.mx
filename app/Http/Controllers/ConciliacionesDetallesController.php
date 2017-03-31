@@ -117,7 +117,7 @@ class ConciliacionesDetallesController extends Controller
                 $ids = $request->get('idviaje', []);
                 $i = 0;
                 foreach ($ids as $key => $id_viaje) {
-                    $v_ba = Viaje::where('IdViaje', '=', $id)->first();
+                    $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
                     ConciliacionDetalle::create([
                         'idconciliacion' => $id,
                         'idviaje_neto' => $v_ba->IdViajeNeto,
@@ -135,7 +135,10 @@ class ConciliacionesDetallesController extends Controller
                 'registros'   => $i,
                 'detalles'    => $detalles,
                 'importe'     => $conciliacion->importe_f,
-                'volumen'     => $conciliacion->volumen_f
+                'volumen'     => $conciliacion->volumen_f,
+                'rango'       => $conciliacion->rango,
+                'importe_viajes_manuales' => $conciliacion->importe_viajes_manuales_f,
+                'volumen_viajes_manuales' => $conciliacion->volumen_viajes_manuales_f
             ]);
         }
     }
