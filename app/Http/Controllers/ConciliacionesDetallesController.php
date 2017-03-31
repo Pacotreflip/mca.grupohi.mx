@@ -126,11 +126,13 @@ class ConciliacionesDetallesController extends Controller
                 }
                 $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
             }
-
+            $conciliacion = Conciliacion::find($id);
             return response()->json([
                 'status_code' => 201,
                 'registros'   => $i,
                 'detalles'    => $detalles,
+                'importe'     => $conciliacion->importe_f,
+                'volumen'     => $conciliacion->volumen_f
             ]);
         }
     }
