@@ -93,8 +93,13 @@ class ViajeNeto extends Model
                 foreach($data as $key => $estatus) {
                     $viaje = ViajeNeto::findOrFail($key);
                     $viaje->Estatus = $estatus;
-                    $viaje->Aprobo = auth()->user()->idusuario;
-                    $viaje->FechaHoraAprobacion = Carbon::now()->toDateTimeString();
+                    if($estatus == '22') {
+                        $viaje->Rechazo = auth()->user()->idusuario;
+                        $viaje->FechaHoraRechazo = Carbon::now()->toDateTimeString();
+                    } else {
+                        $viaje->Aprobo = auth()->user()->idusuario;
+                        $viaje->FechaHoraAprobacion = Carbon::now()->toDateTimeString();
+                    }
                     $viaje->save();
                     if($estatus == "20") {
                         $autorizados += 1;    
