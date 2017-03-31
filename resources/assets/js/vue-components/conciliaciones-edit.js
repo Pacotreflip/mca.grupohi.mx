@@ -336,6 +336,9 @@ Vue.component('conciliaciones-edit', {
                             showConfirmButton: false,
                             timer: 500
                         });
+                        _this.conciliacion.importe = response.importe;
+                        _this.conciliacion.volumen = response.volumen;
+                        _this.conciliacion.num_viajes += 1;
 
                         $('.ticket').val('');
                         $('.ticket').focus();

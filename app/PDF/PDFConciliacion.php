@@ -144,7 +144,7 @@ class PDFConciliacion extends Rotation
             $this->Row(array('MATERIAL : ' . $this->material->material));
 
             $this->SetFont('Arial', '', 5);
-            $this->SetWidths(array(0.125 * $this->WidthTotal, 0.1 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+            $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
             $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
             $this->SetRounds(array('4', '', '', '', '', '', '', '', '', '3'));
             $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
@@ -152,7 +152,7 @@ class PDFConciliacion extends Rotation
             $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.6));
             $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
-            $this->Row(array(utf8_decode('CAMIÓN'), 'FECHA', 'ORIGEN', 'DESTINO', 'TURNO', 'CUBIC.', 'VIAJES', 'DIST.', 'VOLÚMEN', 'IMPORTE'));
+            $this->Row(array(utf8_decode('CAMIÓN'), 'FECHA', 'ORIGEN', 'DESTINO', 'TURNO', 'CUBIC.', 'VIAJES', 'DIST.', utf8_decode('VOLÚMEN'), 'IMPORTE'));
 
             $this->SetRounds(array('', '', '', '', '', '', '', '', '', ''));
             $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
@@ -163,13 +163,13 @@ class PDFConciliacion extends Rotation
                 $this->SetHeights(array(0.35));
                 $this->SetAligns(array('L', 'L', 'L', 'L', 'C', 'R', 'R', 'R', 'R', 'R'));
             } else if ($this->encola == 'subtotal_camion') {
-                $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+                $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
                 $this->SetFills(array('221,221,221', '221,221,221', '221,221,221', '221,221,221', '221,221,221'));
                 $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
                 $this->SetHeights(array(0.35));
                 $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
             } else if ($this->encola = 'subtotal_material') {
-                $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+                $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
                 $this->SetFont('Arial', '', 6.5);
                 $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
                 $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
@@ -177,7 +177,7 @@ class PDFConciliacion extends Rotation
                 $this->SetHeights(array(0.6));
                 $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
             } else if ($this->encola = 'total') {
-                $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+                $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
                 $this->SetFont('Arial', '', 6.5);
                 $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
                 $this->SetFills(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
@@ -299,7 +299,7 @@ class PDFConciliacion extends Rotation
             $this->Row(array('MATERIAL : ' . utf8_decode($this->material->material)));
 
             $this->SetFont('Arial', '', 5);
-            $this->SetWidths(array(0.125 * $this->WidthTotal, 0.1 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+            $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
             $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
             $this->SetRounds(array('4', '', '', '', '', '', '', '', '', '3'));
             $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
@@ -346,7 +346,7 @@ class PDFConciliacion extends Rotation
 				v.IdTiro;')) as $key => $row) {
 
                     $this->SetFont('Arial', '', 6);
-                    $this->SetWidths(array(0.125 * $this->WidthTotal, 0.1 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+                    $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
                     //$this->SetRounds(array('', '', '', '', '', '', '', '', '', ''));
                     //$this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
                     $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
@@ -354,7 +354,7 @@ class PDFConciliacion extends Rotation
                     $this->SetHeights(array(0.35));
                     $this->SetAligns(array('L', 'L', 'L', 'L', 'C', 'R', 'R', 'R', 'R', 'R'));
 
-                    $this->SetWidths(array(0.125 * $this->WidthTotal, 0.1 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+                    $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
                     //for($cont = 0; $cont < 8; $cont++){
                     $this->encola = "items";
                     $this->Row(array($key == 0 ? $camion->Economico : '', $row->FechaLlegada, utf8_decode(Origen::find($row->IdOrigen)->Descripcion), utf8_decode(Tiro::find($row->IdTiro)->Descripcion), '1', $row->CubicacionCamion, $row->NumViajes, $row->Distancia, number_format(($row->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($row->Importe), 2, '.', ',')));
@@ -387,7 +387,7 @@ class PDFConciliacion extends Rotation
 						GROUP BY v.IdCamion;'));
 
                 if ($subtotal_camion) {
-                    $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+                    $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
                     $this->SetFills(array('221,221,221', '221,221,221', '221,221,221', '221,221,221', '221,221,221'));
                     $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
                     $this->SetHeights(array(0.35));
@@ -425,7 +425,7 @@ class PDFConciliacion extends Rotation
 							c.idconciliacion,
 							v.IdMaterial;'))[0];
 
-            $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+            $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
             $this->SetFont('Arial', '', 6.5);
             $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
             $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
@@ -441,7 +441,7 @@ class PDFConciliacion extends Rotation
 
         //Total
         $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
-        $this->SetWidths(array(0.7125 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.08125 * $this->WidthTotal, 0.08125 * $this->WidthTotal));
+        $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
         $this->SetFont('Arial', '', 6.5);
         $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
         $this->SetFills(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
