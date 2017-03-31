@@ -25980,13 +25980,14 @@ $(function () {
     });
 });
 $('[data-submenu]').submenupicker();
-/*$('.fecha').datepicker({
+$('.fecha').datepicker({
     format: 'yyyy-mm-dd',
     language: 'es',
     autoclose: true,
     clearBtn: true,
     todayHighlight: true
-});*/
+});
+
 $(".element_destroy").off().on("click", function (event) {
     var btn = $(this);
     event.preventDefault();
@@ -26385,14 +26386,25 @@ require('./vue-components/vajes-revertir');
 Vue.component('conciliaciones-create', {
     data: function data() {
         return {
-            'conciliacion': {
-                'idsindicato': '',
-                'idempresa': ''
-            },
             'form': {
                 'errors': []
             }
         };
+    },
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: true,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+                $(el).val(App.timeStamp(1));
+            }
+        }
     },
 
     methods: {
@@ -26414,15 +26426,22 @@ Vue.component('conciliaciones-create', {
         },
 
         registrar: function registrar() {
-            var _this3 = this;
-
             var _this = this;
             this.form.errors = [];
-            this.$http.post(App.host + '/conciliaciones', this.conciliacion).then(function (response) {
-                var conciliacion = response.body.conciliacion;
-                window.location.href = App.host + '/conciliaciones/' + conciliacion.idconciliacion + '/edit';
-            }, function (error) {
-                App.setErrorsOnForm(_this3.form, error.body);
+            var url = App.host + '/conciliaciones';
+            var data = $('.form_conciliacion_create').serialize();
+
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                success: function success(response) {
+                    var conciliacion = response.conciliacion;
+                    window.location.href = App.host + '/conciliaciones/' + conciliacion.idconciliacion + '/edit';
+                },
+                error: function error(_error) {
+                    App.setErrorsOnForm(_this.form, _error.responseJSON);
+                }
             });
         }
     }

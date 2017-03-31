@@ -10,19 +10,31 @@
     <conciliaciones-create inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
-            {!! Form::open() !!}
-                <!-- Empresa y Sindicato -->
+            {!! Form::open(['class' => 'form_conciliacion_create']) !!}
+                <!-- Fecha, Folio, Empresa, Sindicato -->
                 <div class="row">
-                    <div class="col-md-6">
+                    <div class="col-md-3">
                         <div class="form-group">
-                            <label for="Empresa">Empresa: </label>
-                            {!! Form::select('idempresa', $empresas, null, ['v-model' => 'conciliacion.idempresa', 'class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                            <label for="fecha">Fecha de Conciliación: </label>
+                            <input type="text" name="fecha" class="form-control" v-datepicker>
                         </div>
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="folio">Folio: </label>
+                            <input type="text" name="folio" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <div class="form-group">
+                            <label for="Empresa">Empresa: </label>
+                            {!! Form::select('idempresa', $empresas, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-3">
                         <div class="form-group">
                             <label for="Empresa">Sindicato: </label>
-                            {!! Form::select('idsindicato', $sindicatos, null, ['v-model' => 'conciliacion.idsindicato', 'class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                            {!! Form::select('idsindicato', $sindicatos, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
                         </div>
                     </div>
                 </div>

@@ -164,7 +164,9 @@ return [
         'idsindicato'           => 'Sindicato',
         'idempresa'             => 'Empresa',
         'FechaInicial'          => 'Fecha Inicial',
-        'FechaFinal'           => 'Fecha Final'
+        'FechaFinal'            => 'Fecha Final',
+        'fecha'                 => 'Fecha',
+        'folio'                 => 'Folio'
     ],
 
 ];

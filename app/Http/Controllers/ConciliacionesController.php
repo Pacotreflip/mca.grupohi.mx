@@ -90,14 +90,15 @@ class ConciliacionesController extends Controller
 //            $conciliacion = $result;
 //        }
         $conciliacion = Conciliacion::create([
-                'fecha_conciliacion' => Carbon::now()->toDateString(),
-                'idsindicato'        => $request->get('idsindicato'),
-                'idempresa'          => $request->get('idempresa'),
-                'fecha_inicial'      => Carbon::now()->toDateString(),
-                'fecha_final'        => Carbon::now()->toDateString(),
-                'estado'             => 0,
-                'IdRegistro'         => auth()->user()->idusuario
-            ]);
+            'fecha_conciliacion' => $request->get('fecha'),
+            'idsindicato'        => $request->get('idsindicato'),
+            'idempresa'          => $request->get('idempresa'),
+            'fecha_inicial'      => Carbon::now()->toDateString(),
+            'fecha_final'        => Carbon::now()->toDateString(),
+            'estado'             => 0,
+            'IdRegistro'         => auth()->user()->idusuario,
+            'Folio'              => $request->get('folio'),
+        ]);
         
         return response()->json([
             'success' => true,

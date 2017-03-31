@@ -13,6 +13,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\DB;
 use App\User;
 use Carbon\Carbon;
+use PhpParser\Node\Stmt\Return_;
 
 class Conciliacion extends Model
 {
@@ -31,7 +32,8 @@ class Conciliacion extends Model
         'fecha_final',
         'timestamp',
         'estado',
-        'IdRegistro'
+        'IdRegistro',
+        'Folio'
     ];
     protected $dates = ['timestamp','FechaHoraCierre','FechaHoraAprobacion'];
     protected $presenter = ModelPresenter::class;
@@ -65,7 +67,7 @@ class Conciliacion extends Model
 
     public function viajes() {
         $viajes = new Collection();
-        foreach ($this->conciliacionDetalles->where('estado', '=', 1) as $cd) {
+        foreach ($this->conciliacionDetalles->where('estado', 1) as $cd) {
             $viajes->push($cd->viaje);
         }
         return $viajes;
@@ -275,6 +277,30 @@ class Conciliacion extends Model
             return 'Aprobada';
         }else if($this->estado < 0){
             return 'Cancelada';
+        }
+    }
+
+    public function getFechaInicialAttribute() {
+        if($this->viajes()->count()) {
+            return DB::connection('sca')->select(DB::raw("
+                SELECT min(v.FechaLlegada) as fecha_inicial FROM conciliacion c 
+                join conciliacion_detalle cd on (c.idconciliacion = cd.idconciliacion and cd.estado = 1)
+                join viajes v on (cd.idviaje = v.IdViaje)
+                where c.idconciliacion = {$this->idconciliacion} "))[0]->fecha_inicial;
+        } else{
+            return "";
+        }
+    }
+
+    public function getFechaFinalAttribute() {
+        if($this->viajes()->count()) {
+            return DB::connection('sca')->select(DB::raw("
+                SELECT max(v.FechaLlegada) as fecha_final FROM conciliacion c 
+                join conciliacion_detalle cd on (c.idconciliacion = cd.idconciliacion and cd.estado = 1)
+                join viajes v on (cd.idviaje = v.IdViaje)
+                where c.idconciliacion = {$this->idconciliacion} "))[0]->fecha_final;
+        } else{
+            return "";
         }
     }
 }

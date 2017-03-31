@@ -6,13 +6,14 @@ $(function () {
     });    
 });
 $('[data-submenu]').submenupicker();
-/*$('.fecha').datepicker({
+$('.fecha').datepicker({
     format: 'yyyy-mm-dd',
     language: 'es',
     autoclose: true,
     clearBtn: true,
     todayHighlight: true
-});*/
+});
+
 $(".element_destroy").off().on("click", function(event) {
     var btn = $(this);   
     event.preventDefault();

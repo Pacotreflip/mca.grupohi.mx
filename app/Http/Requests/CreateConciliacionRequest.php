@@ -24,8 +24,10 @@ class CreateConciliacionRequest extends Request
     public function rules()
     {
         return [
-            'idsindicato'          => 'required|exists:sca.sindicatos,IdSindicato',
-            'idempresa'            => 'required|exists:sca.empresas,IdEmpresa',
+            'idsindicato' => 'required|exists:sca.sindicatos,IdSindicato',
+            'idempresa'   => 'required|exists:sca.empresas,IdEmpresa',
+            'fecha'       => 'required|date_format:"Y-m-d"',
+            'folio'       => 'required|string'
         ];
     }
     
