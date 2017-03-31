@@ -46,6 +46,7 @@ class Origen extends Model
     }
     
     public function tiros() {
-        return $this->belongsToMany(Tiro::class, 'rutas', 'IdOrigen', 'IdTiro');
+        return $this->belongsToMany(Tiro::class, 'rutas', 'IdOrigen', 'IdTiro')
+            ->orderBy('tiros.Descripcion', 'ASC');
     }
 }

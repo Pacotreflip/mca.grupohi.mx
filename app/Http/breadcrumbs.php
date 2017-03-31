@@ -256,7 +256,7 @@ Breadcrumbs::register('viajes.netos.carga_manual_completa', function($breadcrumb
 });
 
 Breadcrumbs::register('viajes.netos.autorizar', function($breadcrumbs) {
-    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES MANUALES', route('viajes.netos.edit', ['action' => 'autorizar']));
+    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES', route('viajes.netos.edit', ['action' => 'autorizar']));
 });
 
 Breadcrumbs::register('viajes.netos.validar', function($breadcrumbs) {

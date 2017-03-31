@@ -24,17 +24,18 @@ class CreateViajeNetoRequest extends Request
     public function rules()
     {
         $rules = [];
-        
+
         if($this->path() == 'viajes/netos/manual') {
             foreach($this->get('viajes', []) as $key => $viaje) {
-                $rules['viajes.'.$key.'.FechaLlegada'] = 'required|date_format:"Y-m-d"';
-                $rules['viajes.'.$key.'.HoraLlegada'] = 'required|date_format:H:i';
-                $rules['viajes.'.$key.'.IdCamion'] = 'required|exists:sca.camiones,IdCamion';
-                $rules['viajes.'.$key.'.IdOrigen'] = 'required|exists:sca.origenes,IdOrigen';
-                $rules['viajes.'.$key.'.IdTiro'] = 'required|exists:sca.tiros,IdTiro';
-                $rules['viajes.'.$key.'.IdMaterial'] = 'required|exists:sca.materiales,IdMaterial';
-                $rules['viajes.'.$key.'.Observaciones'] = 'string';
-
+                $rules['viajes.'.$key.'.Codigo']        = 'required|unique:sca.viajesnetos,Code';
+                $rules['viajes.'.$key.'.Cubicacion']    = 'required|numeric';
+                $rules['viajes.'.$key.'.FechaLlegada']   = 'required|date_format:"Y-m-d"';
+                $rules['viajes.'.$key.'.HoraLlegada']    = 'required|date_format:H:i';
+                $rules['viajes.'.$key.'.IdCamion']      = 'required|exists:sca.camiones,IdCamion';
+                $rules['viajes.'.$key.'.IdOrigen']      = 'required|exists:sca.origenes,IdOrigen';
+                $rules['viajes.'.$key.'.IdTiro']        = 'required|exists:sca.tiros,IdTiro';
+                $rules['viajes.'.$key.'.IdMaterial']    = 'required|exists:sca.materiales,IdMaterial';
+                $rules['viajes.'.$key.'.Motivo']        = 'required|string';
             }
         } else if($this->path() == 'viajes/netos/completa') {
             foreach($this->get('viajes', []) as $key => $viaje) {
@@ -60,25 +61,32 @@ class CreateViajeNetoRequest extends Request
         $messages = [];
         if($this->path() == 'viajes/netos/manual') {
             foreach($this->get('viajes', []) as $key => $viaje) {
-                $messages['viajes.'.$key.'.FechaLlegada.required'] = '(Viaje: '.$viaje['Id'].') El campo Fecha es obligatorio';
-                $messages['viajes.'.$key.'.FechaLlegada.date_format'] = '(Viaje: '.$viaje['Id'].') La Fecha no corresponde al formato :format.';
+                $messages['viajes.'.$key.'.FechaLlegada.required'] = '(Viaje: '.$key.') El campo Fecha Llegada es obligatorio';
+                $messages['viajes.'.$key.'.FechaLlegada.date_format'] = '(Viaje: '.$key.') La Fecha Llegada no corresponde al formato :format.';
 
-                $messages['viajes.'.$key.'.HoraLlegada.required'] = '(Viaje: '.$viaje['Id'].') El campo Hora es obligatorio';
-                $messages['viajes.'.$key.'.HoraLlegada.required'] = '(Viaje: '.$viaje['Id'].') La Hora no corresponde al formato :format.';
+                $messages['viajes.'.$key.'.HoraLlegada.required'] = '(Viaje: '.$key.') El campo Hora Llegada es obligatorio';
+                $messages['viajes.'.$key.'.HoraLlegada.required'] = '(Viaje: '.$key.') La Hora Llegada no corresponde al formato :format.';
 
-                $messages['viajes.'.$key.'.IdCamion.required'] = '(Viaje: '.$viaje['Id'].') El campo Camión es obligatorio';
-                $messages['viajes.'.$key.'.IdCamion.exists'] = '(Viaje: '.$viaje['Id'].') El Camión es inválido.';
+                $messages['viajes.'.$key.'.IdCamion.required'] = '(Viaje: '.$key.') El campo Camión es obligatorio';
+                $messages['viajes.'.$key.'.IdCamion.exists'] = '(Viaje: '.$key.') El Camión es inválido.';
 
-                $messages['viajes.'.$key.'.IdOrigen.required'] = '(Viaje: '.$viaje['Id'].') El campo Origen es obligatorio';
-                $messages['viajes.'.$key.'.IdOrigen.exists'] = '(Viaje: '.$viaje['Id'].') El Origen es inválido.';
+                $messages['viajes.'.$key.'.IdOrigen.required'] = '(Viaje: '.$key.') El campo Origen es obligatorio';
+                $messages['viajes.'.$key.'.IdOrigen.exists'] = '(Viaje: '.$key.') El Origen es inválido.';
 
-                $messages['viajes.'.$key.'.IdTiro.required'] = '(Viaje: '.$viaje['Id'].') El campo Tiro es obligatorio';
-                $messages['viajes.'.$key.'.IdTiro.exists'] = '(Viaje: '.$viaje['Id'].') El Tiro es inválido.';
+                $messages['viajes.'.$key.'.IdTiro.required'] = '(Viaje: '.$key.') El campo Tiro es obligatorio';
+                $messages['viajes.'.$key.'.IdTiro.exists'] = '(Viaje: '.$key.') El Tiro es inválido.';
 
-                $messages['viajes.'.$key.'.IdMaterial.required'] = '(Viaje: '.$viaje['Id'].') El campo Material es obligatorio';
-                $messages['viajes.'.$key.'.IdMaterial.exists'] = '(Viaje: '.$viaje['Id'].') El Material es inválido.';
+                $messages['viajes.'.$key.'.IdMaterial.required'] = '(Viaje: '.$key.') El campo Material es obligatorio';
+                $messages['viajes.'.$key.'.IdMaterial.exists'] = '(Viaje: '.$key.') El Material es inválido.';
 
-                $messages['viajes.'.$key.'.Observaciones.string'] = '(Viaje: '.$viaje['Id'].') El campo Observaciones debe ser una cadena de caracteres.';
+                $messages['viajes.'.$key.'.Motivo.required'] = '(Viaje: '.$key.') El campo Motivo es obligatorio.';
+                $messages['viajes.'.$key.'.Motivo.string'] = '(Viaje: '.$key.') El campo Motivo debe ser una cadena de caracteres.';
+
+                $messages['viajes.'.$key.'.Cubicacion.required'] = '(Viaje: '.$key.') El campo Cubicación es obligatorio.';
+                $messages['viajes.'.$key.'.Cubicacion.numeric'] = '(Viaje: '.$key.') El campo Cubicación debe ser numérico.';
+
+                $messages['viajes.'.$key.'.Codigo.required'] = '(Viaje: '.$key.') El campo Codigo es obligatorio.';
+                $messages['viajes.'.$key.'.Codigo.unique'] = '(Viaje: '.$key.') Ya existe un Viaje Neto con el Código proporcionado';
 
             }
         } else if($this->path() == 'viajes/netos/completa') {

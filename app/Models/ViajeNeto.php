@@ -28,7 +28,9 @@ class ViajeNeto extends Model
         'IdMaterial', 
         'Observaciones', 
         'Creo',
-        'Estatus'
+        'Estatus',
+        'Code',
+        'CubicacionCamion'
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
@@ -91,6 +93,13 @@ class ViajeNeto extends Model
                 foreach($data as $key => $estatus) {
                     $viaje = ViajeNeto::findOrFail($key);
                     $viaje->Estatus = $estatus;
+                    if($estatus == '22') {
+                        $viaje->Rechazo = auth()->user()->idusuario;
+                        $viaje->FechaHoraRechazo = Carbon::now()->toDateTimeString();
+                    } else {
+                        $viaje->Aprobo = auth()->user()->idusuario;
+                        $viaje->FechaHoraAprobacion = Carbon::now()->toDateTimeString();
+                    }
                     $viaje->save();
                     if($estatus == "20") {
                         $autorizados += 1;    
@@ -133,11 +142,16 @@ class ViajeNeto extends Model
                 $extra = [
                     'FechaCarga' => Carbon::now()->toDateString(),
                     'HoraCarga' => Carbon::now()->toTimeString(),
+                    'FechaLlegada' => $viaje['FechaLlegada'],
+                    'HoraLlegada' => $viaje['HoraLlegada'],
                     'FechaSalida' => $fecha_salida->toDateString(),
                     'HoraSalida' => $fecha_salida->toTimeString(),
                     'IdProyecto' => $proyecto_local->IdProyecto,
-                    'Creo' => auth()->user()->present()->nombreCompleto.'*'.Carbon::now()->toDateString().'*'.Carbon::now()->toTimeString(),
+                    'Creo' => auth()->user()->idusuario,
                     'Estatus' => 29,
+                    'Code' => $viaje['Codigo'],
+                    'CubicacionCamion' => $viaje['Cubicacion'],
+                    'Observaciones' => $viaje['Motivo']
                 ];
 
                 ViajeNeto::create(array_merge($viaje, $extra));
@@ -406,5 +420,19 @@ class ViajeNeto extends Model
 
     public function sindicato () {
         return $this->belongsTo(Sindicato::class, 'IdSindicato');
+    }
+
+    public function getSindicatoConciliadoAttribute() {
+        if($this->viaje) {
+            if($this->viaje->conciliacionDetalles->where('estado', 1)->first()) {
+                $detalle = $this->viaje->conciliacionDetalles->where('estado', 1)->first();
+                if($detalle->conciliacion->sinicato) {
+                    return (String) $detalle->conciliacion->sindicato;
+                }
+                return '';
+            }
+            return '';
+        }
+        return '';
     }
 }

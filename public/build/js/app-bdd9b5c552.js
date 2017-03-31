@@ -27622,33 +27622,6 @@ Vue.component('viajes-manual-completa', {
 },{}],50:[function(require,module,exports){
 'use strict';
 
-function timeStamp(type) {
-    var today = new Date();
-    var dd = today.getDate();
-    var mm = today.getMonth() + 1; //January is 0!
-    var yyyy = today.getFullYear();
-    var hh = today.getHours();
-    var min = today.getMinutes();
-
-    if (dd < 10) {
-        dd = '0' + dd;
-    }
-    if (mm < 10) {
-        mm = '0' + mm;
-    }
-    if (hh < 10) {
-        hh = '0' + hh;
-    }
-    if (min < 10) {
-        min = '0' + min;
-    }
-
-    var date = yyyy + '-' + mm + '-' + dd;
-    var time = hh + ":" + min;
-
-    return type == 1 ? date : time;
-}
-
 Array.prototype.removeValue = function (name, value) {
     var array = $.map(this, function (v, i) {
         return v[name] === value ? null : v;
@@ -27658,26 +27631,26 @@ Array.prototype.removeValue = function (name, value) {
 };
 
 Vue.component('viajes-manual', {
-
     data: function data() {
         return {
+            'num_viajes': 1,
             'form': {
                 'viajes': [{
-                    'Id': 1,
-                    'FechaLlegada': timeStamp(1),
-                    'HoraLlegada': timeStamp(2),
-                    'IdCamion': '',
-                    'IdOrigen': '',
-                    'IdTiro': '',
-                    'IdMaterial': '',
-                    'Observaciones': '',
-                    'Tiros': []
+                    Codigo: '',
+                    FechaLlegada: App.timeStamp(1),
+                    HoraLlegada: App.timeStamp(2),
+                    IdCamion: '',
+                    Cubicacion: '',
+                    IdOrigen: '',
+                    IdTiro: '',
+                    IdMaterial: '',
+                    Motivo: '',
+                    Tiros: []
                 }],
                 'errors': []
             },
             'guardando': false,
-            'cargando': false,
-            'numViajes': 1
+            'cargando': false
         };
     },
 
@@ -27687,11 +27660,12 @@ Vue.component('viajes-manual', {
                 $(el).datepicker({
                     format: 'yyyy-mm-dd',
                     language: 'es',
-                    autoclose: false,
+                    autoclose: true,
                     clearBtn: true,
                     todayHighlight: true,
                     endDate: '0d'
                 });
+                $(el).val(App.timeStamp(1));
             }
         }
     },
@@ -27699,7 +27673,7 @@ Vue.component('viajes-manual', {
     methods: {
 
         setTiros: function setTiros(viaje) {
-            var _this = this;
+            var _this2 = this;
 
             viaje.Tiros = [];
             if (viaje.IdOrigen) {
@@ -27707,59 +27681,91 @@ Vue.component('viajes-manual', {
                     viaje.Tiros = response.body;
                     viaje.IdTiro = '';
                 }, function (response) {
-                    App.setErrorsOnForm(_this.form, response.body);
+                    App.setErrorsOnForm(_this2.form, response.body);
                 });
             } else {
                 viaje.IdTiro = '';
             }
         },
 
-        setFechaLlegada: function setFechaLlegada(viaje, event) {
-            viaje.FechaLlegada = event.currentTarget.value;
+        setCamion: function setCamion(viaje) {
+            var _this3 = this;
+
+            viaje.Cubicacion = '';
+            if (viaje.IdCamion) {
+                this.$http.get(App.host + '/camiones/' + viaje.IdCamion).then(function (response) {
+                    viaje.Cubicacion = response.body.CubicacionParaPago;
+                }, function (error) {
+                    App.setErrorsOnForm(_this3.form, error.body);
+                });
+            } else {
+                viaje.Cubicacion = '';
+            }
         },
 
-        addViaje: function addViaje() {
-            this.numViajes += 1;
+        addViaje: function addViaje(e) {
+            e.preventDefault();
+
             this.form.viajes.push({
-                'Id': this.numViajes,
-                'FechaLlegada': timeStamp(1),
-                'HoraLlegada': timeStamp(2),
-                'IdCamion': '',
-                'IdOrigen': '',
-                'IdTiro': '',
-                'IdMaterial': '',
-                'Observaciones': '',
-                'Tiros': []
+                Codigo: '',
+                FechaLlegada: App.timeStamp(1),
+                HoraLlegada: App.timeStamp(2),
+                IdCamion: '',
+                Cubicacion: '',
+                IdOrigen: '',
+                IdTiro: '',
+                IdMaterial: '',
+                Motivo: '',
+                Tiros: []
             });
         },
 
-        removeViaje: function removeViaje(viaje) {
-            this.form.viajes.removeValue('Id', viaje.Id);
+        removeViaje: function removeViaje(index, e) {
+            e.preventDefault();
+            if (index != this.form.viajes.length - 1) {
+                var last_val = $('.FechaLlegada' + (this.form.viajes.length - 1)).val();
+                for (var i = index; i < this.form.viajes.length - 1; i++) {
+                    var new_val = $('.FechaLlegada' + (index + 1)).val();
+                    $('.FechaLlegada' + index).val(new_val);
+                }
+                this.form.viajes.splice(index, 1);
+                $('.FechaLlegada' + (this.form.viajes.length - 1)).val(last_val);
+            } else {
+                this.form.viajes.splice(index, 1);
+            }
         },
 
         registrar: function registrar() {
-            var _this2 = this;
 
+            var _this = this;
             this.guardando = true;
             this.form.errors = [];
-            this.$http.post(App.host + '/viajes/netos/manual', this.form).then(function (response) {
-                if (response.body.success) {
+            var data = $('.form_carga_manual').serialize();
+            var url = App.host + '/viajes/netos/manual';
+
+            $.ajax({
+                url: url,
+                type: 'POST',
+                data: data,
+                success: function success(response) {
                     swal({
                         type: 'success',
                         title: '',
-                        text: response.body.message,
+                        text: response.message,
                         showConfirmButton: true
                     });
-                    _this2.guardando = false;
+                    _this.guardando = false;
+                },
+                error: function error(_error) {
+                    _this.guardando = false;
+                    console.log(_error);
+                    App.setErrorsOnForm(_this.form, _error.responseJSON);
                 }
-            }, function (response) {
-                _this2.guardando = false;
-                App.setErrorsOnForm(_this2.form, response.body);
             });
         },
 
         confirmarRegistro: function confirmarRegistro(e) {
-            var _this3 = this;
+            var _this4 = this;
 
             e.preventDefault();
 
@@ -27772,7 +27778,7 @@ Vue.component('viajes-manual', {
                 cancelButtonText: "No",
                 confirmButtonColor: "#ec6c62"
             }, function () {
-                return _this3.registrar();
+                return _this4.registrar();
             });
         }
     }

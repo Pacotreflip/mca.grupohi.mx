@@ -119,10 +119,10 @@ class ViajesNetosController extends Controller
     public function create(Request $request)
     {
         return view('viajes.netos.create')
-                ->withCamiones(Camion::all())
-                ->withOrigenes(Origen::all())
-                ->withTiros(Tiro::all())
-                ->withMateriales(Material::all())
+                ->withCamiones(Camion::orderBy('Economico', 'ASC')->lists('Economico', 'IdCamion'))
+                ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
+                ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdTiro'))
+                ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'))
                 ->withAction($request->get('action'));       
     }
 
