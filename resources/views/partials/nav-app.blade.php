@@ -82,6 +82,7 @@
     </ul>
   </li>
 
+  @if(Auth::user()->can(['consulta-viajes-netos']))
   <li class="dropdown">
       <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
           Reportes<span class="caret"></span>
@@ -90,7 +91,9 @@
           <li><a href="{{ route('reportes.viajes_netos.create') }}">Viajes Netos</a></li>
       </ul>
   </li>
+  @endif
 
-      @else
+
+@else
   <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
 @endif
