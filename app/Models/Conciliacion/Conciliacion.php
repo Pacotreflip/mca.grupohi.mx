@@ -336,7 +336,8 @@ class Conciliacion extends Model
 
     public function getRangoAttribute()
     {
-        return "DEL (" . $this->fecha_inicial . ") AL (" . $this->fecha_final . ")";
+
+        return $this->fecha_inicial != '' && $this->fecha_final != '' ? "DEL (" . $this->fecha_inicial . ") AL (" . $this->fecha_final . ")" : "SIN VIAJES";
     }
 
     public function getImporteViajesManualesAttribute()

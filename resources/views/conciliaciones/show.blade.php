@@ -96,6 +96,16 @@
                         <td>{{ $detalle->viaje->code }}</td>
                     </tr>
                 @endforeach
+                @foreach($conciliacion->conciliacionDetalles->where('estado', 1) as $detalle)
+                    <tr>
+                        <td>{{ $detalle->viaje->FechaLlegada.' ('.$detalle->viaje->HoraLlegada.')' }}</td>
+                        <td>{{ $detalle->viaje->camion->Economico }}</td>
+                        <td style="text-align: right">{{ $detalle->viaje->CubicacionCamion }}</td>
+                        <td>{{ $detalle->viaje->material->Descripcion }}</td>
+                        <td style="text-align: right">{{ number_format($detalle->viaje->Importe, 2, '.', ',') }}</td>
+                        <td>{{ $detalle->viaje->code }}</td>
+                    </tr>
+                @endforeach
                 </tbody>
             </table>
         </div>

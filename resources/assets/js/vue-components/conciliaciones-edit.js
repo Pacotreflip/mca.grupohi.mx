@@ -73,6 +73,20 @@ Vue.component('conciliaciones-edit', {
                 }
                 return false;
             });
+        },
+
+        manuales: function() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                return (detalle.estatus_viaje === 20 && detalle.estado === 1);
+            });
+        },
+
+        moviles: function() {
+            var _this = this;
+            return _this.conciliacion.detalles.filter(function (detalle) {
+                return (detalle.estatus_viaje === 0 && detalle.estado === 1);
+            });
         }
     },
 

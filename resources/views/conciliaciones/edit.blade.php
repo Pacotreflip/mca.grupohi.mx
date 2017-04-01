@@ -189,7 +189,12 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr v-for="detalle in conciliados">
+                            <tr v-if="manuales.length">
+                                <td colspan="7" style="text-align: center">
+                                    <strong>VIAJES CARGADOS MANUALMENTE</strong>
+                                </td>
+                            </tr>
+                            <tr v-for="detalle in manuales">
                                 <td>@{{ detalle.timestamp_llegada }}</td>
                                 <td>@{{ detalle.camion }}</td>
                                 <td style="text-align: right">
@@ -208,6 +213,30 @@
                                         <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
                                     </td>
                                     @endif
+                            </tr>
+                            <tr v-if="moviles.length">
+                                <td colspan="7" style="text-align: center">
+                                    <strong>VIAJES CARGADOS DESDE APLICACIÓN MÓVIL</strong>
+                                </td>
+                            </tr>                            <tr v-for="detalle in moviles">
+                                <td>@{{ detalle.timestamp_llegada }}</td>
+                                <td>@{{ detalle.camion }}</td>
+                                <td style="text-align: right">
+                                    <span v-if="conciliacion.estado == 0">
+                                        <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }}</a>
+                                    </span>
+                                    <span v-else>
+                                        @{{ detalle.cubicacion_camion }}
+                                    </span>
+                                </td>
+                                <td>@{{ detalle.material }}</td>
+                                <td style="text-align: right">@{{ detalle.importe }}</td>
+                                <td>@{{ detalle.code }}</td>
+                                @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
+                                    <td v-if="conciliacion.estado == 0">
+                                        <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
+                                    </td>
+                                @endif
                             </tr>
                             </tbody>
                         </table>
