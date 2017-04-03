@@ -36,8 +36,8 @@
                     DETALLES DE VIAJES MANUALES
                 </div>
                 <div class="panel-body">
-                    <strong>Importe de viajes manuales: </strong>$ {{ $conciliacion->importe_viajes_manuales_f }}<br>
-                    <strong>Volúmen de viajes manuales: </strong>{{ $conciliacion->volumen_viajes_manuales_f }} m<sup>3</sup><br>
+                    <strong>Importe de viajes manuales: </strong>$ {{ $conciliacion->importe_viajes_manuales_f . ' (' . $conciliacion->porcentaje_importe_viajes_manuales . '%)'  }} <br>
+                    <strong>Volúmen de viajes manuales: </strong>{{ $conciliacion->volumen_viajes_manuales_f }}  m<sup>3</sup>  ( {{ $conciliacion->porcentaje_volumen_viajes_manuales}} %)<br>
                 </div>
             </div>
         </div>
