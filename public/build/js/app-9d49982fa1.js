@@ -26482,6 +26482,19 @@ Vue.component('conciliaciones-edit', {
             }
         },
 
+        datepickerconciliacion: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: true,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
+            }
+        },
+
         fileinput: {
             inserted: function inserted(el) {
                 $(el).fileinput({
@@ -27040,6 +27053,55 @@ Vue.component('conciliaciones-edit', {
                             type: 'error',
                             title: '¡Error!',
                             text: App.errorsToString(_error7.responseText)
+                        });
+                        _this.fetchConciliacion();
+                    }
+                });
+            });
+        },
+        cambiar_fecha: function cambiar_fecha(event) {
+
+            var _this = this;
+            var url = App.host + '/conciliaciones/' + _this.conciliacion.id;
+            var fecha = event.currentTarget.value;
+
+            swal({
+                title: "¡Cambiar Fecha!",
+                text: "¿Desea cambiar la fecha de la conciliación?",
+                type: "info",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                confirmButtonText: "Si, Cambiar",
+                cancelButtonText: "No",
+                showLoaderOnConfirm: true
+            }, function () {
+                $.ajax({
+                    url: url,
+                    type: 'POST',
+                    data: {
+                        _method: 'PATCH',
+                        action: 'fecha',
+                        fecha: fecha
+                    },
+                    success: function success(response) {
+                        if (response.status_code = 200) {
+                            swal({
+                                type: 'success',
+                                title: '¡Hecho!',
+                                text: 'Fecha cambiada correctamente',
+                                showCancelButton: false,
+                                confirmButtonText: 'OK',
+                                closeOnConfirm: true
+                            }, function () {
+                                _this.conciliacion.fecha = response.fecha;
+                            });
+                        }
+                    },
+                    error: function error(_error8) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error8.responseText)
                         });
                         _this.fetchConciliacion();
                     }

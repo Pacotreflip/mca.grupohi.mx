@@ -501,4 +501,22 @@ class Conciliacion extends Model
             throw $e;
         }
     }
+
+    public function camviar_fecha($fecha) {
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            if ($this->estado != 0) {
+                throw new \Exception("No se puede cambiar la Fecha ya que el estado de la conciliación es " . $this->estado_str);
+            }
+
+            $this->fecha_conciliacion = $fecha;
+            $this->save();
+
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
+    }
 }

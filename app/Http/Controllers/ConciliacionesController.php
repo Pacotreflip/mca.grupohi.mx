@@ -141,6 +141,14 @@ class ConciliacionesController extends Controller
                     'status_code' => 200,
                     'folio' => $conciliacion->Folio
                 ]);
+            } else if($request->get('action') == 'fecha') {
+                dd($request->all());
+                $conciliacion->cambiar_fecha($request->get('fecha'));
+
+                return response()->json([
+                    'status_code' => 200,
+                    'fecha' => $conciliacion->fecha_conciliacion
+                ]);
             }
 
             return response()->json([
