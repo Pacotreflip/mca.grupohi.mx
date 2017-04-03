@@ -483,4 +483,22 @@ class Conciliacion extends Model
             return 0;
         }
     }
+
+    public function cambiar_folio($folio) {
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            if ($this->estado != 0) {
+                throw new \Exception("No se puede cambiar el Folio ya que el estado de la conciliación es " . $this->estado_str);
+            }
+
+            $this->Folio = $folio;
+            $this->save();
+
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
+    }
 }

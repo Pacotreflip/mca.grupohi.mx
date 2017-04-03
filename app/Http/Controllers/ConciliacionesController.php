@@ -134,6 +134,13 @@ class ConciliacionesController extends Controller
                 $conciliacion->cerrar();
             } else if ($request->get('action') == 'aprobar') {
                 $conciliacion->aprobar();
+            } else if($request->get('action') == 'folio') {
+                $conciliacion->cambiar_folio($request->get('folio'));
+
+                return response()->json([
+                    'status_code' => 200,
+                    'folio' => $conciliacion->Folio
+                ]);
             }
 
             return response()->json([

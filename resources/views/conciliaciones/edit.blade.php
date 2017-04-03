@@ -129,7 +129,7 @@
                                 </div>
                                 <div class="panel-body">
                                         <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
-                                        <strong>Folio: </strong>@{{ conciliacion.folio }}<br>
+                                        <strong>Folio: </strong>@{{ conciliacion.folio }} <a @click="cambiar_folio"><small>(Cambiar)</small></a><br>
                                         <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
                                         <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
                                         <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>

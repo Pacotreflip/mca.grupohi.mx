@@ -544,6 +544,62 @@ Vue.component('conciliaciones-edit', {
                 console.log('reabrir');
                 console.log(url);
             });
-        }
+        },
+
+        cambiar_folio: function () {
+
+            var _this = this;
+            swal({
+                    title: "¡Cambiar Folio!",
+                    text: "Folio Actual : " + _this.conciliacion.folio,
+                    type: "input",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    inputPlaceholder: "Nuevo Folio.",
+                    confirmButtonText: "Si, Cambiar",
+                    cancelButtonText: "No",
+                    showLoaderOnConfirm: true
+                },
+                function(inputValue){
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("¡Escriba el Nuevo Folio!");
+                        return false
+                    } if (! $.isNumeric(inputValue)) {
+                        swal.showInputError("¡Por favor introduzca sólo números!");
+                        return false;
+                    }
+                    $.ajax({
+                        url: App.host + '/conciliaciones/' + _this.conciliacion.id,
+                        type : 'POST',
+                        data : {
+                            _method : 'PATCH',
+                            folio : inputValue,
+                            action : 'folio',
+                        },
+                        success: function(response) {
+                            if(response.status_code = 200) {
+                                _this.conciliacion.folio = response.folio;
+                                swal({
+                                    type: 'success',
+                                    title: '¡Hecho!',
+                                    text: 'Folio cambiado correctamente',
+                                    showCancelButton: false,
+                                    confirmButtonText: 'OK',
+                                    closeOnConfirm: true
+                                });
+                            }
+                        },
+                        error: function (error) {
+                            swal({
+                                type: 'error',
+                                title: '¡Error!',
+                                text: App.errorsToString(error.responseText)
+                            });
+                            _this.fetchConciliacion();
+                        }
+                    });
+                });
+        },
     }
 });
