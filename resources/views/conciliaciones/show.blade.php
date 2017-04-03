@@ -36,7 +36,7 @@
                     DETALLES DE VIAJES MANUALES
                 </div>
                 <div class="panel-body">
-                    <strong>Importe de viajes manuales: </strong>$ {{ $conciliacion->importe_viajes_manuales_f . ' (' . $conciliacion->porcentaje_importe_viajes_manuales . '%)'  }} <br>
+                    <strong>Importe de viajes manuales: </strong>$ {{ $conciliacion->importe_viajes_manuales_f . ' (' . $conciliacion->porcentaje_importe_viajes_manuales . ' %)'  }} <br>
                     <strong>Volúmen de viajes manuales: </strong>{{ $conciliacion->volumen_viajes_manuales_f }}  m<sup>3</sup>  ( {{ $conciliacion->porcentaje_volumen_viajes_manuales}} %)<br>
                 </div>
             </div>
@@ -63,8 +63,9 @@
     <ul id="detail-tabs" class="nav nav-tabs">
         @if(count($conciliacion->conciliacionDetalles->where('estado', 1)))
         <li class="active tab-conciliacion"><a href="#details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
-        @elseif(count($conciliacion->conciliacionDetalles->where('estado', -1)))
-            @if(count($conciliacion->conciliacionDetalles->where('estado', -1)) && ! count($conciliacion->conciliacionDetalles->where('estado', 1)))
+        @endif
+        @if(count($conciliacion->conciliacionDetalles->where('estado', -1)))
+            @if(! count($conciliacion->conciliacionDetalles->where('estado', 1)))
                 <li class="active tab-conciliacion"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
             @else
                 <li class="tab-conciliacion"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
@@ -75,38 +76,83 @@
         @if(count($conciliacion->conciliacionDetalles->where('estado', 1)))
         <div id="details" class="fade in active tab-pane table-responsive">
             <table class="table table-striped table-bordered small">
+                @if($conciliacion->viajes_manuales()->count())
                 <thead>
                 <tr>
-                    <th>Fecha y Hora de Llegada</th>
-                    <th>Camión</th>
-                    <th>Cubicación</th>
-                    <th>Material</th>
-                    <th>Importe</th>
-                    <th>Ticket (Código)</th>
+                    <td colspan="6" style="text-align: center">
+                        <strong>VIAJES CARGADOS MANUALMENTE</strong>
+                    </td>
+                </tr>
+                <tr>
+                    <th style="text-align: center">Camión</th>
+                    <th style="text-align: center">Ticket (Código)</th>
+                    <th style="text-align: center">Fecha y Hora de Llegada</th>
+                    <th style="text-align: center">Material</th>
+                    <th style="text-align: center">Cubicación</th>
+                    <th style="text-align: center">Importe</th>
                 </tr>
                 </thead>
                 <tbody>
-                @foreach($conciliacion->conciliacionDetalles->where('estado', 1) as $detalle)
+                @foreach($conciliacion->viajes_manuales() as $viaje)
                     <tr>
-                        <td>{{ $detalle->viaje->FechaLlegada.' ('.$detalle->viaje->HoraLlegada.')' }}</td>
-                        <td>{{ $detalle->viaje->camion->Economico }}</td>
-                        <td style="text-align: right">{{ $detalle->viaje->CubicacionCamion }}</td>
-                        <td>{{ $detalle->viaje->material->Descripcion }}</td>
-                        <td style="text-align: right">{{ number_format($detalle->viaje->Importe, 2, '.', ',') }}</td>
-                        <td>{{ $detalle->viaje->code }}</td>
+                        <td>{{ $viaje->camion->Economico }}</td>
+                        <td>{{ $viaje->code }}</td>
+                        <td>{{ $viaje->FechaLlegada.' ('.$viaje->HoraLlegada.')' }}</td>
+                        <td>{{ $viaje->material->Descripcion }}</td>
+                        <td style="text-align: right">{{ $viaje->CubicacionCamion }} m<sup>3</sup></td>
+                        <td style="text-align: right">$ {{ number_format($viaje->Importe, 2, '.', ',') }}</td>
                     </tr>
                 @endforeach
-                @foreach($conciliacion->conciliacionDetalles->where('estado', 1) as $detalle)
                     <tr>
-                        <td>{{ $detalle->viaje->FechaLlegada.' ('.$detalle->viaje->HoraLlegada.')' }}</td>
-                        <td>{{ $detalle->viaje->camion->Economico }}</td>
-                        <td style="text-align: right">{{ $detalle->viaje->CubicacionCamion }}</td>
-                        <td>{{ $detalle->viaje->material->Descripcion }}</td>
-                        <td style="text-align: right">{{ number_format($detalle->viaje->Importe, 2, '.', ',') }}</td>
-                        <td>{{ $detalle->viaje->code }}</td>
+                        <td colspan="4">
+                            <strong>TOTAL VIAJES MANUALES</strong>
+                        </td>
+                        <td style="text-align: right"><strong>{{ $conciliacion->volumen_viajes_manuales_f }} m<sup>3</sup></strong></td>
+                        <td style="text-align: right"><strong>$ {{ $conciliacion->importe_viajes_manuales_f }}</strong></td>
                     </tr>
-                @endforeach
-                </tbody>
+                @endif
+
+                <!-- VIAJES MÓVILES -->
+                    @if($conciliacion->viajes_moviles()->count())
+                    <tr><td colspan="6"></td></tr>
+                    <tr>
+                        <th colspan="6" style="text-align: center">
+                            <strong>VIAJES CARGADOS DESDE APLICACIÓN MÓVIL</strong>
+                        </th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: center">Camión</th>
+                        <th style="text-align: center">Ticket (Código)</th>
+                        <th style="text-align: center">Fecha y Hora de Llegada</th>
+                        <th style="text-align: center">Material</th>
+                        <th style="text-align: center">Cubicación</th>
+                        <th style="text-align: center">Importe</th>
+                    </tr>
+                    @foreach($conciliacion->viajes_moviles() as $viaje)
+                        <tr>
+                            <td>{{ $viaje->camion->Economico }}</td>
+                            <td>{{ $viaje->code }}</td>
+                            <td>{{ $viaje->FechaLlegada.' ('.$viaje->HoraLlegada.')' }}</td>
+                            <td>{{ $viaje->material->Descripcion }}</td>
+                            <td style="text-align: right">{{ $viaje->CubicacionCamion }} m<sup>3</sup></td>
+                            <td style="text-align: right">$ {{ number_format($viaje->Importe, 2, '.', ',') }}</td>
+                        </tr>
+                    @endforeach
+                        <tr>
+                            <td colspan="4">
+                                <strong>TOTAL VIAJES MÓVILES</strong>
+                            </td>
+                            <td style="text-align: right"><strong>{{ $conciliacion->volumen_viajes_moviles_f }} m<sup>3</sup></strong></td>
+                            <td style="text-align: right"><strong>$ {{ $conciliacion->importe_viajes_moviles_f }}</strong></td>
+                        </tr>
+                    @endif
+                <tr><td colspan="6"></td> </tr>
+                <tr>
+                    <td colspan="4"><strong>TOTAL</strong></td>
+                    <td style="text-align: right"><strong>{{ $conciliacion->volumen_f }} m<sup>3</sup></strong></td>
+                    <td style="text-align: right"><strong>$ {{ $conciliacion->importe_f }}</strong></td>
+                </tr>
+            </tbody>
             </table>
         </div>
         @endif
@@ -118,26 +164,26 @@
             <table class="table table-striped table-bordered small">
                 <thead>
                 <tr>
-                    <th>Fecha y Hora de Llegada</th>
-                    <th>Camión</th>
-                    <th>Cubicación</th>
-                    <th>Material</th>
-                    <th>Importe</th>
-                    <th>Ticket (Código)</th>
-                    <th>Fecha Cancelación</th>
-                    <th>Persona que Canceló</th>
-                    <th>Motivo de Cancelación</th>
+                    <th style="text-align: center">Camión</th>
+                    <th style="text-align: center">Ticket (Código)</th>
+                    <th style="text-align: center">Fecha y Hora de Llegada</th>
+                    <th style="text-align: center">Material</th>
+                    <th style="text-align: center">Cubicación</th>
+                    <th style="text-align: center">Importe</th>
+                    <th style="text-align: center">Fecha Cancelación</th>
+                    <th style="text-align: center">Persona que Canceló</th>
+                    <th style="text-align: center">Motivo de Cancelación</th>
                 </tr>
                 </thead>
                 <tbody>
                 @foreach($conciliacion->conciliacionDetalles->where('estado', -1) as $detalle)
-                <tr v-for="detalle in cancelados">
-                    <td>{{ $detalle->viaje->FechaLlegada.' ('.$detalle->viaje->HoraLlegada.')' }}</td>
+                <tr>
                     <td>{{ $detalle->viaje->camion->Economico }}</td>
-                    <td style="text-align: right">{{ $detalle->viaje->CubicacionCamion }}</td>
-                    <td>{{ $detalle->viaje->material->Descripcion }}</td>
-                    <td style="text-align: right">{{ number_format($detalle->viaje->Importe, 2, '.', ',') }}</td>
                     <td>{{ $detalle->viaje->code }}</td>
+                    <td>{{ $detalle->viaje->FechaLlegada.' ('.$detalle->viaje->HoraLlegada.')' }}</td>
+                    <td>{{ $detalle->viaje->material->Descripcion }}</td>
+                    <td style="text-align: right">{{ $detalle->viaje->CubicacionCamion }} m<sup>3</sup></td>
+                    <td style="text-align: right">$ {{ number_format($detalle->viaje->Importe, 2, '.', ',') }}</td>
                     <td>{{ $detalle->cancelacion->timestamp_cancelacion }}</td>
                     <td>{{ App\User::find($detalle->cancelacion->idcancelo)->present()->nombreCompleto }}</td>
                     <td>{{ $detalle->cancelacion->motivo }}</td>
