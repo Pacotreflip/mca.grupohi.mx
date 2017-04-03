@@ -68,11 +68,63 @@ class Conciliacion extends Model
 			  ORDER BY materiales.Descripcion ASC;'));
     }
 
+    public function materiales_manuales() {
+        return DB::connection($this->connection)->select(DB::raw('
+            SELECT viajes.IdMaterial, materiales.Descripcion as material 
+              FROM (viajes viajes 
+                INNER JOIN materiales materiales
+                  ON (viajes.IdMaterial = materiales.IdMaterial))
+                RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
+				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
+			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
+			  AND(conciliacion_detalle.estado = 1)
+			  AND(viajes.Estatus = 20)
+			  GROUP BY materiales.Descripcion
+			  ORDER BY materiales.Descripcion ASC;'));
+    }
+
+    public function materiales_moviles() {
+        return DB::connection($this->connection)->select(DB::raw('
+            SELECT viajes.IdMaterial, materiales.Descripcion as material 
+              FROM (viajes viajes 
+                INNER JOIN materiales materiales
+                  ON (viajes.IdMaterial = materiales.IdMaterial))
+                RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
+				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
+			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
+			  AND(conciliacion_detalle.estado = 1)
+			  AND(viajes.Estatus = 0)
+			  GROUP BY materiales.Descripcion
+			  ORDER BY materiales.Descripcion ASC;'));
+    }
+
     public function viajes()
     {
         $viajes = new Collection();
         foreach ($this->conciliacionDetalles->where('estado', 1) as $cd) {
             $viajes->push($cd->viaje);
+        }
+        return $viajes;
+    }
+
+    public function viajes_manuales()
+    {
+        $viajes = new Collection();
+        foreach ($this->conciliacionDetalles->where('estado', 1) as $cd) {
+            if($cd->viaje->Estatus == 20) {
+                $viajes->push($cd->viaje);
+            }
+        }
+        return $viajes;
+    }
+
+    public function viajes_moviles()
+    {
+        $viajes = new Collection();
+        foreach ($this->conciliacionDetalles->where('estado', 1) as $cd) {
+            if($cd->viaje->Estatus == 0) {
+                $viajes->push($cd->viaje);
+            }
         }
         return $viajes;
     }
@@ -88,6 +140,38 @@ class Conciliacion extends Model
 				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
 			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
 			  AND(conciliacion_detalle.estado = 1)
+			  GROUP BY camiones.Economico
+			  ORDER BY camiones.Economico ASC;'));
+    }
+
+    public function camiones_moviles()
+    {
+        return DB::connection($this->connection)->select(DB::raw('
+            SELECT viajes.IdCamion, camiones.Economico as Economico 
+              FROM (viajes viajes 
+                INNER JOIN camiones camiones
+                  ON (viajes.IdCamion = camiones.IdCamion))
+                RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
+				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
+			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
+			  AND(conciliacion_detalle.estado = 1)
+			  AND(viajes.Estatus = 0)
+			  GROUP BY camiones.Economico
+			  ORDER BY camiones.Economico ASC;'));
+    }
+
+    public function camiones_manuales()
+    {
+        return DB::connection($this->connection)->select(DB::raw('
+            SELECT viajes.IdCamion, camiones.Economico as Economico 
+              FROM (viajes viajes 
+                INNER JOIN camiones camiones
+                  ON (viajes.IdCamion = camiones.IdCamion))
+                RIGHT OUTER JOIN conciliacion_detalle conciliacion_detalle
+				  ON (conciliacion_detalle.idviaje = viajes.IdViaje)
+			  WHERE (conciliacion_detalle.idconciliacion = ' . $this->idconciliacion . ') 
+			  AND(conciliacion_detalle.estado = 1)
+			  AND(viajes.Estatus = 20)
 			  GROUP BY camiones.Economico
 			  ORDER BY camiones.Economico ASC;'));
     }

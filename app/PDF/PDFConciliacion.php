@@ -333,13 +333,36 @@ class PDFConciliacion extends Rotation
         $this->MultiCell($this->WidthTotal, 0.5, utf8_decode($rutas), '', 1, '');
     }
 
-    function items()
-    {
+    function total() {
+        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
+        $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+        $this->SetFont('Arial', 'B', 6.5);
+        $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
+        $this->SetFills(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetTextColors(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+        $this->SetHeights(array(0.6));
+        $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
+        $this->SetRounds(array('', '', '', '', ''));
+        $this->SetRadius(array(0, 0, 0, 0, 0));
+        $this->encola = 'total';
+        $this->Row(array('', 'VIAJES', '', utf8_decode('VOLÚMEN'), utf8_decode('IMPORTE')));
+        $this->Row(array(utf8_decode('TOTAL'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
+        $this->encola = '';
+    }
 
-        foreach ($this->conciliacion->materiales() as $material) {
+    function items_moviles()
+    {
+        if($this->conciliacion->viajes_moviles()->count()) {
+            $this->SetFont('Arial', '', $this->txtTitleTam - 8);
+            $this->SetTextColor(0,0,0);
+            $this->Cell($this->WidthTotal, 1, utf8_decode('VIAJES CARGADOS DESDE APLICACIÓN MÓVIL'), 0, 1, 'C', 0);
+        }
+
+        foreach ($this->conciliacion->materiales_moviles() as $material) {
 
             $this->material = $material;
-            $numItems = count($this->conciliacion->viajes()->where('IdMaterial', $this->material->IdMaterial));
+            $numItems = count($this->conciliacion->viajes_moviles()->where('IdMaterial', $this->material->IdMaterial));
+
             $i = 1;
 
             $this->SetWidths(array($this->WidthTotal));
@@ -371,7 +394,7 @@ class PDFConciliacion extends Rotation
             $this->SetHeights(array(0.35));
             $this->SetAligns(array('L', 'L', 'L', 'L', 'C', 'R', 'R', 'R', 'R', 'R'));
 
-            foreach ($this->conciliacion->camiones() as $camion) {
+            foreach ($this->conciliacion->camiones_moviles() as $camion) {
                 foreach (DB::connection('sca')->select(DB::raw('SELECT
                     count(v.IdViaje) as NumViajes,
 				v.FechaLlegada,
@@ -393,6 +416,7 @@ class PDFConciliacion extends Rotation
                 AND v.IdCamion=' . $camion->IdCamion . '
                 AND v.idMaterial=' . $material->IdMaterial . '
                 AND c.estado=1' . " " . '
+                AND v.Estatus =0
 			GROUP BY 
 				v.FechaLlegada, 
 				v.CubicacionCamion,
@@ -440,6 +464,7 @@ class PDFConciliacion extends Rotation
 						and v.IdCamion=' . $camion->IdCamion . ' 
 						and v.IdMaterial=' . $material->IdMaterial . '
                         and c.estado=1' . " " . '
+                        and v.Estatus=0
 						GROUP BY v.IdCamion;'));
 
                 if ($subtotal_camion) {
@@ -481,7 +506,7 @@ class PDFConciliacion extends Rotation
 							c.idconciliacion=' . $this->conciliacion->idconciliacion . '
                         AND v.IdMaterial=' . $material->IdMaterial . '
                         AND c.estado=1' . " " . '
-								
+                        AND v.Estatus=0
 						GROUP BY 
 							c.idconciliacion,
 							v.IdMaterial;'))[0];
@@ -502,7 +527,7 @@ class PDFConciliacion extends Rotation
         }
 
         //Total
-        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
+        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND v.Estatus=0 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
         $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
         $this->SetFont('Arial', '', 6.5);
         $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
@@ -513,8 +538,200 @@ class PDFConciliacion extends Rotation
         $this->SetRounds(array('', '', '', '', ''));
         $this->SetRadius(array(0, 0, 0, 0, 0));
         $this->encola = 'total';
-        $this->Row(array('TOTAL', $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
+        $this->Row(array(utf8_decode('TOTAL VIAJES MÓVILES'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
         $this->encola = '';
+    }
+
+    function items_manuales()
+    {
+        if($this->conciliacion->viajes_manuales()->count()) {
+            $this->SetFont('Arial', '', $this->txtTitleTam - 8);
+            $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES CARGADOS MANUALMENTE'), 0, 1, 'C', 0);
+        }
+        foreach ($this->conciliacion->materiales_manuales() as $material) {
+            $this->material = $material;
+            $numItems = count($this->conciliacion->viajes_manuales()->where('IdMaterial', $this->material->IdMaterial));
+            $i = 1;
+
+            $this->SetWidths(array($this->WidthTotal));
+            $this->SetFont('Arial', '', 6);
+            $this->SetStyles(array('DF'));
+            $this->SetRounds(array('12'));
+            $this->SetRadius(array(0.2));
+            $this->SetFills(array('180,180,180'));
+            $this->SetTextColors(array('0,0,0'));
+            $this->SetHeights(array(0.6));
+            $this->SetAligns(array('L'));
+            $this->Row(array('MATERIAL : ' . utf8_decode($this->material->material)));
+
+            $this->SetFont('Arial', '', 5);
+            $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+            $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
+            $this->SetRounds(array('4', '', '', '', '', '', '', '', '', '3'));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetHeights(array(0.6));
+            $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+            $this->Row(array(utf8_decode('CAMIÓN'), 'FECHA', 'ORIGEN', 'DESTINO', 'TURNO', 'CUBIC.', 'VIAJES', 'DIST.', 'VOLUMEN', 'IMPORTE'));
+
+            $this->SetRounds(array('', '', '', '', '', '', '', '', '', ''));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetHeights(array(0.35));
+            $this->SetAligns(array('L', 'L', 'L', 'L', 'C', 'R', 'R', 'R', 'R', 'R'));
+
+            foreach ($this->conciliacion->camiones_manuales() as $camion) {
+                foreach (DB::connection('sca')->select(DB::raw('SELECT
+                    count(v.IdViaje) as NumViajes,
+				v.FechaLlegada,
+				v.IdMaterial,
+				v.IdOrigen,
+				v.IdTiro,
+				v.CubicacionCamion, 
+				v.Distancia as Distancia,
+                                sum(v.CubicacionCamion) as CubicacionCamionSum,
+				sum(v.VolumenPrimerKM) as Vol1KM,
+				sum(v.VolumenKMSubsecuentes) as VolSub,
+				sum(v.VolumenKMAdicionales) as VolAdic,
+				sum(v.ImportePrimerKM) as Imp1Km,
+				sum(v.ImporteKMSubsecuentes) as ImpSub,
+				sum(v.ImporteKMAdicionales) as ImpAdc,
+				sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje)
+			WHERE 
+				c.idconciliacion=' . $this->conciliacion->idconciliacion . '
+                AND v.IdCamion=' . $camion->IdCamion . '
+                AND v.idMaterial=' . $material->IdMaterial . '
+                AND c.estado=1' . " " . '
+                AND v.Estatus =20
+			GROUP BY 
+				v.FechaLlegada, 
+				v.CubicacionCamion,
+				v.IdMaterial,
+				v.IdOrigen,
+				v.IdTiro;')) as $key => $row) {
+
+                    $this->SetFont('Arial', '', 6);
+                    $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+                    //$this->SetRounds(array('', '', '', '', '', '', '', '', '', ''));
+                    //$this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+                    $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+                    $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+                    $this->SetHeights(array(0.35));
+                    $this->SetAligns(array('L', 'L', 'L', 'L', 'C', 'R', 'R', 'R', 'R', 'R'));
+
+                    $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+                    //for($cont = 0; $cont < 8; $cont++){
+                    $this->encola = "items";
+                    $this->Row(array($key == 0 ? $camion->Economico : '', $row->FechaLlegada, utf8_decode(Origen::find($row->IdOrigen)->Descripcion), utf8_decode(Tiro::find($row->IdTiro)->Descripcion), '1', $row->CubicacionCamion, $row->NumViajes, $row->Distancia, number_format(($row->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($row->Importe), 2, '.', ',')));
+                    //}
+                    $i++;
+                }
+
+                //Subtotal Por Camión
+                $subtotal_camion = DB::connection('sca')->select(DB::raw('SELECT 
+						count(v.IdViaje) as NumViajes, 
+						v.FechaLlegada, 
+						v.IdMaterial, 
+						v.IdOrigen, 
+						v.IdTiro, 
+						v.CubicacionCamion, 
+						v.Distancia as Distancia, 
+                                                sum(v.CubicacionCamion) as CubicacionCamionSum,
+						sum(v.VolumenPrimerKM) as Vol1KM, 
+						sum(v.VolumenKMSubsecuentes) as VolSub, 
+						sum(v.VolumenKMAdicionales) as VolAdic, 
+						sum(v.ImportePrimerKM) as Imp1Km, 
+						sum(v.ImporteKMSubsecuentes) as ImpSub, 
+						sum(v.ImporteKMAdicionales) as ImpAdc, 
+						sum(v.Importe) as Importe 
+					FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) 
+					WHERE 
+						c.idconciliacion=' . $this->conciliacion->idconciliacion . ' 
+						and v.IdCamion=' . $camion->IdCamion . ' 
+						and v.IdMaterial=' . $material->IdMaterial . '
+                        and c.estado=1' . " " . '
+                        and v.Estatus=20
+						GROUP BY v.IdCamion;'));
+
+                if ($subtotal_camion) {
+                    $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+                    $this->SetFills(array('221,221,221', '221,221,221', '221,221,221', '221,221,221', '221,221,221'));
+                    $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+                    $this->SetHeights(array(0.35));
+                    $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
+                    $this->encola = "subtotal_camion";
+                    $this->Row(array(utf8_decode('SUBTOTAL CAMIÓN'), $subtotal_camion[0]->NumViajes, '', number_format(($subtotal_camion[0]->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($subtotal_camion[0]->Importe), 2, '.', ',')));
+                    if($i < $numItems) {
+                        $this->encola = 'items';
+                    } else {
+                        $this->encola = '';
+                    }
+                }
+            }
+
+            //Subtotal Material
+            $subtotal_material = DB::connection('sca')->select(DB::raw('SELECT 
+							count(v.IdViaje) as NumViajes, 
+							v.FechaLlegada, 
+							v.IdMaterial, 
+							v.IdOrigen, 
+							v.IdTiro, 
+							v.CubicacionCamion, 
+							v.Distancia as Distancia, 
+                                                        sum(v.CubicacionCamion) as CubicacionCamionSum,
+							sum(v.VolumenPrimerKM) as Vol1KM, 
+							sum(v.VolumenKMSubsecuentes) as VolSub, 
+							sum(v.VolumenKMAdicionales) as VolAdic, 
+							sum(v.ImportePrimerKM) as Imp1Km, 
+							sum(v.ImporteKMSubsecuentes) as ImpSub, 
+							sum(v.ImporteKMAdicionales) as ImpAdc, 
+							sum(v.Importe) as Importe 
+						FROM 
+							conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) 
+						WHERE 
+							c.idconciliacion=' . $this->conciliacion->idconciliacion . '
+                        AND v.IdMaterial=' . $material->IdMaterial . '
+                        AND c.estado=1' . " " . '
+                        AND v.Estatus=20
+						GROUP BY 
+							c.idconciliacion,
+							v.IdMaterial;'))[0];
+
+            $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+            $this->SetFont('Arial', '', 6.5);
+            $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
+            $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetHeights(array(0.6));
+            $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
+            $this->SetRounds(array('4', '', '', '', '3'));
+            $this->SetRadius(array(0.2, 0, 0, 0, 0.2));
+            $this->encola = 'subtotal_material';
+            $this->Row(array('SUBTOTAL MATERIAL : ' . utf8_decode($this->material->material), $subtotal_material->NumViajes, '', number_format(($subtotal_material->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($subtotal_material->Importe), 2, '.', ',')));
+            $this->ln(0.25);
+            $this->encola = 'nuevo_material';
+        }
+
+        //Total
+        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND v.Estatus=20 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'));
+        if($total) {
+            $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
+            $this->SetFont('Arial', '', 6.5);
+            $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
+            $this->SetFills(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetTextColors(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetHeights(array(0.6));
+            $this->SetAligns(array('L', 'R', 'R', 'R', 'R'));
+            $this->SetRounds(array('', '', '', '', ''));
+            $this->SetRadius(array(0, 0, 0, 0, 0));
+            $this->encola = 'total';
+            $this->Row(array('TOTAL VIAJES MANUALES', $total[0]->NumViajes, '', number_format(($total[0]->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total[0]->Importe), 2, '.', ',')));
+            $this->encola = '';
+            $this->ln(1);
+        }
+
     }
 
     function Footer()
@@ -583,7 +800,10 @@ class PDFConciliacion extends Rotation
         $this->AliasNbPages();
         $this->AddPage();
         $this->SetAutoPageBreak(true,4.5);
-        $this->items();
+        $this->items_manuales();
+        $this->items_moviles();
+        $this->Ln(0.75);
+        $this->total();
         $this->Output('I', 'Conciliacion.pdf', 1);
         exit;
     }
