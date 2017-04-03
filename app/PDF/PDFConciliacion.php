@@ -355,7 +355,7 @@ class PDFConciliacion extends Rotation
         if($this->conciliacion->viajes_moviles()->count()) {
             $this->SetFont('Arial', '', $this->txtTitleTam - 8);
             $this->SetTextColor(0,0,0);
-            $this->Cell($this->WidthTotal, 1, utf8_decode('VIAJES CARGADOS DESDE APLICACIÓN MÓVIL'), 0, 1, 'C', 0);
+            $this->Cell($this->WidthTotal, 1, utf8_decode('VIAJES CARGADOS DESDE APLICACIÓN MÓVIL'), 0, 1, 'L', 0);
         }
 
         foreach ($this->conciliacion->materiales_moviles() as $material) {
@@ -546,7 +546,7 @@ class PDFConciliacion extends Rotation
     {
         if($this->conciliacion->viajes_manuales()->count()) {
             $this->SetFont('Arial', '', $this->txtTitleTam - 8);
-            $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES CARGADOS MANUALMENTE'), 0, 1, 'C', 0);
+            $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES CARGADOS MANUALMENTE'), 0, 1, 'L', 0);
         }
         foreach ($this->conciliacion->materiales_manuales() as $material) {
             $this->material = $material;
