@@ -538,7 +538,7 @@ class PDFConciliacion extends Rotation
         $this->SetRounds(array('', '', '', '', ''));
         $this->SetRadius(array(0, 0, 0, 0, 0));
         $this->encola = 'total';
-        $this->Row(array(utf8_decode('TOTAL VIAJES MÓVILES'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
+        $this->Row(array(utf8_decode('TOTAL VIAJES APLICACIÓN MÓVIL'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
         $this->encola = '';
     }
 
