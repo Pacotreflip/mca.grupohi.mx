@@ -174,69 +174,105 @@
                 </ul>
                 <div class="tab-content">
                     <div id="details" v-if="conciliados.length" class="fade in active tab-pane table-responsive">
-                        <table class="table table-striped table-bordered small">
+                        <table  class="table table-hover table-bordered small">
                             <thead>
-                            <tr>
-                                <th>Fecha y Hora de Llegada</th>
-                                <th>Camión</th>
-                                <th>Cubicación</th>
-                                <th>Material</th>
-                                <th>Importe</th>
-                                <th>Ticket (Código)</th>
-                                @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
-                                <th v-if="conciliacion.estado == 0" style="width: 30px"></th>
-                                @endif
-                            </tr>
+                                <tr v-if="manuales.length">
+                                    <td v-bind:colspan="conciliacion.estado == 0 ? '7' : '6'" style="text-align: center">
+                                        <strong>VIAJES CARGADOS MANUALMENTE</strong>
+                                    </td>
+                                </tr>
+                                <tr v-if="manuales.length">
+                                    <th style="text-align: center">Camión</th>
+                                    <th style="text-align: center">Ticket (Código)</th>
+                                    <th style="text-align: center">Fecha y Hora de Llegada</th>
+                                    <th style="text-align: center">Material</th>
+                                    <th style="text-align: center">Cubicación</th>
+                                    <th style="text-align: center">Importe</th>
+                                    @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
+                                    <th style="text-align: center" v-if="conciliacion.estado == 0" style="width: 30px"></th>
+                                    @endif
+                                </tr>
                             </thead>
                             <tbody>
-                            <tr v-if="manuales.length">
-                                <td colspan="7" style="text-align: center">
-                                    <strong>VIAJES CARGADOS MANUALMENTE</strong>
-                                </td>
-                            </tr>
-                            <tr v-for="detalle in manuales">
-                                <td>@{{ detalle.timestamp_llegada }}</td>
-                                <td>@{{ detalle.camion }}</td>
-                                <td style="text-align: right">
-                                    <span v-if="conciliacion.estado == 0">
-                                        <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }}</a>
-                                    </span>
-                                    <span v-else>
-                                        @{{ detalle.cubicacion_camion }}
-                                    </span>
-                                </td>
-                                <td>@{{ detalle.material }}</td>
-                                <td style="text-align: right">@{{ detalle.importe }}</td>
-                                <td>@{{ detalle.code }}</td>
+
+                                <tr v-for="detalle in manuales">
+                                    <td>@{{ detalle.camion }}</td>
+                                    <td>@{{ detalle.code }}</td>
+                                    <td>@{{ detalle.timestamp_llegada }}</td>
+                                    <td>@{{ detalle.material }}</td>
+                                    <td style="text-align: right">
+                                        <span v-if="conciliacion.estado == 0">
+                                            <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }} m<sup>3</sup></a>
+                                        </span>
+                                        <span v-else>
+                                            @{{ detalle.cubicacion_camion }} m<sup>3</sup>
+                                        </span>
+                                    </td>
+                                    <td style="text-align: right">$ @{{ detalle.importe }}</td>
+                                        @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
+                                        <td v-if="conciliacion.estado == 0">
+                                            <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
+                                        </td>
+                                        @endif
+                                </tr>
+                                <tr v-if="manuales.length">
+                                    <td colspan="4">
+                                        <strong>TOTAL VIAJES MANUALES</strong>
+                                    </td>
+                                    <td style="text-align: right"><strong>@{{ conciliacion.volumen_viajes_manuales }} m<sup>3</sup></strong></td>
+                                    <td style="text-align: right"><strong>$ @{{ conciliacion.importe_viajes_manuales }}</strong></td>
+                                </tr>
+
+                                <!-- VIAJES MOVILES-->
+                                <tr><td v-if="manuales.length" v-bind:colspan="conciliacion.estado == 0 ? '7' : '6'"></td></tr>
+                                <tr v-if="moviles.length">
+                                    <th v-bind:colspan="conciliacion.estado == 0 ? '7' : '6'" style="text-align: center">
+                                        <strong>VIAJES CARGADOS DESDE APLICACIÓN MÓVIL</strong>
+                                    </th>
+                                </tr>
+                                <tr v-if="moviles.length">
+                                    <th style="text-align: center">Camión</th>
+                                    <th style="text-align: center">Ticket (Código)</th>
+                                    <th style="text-align: center">Fecha y Hora de Llegada</th>
+                                    <th style="text-align: center">Material</th>
+                                    <th style="text-align: center">Cubicación</th>
+                                    <th style="text-align: center">Importe</th>
                                     @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
-                                    <td v-if="conciliacion.estado == 0">
-                                        <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
-                                    </td>
+                                        <th v-if="conciliacion.estado == 0" style="width: 30px"></th>
                                     @endif
-                            </tr>
-                            <tr v-if="moviles.length">
-                                <td colspan="7" style="text-align: center">
-                                    <strong>VIAJES CARGADOS DESDE APLICACIÓN MÓVIL</strong>
-                                </td>
-                            </tr>                            <tr v-for="detalle in moviles">
-                                <td>@{{ detalle.timestamp_llegada }}</td>
-                                <td>@{{ detalle.camion }}</td>
-                                <td style="text-align: right">
-                                    <span v-if="conciliacion.estado == 0">
-                                        <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }}</a>
-                                    </span>
-                                    <span v-else>
-                                        @{{ detalle.cubicacion_camion }}
-                                    </span>
-                                </td>
-                                <td>@{{ detalle.material }}</td>
-                                <td style="text-align: right">@{{ detalle.importe }}</td>
-                                <td>@{{ detalle.code }}</td>
-                                @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
-                                    <td v-if="conciliacion.estado == 0">
-                                        <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
+                                </tr>
+                                <tr v-for="detalle in moviles">
+                                    <td>@{{ detalle.camion }}</td>
+                                    <td>@{{ detalle.code }}</td>
+                                    <td>@{{ detalle.timestamp_llegada }}</td>
+                                    <td>@{{ detalle.material }}</td>
+                                    <td style="text-align: right">
+                                        <span v-if="conciliacion.estado == 0">
+                                            <a href="#" @click="cambiar_cubicacion(detalle)" style="text-decoration: underline">@{{ detalle.cubicacion_camion }} m<sup>3</sup></a>
+                                        </span>
+                                        <span v-else>
+                                            @{{ detalle.cubicacion_camion }} m<sup>3</sup>
+                                        </span>
                                     </td>
-                                @endif
+                                    <td style="text-align: right">$ @{{ detalle.importe }}</td>
+                                    @if(Auth::user()->can(['eliminar-viaje-conciliacion']))
+                                        <td v-if="conciliacion.estado == 0">
+                                            <button class="btn btn-xs btn-danger" @click="eliminar_detalle(detalle.idconciliacion_detalle)"><i class="fa fa-close"></i></button>
+                                        </td>
+                                    @endif
+                                </tr>
+                                <tr v-if="moviles.length">
+                                    <td colspan="4">
+                                        <strong>TOTAL VIAJES MÓVILES</strong>
+                                    </td>
+                                    <td style="text-align: right"><strong>@{{ conciliacion.volumen_viajes_moviles }} m<sup>3</sup></strong></td>
+                                    <td style="text-align: right"><strong>$ @{{ conciliacion.importe_viajes_moviles }}</strong></td>
+                                </tr>
+                                <tr><td v-bind:colspan="conciliacion.estado == 0 ? '7' : '6'"></td> </tr>
+                            <tr>
+                                <td colspan="4"><strong>TOTAL</strong></td>
+                                <td style="text-align: right"><strong>@{{ conciliacion.volumen }} m<sup>3</sup></strong></td>
+                                <td style="text-align: right"><strong>$ @{{ conciliacion.importe }}</strong></td>
                             </tr>
                             </tbody>
                         </table>
@@ -245,25 +281,25 @@
                         <table class="table table-striped table-bordered small">
                             <thead>
                             <tr>
-                                <th>Fecha y Hora de Llegada</th>
-                                <th>Camión</th>
-                                <th>Cubicación</th>
-                                <th>Material</th>
-                                <th>Importe</th>
-                                <th>Ticket (Código)</th>
-                                <th>Fecha Cancelación</th>
-                                <th>Persona que Canceló</th>
-                                <th>Motivo de Cancelación</th>
+                                <th style="text-align: center">Camión</th>
+                                <th style="text-align: center">Ticket (Código)</th>
+                                <th style="text-align: center">Fecha y Hora de Llegada</th>
+                                <th style="text-align: center">Material</th>
+                                <th style="text-align: center">Cubicación</th>
+                                <th style="text-align: center">Importe</th>
+                                <th style="text-align: center">Fecha Cancelación</th>
+                                <th style="text-align: center">Persona que Canceló</th>
+                                <th style="text-align: center">Motivo de Cancelación</th>
                             </tr>
                             </thead>
                             <tbody>
                             <tr v-for="detalle in cancelados">
-                                <td>@{{ detalle.timestamp_llegada }}</td>
                                 <td>@{{ detalle.camion }}</td>
-                                <td style="text-align: right">@{{ detalle.cubicacion_camion }}</td>
-                                <td>@{{ detalle.material }}</td>
-                                <td style="text-align: right">@{{ detalle.importe }}</td>
                                 <td>@{{ detalle.code }}</td>
+                                <td>@{{ detalle.timestamp_llegada }}</td>
+                                <td>@{{ detalle.material }}</td>
+                                <td style="text-align: right">@{{ detalle.cubicacion_camion }} m<sup>3</sup></td>
+                                <td style="text-align: right">$ @{{ detalle.importe }}</td>
                                 <td>@{{ detalle.cancelacion.timestamp }}</td>
                                 <td>@{{ detalle.cancelacion.cancelo }}</td>
                                 <td>@{{ detalle.cancelacion.motivo }}</td>

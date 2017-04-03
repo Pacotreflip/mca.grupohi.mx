@@ -458,6 +458,14 @@ class Conciliacion extends Model
         return number_format($this->importe_viajes_manuales, 2, ".", ",");
     }
 
+    public function getImporteViajesMovilesFAttribute() {
+        return number_format(($this->importe - $this->importe_viajes_manuales), 2, ".", ",");
+    }
+
+    public function getVolumenViajesMovilesFAttribute() {
+        return number_format(($this->volumen - $this->volumen_viajes_manuales), 2, ".", ",");
+    }
+
     public function getPorcentajeImporteViajesManualesAttribute()
     {
         if ($this->importe != 0) {

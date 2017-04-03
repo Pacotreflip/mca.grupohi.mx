@@ -39,7 +39,10 @@ class ConciliacionTransformer extends AbstractTransformer
             'importe_viajes_manuales' => $conciliacion->importe_viajes_manuales_f,
             'volumen_viajes_manuales' => $conciliacion->volumen_viajes_manuales_f,
             'porcentaje_importe_viajes_manuales' => $conciliacion->porcentaje_importe_viajes_manuales,
-            'porcentaje_volumen_viajes_manuales' => $conciliacion->porcentaje_volumen_viajes_manuales];
+            'porcentaje_volumen_viajes_manuales' => $conciliacion->porcentaje_volumen_viajes_manuales,
+            'importe_viajes_moviles' => $conciliacion->importe_viajes_moviles_f,
+            'volumen_viajes_moviles' => $conciliacion->volumen_viajes_moviles_f
+        ];
 
         return $output;
     }
