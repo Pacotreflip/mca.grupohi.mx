@@ -134,20 +134,19 @@ class ConciliacionesController extends Controller
                 $conciliacion->cerrar();
             } else if ($request->get('action') == 'aprobar') {
                 $conciliacion->aprobar();
-            } else if($request->get('action') == 'folio') {
-                $conciliacion->cambiar_folio($request->get('folio'));
+            } else if($request->get('action') == 'detalles') {
 
-                return response()->json([
-                    'status_code' => 200,
-                    'folio' => $conciliacion->Folio
+                $this->validate($request, [
+                    'fecha' => 'required|date_format:"Y-m-d"',
+                    'folio' => 'numeric'
                 ]);
-            } else if($request->get('action') == 'fecha') {
-                dd($request->all());
-                $conciliacion->cambiar_fecha($request->get('fecha'));
+
+                $conciliacion->cambiar_detalles($request->get('folio'), $request->get('fecha'));
 
                 return response()->json([
                     'status_code' => 200,
-                    'fecha' => $conciliacion->fecha_conciliacion
+                    'fecha' => $conciliacion->fecha_conciliacion,
+                    'folio' => $conciliacion->Folio
                 ]);
             }
 
