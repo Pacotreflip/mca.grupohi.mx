@@ -128,14 +128,16 @@
                                     DETALLES DE LA CONCILIACIÓN
                                 </div>
                                 <div class="panel-body">
-                                        <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
-                                        <strong>Folio: </strong>@{{ conciliacion.folio }} <a @click="cambiar_folio"><small>(Cambiar)</small></a><br>
-                                        <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
-                                        <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
-                                        <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
-                                        <strong>Número de Viajes: </strong>@{{ conciliados ? conciliados.length : 0 }}<br>
-                                        <strong>Volúmen: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
-                                        <strong>Importe: </strong>$ @{{ conciliacion.importe }}<br>
+                                    <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
+                                    <button v-if="conciliacion.estado == 0" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+                                    <strong>Folio: </strong>@{{ conciliacion.folio }}
+                                    <hr>
+                                    <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
+                                    <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
+                                    <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
+                                    <strong>Número de Viajes: </strong>@{{ conciliados ? conciliados.length : 0 }}<br>
+                                    <strong>Volúmen: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
+                                    <strong>Importe: </strong>$ @{{ conciliacion.importe }}<br>
                                 </div>
                             </div>
                         </div>
@@ -359,6 +361,42 @@
                     </div><!-- /.modal-content -->
                 </div><!-- /.modal-dialog -->
             </div><!-- /.modal -->
+
+            <!-- Modal Editar Fecha y Folio -->
+            <div class="modal fade" id="detalles_conciliacion" tabindex="-1" role="dialog">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title">EDITAR DETALLES DE LA CONCILIACIÓN</h4>
+                  </div>
+                  <div class="modal-body">
+                      {!! Form::open(['route' => ['conciliaciones.update', $conciliacion->idconciliacion], 'method' => 'patch', 'class' => 'form_update']) !!}
+                      <input type="hidden" value="detalles" name="action">
+                      <div class="row">
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label>Fecha:</label>
+                                  <input type="text" class="form-control input-sm" name="fecha" v-bind:value="conciliacion.fecha" v-datepickerconciliacion>
+                              </div>
+                          </div>
+                          <div class="col-md-6">
+                              <div class="form-group">
+                                  <label>Folio:</label>
+                                  <input type="number" step="0" class="form-control input-sm" name="folio" v-bind:value="conciliacion.folio">
+                              </div>
+                          </div>
+                      </div>
+                      {!! Form::close() !!}
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" @click="modificar_detalles">Guardar Cambios</button>
+                  </div>
+                </div><!-- /.modal-content -->
+              </div><!-- /.modal-dialog -->
+            </div><!-- /.modal -->
+
             </span>
         </section>
     </conciliaciones-edit>

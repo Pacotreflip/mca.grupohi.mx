@@ -11,7 +11,8 @@ Vue.component('conciliaciones-edit', {
                 'errors' : []
             },
             'guardando'  : false,
-            'fetching'   : false
+            'fetching'   : false,
+            'fecha_cambio' : ''
         }
     },
 
@@ -27,6 +28,19 @@ Vue.component('conciliaciones-edit', {
                     endDate: '0d'
                 });
                 $(el).val(App.timeStamp(1));
+            }
+        },
+
+        datepickerconciliacion: {
+            inserted: function(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: true,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d'
+                });
             }
         },
 
@@ -99,6 +113,7 @@ Vue.component('conciliaciones-edit', {
             this.$http.get(url).then(response => {
                 _this.conciliacion = response.body.conciliacion;
                 this.fetching = false;
+                _this.fecha_cambio = _this.conciliacion.fecha;
             }, error => {
                 this.fetching = false;
                 App.setErrorsOnForm(_this.form, error.body);
@@ -526,80 +541,44 @@ Vue.component('conciliaciones-edit', {
             });
         },
 
-        reabrir: function (e) {
-            e.preventDefault();
-
+        modificar_detalles: function () {
             var _this = this;
-            var url = $(e.target).attr('href');
+            var url = $('.form_update').attr('action');
+            var data = $('.form_update').serialize();
 
-            swal({
-                title: "Re-abrir conciliación?",
-                text: "¿Esta seguro de que desea Re-abrir la conciliación?",
-                type: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
-                confirmButtonColor: "#ec6c62"
-            }, function() {
-                console.log('reabrir');
-                console.log(url);
-            });
-        },
-
-        cambiar_folio: function () {
-
-            var _this = this;
-            swal({
-                    title: "¡Cambiar Folio!",
-                    text: "Folio Actual : " + _this.conciliacion.folio,
-                    type: "input",
-                    showCancelButton: true,
-                    closeOnConfirm: false,
-                    inputPlaceholder: "Nuevo Folio.",
-                    confirmButtonText: "Si, Cambiar",
-                    cancelButtonText: "No",
-                    showLoaderOnConfirm: true
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'POST',
+                beforeSend: function () {
+                    _this.guardando = true;
                 },
-                function(inputValue){
-                    if (inputValue === false) return false;
-                    if (inputValue === "") {
-                        swal.showInputError("¡Escriba el Nuevo Folio!");
-                        return false
-                    } if (! $.isNumeric(inputValue)) {
-                        swal.showInputError("¡Por favor introduzca sólo números!");
-                        return false;
+                success: function (response) {
+                    swal('¡Hecho!', 'Datos actualizados correctamente', 'success');
+                    _this.conciliacion.fecha = response.fecha;
+                    _this.conciliacion.folio = response.folio;
+                },
+                error:function(error) {
+                    if(error.status == 422) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseJSON)
+                        });
+                    } else if(error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                        _this.fetchConciliacion();
                     }
-                    $.ajax({
-                        url: App.host + '/conciliaciones/' + _this.conciliacion.id,
-                        type : 'POST',
-                        data : {
-                            _method : 'PATCH',
-                            folio : inputValue,
-                            action : 'folio',
-                        },
-                        success: function(response) {
-                            if(response.status_code = 200) {
-                                _this.conciliacion.folio = response.folio;
-                                swal({
-                                    type: 'success',
-                                    title: '¡Hecho!',
-                                    text: 'Folio cambiado correctamente',
-                                    showCancelButton: false,
-                                    confirmButtonText: 'OK',
-                                    closeOnConfirm: true
-                                });
-                            }
-                        },
-                        error: function (error) {
-                            swal({
-                                type: 'error',
-                                title: '¡Error!',
-                                text: App.errorsToString(error.responseText)
-                            });
-                            _this.fetchConciliacion();
-                        }
-                    });
-                });
-        },
+                },
+                complete: function () {
+                    _this.guardando = false;
+                    $('#detalles_conciliacion').modal('hide');
+                }
+            });
+        }
     }
 });
