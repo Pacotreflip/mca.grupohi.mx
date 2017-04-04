@@ -2,21 +2,23 @@ if($('#viajes_netos_autorizar').length) {
     var auth_config = {
         auto_filter: true,
         watermark: [
+            'Folio', 
             'Fecha Llegada', 
             'Hora Llegada', 
             'Camión', 
             'Tiro', 
             'Origen', 
-            'Material', 
+            'Material',
+            'Registro', 
             'Observaciones'
         ],
-        col_2: 'select',
         col_3: 'select',
         col_4: 'select',
         col_5: 'select',
-        col_7: 'none',
+        col_6: 'select',
         col_8: 'none',
         col_9: 'none',
+        col_10: 'none',
         base_path: App.tablefilterBasePath,      
         col_types: [
             'string',            

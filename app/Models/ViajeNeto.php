@@ -439,4 +439,17 @@ class ViajeNeto extends Model
         }
         return '';
     }
+    public function getRegistroAttribute(){
+        $creo = $this->Creo;
+        if(is_numeric($creo)){
+            $registro = $this->usuario_registro->present()->NombreCompleto;
+            return $registro;
+        }else{
+            
+            return $creo;
+        }
+    }
+    public function usuario_registro(){
+        return  $this->belongsTo(\Ghi\Core\Models\User::class, 'Creo');
+    }
 }
