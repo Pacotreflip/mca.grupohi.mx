@@ -1,5 +1,5 @@
 <h1>VIAJES</h1>
-{!! Breadcrumbs::render('viajes.netos.validar') !!}
+{!! Breadcrumbs::render('viajes_netos.validar') !!}
 <hr>
 <div id="app">
     <global-errors></global-errors>

@@ -113,7 +113,7 @@ Vue.component('viajes-manual', {
             this.guardando = true;
             this.form.errors = [];
             var data = $('.form_carga_manual').serialize();
-            var url = App.host + '/viajes/netos/manual';
+            var url = App.host + '/viajes_netos/manual';
 
             $.ajax({
                 url : url,

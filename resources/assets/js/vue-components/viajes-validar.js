@@ -119,7 +119,7 @@ Vue.component('viajes-validar', {
             this.form.errors = [];
 
             var data = $('.form_buscar').serialize();
-            var url = App.host + '/viajes/netos?action=validar&' + data;
+            var url = App.host + '/viajes_netos?action=validar&' + data;
 
             this.$http.get(url).then((response) => {
                 _this.cargando = false;
@@ -152,7 +152,7 @@ Vue.component('viajes-validar', {
                 _this.form.errors = [];
                 var data = _this.form.data;
 
-                _this.$http.post(App.host + '/viajes/netos', {'type' : 'validar', '_method' : 'PATCH', 'IdViajeNeto' : viaje.IdViajeNeto,  data}).then((response) => {
+                _this.$http.post(App.host + '/viajes_netos', {'type' : 'validar', '_method' : 'PATCH', 'IdViajeNeto' : viaje.IdViajeNeto,  data}).then((response) => {
                     swal({
                         type: response.body.tipo,
                         title: '',

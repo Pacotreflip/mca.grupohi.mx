@@ -72,11 +72,11 @@
 @stop
 @section('content')
 @if($action == 'autorizar')
-@include('viajes.netos.partials.autorizar')
+@include('viajes_netos.partials.autorizar')
 @elseif($action == 'validar')
-@include('viajes.netos.partials.validar')
+@include('viajes_netos.partials.validar')
 @elseif($action == 'modificar')
-@include('viajes.netos.partials.modificar')
+@include('viajes_netos.partials.modificar')
 @endif
 @stop
 @section('scripts')

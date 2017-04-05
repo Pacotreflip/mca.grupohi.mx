@@ -2,8 +2,8 @@
 
 @section('content')
 @if($action == 'completa')
-@include('viajes.netos.partials.carga_manual_completa')
+@include('viajes_netos.partials.carga_manual_completa')
 @elseif($action == 'manual')
-@include('viajes.netos.partials.carga_manual')
+@include('viajes_netos.partials.carga_manual')
 @endif
 @stop

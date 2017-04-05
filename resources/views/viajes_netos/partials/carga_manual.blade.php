@@ -1,12 +1,12 @@
 <h1>VIAJES</h1>
-{!! Breadcrumbs::render('viajes.netos.carga_manual') !!}
+{!! Breadcrumbs::render('viajes_netos.carga_manual') !!}
 <hr>
 <div id="app">
     <global-errors></global-errors>
     <viajes-manual inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
-            {!! Form::open(['route' => ['viajes.netos.manual.store'], 'class' => 'form_carga_manual']) !!}
+            {!! Form::open(['route' => ['viajes_netos.manual.store'], 'class' => 'form_carga_manual']) !!}
             <h3>INGRESAR VIAJES</h3>
             <div v-if="!cargando" class="table-responsive">
                 <table class="table table-hover table-bordered table-condensed">

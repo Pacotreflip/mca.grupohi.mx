@@ -118,7 +118,7 @@ class ViajesNetosController extends Controller
      */
     public function create(Request $request)
     {
-        return view('viajes.netos.create')
+        return view('viajes_netos.create')
                 ->withCamiones(Camion::orderBy('Economico', 'ASC')->lists('Economico', 'IdCamion'))
                 ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
                 ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdTiro'))
@@ -134,9 +134,9 @@ class ViajesNetosController extends Controller
      */
     public function store(Requests\CreateViajeNetoRequest $request)
     {
-        if($request->path() == 'viajes/netos/manual') {
+        if($request->path() == 'viajes_netos/manual') {
             return response()->json(ViajeNeto::cargaManual($request));
-        } else if($request->path() == 'viajes/netos/completa') {
+        } else if($request->path() == 'viajes_netos/completa') {
             return response()->json(ViajeNeto::cargaManualCompleta($request));
         }
     }
@@ -178,16 +178,16 @@ class ViajesNetosController extends Controller
     public function edit(Request $request)
     {
         if($request->get('action') == 'validar') {
-            return view('viajes.netos.edit')
+            return view('viajes_netos.edit')
                     ->withSindicatos(Sindicato::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdSindicato'))
                     ->withEmpresas(Empresa::orderBy('razonSocial', 'ASC')->lists('razonSocial', 'IdEmpresa'))
                     ->withAction('validar');
         } else if($request->get('action') == 'autorizar') {
-            return view('viajes.netos.edit')
+            return view('viajes_netos.edit')
                 ->withViajes(ViajeNeto::registradosManualmente()->get())
                 ->withAction('autorizar');
         } else if($request->get('action') == 'modificar') {
-            return view('viajes.netos.edit')
+            return view('viajes_netos.edit')
                     ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
                     ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdTiro'))
                     ->withCamiones(Camion::orderBy('Economico', 'ASC')->lists('Economico', 'IdCamion'))
@@ -209,7 +209,7 @@ class ViajesNetosController extends Controller
         if($request->get('type') == 'validar') {
             $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
             return response()->json($viaje_neto->validar($request));
-        } else if($request->path() == 'viajes/netos/autorizar') {
+        } else if($request->path() == 'viajes_netos/autorizar') {
             $msg = ViajeNeto::autorizar($request->get('Estatus'));
             Flash::success($msg);
             return redirect()->back();
