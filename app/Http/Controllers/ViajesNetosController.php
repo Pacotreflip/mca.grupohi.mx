@@ -124,31 +124,42 @@ class ViajesNetosController extends Controller
                     'Estatus' => 'numeric'
                 ]);
 
-                if($request->get('Tipo') == '0') {
-
-                } elseif ($request->get('Tipo') == '1') {
+                switch ($request->get('Estatus')) {
+                    case '0' :
+                        $viajes = ViajeNeto::MovilesAutorizados();
+                        break;
+                    case '1' :
+                        $viajes = ViajeNeto::MovilesValidados();
+                        break;
+                    case '20' :
+                        $viajes = ViajeNeto::ManualesAutorizados();
+                        break;
+                    case '21' :
+                        $viajes = ViajeNeto::ManualesDenegados();
+                        break;
+                    case '211' :
+                        $viajes = ViajeNeto::ManualesValidados();
+                        break;
+                    case '22' :
+                        $viajes = ViajeNeto::ManualesRechazados();
+                        break;
+                    case '29' :
+                        $viajes = ViajeNeto::RegistradosManualmente();
+                        break;
+                    case null :
+                        if ($request->get('Tipo') == '0') {
+                            $viajes = ViajeNeto::Manuales();
+                        } else {
+                            $viajes = ViajeNeto::Moviles();
+                        }
+                        break;
                 }
 
-                $estatus = $request->get('Estatus') == '211' ? ['21'] : (! $request->has('Estatus') ? ['0','1','20' , '21', '22', '29'] : [$request->get('Estatus')]);
+
+                $viajes_netos = $viajes->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')]) ->get();
 
 
-                $viajes = ViajeNeto::whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
-                    ->whereIn('Estatus', $estatus)
-                    ->get();
-
-                if ($estatus == '21') {
-                    if($request->get('Estatus') == '211') {
-                        $viajes = $viajes->filter(function ($viaje) {
-                            return count($viaje->viaje);
-                        });
-                    } else if ($request->get('Estatus') == '21') {
-                        $viajes = $viajes->filter(function ($viaje) {
-                            return ! count($viaje->viaje);
-                        });
-                    }
-                }
-
-                $data = ViajeNetoTransformer::transform($viajes);
+                $data = ViajeNetoTransformer::transform($viajes_netos);
             }
             return response()->json(['viajes_netos' => $data]);
         } else {

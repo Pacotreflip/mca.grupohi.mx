@@ -36950,6 +36950,7 @@ Vue.component('viajes-index', {
                 beforeSend: function beforeSend() {
                     _this.cargando = true;
                     _this.viajes_netos = [];
+                    _this.form.errors = [];
                 },
                 success: function success(response) {
                     if (!response.viajes_netos.length) {
@@ -36959,12 +36960,15 @@ Vue.component('viajes-index', {
                     }
                 },
                 error: function error(_error) {
-
-                    swal({
-                        type: 'error',
-                        title: '¡Error!',
-                        text: App.errorsToString(_error.status == 422 ? _error.responseJSON : _error.responseText)
-                    });
+                    if (_error.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error.responseJSON);
+                    } else if (_error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error.responseText)
+                        });
+                    }
                 },
                 complete: function complete() {
                     _this.cargando = false;

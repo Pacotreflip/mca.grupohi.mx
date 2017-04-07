@@ -94,6 +94,7 @@ Vue.component('viajes-index', {
                 beforeSend : function () {
                     _this.cargando = true;
                     _this.viajes_netos = [];
+                    _this.form.errors = [];
                 },
                 success:function (response) {
                     if(! response.viajes_netos.length) {
@@ -103,12 +104,15 @@ Vue.component('viajes-index', {
                     }
                 },
                 error: function (error) {
-
-                    swal({
-                        type: 'error',
-                        title: '¡Error!',
-                        text: App.errorsToString(error.status == 422 ? error.responseJSON : error.responseText)
-                    });
+                    if(error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if(error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
                 },
                 complete: function () {
                     _this.cargando = false;

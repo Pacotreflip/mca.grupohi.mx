@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
-    
+
     protected $connection = 'sca';
     protected $table = 'viajesnetos';
     protected $primaryKey = 'IdViajeNeto';
@@ -488,5 +488,43 @@ class ViajeNeto extends Model
     }
     public function usuario_registro(){
         return  $this->belongsTo(User::class, 'Creo');
+    }
+
+    public function scopeManualesAutorizados($query) {
+        return $query->where('Estatus', 20);
+    }
+
+    public function scopeManualesRechazados($query) {
+        return $query->where('Estatus', 22);
+    }
+
+    public function scopeManualesValidados($query) {
+        return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function($query){
+                $query->whereNotNull('viajes.IdViaje');
+            });
+    }
+
+    public function scopeManualesDenegados($query) {
+        return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function ($query) {
+                $query->whereNull('viajes.IdViaje');
+            });
+    }
+
+    public function scopeMovilesValidados($query) {
+        return $query->where('Estatus', 1);
+    }
+
+    public function scopeMovilesAutorizados($query) {
+        return $query->where('Estatus', 0);
+    }
+
+    public function scopeManuales($query){
+        return $query->whereIn('Estatus', [20,21,22,29]);
+    }
+
+    public function scopeMoviles($query) {
+        return $query->whereIn('Estatus', [0,1]);
     }
 }
