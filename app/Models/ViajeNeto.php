@@ -441,20 +441,20 @@ class ViajeNeto extends Model
         return '';
     }
 
-    public function getTipoAttrubite() {
-        return in_array($this->Estatus, ['0', '1'])? 'APLICACIÓN MÓVIL' : 'MANUAL';
+    public function getTipoAttribute() {
+        return in_array($this->Estatus, ['0', '1']) ? 'APLICACIÓN MÓVIL' : 'MANUAL';
     }
 
     public function getEstadoAttribute() {
         switch ($this->Estatus) {
             case 0 :
-                return "NO VALIDADO";
+                return "PENDIENTE DE VALIDAR";
                 break;
             case 1:
                 return "VALIDADO";
                 break;
             case 20:
-                return "AUTORIZADO (PENDIENTE DE VALIDAR)";
+                return "PENDIENTE DE VALIDAR";
                 break;
             case 21:
                 if(count($this->viaje)) {
@@ -501,14 +501,16 @@ class ViajeNeto extends Model
     public function scopeManualesValidados($query) {
         return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
             ->where(function($query){
-                $query->whereNotNull('viajes.IdViaje');
+                $query->whereNotNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 21);
             });
     }
 
     public function scopeManualesDenegados($query) {
         return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje');
+                $query->whereNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 21);
             });
     }
 
@@ -526,5 +528,9 @@ class ViajeNeto extends Model
 
     public function scopeMoviles($query) {
         return $query->whereIn('Estatus', [0,1]);
+    }
+
+    public function scopeAutorizados($query) {
+        return $query->whereIn('Estatus', [0,20]);
     }
 }

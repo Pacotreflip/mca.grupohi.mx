@@ -36879,7 +36879,7 @@ Vue.component('viajes-index', {
             'viajes_netos': [],
             'cargando': false,
             'form': {
-                'tipo': '',
+                'tipo': '2',
                 'errors': []
             }
         };

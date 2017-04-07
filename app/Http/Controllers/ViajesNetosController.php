@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transformers\ViajeNetoTransformer;
+use App\Models\Viaje;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -124,12 +125,21 @@ class ViajesNetosController extends Controller
                     'Estatus' => 'numeric'
                 ]);
 
+
                 switch ($request->get('Estatus')) {
                     case '0' :
-                        $viajes = ViajeNeto::MovilesAutorizados();
+                        if($request->get('Tipo') == '2') {
+                            $viajes = ViajeNeto::Autorizados();
+                        } else {
+                            $viajes = ViajeNeto::MovilesAutorizados();
+                        }
                         break;
                     case '1' :
-                        $viajes = ViajeNeto::MovilesValidados();
+                        if($request->get('Tipo') == '2') {
+                            $viajes = ViajeNeto::Validados();
+                        } else {
+                            $viajes = ViajeNeto::MovilesValidados();
+                        }
                         break;
                     case '20' :
                         $viajes = ViajeNeto::ManualesAutorizados();
@@ -149,15 +159,15 @@ class ViajesNetosController extends Controller
                     case null :
                         if ($request->get('Tipo') == '0') {
                             $viajes = ViajeNeto::Manuales();
-                        } else {
+                        } else if ($request->get('Tipo') == '1') {
                             $viajes = ViajeNeto::Moviles();
+                        } else if($request->get('Tipo') == '2') {
+                            $viajes = ViajeNeto::all();
                         }
                         break;
                 }
 
-
-                $viajes_netos = $viajes->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')]) ->get();
-
+                $viajes_netos = $viajes->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')]) ->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
             }

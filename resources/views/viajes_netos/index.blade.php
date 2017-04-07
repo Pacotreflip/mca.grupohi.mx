@@ -16,7 +16,7 @@
                     <div class="form-group">
                         <label>TIPO DE VIAJES (*)</label>
                         <select name="Tipo" v-model="form.tipo" class="form-control">
-                            <option value>--SELECCIONE--</option>
+                            <option value="2">TODOS</option>
                             <option value="0">CARGADOS MANUALMENTE</option>
                             <option value="1">CARGADOS DESDE APLICACIÓN MÓVIL</option>
                         </select>
@@ -26,14 +26,14 @@
                     <div class="form-group">
                         <label>ESTADO</label>
                         <select name="Estatus" class="form-control">
-                            <option value>--SELECCIONE--</option>
+                            <option value>TODOS</option>
                             <option v-if="form.tipo == '0'" value="29">CARGADOS</option>
-                            <option v-if="form.tipo == '0'" value="20">AUTORIZADOS (PENDIENTES DE VALIDAR)</option>
+                            <option v-if="form.tipo == '0'" value="20">PENDIENTES DE VALIDAR</option>
                             <option v-if="form.tipo == '0'"  value="22">NO AUTORIZADOS (RECHAZADOS)</option>
                             <option v-if="form.tipo == '0'"  value="211">VALIDADOS</option>
                             <option v-if="form.tipo == '0'"  value="21">NO VALIDADOS (DENEGADOS)</option>
-                            <option v-if="form.tipo == '1'"  value="1">VALIDADOS</option>
-                            <option v-if="form.tipo == '1'"  value="0">NO VALIDADOS</option>
+                            <option v-if="form.tipo != '0'"  value="1">VALIDADOS</option>
+                            <option v-if="form.tipo != '0'"  value="0">PENDIENTES DE VALIDAR</option>
                             </span>
                         </select>
                     </div>
