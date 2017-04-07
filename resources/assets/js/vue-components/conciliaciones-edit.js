@@ -5,7 +5,8 @@ Vue.component('conciliaciones-edit', {
             'resultados'   : [],
             'conciliacion' : {
                 'id'       : '',
-                'detalles' : []
+                'detalles' : [],
+                'detalles_nc' : []
             },
             'form' : {
                 'errors' : []
@@ -357,6 +358,7 @@ Vue.component('conciliaciones-edit', {
                 success: function (response) {
                     if(response.detalles != null) {
                         _this.conciliacion.detalles.push(response.detalles);
+                        
                         _this.guardando = false;
                         swal({
                             type: 'success',
@@ -383,7 +385,7 @@ Vue.component('conciliaciones-edit', {
                         _this.guardando = false;
                         swal({
                             type: 'warning',
-                            title: '¡Error!',
+                            title: '¡Error-2!',
                             text: response.msg,
                             showConfirmButton: true,
                             timer: 1500
@@ -394,13 +396,14 @@ Vue.component('conciliaciones-edit', {
                     }
                 },
                 error: function (error) {
+                    _this.conciliacion.detalles_nc.push(response.detalles_nc);
                     _this.guardando = false
                     $('.ticket').val('');
                     $('.ticket').focus();
                     
                     swal({
-                        type: 'error',
-                        title: '¡Error!',
+                        type: 'error-1',
+                        title: '¡Error-1!',
                         text: App.errorsToString(error.responseText)
                     });
                 }

@@ -171,11 +171,13 @@
                 <section id="detalles" v-if="conciliacion.detalles.length">
                 <hr>
                 <ul id="detail-tabs" class="nav nav-tabs">
-                    <li v-if="conciliados.length" class="active tab-conciliacion"><a href="#details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
-                    <li v-if="cancelados.length" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
+                    <li v-if="conciliados.length" class="active tab-conciliacion"><a href="#conciliados_details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
+                    <li v-if="cancelados.length" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#cancelados_details" data-toggle="tab">VIAJES CANCELADOS</a></li>
+                    <li v-if="conciliacion.detalles_nc.length" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
+
                 </ul>
                 <div class="tab-content">
-                    <div id="details" v-if="conciliados.length" class="fade in active tab-pane table-responsive">
+                    <div id="conciliados_details" v-if="conciliados.length" class="fade in active tab-pane table-responsive">
                         <table  class="table table-hover table-bordered small">
                             <thead>
                                 <tr v-if="manuales.length">
@@ -279,7 +281,7 @@
                             </tbody>
                         </table>
                     </div>
-                    <div id="cancelados" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + ' fade in tab-pane table-responsive'">
+                    <div id="cancelados_details" v-bind:class="(cancelados.length && !conciliados.length && !conciliacion.detalles_nc.length) ? 'active' : '' + ' fade in tab-pane table-responsive'">
                         <table class="table table-striped table-bordered small">
                             <thead>
                             <tr>
@@ -305,6 +307,24 @@
                                 <td>@{{ detalle.cancelacion.timestamp }}</td>
                                 <td>@{{ detalle.cancelacion.cancelo }}</td>
                                 <td>@{{ detalle.cancelacion.motivo }}</td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="no_conciliados_details" v-bind:class="(conciliacion.detalles_nc.length && !cancelados.length && !conciliados.length) ? 'active' : '' + ' fade in tab-pane table-responsive'">
+                        <table class="table table-striped table-bordered small">
+                            <thead>
+                            <tr>
+                                <th style="text-align: center">Ticket (Código)</th>
+                                <th style="text-align: center; width: 130px">Fecha y Hora Intento Conciliación </th>
+                                <th style="text-align: center">Motivo</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr v-for="detalle in conciliacion.detalles_nc">
+                                <td>@{{ detalle.Code }}</td>
+                                <td>@{{ detalle.timestamp }}</td>
+                                <td>@{{ detalle.detalle }}</td>
                             </tr>
                             </tbody>
                         </table>

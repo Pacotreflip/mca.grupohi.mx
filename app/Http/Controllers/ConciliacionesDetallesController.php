@@ -14,7 +14,8 @@ use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Models\Conciliacion\ConciliacionDetalleNoConciliado;
+use App\Models\Transformers\ConciliacionDetalleNoConciliadoTransformer;
 class ConciliacionesDetallesController extends Controller
 {
     function __construct() {
@@ -78,15 +79,34 @@ class ConciliacionesDetallesController extends Controller
                     $v = Viaje::where('code', '=', $request->get('code'))->first();
                     $viaje_neto = ViajeNeto::where('Code', '=', $request->get('code'))->first();
                     if (!$viaje_neto) {
-                        throw new \Exception("Viaje no encontrado");
+                        $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
+                            'idconciliacion' => $id,
+                            'idmotivo'=>3,
+                            'detalle'=>"Viaje no encontrado en sistema",
+                            'Code' => $request->get('code'),
+                        ]);
+                        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
+                        return response()->json([
+                            'detalles_nc'    => $detalles_nc,
+                        ]);
+                        throw new \Exception("Viaje no encontrado en sistema");
                     } else if ($viaje_neto && !$v) {
-                        throw new \Exception("Viaje no validado");
+                        $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
+                            'idconciliacion' => $id,
+                            'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                            'idmotivo'=>2,
+                            'detalle'=>"Viaje pendiente de proceso de validación.",
+                            'Code' => $viaje_neto->Code,
+                        ]);
+                        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
+                        throw new \Exception("Viaje pendiente de proceso de validación");
                     } else if ($viaje) {
                         if ($viaje->disponible()) {
                             $detalle = ConciliacionDetalle::create([
                                 'idconciliacion' => $id,
                                 'idviaje_neto' => $viaje_neto->IdViajeNeto,
                                 'idviaje' => $viaje->IdViaje,
+                                'Code' => $request->get('code'),
                                 'timestamp' => Carbon::now()->toDateTimeString(),
                                 'estado' => 1
                             ]);
@@ -99,6 +119,15 @@ class ConciliacionesDetallesController extends Controller
                             if($c->idconciliacion == $id) {
                                 throw new \Exception("Viaje conciliado en ésta conciliación");
                             } else {
+                                $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
+                                    'idconciliacion' => $id,
+                                    'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                                    'idviaje' => $viaje->IdViaje,
+                                    'idmotivo'=>5,
+                                    'detalle'=>"Viaje conciliado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "",
+                                    'Code' => $request->get('code'),
+                                ]);
+                                $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
                                 throw new \Exception("Viaje conciliado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "");
                             }
                         }
@@ -107,6 +136,15 @@ class ConciliacionesDetallesController extends Controller
                         if($c->idconciliacion == $id) {
                             throw new \Exception("Viaje conciliado en ésta conciliación");
                         } else {
+                            $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
+                                    'idconciliacion' => $id,
+                                    'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                                    'idviaje' => $v->IdViaje,
+                                    'idmotivo'=>5,
+                                    'detalle'=>"Viaje conciliado en conciliación: " . $c->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "",
+                                    'Code' => $request->get('code'),
+                                ]);
+                            $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
                             throw new \Exception("Viaje conciliado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato );
                         }
                     }
@@ -134,6 +172,7 @@ class ConciliacionesDetallesController extends Controller
                 'status_code' => 201,
                 'registros'   => $i,
                 'detalles'    => $detalles,
+                'detalles_nc'    => $detalles_nc,
                 'importe'     => $conciliacion->importe_f,
                 'volumen'     => $conciliacion->volumen_f,
                 'rango'       => $conciliacion->rango,

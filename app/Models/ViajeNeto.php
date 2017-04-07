@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Models\Conciliacion\ConciliacionDetalle;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -34,6 +34,10 @@ class ViajeNeto extends Model
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
+    
+    public function conciliacionDetalles() {
+        return $this->hasMany(ConciliacionDetalle::class, "idviaje_neto", "IdViajeNeto");
+    }
     
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');

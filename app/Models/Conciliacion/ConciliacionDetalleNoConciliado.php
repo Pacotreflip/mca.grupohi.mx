@@ -8,57 +8,46 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\ViajeNeto;
 
-class ConciliacionDetalle extends Model
+class ConciliacionDetalleNoConciliado extends Model
 {
     protected $connection = 'sca';
-    protected $table = 'conciliacion_detalle';
-    protected $primaryKey = 'idconciliacion_detalle';
+    protected $table = 'conciliacion_detalle_no_conciliado';
 
     public $timestamps = false;
 
     protected $fillable = [
         'idconciliacion',
+        'idmotivo',
         'idviaje_neto',
         'idviaje',
+        'Code',
+        'detalle',
         'timestamp',
-        'estado'
+        'estado',
     ];
 
     public function viaje() {
         return $this->belongsTo(Viaje::class, 'idviaje');
     }
-    
     public function viaje_neto() {
         return $this->belongsTo(ViajeNeto::class,'IdViajeNeto', 'idviaje_neto');
     }
-
     public function conciliacion() {
         return $this->belongsTo(Conciliacion::class, 'idconciliacion');
-    }
-
-    public function cancelacion() {
-        return $this->hasOne(ConciliacionDetalleCancelacion::class, 'idconciliaciondetalle');
     }
     
     public function save(array $options = array()) {
         if($this->conciliacion->estado != 0 && $this->estado != -1 ){
-            throw new \Exception("No se pueden relacionar más viajes a la conciliación.");
+            throw new \Exception("No se pueden relacionar más viajes fallidos a la conciliación.");
         }else{
-            $v = ViajeNeto::find($this->idviaje_neto);
-            $preexistente = $v->conciliacionDetalles->where('estado', 1)->first();
+            $preexistente = $this->conciliacion->ConciliacionDetallesNoConciliados->where('idmotivo',$this->idmotivo)
+                    ->where('Code', $this->Code)
+                    ->where('idviaje_neto', $this->idviaje_neto)
+                    ->first();
             if(!$preexistente){
-                $this->removerNoConciliados();
                 parent::save($options);
             }
         }
     }
-
-    private function removerNoConciliados(){
-        $v = ViajeNeto::find($this->idviaje_neto);
-        $no_concilados_coincidentes = $this->conciliacion->ConciliacionDetallesNoConciliados
-                ->where('Code',$v->Code);
-        foreach($no_concilados_coincidentes as $ncc){
-            $ncc->delete();
-        }
-    }
+   
 }
