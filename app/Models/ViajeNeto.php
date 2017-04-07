@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 use Illuminate\Support\Facades\DB;
@@ -439,9 +440,45 @@ class ViajeNeto extends Model
         }
         return '';
     }
+
+    public function getTipoAttrubite() {
+        return in_array($this->Estatus, ['0', '1'])? 'APLICACIÓN MÓVIL' : 'MANUAL';
+    }
+
+    public function getEstadoAttribute() {
+        switch ($this->Estatus) {
+            case 0 :
+                return "NO VALIDADO";
+                break;
+            case 1:
+                return "VALIDADO";
+                break;
+            case 20:
+                return "AUTORIZADO (PENDIENTE DE VALIDAR)";
+                break;
+            case 21:
+                if(count($this->viaje)) {
+                    return "VALIDADO";
+                } else {
+                    return "NO VALIDADO (DENEGADO)";
+                }
+                break;
+            case 22:
+                return "NO AUTORIZADO (RECHAZADO)";
+                break;
+            case 29 :
+                return "CARGADO";
+                break;
+            default: return "";
+        }
+    }
+
     public function getRegistroAttribute(){
         $creo = $this->Creo;
         if(is_numeric($creo)){
+            if(!count($this->usuario_registro)) {
+                dd($this->Creo);
+            }
             $registro = $this->usuario_registro->present()->NombreCompleto;
             return $registro;
         }else{
@@ -450,6 +487,6 @@ class ViajeNeto extends Model
         }
     }
     public function usuario_registro(){
-        return  $this->belongsTo(\Ghi\Core\Models\User::class, 'Creo');
+        return  $this->belongsTo(User::class, 'Creo');
     }
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transformers\ViajeNetoTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -14,8 +15,6 @@ use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\Camion;
 use App\Models\Material;
-use phpDocumentor\Reflection\Types\String_;
-
 
 class ViajesNetosController extends Controller
 {
@@ -37,18 +36,18 @@ class ViajesNetosController extends Controller
     public function index(Request $request)
     {
         if($request->ajax()) {
-            $data = [];
+            if ($request->get('action') == 'modificar') {
 
-            $this->validate($request, [
-                'FechaInicial' => 'required|date_format:"Y-m-d"',
-                'FechaFinal' => 'required|date_format:"Y-m-d"',
-            ]);
+                $data = [];
 
-            $viajes = ViajeNeto::porValidar()
-                ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
-                ->get();
+                $this->validate($request, [
+                    'FechaInicial' => 'required|date_format:"Y-m-d"',
+                    'FechaFinal' => 'required|date_format:"Y-m-d"',
+                ]);
 
-            if($request->get('action') == 'modificar') {
+                $viajes = ViajeNeto::porValidar()
+                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->get();
 
                 foreach ($viajes as $viaje) {
                     $data [] = [
@@ -67,15 +66,25 @@ class ViajesNetosController extends Controller
                         'ShowModal' => false,
                         'IdSindicato' => $viaje->IdSindicato,
                         'IdEmpresa' => $viaje->IdEmpresa,
-                        'Sindicato' => (String) $viaje->sindicato,
-                        'Empresa' => (String) $viaje->empresa
+                        'Sindicato' => (String)$viaje->sindicato,
+                        'Empresa' => (String)$viaje->empresa
                     ];
                 }
 
             } else if ($request->get('action') == 'validar') {
+                $data = [];
 
-                foreach($viajes as $viaje) {
-                    $data [] =  [
+                $this->validate($request, [
+                    'FechaInicial' => 'required|date_format:"Y-m-d"',
+                    'FechaFinal' => 'required|date_format:"Y-m-d"',
+                ]);
+
+                $viajes = ViajeNeto::porValidar()
+                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->get();
+
+                foreach ($viajes as $viaje) {
+                    $data [] = [
                         'Accion' => $viaje->valido() ? 1 : 0,
                         'IdViajeNeto' => $viaje->IdViajeNeto,
                         'FechaLlegada' => $viaje->FechaLlegada,
@@ -89,25 +98,61 @@ class ViajesNetosController extends Controller
                         'IdEmpresa' => isset($viaje->IdEmpresa) ? $viaje->IdEmpresa : '',
                         'Material' => $viaje->material->Descripcion,
                         'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
-                        'Ruta' => isset($viaje->ruta) ?  $viaje->ruta->present()->claveRuta : "",
+                        'Ruta' => isset($viaje->ruta) ? $viaje->ruta->present()->claveRuta : "",
                         'Code' => isset($viaje->Code) ? $viaje->Code : "",
                         'Valido' => $viaje->valido(),
                         'ShowModal' => false,
                         'Distancia' => $viaje->ruta ? $viaje->ruta->TotalKM : null,
                         'Estado' => $viaje->estado(),
                         'Importe' => $viaje->ruta ? $viaje->getImporte() : null,
-                        'PrimerKM' => ($viaje->material->tarifaMaterial)?$viaje->material->tarifaMaterial->PrimerKM:0,
-                        'KMSubsecuente' => ($viaje->material->tarifaMaterial)?$viaje->material->tarifaMaterial->KMSubsecuente:0,
-                        'KMAdicional' => ($viaje->material->tarifaMaterial)?$viaje->material->tarifaMaterial->KMAdicional:0,
+                        'PrimerKM' => ($viaje->material->tarifaMaterial) ? $viaje->material->tarifaMaterial->PrimerKM : 0,
+                        'KMSubsecuente' => ($viaje->material->tarifaMaterial) ? $viaje->material->tarifaMaterial->KMSubsecuente : 0,
+                        'KMAdicional' => ($viaje->material->tarifaMaterial) ? $viaje->material->tarifaMaterial->KMAdicional : 0,
                         'Tara' => 0,
                         'Bruto' => 0,
                         'TipoTarifa' => 'm',
                         'TipoFDA' => 'm',
                         'Imagenes' => $viaje->imagenes
-                    ]; 
+                    ];
                 }
+            } else if ($request->get('action') == 'index') {
+
+                $this->validate($request, [
+                    'FechaInicial' => 'required|date_format:"Y-m-d"',
+                    'FechaFinal' => 'required|date_format:"Y-m-d"',
+                    'Tipo' => 'required|numeric',
+                    'Estatus' => 'numeric'
+                ]);
+
+                if($request->get('Tipo') == '0') {
+
+                } elseif ($request->get('Tipo') == '1') {
+                }
+
+                $estatus = $request->get('Estatus') == '211' ? ['21'] : (! $request->has('Estatus') ? ['0','1','20' , '21', '22', '29'] : [$request->get('Estatus')]);
+
+
+                $viajes = ViajeNeto::whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->whereIn('Estatus', $estatus)
+                    ->get();
+
+                if ($estatus == '21') {
+                    if($request->get('Estatus') == '211') {
+                        $viajes = $viajes->filter(function ($viaje) {
+                            return count($viaje->viaje);
+                        });
+                    } else if ($request->get('Estatus') == '21') {
+                        $viajes = $viajes->filter(function ($viaje) {
+                            return ! count($viaje->viaje);
+                        });
+                    }
+                }
+
+                $data = ViajeNetoTransformer::transform($viajes);
             }
             return response()->json(['viajes_netos' => $data]);
+        } else {
+            return response()->view('viajes_netos.index');
         }
     }
 
