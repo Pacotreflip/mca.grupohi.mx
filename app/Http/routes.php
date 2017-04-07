@@ -95,6 +95,11 @@ Route::group(['prefix' => 'pdf'], function () {
         'as'   => 'pfd.conciliacion',
         'uses' => 'PDFController@conciliacion'
     ]);
+
+    Route::get('viajes_netos', [
+        'as' => 'pdf.viajes_netos',
+        'uses' => 'PDFController@viajes_netos'
+    ]);
 });
 
 //Reportes Routes

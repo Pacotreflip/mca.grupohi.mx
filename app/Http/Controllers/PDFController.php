@@ -46,6 +46,10 @@ class PDFController extends Controller
         //
     }
 
+    public function viajer_netos(Request $request) {
+
+    }
+
     /**
      * Store a newly created resource in storage.
      *
