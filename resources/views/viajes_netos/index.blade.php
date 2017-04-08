@@ -54,15 +54,18 @@
             </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit" @click="buscar">
-                    <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i></span>
-                    <span v-else>Buscar</span>
+                    <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
+                    <span v-else><i class="fa fa-search"></i> Buscar</span>
                 </button>
+                <button class="btn  btn-info" @click="pdf"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
             </div>
             <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
             {!! Form::close() !!}
             <hr>
             <section v-if="viajes_netos.length" id="results">
-                <h3>RESULTADOS DE LA BÚSQUEDA</h3>
+                <h3>
+                    RESULTADOS DE LA BÚSQUEDA
+                </h3>
                 <div class="table-responsive">
                     <table class="table table-hover table-bordered small">
                         <thead>

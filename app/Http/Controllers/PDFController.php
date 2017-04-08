@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conciliacion\Conciliacion;
+use App\Models\Transformers\ViajeNetoTransformer;
+use App\Models\ViajeNeto;
 use App\PDF\PDFConciliacion;
+use App\PDF\PDFViajesNetos;
 use Illuminate\Http\Request;
 
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 
 class PDFController extends Controller
@@ -36,18 +37,55 @@ class PDFController extends Controller
         $pdf->create();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
+    public function viajes_netos(Request $request) {
 
-    public function viajer_netos(Request $request) {
+        switch ($request->get('Estatus')) {
+            case '0' :
+                if($request->get('Tipo') == '2') {
+                    $viajes = ViajeNeto::Autorizados();
+                } else {
+                    $viajes = ViajeNeto::MovilesAutorizados();
+                }
+                break;
+            case '1' :
+                if($request->get('Tipo') == '2') {
+                    $viajes = ViajeNeto::Validados();
+                } else {
+                    $viajes = ViajeNeto::MovilesValidados();
+                }
+                break;
+            case '20' :
+                $viajes = ViajeNeto::ManualesAutorizados();
+                break;
+            case '21' :
+                $viajes = ViajeNeto::ManualesDenegados();
+                break;
+            case '211' :
+                $viajes = ViajeNeto::ManualesValidados();
+                break;
+            case '22' :
+                $viajes = ViajeNeto::ManualesRechazados();
+                break;
+            case '29' :
+                $viajes = ViajeNeto::RegistradosManualmente();
+                break;
+            default :
+                if ($request->get('Tipo') == '0') {
+                    $viajes = ViajeNeto::Manuales();
+                } else if ($request->get('Tipo') == '1') {
+                    $viajes = ViajeNeto::Moviles();
+                } else if($request->get('Tipo') == '2') {
+                    $viajes = ViajeNeto::whereNotNull('Estatus');
+                }
+                break;
+        }
 
+        $viajes_netos = $viajes->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')]) ->get();
+
+        $data = ViajeNetoTransformer::transform($viajes_netos);
+
+        $pdf = new PDFViajesNetos('p', 'cm', 'Letter', $data);
+        $pdf->create();
     }
 
     /**

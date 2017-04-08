@@ -125,7 +125,6 @@ class ViajesNetosController extends Controller
                     'Estatus' => 'numeric'
                 ]);
 
-
                 switch ($request->get('Estatus')) {
                     case '0' :
                         if($request->get('Tipo') == '2') {
@@ -156,13 +155,14 @@ class ViajesNetosController extends Controller
                     case '29' :
                         $viajes = ViajeNeto::RegistradosManualmente();
                         break;
-                    case null :
+                    default :
+
                         if ($request->get('Tipo') == '0') {
                             $viajes = ViajeNeto::Manuales();
                         } else if ($request->get('Tipo') == '1') {
                             $viajes = ViajeNeto::Moviles();
                         } else if($request->get('Tipo') == '2') {
-                            $viajes = ViajeNeto::all();
+                            $viajes = ViajeNeto::whereNotNull('IdViajeNeto');
                         }
                         break;
                 }

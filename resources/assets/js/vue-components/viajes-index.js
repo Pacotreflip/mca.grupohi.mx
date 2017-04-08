@@ -76,7 +76,7 @@ Vue.component('viajes-index', {
             }         
         }        
     },
-    
+
     methods: {
         buscar: function(e) {
             e.preventDefault(
@@ -118,6 +118,16 @@ Vue.component('viajes-index', {
                     _this.cargando = false;
                 }
             });
+        },
+
+        pdf: function(e) {
+            e.preventDefault();
+
+            var url = App.host + '/pdf/viajes_netos';
+
+            $('.form_buscar').attr('action', url);
+            $('.form_buscar').attr('method', 'GET');
+            $('.form_buscar').submit();
         }
     }
 });
