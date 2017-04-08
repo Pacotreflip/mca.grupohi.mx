@@ -75,88 +75,10 @@ class ConciliacionesDetallesController extends Controller
         if($request->ajax()) {
             if ($request->get('Tipo') == '1') {
                 try {
-                    $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
-                    $v = Viaje::where('code', '=', $request->get('code'))->first();
-                    $viaje_neto = ViajeNeto::where('Code', '=', $request->get('code'))->first();
-                    if (!$viaje_neto) {
-                        $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
-                            'idconciliacion' => $id,
-                            'idmotivo'=>3,
-                            'detalle'=>"Viaje no encontrado en sistema",
-                            'timestamp'=>Carbon::now()->toDateTimeString(),
-                            'Code' => $request->get('code'),
-                        ]);
-                        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
-                        return response()->json([
-                            'status_code' => 500,
-                            'detalles_nc'    => $detalles_nc,
-                        ]);
-                    } else if ($viaje_neto && !$v) {
-                        $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
-                            'idconciliacion' => $id,
-                            'idviaje_neto'=>$viaje_neto->IdViajeNeto,
-                            'idmotivo'=>2,
-                            'detalle'=>"Viaje pendiente de proceso de validación.",
-                            'timestamp'=>Carbon::now()->toDateTimeString(),
-                            'Code' => $viaje_neto->Code,
-                        ]);
-                        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
-                        return response()->json([
-                            'status_code' => 500,
-                            'detalles_nc'    => $detalles_nc,
-                        ]);
-                    } else if ($viaje) {
-                        if ($viaje->disponible()) {
-                            $detalle = ConciliacionDetalle::create([
-                                'idconciliacion' => $id,
-                                'idviaje_neto' => $viaje_neto->IdViajeNeto,
-                                'idviaje' => $viaje->IdViaje,
-                                'Code' => $request->get('code'),
-                                'timestamp' => Carbon::now()->toDateTimeString(),
-                                'estado' => 1
-                            ]);
-                            $i = 1;
-                            $detalles = ConciliacionDetalleTransformer::transform($detalle);
-                            $msg = "Viaje Conciliado";
-                        } else {
-                            $cd = $v->conciliacionDetalles->where('estado', 1)->first();
-                            $c = $cd->conciliacion;
-                            if($c->idconciliacion == $id) {
-                                throw new \Exception("Viaje conciliado en ésta conciliación");
-                            } else {
-                                $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
-                                    'idconciliacion' => $id,
-                                    'idviaje_neto'=>$viaje_neto->IdViajeNeto,
-                                    'idviaje' => $viaje->IdViaje,
-                                    'idmotivo'=>5,
-                                    'detalle'=>"Viaje conciliado en conciliación " . $cd->idconciliacion . " de la empresa" . $c->empresa . " y el sindicato " . $c->sindicato . "",
-                                    'Code' => $request->get('code'),
-                                ]);
-                                $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
-                                throw new \Exception("Viaje conciliado en conciliación " . $cd->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato . "");
-                            }
-                        }
-                    } else {
-                        $c = $v->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
-                        if($c->idconciliacion == $id) {
-                            throw new \Exception("Viaje conciliado en ésta conciliación");
-                        } else {
-                            $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
-                                    'idconciliacion' => $id,
-                                    'idviaje_neto'=>$viaje_neto->IdViajeNeto,
-                                    'idviaje' => $v->IdViaje,
-                                    'idmotivo'=>5,
-                                    'timestamp'=>Carbon::now()->toDateTimeString(),
-                                    'detalle'=>"Viaje conciliado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato . "",
-                                    'Code' => $request->get('code'),
-                                ]);
-                            $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform($detalle_no_conciliado);
-                            return response()->json([
-                                'status_code' => 500,
-                                'detalles_nc'    => $detalles_nc,
-                            ]);
-                        }
-                    }
+                    $conciliacion = Conciliacion::find($id);
+                    $output = (new Conciliaciones($conciliacion))->procesaCodigo($request->get('code'));
+                    return response()->json($output);
+
                 } catch (\Exception $e) {
                     throw $e;
                 }
