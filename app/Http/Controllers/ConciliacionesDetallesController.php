@@ -83,6 +83,11 @@ class ConciliacionesDetallesController extends Controller
                     throw $e;
                 }
             } else if ($request->get('Tipo') == '2') {
+                
+//                $conciliacion = Conciliacion::find($id);
+//                $output = (new Conciliaciones($conciliacion))->procesaArregloIds($request->get('idviaje', []));
+//                return response()->json($output);
+                
                 $ids = $request->get('idviaje', []);
                 $i = 0;
                 foreach ($ids as $key => $id_viaje) {
