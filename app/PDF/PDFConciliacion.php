@@ -760,18 +760,18 @@ class PDFConciliacion extends Rotation
             $this->SetFont('Arial', '', $this->txtTitleTam - 8);
             $this->SetTextColor(0,0,0);
             $this->Cell($this->WidthTotal, 1, utf8_decode('VIAJES NO CONCILIADOS'), 0, 1, 'L', 0);
+        
+            $this->SetWidths(array(0.030 * $this->WidthTotal,0.12 * $this->WidthTotal,0.12 * $this->WidthTotal,0.22 * $this->WidthTotal,0.51 * $this->WidthTotal));
+            $this->SetFont('Arial', '', 6);
+            $this->SetStyles(array('DF','DF','DF','DF','DF'));
+            $this->SetRounds(array('1','','','','2'));
+            $this->SetRadius(array(0.2,0,0,0,0.2));
+            $this->SetFills(array('180,180,180','180,180,180','180,180,180','180,180,180','180,180,180'));
+            $this->SetTextColors(array('0,0,0','0,0,0','0,0,0','0,0,0','0,0,0'));
+            $this->SetHeights(array(0.6));
+            $this->SetAligns(array('C','C','C','C','C'));
+            $this->Row(array('#',utf8_decode('Ticket (Código)'),'Fecha / Hora Intento',utf8_decode( 'Registró Intento'), 'Motivo'));
         }
-
-        $this->SetWidths(array(0.030 * $this->WidthTotal,0.12 * $this->WidthTotal,0.12 * $this->WidthTotal,0.22 * $this->WidthTotal,0.51 * $this->WidthTotal));
-        $this->SetFont('Arial', '', 6);
-        $this->SetStyles(array('DF','DF','DF','DF','DF'));
-        $this->SetRounds(array('1','','','','2'));
-        $this->SetRadius(array(0.2,0,0,0,0.2));
-        $this->SetFills(array('180,180,180','180,180,180','180,180,180','180,180,180','180,180,180'));
-        $this->SetTextColors(array('0,0,0','0,0,0','0,0,0','0,0,0','0,0,0'));
-        $this->SetHeights(array(0.6));
-        $this->SetAligns(array('C','C','C','C','C'));
-        $this->Row(array('#',utf8_decode('Ticket (Código)'),'Fecha / Hora Intento',utf8_decode( 'Registró Intento'), 'Motivo'));
         $is = 1;
         foreach ($this->conciliacion->conciliacionDetallesNoConciliados as $detalle) {
             
