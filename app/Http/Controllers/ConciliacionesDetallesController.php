@@ -67,10 +67,10 @@ class ConciliacionesDetallesController extends Controller
             $conciliacion = Conciliacion::find($id);
 
             $output = (new Conciliaciones($conciliacion))->cargarExcel($request->file('excel'));
-            return response()->json($output);
+            //return response()->json($output);
 
-           // Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['reg'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['no_reg'] . '</li><li><a href="' . route('conciliacion.info', $output['file']) . '"><strong>VER RESULTADO DE LA CARGA</strong></a></li>');
-           // return redirect()->back();
+            Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['registros'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['registros_nc'] . '</li>');
+            return redirect()->back();
         }
 
         if($request->ajax()) {
@@ -88,38 +88,8 @@ class ConciliacionesDetallesController extends Controller
                 $conciliacion = Conciliacion::find($id);
                 $output = (new Conciliaciones($conciliacion))->procesaArregloIds($request->get('idviaje', []));
                 return response()->json($output);
-                
-//                $ids = $request->get('idviaje', []);
-//                $i = 0;
-//                foreach ($ids as $key => $id_viaje) {
-//                    $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
-//                    ConciliacionDetalle::create([
-//                        'idconciliacion' => $id,
-//                        'idviaje_neto' => $v_ba->IdViajeNeto,
-//                        'idviaje'        => $id_viaje,
-//                        'timestamp'      => Carbon::now()->toDateTimeString(),
-//                        'estado'         => 1
-//                    ]);
-//                    $i++;
-//                }
-//                $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+
             }
-            $conciliacion = Conciliacion::find($id);
-            return response()->json([
-                'status_code' => 201,
-                'registros'   => $i,
-                'detalles'    => $detalles,
-                'detalles_nc'    => $detalles_nc,
-                'importe'     => $conciliacion->importe_f,
-                'volumen'     => $conciliacion->volumen_f,
-                'rango'       => $conciliacion->rango,
-                'importe_viajes_manuales' => $conciliacion->importe_viajes_manuales_f,
-                'volumen_viajes_manuales' => $conciliacion->volumen_viajes_manuales_f,
-                'volumen_viajes_moviles' => $conciliacion->volumen_viajes_moviles_f,
-                'importe_viajes_moviles' => $conciliacion->importe_viajes_moviles_f,
-                'porcentaje_importe_viajes_manuales' => $conciliacion->porcentaje_importe_viajes_manuales,
-                'porcentaje_volumen_viajes_manuales' => $conciliacion->porcentaje_volumen_viajes_manuales
-            ]);
         }
     }
 
