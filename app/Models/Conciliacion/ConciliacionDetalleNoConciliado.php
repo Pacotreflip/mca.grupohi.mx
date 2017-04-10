@@ -26,6 +26,8 @@ class ConciliacionDetalleNoConciliado extends Model
         'estado',
         'registro'
     ];
+    
+    protected $dates = ["timestamp"];
 
     public function viaje() {
         return $this->belongsTo(Viaje::class, 'idviaje');
