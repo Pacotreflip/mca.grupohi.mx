@@ -26,6 +26,7 @@ class ConciliacionDetalleTransformer extends AbstractTransformer
                 'cancelo' => User::find($detalle->cancelacion->idcancelo)->present()->nombreCompleto,
                 'timestamp' => $detalle->cancelacion->timestamp_cancelacion
             ],
+            'registro' => $detalle->usuario_registro,
             'estatus_viaje' => $detalle->viaje->Estatus,
         ];
 

@@ -17,7 +17,7 @@ class Viaje extends Model
     public $timestamps = false;
 
     public function conciliacionDetalles() {
-        return $this->hasMany(ConciliacionDetalle::class, 'IdViaje');
+        return $this->hasMany(ConciliacionDetalle::class, 'idviaje','IdViaje');
     }
 
     public function camion() {

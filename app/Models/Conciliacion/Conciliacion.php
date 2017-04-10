@@ -14,7 +14,7 @@ use Illuminate\Support\Facades\DB;
 use App\User;
 use Carbon\Carbon;
 use PhpParser\Node\Stmt\Return_;
-
+use App\Models\Conciliacion\ConciliacionDetalleNoConciliado;
 class Conciliacion extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -46,6 +46,11 @@ class Conciliacion extends Model
     public function conciliacionDetalles()
     {
         return $this->hasMany(ConciliacionDetalle::class, 'idconciliacion');
+    }
+    
+    public function conciliacionDetallesNoConciliados()
+    {
+        return $this->hasMany(ConciliacionDetalleNoConciliado::class, 'idconciliacion');
     }
 
     public function sindicato()

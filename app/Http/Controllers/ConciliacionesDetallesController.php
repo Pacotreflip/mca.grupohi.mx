@@ -14,7 +14,8 @@ use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 use Illuminate\Support\Facades\DB;
 use Maatwebsite\Excel\Facades\Excel;
-
+use App\Models\Conciliacion\ConciliacionDetalleNoConciliado;
+use App\Models\Transformers\ConciliacionDetalleNoConciliadoTransformer;
 class ConciliacionesDetallesController extends Controller
 {
     function __construct() {
@@ -66,84 +67,29 @@ class ConciliacionesDetallesController extends Controller
             $conciliacion = Conciliacion::find($id);
 
             $output = (new Conciliaciones($conciliacion))->cargarExcel($request->file('excel'));
+            //return response()->json($output);
 
-            Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['reg'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['no_reg'] . '</li><li><a href="' . route('conciliacion.info', $output['file']) . '"><strong>VER RESULTADO DE LA CARGA</strong></a></li>');
+            Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['registros'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['registros_nc'] . '</li>');
             return redirect()->back();
         }
 
         if($request->ajax()) {
             if ($request->get('Tipo') == '1') {
                 try {
-                    $viaje = Viaje::porConciliar()->where('code', '=', $request->get('code'))->first();
-                    $v = Viaje::where('code', '=', $request->get('code'))->first();
-                    $viaje_neto = ViajeNeto::where('Code', '=', $request->get('code'))->first();
-                    if (!$viaje_neto) {
-                        throw new \Exception("Viaje no encontrado");
-                    } else if ($viaje_neto && !$v) {
-                        throw new \Exception("Viaje no validado");
-                    } else if ($viaje) {
-                        if ($viaje->disponible()) {
-                            $detalle = ConciliacionDetalle::create([
-                                'idconciliacion' => $id,
-                                'idviaje_neto' => $viaje_neto->IdViajeNeto,
-                                'idviaje' => $viaje->IdViaje,
-                                'timestamp' => Carbon::now()->toDateTimeString(),
-                                'estado' => 1
-                            ]);
-                            $i = 1;
-                            $detalles = ConciliacionDetalleTransformer::transform($detalle);
-                            $msg = "Viaje Conciliado";
-                        } else {
-                            $cd = $v->conciliacionDetalles->where('estado', 1)->first();
-                            $c = $cd->conciliacion;
-                            if($c->idconciliacion == $id) {
-                                throw new \Exception("Viaje conciliado en ésta conciliación");
-                            } else {
-                                throw new \Exception("Viaje conciliado en conciliación: " . $cd->idconciliacion . " de la empresa: " . $c->empresa . " y el sindicato: " . $c->sindicato . "");
-                            }
-                        }
-                    } else {
-                        $c = $v->conciliacionDetalles->where('estado', 1)->first()->conciliacion;
-                        if($c->idconciliacion == $id) {
-                            throw new \Exception("Viaje conciliado en ésta conciliación");
-                        } else {
-                            throw new \Exception("Viaje conciliado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato );
-                        }
-                    }
+                    $conciliacion = Conciliacion::find($id);
+                    $output = (new Conciliaciones($conciliacion))->procesaCodigo($request->get('code'));
+                    return response()->json($output);
+
                 } catch (\Exception $e) {
                     throw $e;
                 }
             } else if ($request->get('Tipo') == '2') {
-                $ids = $request->get('idviaje', []);
-                $i = 0;
-                foreach ($ids as $key => $id_viaje) {
-                    $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
-                    ConciliacionDetalle::create([
-                        'idconciliacion' => $id,
-                        'idviaje_neto' => $v_ba->IdViajeNeto,
-                        'idviaje'        => $id_viaje,
-                        'timestamp'      => Carbon::now()->toDateTimeString(),
-                        'estado'         => 1
-                    ]);
-                    $i++;
-                }
-                $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+                
+                $conciliacion = Conciliacion::find($id);
+                $output = (new Conciliaciones($conciliacion))->procesaArregloIds($request->get('idviaje', []));
+                return response()->json($output);
+
             }
-            $conciliacion = Conciliacion::find($id);
-            return response()->json([
-                'status_code' => 201,
-                'registros'   => $i,
-                'detalles'    => $detalles,
-                'importe'     => $conciliacion->importe_f,
-                'volumen'     => $conciliacion->volumen_f,
-                'rango'       => $conciliacion->rango,
-                'importe_viajes_manuales' => $conciliacion->importe_viajes_manuales_f,
-                'volumen_viajes_manuales' => $conciliacion->volumen_viajes_manuales_f,
-                'volumen_viajes_moviles' => $conciliacion->volumen_viajes_moviles_f,
-                'importe_viajes_moviles' => $conciliacion->importe_viajes_moviles_f,
-                'porcentaje_importe_viajes_manuales' => $conciliacion->porcentaje_importe_viajes_manuales,
-                'porcentaje_volumen_viajes_manuales' => $conciliacion->porcentaje_volumen_viajes_manuales
-            ]);
         }
     }
 

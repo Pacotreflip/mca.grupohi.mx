@@ -63,6 +63,9 @@
     <ul id="detail-tabs" class="nav nav-tabs">
         @if(count($conciliacion->conciliacionDetalles->where('estado', 1)))
         <li class="active tab-conciliacion"><a href="#details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
+        @if(count($conciliacion->conciliacionDetallesNoConciliados))
+        <li class="tab-conciliacion"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
+        @endif
         @endif
         @if(count($conciliacion->conciliacionDetalles->where('estado', -1)))
             @if(! count($conciliacion->conciliacionDetalles->where('estado', 1)))
@@ -70,6 +73,9 @@
             @else
                 <li class="tab-conciliacion"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
             @endif
+                @if(count($conciliacion->conciliacionDetallesNoConciliados))
+                <li class="tab-conciliacion"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
+                @endif
         @endif
     </ul>
     <div class="tab-content">
@@ -86,6 +92,7 @@
                 <tr>
                     <th style="text-align: center">Camión</th>
                     <th style="text-align: center">Ticket (Código)</th>
+                    <th style="text-align: center">Registró</th>
                     <th style="text-align: center">Fecha y Hora de Llegada</th>
                     <th style="text-align: center">Material</th>
                     <th style="text-align: center">Cubicación</th>
@@ -97,6 +104,7 @@
                     <tr>
                         <td>{{ $viaje->camion->Economico }}</td>
                         <td>{{ $viaje->code }}</td>
+                        <td>{{ $viaje->usuario_registro }}</td>
                         <td>{{ $viaje->FechaLlegada.' ('.$viaje->HoraLlegada.')' }}</td>
                         <td>{{ $viaje->material->Descripcion }}</td>
                         <td style="text-align: right">{{ $viaje->CubicacionCamion }} m<sup>3</sup></td>
@@ -104,7 +112,7 @@
                     </tr>
                 @endforeach
                     <tr>
-                        <td colspan="4">
+                        <td colspan="5">
                             <strong>TOTAL VIAJES MANUALES</strong>
                         </td>
                         <td style="text-align: right"><strong>{{ $conciliacion->volumen_viajes_manuales_f }} m<sup>3</sup></strong></td>
@@ -114,15 +122,16 @@
 
                 <!-- VIAJES MÓVILES -->
                     @if($conciliacion->viajes_moviles()->count())
-                    <tr><td colspan="6"></td></tr>
+                    <tr><td colspan="7"></td></tr>
                     <tr>
-                        <th colspan="6" style="text-align: center">
+                        <th colspan="7" style="text-align: center">
                             <strong>VIAJES CARGADOS DESDE APLICACIÓN MÓVIL</strong>
                         </th>
                     </tr>
                     <tr>
                         <th style="text-align: center">Camión</th>
                         <th style="text-align: center">Ticket (Código)</th>
+                        <th style="text-align: center">Registró</th>
                         <th style="text-align: center">Fecha y Hora de Llegada</th>
                         <th style="text-align: center">Material</th>
                         <th style="text-align: center">Cubicación</th>
@@ -132,6 +141,7 @@
                         <tr>
                             <td>{{ $viaje->camion->Economico }}</td>
                             <td>{{ $viaje->code }}</td>
+                            <td>{{ $viaje->usuario_registro }}</td>
                             <td>{{ $viaje->FechaLlegada.' ('.$viaje->HoraLlegada.')' }}</td>
                             <td>{{ $viaje->material->Descripcion }}</td>
                             <td style="text-align: right">{{ $viaje->CubicacionCamion }} m<sup>3</sup></td>
@@ -139,16 +149,16 @@
                         </tr>
                     @endforeach
                         <tr>
-                            <td colspan="4">
+                            <td colspan="5">
                                 <strong>TOTAL VIAJES MÓVILES</strong>
                             </td>
                             <td style="text-align: right"><strong>{{ $conciliacion->volumen_viajes_moviles_f }} m<sup>3</sup></strong></td>
                             <td style="text-align: right"><strong>$ {{ $conciliacion->importe_viajes_moviles_f }}</strong></td>
                         </tr>
                     @endif
-                <tr><td colspan="6"></td> </tr>
+                <tr><td colspan="7"></td> </tr>
                 <tr>
-                    <td colspan="4"><strong>TOTAL</strong></td>
+                    <td colspan="5"><strong>TOTAL</strong></td>
                     <td style="text-align: right"><strong>{{ $conciliacion->volumen_f }} m<sup>3</sup></strong></td>
                     <td style="text-align: right"><strong>$ {{ $conciliacion->importe_f }}</strong></td>
                 </tr>
@@ -192,6 +202,30 @@
                 </tbody>
             </table>
         </div>
+        
+        <div id="no_conciliados_details" class="fade in tab-pane table-responsive">
+        <table class="table table-striped table-bordered small">
+            <thead>
+            <tr>
+                <th style="text-align: center">Ticket (Código)</th>
+                <th style="text-align: center">Registro Intento</th>
+                <th style="text-align: center; width: 130px">Fecha y Hora Intento Conciliación </th>
+                <th style="text-align: center">Motivo</th>
+            </tr>
+            </thead>
+            <tbody>
+            @foreach($conciliacion->conciliacionDetallesNoConciliados as $detalle)
+            <tr >
+                <td>{{ $detalle->Code }}</td>
+                <td>{{ $detalle->usuario_registro }}</td>
+                <td>{{ $detalle->timestamp }}</td>
+                <td>{{ $detalle->detalle }}</td>
+            </tr>
+            @endforeach
+            </tbody>
+        </table>
+        </div>
+        
     </div>
 </section>
 @endif

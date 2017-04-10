@@ -5,7 +5,8 @@ Vue.component('conciliaciones-edit', {
             'resultados'   : [],
             'conciliacion' : {
                 'id'       : '',
-                'detalles' : []
+                'detalles' : [],
+                'detalles_nc' : []
             },
             'form' : {
                 'errors' : []
@@ -355,42 +356,56 @@ Vue.component('conciliaciones-edit', {
                 data : data,
                 type : 'POST',
                 success: function (response) {
-                    if(response.detalles != null) {
-                        _this.conciliacion.detalles.push(response.detalles);
-                        _this.guardando = false;
-                        swal({
-                            type: 'success',
-                            title: '¡Viaje Conciliado Correctamente!',
-                            text: response.registros + ' Viajes conciliados',
-                            showConfirmButton: false,
-                            timer: 500
-                        });
-                        _this.conciliacion.importe = response.importe;
-                        _this.conciliacion.volumen = response.volumen;
-                        _this.conciliacion.num_viajes += 1;
-                        _this.conciliacion.rango = response.rango;
-                        _this.conciliacion.importe_viajes_manuales = response.importe_viajes_manuales;
-                        _this.conciliacion.volumen_viajes_manuales = response.volumen_viajes_manuales;
-                        _this.conciliacion.porcentaje_importe_viajes_manuales = response.porcentaje_importe_viajes_manuales;
-                        _this.conciliacion.porcentaje_volumen_viajes_manuales = response.porcentaje_volumen_viajes_manuales;
-                        _this.conciliacion.volumen_viajes_moviles = response.volumen_viajes_moviles;
-                        _this.conciliacion.importe_viajes_moviles = response.importe_viajes_moviles;
+                    if(response.status_code == 201){
+                        if(response.detalles != null) {
+                            _this.conciliacion.detalles.push(response.detalles);
 
+                            _this.guardando = false;
+                            swal({
+                                type: 'success',
+                                title: '¡Viaje Conciliado Correctamente!',
+                                text: response.registros + ' Viajes conciliados',
+                                showConfirmButton: false,
+                                timer: 500
+                            });
+                            _this.conciliacion.importe = response.importe;
+                            _this.conciliacion.volumen = response.volumen;
+                            _this.conciliacion.num_viajes += 1;
+                            _this.conciliacion.rango = response.rango;
+                            _this.conciliacion.importe_viajes_manuales = response.importe_viajes_manuales;
+                            _this.conciliacion.volumen_viajes_manuales = response.volumen_viajes_manuales;
+                            _this.conciliacion.porcentaje_importe_viajes_manuales = response.porcentaje_importe_viajes_manuales;
+                            _this.conciliacion.porcentaje_volumen_viajes_manuales = response.porcentaje_volumen_viajes_manuales;
+                            _this.conciliacion.volumen_viajes_moviles = response.volumen_viajes_moviles;
+                            _this.conciliacion.importe_viajes_moviles = response.importe_viajes_moviles;
+
+                            $('.ticket').val('');
+                            $('.ticket').focus();
+
+                        } else {
+                            _this.guardando = false;
+                            swal({
+                                type: 'warning',
+                                title: '¡Error!',
+                                text: response.msg,
+                                showConfirmButton: true,
+                                timer: 1500
+                            });
+
+                            $('.ticket').val('');
+                            $('.ticket').focus();
+                        }
+                    }else if(response.status_code == 500){
+                        _this.conciliacion.detalles_nc.push(response.detalles_nc);
+                        _this.guardando = false
                         $('.ticket').val('');
                         $('.ticket').focus();
 
-                    } else {
-                        _this.guardando = false;
                         swal({
-                            type: 'warning',
+                            type: 'error',
                             title: '¡Error!',
-                            text: response.msg,
-                            showConfirmButton: true,
-                            timer: 1500
+                            text: response.detalles_nc.detalle
                         });
-
-                        $('.ticket').val('');
-                        $('.ticket').focus();
                     }
                 },
                 error: function (error) {

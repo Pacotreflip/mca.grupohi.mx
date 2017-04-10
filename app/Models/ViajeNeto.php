@@ -7,7 +7,8 @@ use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-
+use App\Models\Conciliacion\ConciliacionDetalle;
+use Conflictos\ConflictoEntreViajesDetalle;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -35,6 +36,11 @@ class ViajeNeto extends Model
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
+    //protected $dates = ['FechaLlegada', 'HoraLlegada', 'FechaSalida','HoraSalida'];
+    
+    public function conciliacionDetalles() {
+        return $this->hasMany(ConciliacionDetalle::class, "idviaje_neto", "IdViajeNeto");
+    }
     
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
@@ -577,5 +583,50 @@ class ViajeNeto extends Model
 
     public function scopeAutorizados($query) {
         return $query->whereIn('Estatus', [0,20]);
+    }
+    public function conflicto_entre_viajes(){
+        return $this->hasMany(ConflictoEntreViajesDetalle::class, "idvije_neto", "IdViajeNeto");
+    }
+    public function getConflictoAttribute(){
+        #Máximo Id de conflicto
+        $resultado = DB::connection('sca')->select(DB::raw('select max(idconflicto) as idconflicto from conflictos_entre_viajes_detalle
+        where idviaje_neto = '.$this->IdViajeNeto));
+        $idconflicto = $resultado[0]->idconflicto;
+        $conflicto = Conflictos\ConflictoEntreViajes::find($idconflicto);
+        return $conflicto;
+    }
+    public function getEnConflictoTiempoAttribute(){
+        
+        if($this->conflicto){
+            if($this->conflicto->estado == 1){
+                return TRUE;
+            }else{
+                return FALSE;
+            }
+        }else{
+            return FALSE;
+        }
+    }
+    public function getDescripcionConflictoAttribute(){
+        $codigos =  "";
+        if($this->en_conflicto_tiempo){
+            $detalles = $this->conflicto->detalles;
+            foreach($detalles as $detalle){
+                if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
+                    $codigos.= $detalle->viaje_neto->Code . "[ Llegada: ".$detalle->viaje_neto->timestamp_llegada."] / ";
+                }
+            }
+            return $codigos;
+        }else{
+            return "";
+        }
+    }
+    public function getTimestampLlegadaAttribute(){
+        $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
+        return $timestampLlegada;
+    }
+    public function getTimestampSalidaAttribute(){
+        $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
+        return $timestampLlegada;
     }
 }
