@@ -144,7 +144,13 @@ class ViajesNetosController extends Controller
                         $viajes = ViajeNeto::ManualesAutorizados();
                         break;
                     case '21' :
-                        $viajes = ViajeNeto::ManualesDenegados();
+                        if ($request->get('Tipo') == '0') {
+                            $viajes = ViajeNeto::ManualesDenegados();
+                        } else if ($request->get('Tipo') == '1') {
+                            $viajes = ViajeNeto::MovilesDenegados();
+                        } else if($request->get('Tipo') == '2') {
+                            $viajes = ViajeNeto::Denegados('IdViajeNeto');
+                        }
                         break;
                     case '211' :
                         $viajes = ViajeNeto::ManualesValidados();

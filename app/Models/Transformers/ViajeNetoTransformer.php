@@ -16,6 +16,7 @@ class ViajeNetoTransformer extends AbstractTransformer
     public function transformModel(Model $viaje_neto) {
         return [
             'id'                => $viaje_neto->IdViajeNeto,
+            'autorizo'          => $viaje_neto->autorizo,
             'camion'            => (String) $viaje_neto->camion,
             'codigo'            => $viaje_neto->Code,
             'cubicacion'        => $viaje_neto->CubicacionCamion,
@@ -26,8 +27,8 @@ class ViajeNetoTransformer extends AbstractTransformer
             'timestamp_llegada' => $viaje_neto->FechaLlegada.' ('.$viaje_neto->HoraLlegada.')',
             'tipo'              => $viaje_neto->tipo,
             'tiro'              => (String) $viaje_neto->tiro,
-            'importe'           => $viaje_neto->getImporte()
-
+            'importe'           => $viaje_neto->getImporte(),
+            'valido'            => $viaje_neto->valido
         ];
     }
 }

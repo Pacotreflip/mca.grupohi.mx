@@ -31,9 +31,9 @@
                             <option v-if="form.tipo == '0'" value="20">PENDIENTES DE VALIDAR</option>
                             <option v-if="form.tipo == '0'"  value="22">NO AUTORIZADOS (RECHAZADOS)</option>
                             <option v-if="form.tipo == '0'"  value="211">VALIDADOS</option>
-                            <option v-if="form.tipo == '0'"  value="21">NO VALIDADOS (DENEGADOS)</option>
                             <option v-if="form.tipo != '0'"  value="1">VALIDADOS</option>
                             <option v-if="form.tipo != '0'"  value="0">PENDIENTES DE VALIDAR</option>
+                            <option value="21">NO VALIDADOS (DENEGADOS)</option>
                             </span>
                         </select>
                     </div>
@@ -70,31 +70,37 @@
                     <table class="table table-hover table-bordered small">
                         <thead>
                             <tr>
+                                <th style="text-align: center"> # </th>
                                 <th style="text-align: center"> Tipo </th>
                                 <th style="text-align: center"> Camión </th>
                                 <th style="text-align: center"> Ticket (Código) </th>
                                 <th style="text-align: center"> Fecha y Hora de Llegada </th>
-                                <th style="text-align: center"> Registro </th>
                                 <th style="text-align: center"> Origen</th>
                                 <th style="text-align: center"> Tiro </th>
                                 <th style="text-align: center"> Material </th>
                                 <th style="text-align: center"> Cubicación	</th>
                                 <th style="text-align: center"> Importe </th>
+                                <th style="text-align: center"> Registró </th>
+                                <th style="text-align: center"> Autorizó </th>
+                                <th style="text-align: center"> Validó </th>
                                 <th style="text-align: center"> Estado </th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr v-for="viaje_neto in viajes_netos">
+                            <tr v-for="(viaje_neto, index) in viajes_netos">
+                                <td>@{{ index + 1 }}</td>
                                 <td>@{{ viaje_neto.tipo }}</td>
                                 <td>@{{ viaje_neto.camion }}</td>
                                 <td>@{{ viaje_neto.codigo }}</td>
                                 <td>@{{ viaje_neto.timestamp_llegada }}</td>
-                                <td>@{{ viaje_neto.registro }}</td>
                                 <td>@{{ viaje_neto.origen }}</td>
                                 <td>@{{ viaje_neto.tiro }}</td>
                                 <td>@{{ viaje_neto.material }}</td>
                                 <td>@{{ viaje_neto.cubicacion }}</td>
                                 <td>@{{ viaje_neto.importe }}</td>
+                                <td>@{{ viaje_neto.registro }}</td>
+                                <td>@{{ viaje_neto.autorizo }}</td>
+                                <td>@{{ viaje_neto.valido }}</td>
                                 <td>@{{ viaje_neto.estado }}</td>
                             </tr>
                         </tbody>
