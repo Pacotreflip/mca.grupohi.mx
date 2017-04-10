@@ -109,16 +109,16 @@ class Conciliaciones
         //return $this->registraDetalleConciliacion($code, $viaje_neto, $viaje_pendiente_conciliar, $viaje_validado);
     }
     private function evalua_viaje($code, Viaje $viaje = null, ViajeNeto $viaje_neto = null, $complemento_detalle = null){
-        if(!$viaje){
+        if($code){
             $viaje_neto = ViajeNeto::where('Code', '=', $code)->first();
             $viaje_validado = Viaje::where('code', '=', $code)->first();
             $viaje_pendiente_conciliar = Viaje::porConciliar()->where('code', '=', $code)->first();
             
-        }else if(!$viaje_neto){
+        }else if($viaje_neto){
             $viaje_neto = $viaje_neto;
             $viaje_validado = $viaje_neto->viaje;
             $viaje_pendiente_conciliar =  Viaje::porConciliar()->where('viajes.IdViajeNeto', '=', $viaje_neto->IdViajeNeto)->first();
-        }else{
+        }else if($viaje){
             $viaje_neto = $viaje->viajeNeto;
             $viaje_validado = $viaje;
             $viaje_pendiente_conciliar =  Viaje::porConciliar()->where('viajes.IdViaje', '=', $viaje->IdViaje)->first();
@@ -242,7 +242,7 @@ class Conciliaciones
             } else {
                 $camion = Camion::where('economico', $row->camion)->first();
                 $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $row->fecha_llegada)->where('HoraLlegada', $row->hora_llegada)->first();
-                $complemento = $row->camion .' '. $row->fecha_llegada.' '. $row->hora_llegada;
+                $complemento = 'Camión: '.$row->camion .' Fecha Llegada: '. $row->fecha_llegada->format("d-m-Y").' Hora Llegada: '. $row->hora_llegada->format("h:i:s");
                 $evaluacion = $this->evalua_viaje(null, null, $viaje_neto, $complemento);
                 if($evaluacion["detalle"] !== FALSE){
                     $this->registraDetalle($evaluacion["detalle"]);

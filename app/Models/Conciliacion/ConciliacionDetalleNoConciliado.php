@@ -43,6 +43,7 @@ class ConciliacionDetalleNoConciliado extends Model
             $preexistente = $this->conciliacion->ConciliacionDetallesNoConciliados->where('idmotivo',$this->idmotivo)
                     ->where('Code', $this->Code)
                     ->where('idviaje_neto', $this->idviaje_neto)
+                    ->where('detalle', $this->detalle)
                     ->first();
             if(!$preexistente){
                 parent::save($options);
