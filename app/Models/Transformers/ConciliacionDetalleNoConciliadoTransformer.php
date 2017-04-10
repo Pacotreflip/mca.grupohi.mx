@@ -18,7 +18,7 @@ class ConciliacionDetalleNoConciliadoTransformer extends AbstractTransformer
             'idviaje' => $detalle_nc->idviaje,
             'Code' => $detalle_nc->Code,
             'detalle' => $detalle_nc->detalle,
-            'timestamp' => $detalle_nc->timestamp,
+            'timestamp' => $detalle_nc->timestamp->format("d-m-Y h:i:s"),
             'registro' => $detalle_nc->usuario_registro,
         ];
         return $output;

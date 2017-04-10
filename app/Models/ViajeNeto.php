@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Conciliacion\ConciliacionDetalle;
 use Conflictos\ConflictoEntreViajesDetalle;
+use App\User;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -35,7 +36,7 @@ class ViajeNeto extends Model
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
-    //protected $dates = ['FechaLlegada', 'HoraLlegada', 'FechaSalida','HoraSalida'];
+    protected $dates = ['FechaHoraAprobacion', 'FechaHoraRechazo'];
     
     public function conciliacionDetalles() {
         return $this->hasMany(ConciliacionDetalle::class, "idviaje_neto", "IdViajeNeto");
@@ -423,6 +424,10 @@ class ViajeNeto extends Model
     public function viaje() {
         return$this->hasOne(Viaje::class, 'IdViajeNeto');
     }
+    
+    public function viaje_rechazado() {
+        return$this->hasOne(ViajeRechazado::class, 'IdViajeNeto');
+    }
 
     public function empresa () {
         return $this->belongsTo(Empresa::class, 'IdEmpresa');
@@ -502,5 +507,29 @@ class ViajeNeto extends Model
     public function getTimestampSalidaAttribute(){
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
         return $timestampLlegada;
+    }
+    public function getTimestampAproboAttribute(){
+        $timestampLlegada = $this->FechaHoraAprobacion->format("d-m-Y h:i:s");
+                //Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
+        return $timestampLlegada;
+    }
+    public function getTimestampRechazoAttribute(){
+        $timestampLlegada = $this->FechaHoraRechazo->format("d-m-Y h:i:s");
+                //Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
+        return $timestampLlegada;
+    }
+    public function getUsuarioAproboAttribute(){
+        $usuario = User::find($this->Aprobo);
+        if($usuario){
+            return $usuario->present()->nombreCompleto;
+        }
+        return "";
+    }
+    public function getUsuarioRechazoAttribute(){
+        $usuario = User::find($this->Rechazo);
+        if($usuario){
+            return $usuario->present()->nombreCompleto;
+        }
+        return "";
     }
 }
