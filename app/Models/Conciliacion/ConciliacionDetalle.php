@@ -7,7 +7,7 @@ use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\ViajeNeto;
-
+use App\User;
 class ConciliacionDetalle extends Model
 {
     protected $connection = 'sca';
@@ -61,5 +61,13 @@ class ConciliacionDetalle extends Model
         foreach($no_concilados_coincidentes as $ncc){
             $ncc->delete();
         }
+    }
+    
+    public function getUsuarioRegistroAttribute(){
+        $usuario = User::find($this->registro);
+        if($usuario){
+            return $usuario->present()->nombreCompleto;
+        }
+        return "";
     }
 }

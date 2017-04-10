@@ -7,7 +7,7 @@ use App\Models\Viaje;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Collection;
 use App\Models\ViajeNeto;
-
+use App\User;
 class ConciliacionDetalleNoConciliado extends Model
 {
     protected $connection = 'sca';
@@ -50,6 +50,16 @@ class ConciliacionDetalleNoConciliado extends Model
                 parent::save($options);
             }
         }
+    }
+    public function registro(){
+        return $this->belongsTo(User::class, "registro");
+    }
+    public function getUsuarioRegistroAttribute(){
+        $usuario = User::find($this->registro);
+        if($usuario){
+            return $usuario->present()->nombreCompleto;
+        }
+        return "";
     }
    
 }

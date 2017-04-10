@@ -188,6 +188,7 @@
                                 <tr v-if="manuales.length">
                                     <th style="text-align: center">Camión</th>
                                     <th style="text-align: center">Ticket (Código)</th>
+                                    <th style="text-align: center">Registró</th>
                                     <th style="text-align: center">Fecha y Hora de Llegada</th>
                                     <th style="text-align: center">Material</th>
                                     <th style="text-align: center">Cubicación</th>
@@ -202,6 +203,7 @@
                                 <tr v-for="detalle in manuales">
                                     <td>@{{ detalle.camion }}</td>
                                     <td>@{{ detalle.code }}</td>
+                                    <td>@{{ detalle.registro }}</td>
                                     <td>@{{ detalle.timestamp_llegada }}</td>
                                     <td>@{{ detalle.material }}</td>
                                     <td style="text-align: right">
@@ -220,7 +222,7 @@
                                         @endif
                                 </tr>
                                 <tr v-if="manuales.length">
-                                    <td colspan="4">
+                                    <td colspan="5">
                                         <strong>TOTAL VIAJES MANUALES</strong>
                                     </td>
                                     <td style="text-align: right"><strong>@{{ conciliacion.volumen_viajes_manuales }} m<sup>3</sup></strong></td>
@@ -237,6 +239,7 @@
                                 <tr v-if="moviles.length">
                                     <th style="text-align: center">Camión</th>
                                     <th style="text-align: center">Ticket (Código)</th>
+                                    <th style="text-align: center">Registró</th>
                                     <th style="text-align: center">Fecha y Hora de Llegada</th>
                                     <th style="text-align: center">Material</th>
                                     <th style="text-align: center">Cubicación</th>
@@ -248,6 +251,7 @@
                                 <tr v-for="detalle in moviles">
                                     <td>@{{ detalle.camion }}</td>
                                     <td>@{{ detalle.code }}</td>
+                                    <td>@{{ detalle.registro }}</td>
                                     <td>@{{ detalle.timestamp_llegada }}</td>
                                     <td>@{{ detalle.material }}</td>
                                     <td style="text-align: right">
@@ -266,7 +270,7 @@
                                     @endif
                                 </tr>
                                 <tr v-if="moviles.length">
-                                    <td colspan="4">
+                                    <td colspan="5">
                                         <strong>TOTAL VIAJES MÓVILES</strong>
                                     </td>
                                     <td style="text-align: right"><strong>@{{ conciliacion.volumen_viajes_moviles }} m<sup>3</sup></strong></td>
@@ -274,7 +278,7 @@
                                 </tr>
                                 <tr><td v-bind:colspan="conciliacion.estado == 0 ? '7' : '6'"></td> </tr>
                             <tr>
-                                <td colspan="4"><strong>TOTAL</strong></td>
+                                <td colspan="5"><strong>TOTAL</strong></td>
                                 <td style="text-align: right"><strong>@{{ conciliacion.volumen }} m<sup>3</sup></strong></td>
                                 <td style="text-align: right"><strong>$ @{{ conciliacion.importe }}</strong></td>
                             </tr>
@@ -287,6 +291,7 @@
                             <tr>
                                 <th style="text-align: center">Camión</th>
                                 <th style="text-align: center">Ticket (Código)</th>
+                                <th style="text-align: center">Registró</th>
                                 <th style="text-align: center">Fecha y Hora de Llegada</th>
                                 <th style="text-align: center">Material</th>
                                 <th style="text-align: center">Cubicación</th>
@@ -300,6 +305,7 @@
                             <tr v-for="detalle in cancelados">
                                 <td>@{{ detalle.camion }}</td>
                                 <td>@{{ detalle.code }}</td>
+                                <td>@{{ detalle.registro }}</td>
                                 <td>@{{ detalle.timestamp_llegada }}</td>
                                 <td>@{{ detalle.material }}</td>
                                 <td style="text-align: right">@{{ detalle.cubicacion_camion }} m<sup>3</sup></td>
@@ -316,6 +322,7 @@
                             <thead>
                             <tr>
                                 <th style="text-align: center">Ticket (Código)</th>
+                                <th style="text-align: center">Registro Intento</th>
                                 <th style="text-align: center; width: 130px">Fecha y Hora Intento Conciliación </th>
                                 <th style="text-align: center">Motivo</th>
                             </tr>
@@ -323,6 +330,7 @@
                             <tbody>
                             <tr v-for="detalle in conciliacion.detalles_nc">
                                 <td>@{{ detalle.Code }}</td>
+                                <td>@{{ detalle.registro }}</td>
                                 <td>@{{ detalle.timestamp }}</td>
                                 <td>@{{ detalle.detalle }}</td>
                             </tr>
