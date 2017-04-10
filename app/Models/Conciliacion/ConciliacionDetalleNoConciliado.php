@@ -24,6 +24,7 @@ class ConciliacionDetalleNoConciliado extends Model
         'detalle',
         'timestamp',
         'estado',
+        'registro'
     ];
 
     public function viaje() {

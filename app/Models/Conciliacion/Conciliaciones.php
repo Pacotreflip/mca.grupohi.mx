@@ -183,11 +183,25 @@ class Conciliaciones
                 'detalle'=>"Viaje no encontrado en sistema. ".$complemento_detalle,
                 'timestamp'=>Carbon::now()->toDateTimeString(),
                 'Code' => $code,
+                'registro'=>auth()->user()->idusuario,
             ];
             $evaluacion["detalle"] = FALSE;
             $evaluacion["detalle_nc"] = $detalle_no_conciliado;
 
-        } else if ($viaje_neto && !$viaje_validado) {
+        }else if($viaje_neto->en_conflicto_tiempo){
+            $detalle_no_conciliado = [
+                'idconciliacion' => $id_conciliacion,
+                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>1,
+                'detalle'=>"Viaje en conflicto de tiempo con:  ".$viaje_neto->descripcion_conflicto,
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje_neto->Code,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $evaluacion["detalle"] = FALSE;
+            $evaluacion["detalle_nc"] = $detalle_no_conciliado;
+        } 
+        else if ($viaje_neto && !$viaje_validado) {
             $detalle_no_conciliado = [
                 'idconciliacion' => $id_conciliacion,
                 'idviaje_neto'=>$viaje_neto->IdViajeNeto,
@@ -195,6 +209,7 @@ class Conciliaciones
                 'detalle'=>"Viaje pendiente de proceso de validación. ". $complemento_detalle,
                 'timestamp'=>Carbon::now()->toDateTimeString(),
                 'Code' => $viaje_neto->Code,
+                'registro'=>auth()->user()->idusuario,
             ];
             $evaluacion["detalle"] = FALSE;
             $evaluacion["detalle_nc"] = $detalle_no_conciliado;
@@ -206,7 +221,8 @@ class Conciliaciones
                     'idviaje' => $viaje_pendiente_conciliar->IdViaje,
                     'Code' => $code,
                     'timestamp' => Carbon::now()->toDateTimeString(),
-                    'estado' => 1
+                    'estado' => 1,
+                    'registro'=>auth()->user()->idusuario,
                 ];
                 $evaluacion["detalle"] = $detalle;
                 $evaluacion["detalle_nc"] = FALSE;
@@ -221,6 +237,7 @@ class Conciliaciones
                         'detalle'=>"Viaje pendiente de proceso de validación. " . $complemento_detalle,
                         'timestamp'=>Carbon::now()->toDateTimeString(),
                         'Code' => $viaje_neto->Code,
+                        'registro'=>auth()->user()->idusuario,
                     ];
                     $evaluacion["detalle"] = FALSE;
                     $evaluacion["detalle_nc"] = $detalle_no_conciliado;
@@ -232,6 +249,7 @@ class Conciliaciones
                         'idmotivo'=>5,
                         'detalle'=>"Viaje conciliado en conciliación " . $cd->idconciliacion . " de la empresa" . $c->empresa . " y el sindicato " . $c->sindicato . "",
                         'Code' => $code,
+                        'registro'=>auth()->user()->idusuario,
                     ]);
                     $evaluacion["detalle"] = FALSE;
                     $evaluacion["detalle_nc"] = $detalle_no_conciliado;
@@ -247,6 +265,7 @@ class Conciliaciones
                         'detalle'=>"Viaje conciliado en esta conciliación.",
                         'timestamp'=>Carbon::now()->toDateTimeString(),
                         'Code' => $viaje_neto->Code,
+                        'registro'=>auth()->user()->idusuario,
                     ];
                 $evaluacion["detalle"] = FALSE;
                 $evaluacion["detalle_nc"] = $detalle_no_conciliado;
@@ -259,6 +278,7 @@ class Conciliaciones
                     'timestamp'=>Carbon::now()->toDateTimeString(),
                     'detalle'=>"Viaje conciliado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato . "",
                     'Code' => $code,
+                    'registro'=>auth()->user()->idusuario,
                 ];
                 $evaluacion["detalle"] = FALSE;
                 $evaluacion["detalle_nc"] = $detalle_no_conciliado;

@@ -17,4 +17,8 @@ class ConflictoEntreViajes extends Model {
     protected $table = 'conflictos_entre_viajes';
     protected $primaryKey = 'id';
     public $timestamps = false;
+    
+    public function detalles(){
+        return $this->hasMany(ConflictoEntreViajesDetalle::class, "idconflicto");
+    }
 }

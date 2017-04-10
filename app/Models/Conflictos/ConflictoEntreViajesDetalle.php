@@ -22,7 +22,7 @@ class ConflictoEntreViajesDetalle extends Model {
     public function conflicto_entre_viajes(){
         return $this->belongsTo(ConflictoEntreViajes::class, "idconflicto");
     }
-    public function viaje(){
+    public function viaje_neto(){
         return $this->belongsTo(ViajeNeto::class, "idviaje_neto");
     }
 }

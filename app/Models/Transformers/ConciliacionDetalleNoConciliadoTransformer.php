@@ -19,6 +19,7 @@ class ConciliacionDetalleNoConciliadoTransformer extends AbstractTransformer
             'Code' => $detalle_nc->Code,
             'detalle' => $detalle_nc->detalle,
             'timestamp' => $detalle_nc->timestamp,
+            'registro' => User::find($detalle_nc->registro),
         ];
         return $output;
     }

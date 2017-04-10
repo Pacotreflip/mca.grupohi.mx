@@ -21,7 +21,8 @@ class ConciliacionDetalle extends Model
         'idviaje_neto',
         'idviaje',
         'timestamp',
-        'estado'
+        'estado',
+        'registro'
     ];
 
     public function viaje() {
