@@ -47,7 +47,7 @@ class ViajesNetosController extends Controller
                 ]);
 
                 $viajes = ViajeNeto::porValidar()
-                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
                     ->get();
 
                 foreach ($viajes as $viaje) {
@@ -81,7 +81,7 @@ class ViajesNetosController extends Controller
                 ]);
 
                 $viajes = ViajeNeto::porValidar()
-                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                    ->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
                     ->get();
 
                 foreach ($viajes as $viaje) {

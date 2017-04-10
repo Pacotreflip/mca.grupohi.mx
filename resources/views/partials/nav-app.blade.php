@@ -48,6 +48,9 @@
         Operación<span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
+
+        <li><a tabindex="-2" href="{{ route('viajes_netos.index') }}">Viajes</a></li>
+
         <li class="dropdown-submenu">
             <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Registrar Viajes</a>  
             <ul class="dropdown-menu">

@@ -83,7 +83,15 @@ class ViajeNeto extends Model
     }
     
     public function scopePorValidar($query) {
-        return $query->whereIn('Estatus', [0, 10, 20, 30]);
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
+            ->where(function($query){
+                $query
+                    ->whereNull('viajes.IdViaje')
+                    ->whereNull('viajesrechazados.IdViajeRechazado')
+                    ->whereIn('viajesnetos.Estatus', [0, 10, 20, 30]);
+            });
     }
 
     public function scopeValidados($query) {
