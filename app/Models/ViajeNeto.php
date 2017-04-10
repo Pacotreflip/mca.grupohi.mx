@@ -566,7 +566,11 @@ class ViajeNeto extends Model
     }
 
     public function scopeMovilesValidados($query) {
-        return $query->where('Estatus', 1);
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function($query){
+                $query->whereNotNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 1);
+            });
     }
 
     public function scopeMovilesAutorizados($query) {
