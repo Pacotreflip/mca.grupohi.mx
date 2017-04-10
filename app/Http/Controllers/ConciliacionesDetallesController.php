@@ -84,24 +84,24 @@ class ConciliacionesDetallesController extends Controller
                 }
             } else if ($request->get('Tipo') == '2') {
                 
-//                $conciliacion = Conciliacion::find($id);
-//                $output = (new Conciliaciones($conciliacion))->procesaArregloIds($request->get('idviaje', []));
-//                return response()->json($output);
+                $conciliacion = Conciliacion::find($id);
+                $output = (new Conciliaciones($conciliacion))->procesaArregloIds($request->get('idviaje', []));
+                return response()->json($output);
                 
-                $ids = $request->get('idviaje', []);
-                $i = 0;
-                foreach ($ids as $key => $id_viaje) {
-                    $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
-                    ConciliacionDetalle::create([
-                        'idconciliacion' => $id,
-                        'idviaje_neto' => $v_ba->IdViajeNeto,
-                        'idviaje'        => $id_viaje,
-                        'timestamp'      => Carbon::now()->toDateTimeString(),
-                        'estado'         => 1
-                    ]);
-                    $i++;
-                }
-                $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+//                $ids = $request->get('idviaje', []);
+//                $i = 0;
+//                foreach ($ids as $key => $id_viaje) {
+//                    $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
+//                    ConciliacionDetalle::create([
+//                        'idconciliacion' => $id,
+//                        'idviaje_neto' => $v_ba->IdViajeNeto,
+//                        'idviaje'        => $id_viaje,
+//                        'timestamp'      => Carbon::now()->toDateTimeString(),
+//                        'estado'         => 1
+//                    ]);
+//                    $i++;
+//                }
+//                $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
             }
             $conciliacion = Conciliacion::find($id);
             return response()->json([

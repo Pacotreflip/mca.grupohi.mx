@@ -49,17 +49,45 @@ class Conciliaciones
     public function procesaArregloIds($ids){
         $i = 0;
         foreach ($ids as $key => $id_viaje) {
-            $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
-            ConciliacionDetalle::create([
-                'idconciliacion' => $this->conciliacion->idconciliacion,
-                'idviaje_neto' => $v_ba->IdViajeNeto,
-                'idviaje'        => $id_viaje,
-                'timestamp'      => Carbon::now()->toDateTimeString(),
-                'estado'         => 1
-            ]);
-            $i++;
+            $v_ba = Viaje::find($id_viaje);
+            $evaluacion = $this->evalua_viaje($v_ba->Code,$v_ba);
+            //dd($evaluacion);
+            if($evaluacion["detalle"] !== FALSE){
+                $this->registraDetalle($evaluacion["detalle"]);
+                $i++;
+            }else{
+                $this->registraDetalleNoConciliado($evaluacion["detalle_nc"]);
+            }
+            
+            
+//            $v_ba = Viaje::where('IdViaje', '=', $id_viaje)->first();
+//            ConciliacionDetalle::create([
+//                'idconciliacion' => $this->conciliacion->idconciliacion,
+//                'idviaje_neto' => $v_ba->IdViajeNeto,
+//                'idviaje'        => $id_viaje,
+//                'timestamp'      => Carbon::now()->toDateTimeString(),
+//                'estado'         => 1
+//            ]);
+//            $i++;
         }
-        $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $id)->get());
+        $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
+        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform(ConciliacionDetalleNoConciliado::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
+
+        return [
+                'status_code' => 201,
+                'registros'   => $i,
+                'detalles'    => $detalles,
+                'detalles_nc'    => $detalles_nc,
+                'importe'     => $this->conciliacion->importe_f,
+                'volumen'     => $this->conciliacion->volumen_f,
+                'rango'       => $this->conciliacion->rango,
+                'importe_viajes_manuales' => $this->conciliacion->importe_viajes_manuales_f,
+                'volumen_viajes_manuales' => $this->conciliacion->volumen_viajes_manuales_f,
+                'volumen_viajes_moviles' => $this->conciliacion->volumen_viajes_moviles_f,
+                'importe_viajes_moviles' => $this->conciliacion->importe_viajes_moviles_f,
+                'porcentaje_importe_viajes_manuales' => $this->conciliacion->porcentaje_importe_viajes_manuales,
+                'porcentaje_volumen_viajes_manuales' => $this->conciliacion->porcentaje_volumen_viajes_manuales
+            ];
     }
     
     public function procesaCodigo($code){
@@ -92,10 +120,18 @@ class Conciliaciones
         }
         //return $this->registraDetalleConciliacion($code, $viaje_neto, $viaje_pendiente_conciliar, $viaje_validado);
     }
-    private function evalua_viaje($code){
-        $viaje_neto = ViajeNeto::where('Code', '=', $code)->first();
-        $viaje_pendiente_conciliar = Viaje::porConciliar()->where('code', '=', $code)->first();
-        $viaje_validado = Viaje::where('code', '=', $code)->first();
+    private function evalua_viaje($code, Viaje $viaje = null){
+        if(!$viaje){
+            $viaje_neto = ViajeNeto::where('Code', '=', $code)->first();
+            $viaje_validado = Viaje::where('code', '=', $code)->first();
+            $viaje_pendiente_conciliar = Viaje::porConciliar()->where('code', '=', $code)->first();
+            
+        }else{
+            $viaje_neto = $viaje->viajeNeto;
+            $viaje_validado = $viaje;
+            $viaje_pendiente_conciliar =  Viaje::porConciliar()->where('viajes.IdViaje', '=', $viaje->IdViaje)->first();
+           // dd($viaje_neto,$viaje_validado,$viaje_pendiente_conciliar);
+        }
         
         $id_conciliacion = $this->conciliacion->idconciliacion;
         if (!$viaje_neto) {
