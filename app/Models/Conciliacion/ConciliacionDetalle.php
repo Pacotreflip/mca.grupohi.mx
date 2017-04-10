@@ -49,8 +49,8 @@ class ConciliacionDetalle extends Model
             $preexistente = $v->conciliacionDetalles->where('estado', 1)->first();
             if(!$preexistente){
                 $this->removerNoConciliados();
-                parent::save($options);
             }
+            parent::save($options);
         }
     }
 

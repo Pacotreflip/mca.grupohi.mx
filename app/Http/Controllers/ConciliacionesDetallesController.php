@@ -158,17 +158,21 @@ class ConciliacionesDetallesController extends Controller
                 'idcancelo'              => auth()->user()->idusuario
             ]);
 
-            $detalle =  ConciliacionDetalle::find($id_detalle);
-            $detalle->estado = -1;
+            /*$detalle =  ConciliacionDetalle::find($id_detalle);*/
+            $detalle->estado = '-1';
             $detalle->save();
+            if($detalle->estado != '-1'){
+                 DB::connection('sca')->rollBack();
+                throw new \Exception("El detalle de la conciliación no pudo ser cancelado.");
+            }
 
-            $conciliacion = ConciliacionTransformer::transform(Conciliacion::find($id_conciliacion));
+            $conciliacion_transformer = ConciliacionTransformer::transform(Conciliacion::find($id_conciliacion));
 
             DB::connection('sca')->commit();
 
             return response()->json([
                 'status_code' => 200,
-                'conciliacion' => $conciliacion
+                'conciliacion' => $conciliacion_transformer
             ]);
         } catch (\Exception $e) {
             DB::connection('sca')->rollBack();
