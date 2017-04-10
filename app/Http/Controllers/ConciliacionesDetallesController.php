@@ -67,9 +67,10 @@ class ConciliacionesDetallesController extends Controller
             $conciliacion = Conciliacion::find($id);
 
             $output = (new Conciliaciones($conciliacion))->cargarExcel($request->file('excel'));
+            return response()->json($output);
 
-            Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['reg'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['no_reg'] . '</li><li><a href="' . route('conciliacion.info', $output['file']) . '"><strong>VER RESULTADO DE LA CARGA</strong></a></li>');
-            return redirect()->back();
+           // Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['reg'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['no_reg'] . '</li><li><a href="' . route('conciliacion.info', $output['file']) . '"><strong>VER RESULTADO DE LA CARGA</strong></a></li>');
+           // return redirect()->back();
         }
 
         if($request->ajax()) {
