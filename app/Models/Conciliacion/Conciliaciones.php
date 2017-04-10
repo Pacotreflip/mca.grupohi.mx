@@ -108,6 +108,56 @@ class Conciliaciones
         }
         //return $this->registraDetalleConciliacion($code, $viaje_neto, $viaje_pendiente_conciliar, $viaje_validado);
     }
+    
+    public function cargarExcel(UploadedFile $data) {
+        $reader = Excel::load($data->getRealPath())->get();
+        $i = 0;
+        $y = 0;
+        foreach ($reader as $row) {
+            if ($row->codigo != null) {
+                $evaluacion = $this->evalua_viaje($row->codigo);
+                if($evaluacion["detalle"] !== FALSE){
+                    $this->registraDetalle($evaluacion["detalle"]);
+                    $i++;
+                }else{
+                    $this->registraDetalleNoConciliado($evaluacion["detalle_nc"]);
+                    $y++;
+                }
+            } else {
+                $camion = Camion::where('economico', $row->camion)->first();
+                $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $row->fecha_llegada)->where('HoraLlegada', $row->hora_llegada)->first();
+                $complemento = 'Camión: '.$row->camion .' Fecha Llegada: '. $row->fecha_llegada->format("d-m-Y").' Hora Llegada: '. $row->hora_llegada->format("h:i:s");
+                $evaluacion = $this->evalua_viaje(null, null, $viaje_neto, $complemento);
+                if($evaluacion["detalle"] !== FALSE){
+                    $this->registraDetalle($evaluacion["detalle"]);
+                    $i++;
+                }else{
+                    $this->registraDetalleNoConciliado($evaluacion["detalle_nc"]);
+                    $y++;
+                }
+            }
+        }
+        $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
+        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform(ConciliacionDetalleNoConciliado::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
+
+        return [
+                'status_code' => 201,
+                'registros'   => $i,
+                'registros_nc'   => $y,
+                'detalles'    => $detalles,
+                'detalles_nc'    => $detalles_nc,
+                'importe'     => $this->conciliacion->importe_f,
+                'volumen'     => $this->conciliacion->volumen_f,
+                'rango'       => $this->conciliacion->rango,
+                'importe_viajes_manuales' => $this->conciliacion->importe_viajes_manuales_f,
+                'volumen_viajes_manuales' => $this->conciliacion->volumen_viajes_manuales_f,
+                'volumen_viajes_moviles' => $this->conciliacion->volumen_viajes_moviles_f,
+                'importe_viajes_moviles' => $this->conciliacion->importe_viajes_moviles_f,
+                'porcentaje_importe_viajes_manuales' => $this->conciliacion->porcentaje_importe_viajes_manuales,
+                'porcentaje_volumen_viajes_manuales' => $this->conciliacion->porcentaje_volumen_viajes_manuales
+            ];
+        
+    }
     private function evalua_viaje($code, Viaje $viaje = null, ViajeNeto $viaje_neto = null, $complemento_detalle = null){
         if($code){
             $viaje_neto = ViajeNeto::where('Code', '=', $code)->first();
@@ -223,55 +273,5 @@ class Conciliaciones
     private function registraDetalle($array){
         $detalle = ConciliacionDetalle::create($array);
         return $detalle;
-    }
-    
-    public function cargarExcel(UploadedFile $data) {
-        $reader = Excel::load($data->getRealPath())->get();
-        $i = 0;
-        $y = 0;
-        foreach ($reader as $row) {
-            if ($row->codigo != null) {
-                $evaluacion = $this->evalua_viaje($row->codigo);
-                if($evaluacion["detalle"] !== FALSE){
-                    $this->registraDetalle($evaluacion["detalle"]);
-                    $i++;
-                }else{
-                    $this->registraDetalleNoConciliado($evaluacion["detalle_nc"]);
-                    $y++;
-                }
-            } else {
-                $camion = Camion::where('economico', $row->camion)->first();
-                $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $row->fecha_llegada)->where('HoraLlegada', $row->hora_llegada)->first();
-                $complemento = 'Camión: '.$row->camion .' Fecha Llegada: '. $row->fecha_llegada->format("d-m-Y").' Hora Llegada: '. $row->hora_llegada->format("h:i:s");
-                $evaluacion = $this->evalua_viaje(null, null, $viaje_neto, $complemento);
-                if($evaluacion["detalle"] !== FALSE){
-                    $this->registraDetalle($evaluacion["detalle"]);
-                    $i++;
-                }else{
-                    $this->registraDetalleNoConciliado($evaluacion["detalle_nc"]);
-                    $y++;
-                }
-            }
-        }
-        $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
-        $detalles_nc = ConciliacionDetalleNoConciliadoTransformer::transform(ConciliacionDetalleNoConciliado::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
-
-        return [
-                'status_code' => 201,
-                'registros'   => $i,
-                'registros_nc'   => $y,
-                'detalles'    => $detalles,
-                'detalles_nc'    => $detalles_nc,
-                'importe'     => $this->conciliacion->importe_f,
-                'volumen'     => $this->conciliacion->volumen_f,
-                'rango'       => $this->conciliacion->rango,
-                'importe_viajes_manuales' => $this->conciliacion->importe_viajes_manuales_f,
-                'volumen_viajes_manuales' => $this->conciliacion->volumen_viajes_manuales_f,
-                'volumen_viajes_moviles' => $this->conciliacion->volumen_viajes_moviles_f,
-                'importe_viajes_moviles' => $this->conciliacion->importe_viajes_moviles_f,
-                'porcentaje_importe_viajes_manuales' => $this->conciliacion->porcentaje_importe_viajes_manuales,
-                'porcentaje_volumen_viajes_manuales' => $this->conciliacion->porcentaje_volumen_viajes_manuales
-            ];
-        
     }
 }

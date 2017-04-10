@@ -7,6 +7,7 @@ use App\Presenters\ModelPresenter;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Conciliacion\ConciliacionDetalle;
+use Conflictos\ConflictoEntreViajesDetalle;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -455,5 +456,8 @@ class ViajeNeto extends Model
     }
     public function usuario_registro(){
         return  $this->belongsTo(\Ghi\Core\Models\User::class, 'Creo');
+    }
+    public function conflicto_entre_viajes(){
+        return $this->hasMany(ConflictoEntreViajesDetalle::class, "idvije_neto", "IdViajeNeto");
     }
 }
