@@ -322,7 +322,7 @@ class ViajeNeto extends Model
                 $msg = $data['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
                 $tipo = $data['Accion'] == 1 ? 'success' : 'info';
             } else {
-                $msg = 'Error al procesar el viaje' . $result[0]->{'@v'};
+                $msg = 'Error: ' . $result[0]->{'@v'};
                 $tipo = 'error';
             }            
             
