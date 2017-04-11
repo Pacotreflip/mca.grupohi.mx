@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Conciliacion\ConciliacionDetalle;
 use Conflictos\ConflictoEntreViajesDetalle;
-use App\User;
+
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
