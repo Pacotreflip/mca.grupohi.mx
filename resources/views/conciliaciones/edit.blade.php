@@ -168,12 +168,12 @@
                         </span>
                     </div>
                 </section>
-                <section id="detalles" v-if="conciliacion.detalles.length">
+                <section id="detalles" v-if="conciliacion.detalles.length || conciliacion.detalles_nc.length">
                 <hr>
                 <ul id="detail-tabs" class="nav nav-tabs">
                     <li v-if="conciliados.length" class="active tab-conciliacion"><a href="#conciliados_details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
                     <li v-if="cancelados.length" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#cancelados_details" data-toggle="tab">VIAJES CANCELADOS</a></li>
-                    <li v-if="conciliacion.detalles_nc.length" v-bind:class="(cancelados.length && !conciliados.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
+                    <li v-if="conciliacion.detalles_nc.length" v-bind:class="(!cancelados.length && !conciliados.length && conciliacion.detalles_nc.length) ? 'active' : '' + 'tab-conciliacion'"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
 
                 </ul>
                 <div class="tab-content">

@@ -57,15 +57,17 @@
         @endif
     </div>
 </section>
-@if(count($conciliacion->conciliacionDetalles))
+@if(count($conciliacion->conciliacionDetalles) || count($conciliacion->conciliacionDetallesNoConciliados) )
 <section id="detalles">
     <hr>
     <ul id="detail-tabs" class="nav nav-tabs">
         @if(count($conciliacion->conciliacionDetalles->where('estado', 1)))
+        
         <li class="active tab-conciliacion"><a href="#details" data-toggle="tab">VIAJES CONCILIADOS</a></li>
+        @endif
         @if(count($conciliacion->conciliacionDetallesNoConciliados))
         <li class="tab-conciliacion"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
-        @endif
+        
         @endif
         @if(count($conciliacion->conciliacionDetalles->where('estado', -1)))
             @if(! count($conciliacion->conciliacionDetalles->where('estado', 1)))
@@ -203,7 +205,11 @@
             </table>
         </div>
         
-        <div id="no_conciliados_details" class="fade in tab-pane table-responsive">
+         @if(count($conciliacion->conciliacionDetallesNoConciliados) && ! count($conciliacion->conciliacionDetalles->where('estado', 1)))
+        <div id="no_conciliados_details" class="fade in tab-pane table-responsive active">
+            @else
+             <div id="no_conciliados_details" class="fade in tab-pane table-responsive">
+            @endif
         <table class="table table-striped table-bordered small">
             <thead>
             <tr>
