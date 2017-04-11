@@ -25,7 +25,7 @@ class CreateViajeNetoRequest extends Request
     {
         $rules = [];
 
-        if($this->path() == 'viajes/netos/manual') {
+        if($this->path() == 'viajes_netos/manual') {
             foreach($this->get('viajes', []) as $key => $viaje) {
                 $rules['viajes.'.$key.'.Codigo']        = 'required|unique:sca.viajesnetos,Code';
                 $rules['viajes.'.$key.'.Cubicacion']    = 'required|numeric';
@@ -37,7 +37,7 @@ class CreateViajeNetoRequest extends Request
                 $rules['viajes.'.$key.'.IdMaterial']    = 'required|exists:sca.materiales,IdMaterial';
                 $rules['viajes.'.$key.'.Motivo']        = 'required|string';
             }
-        } else if($this->path() == 'viajes/netos/completa') {
+        } else if($this->path() == 'viajes_netos/completa') {
             foreach($this->get('viajes', []) as $key => $viaje) {
                 $rules['viajes.'.$key.'.NumViajes'] = 'required|numeric|min:1';
                 $rules['viajes.'.$key.'.FechaLlegada'] = 'required|date_format:"Y-m-d"';
@@ -59,7 +59,7 @@ class CreateViajeNetoRequest extends Request
     
     public function messages() {
         $messages = [];
-        if($this->path() == 'viajes/netos/manual') {
+        if($this->path() == 'viajes_netos/manual') {
             foreach($this->get('viajes', []) as $key => $viaje) {
                 $messages['viajes.'.$key.'.FechaLlegada.required'] = '(Viaje: '.$key.') El campo Fecha Llegada es obligatorio';
                 $messages['viajes.'.$key.'.FechaLlegada.date_format'] = '(Viaje: '.$key.') La Fecha Llegada no corresponde al formato :format.';
@@ -89,7 +89,7 @@ class CreateViajeNetoRequest extends Request
                 $messages['viajes.'.$key.'.Codigo.unique'] = '(Viaje: '.$key.') Ya existe un Viaje Neto con el Código proporcionado';
 
             }
-        } else if($this->path() == 'viajes/netos/completa') {
+        } else if($this->path() == 'viajes_netos/completa') {
             foreach($this->get('viajes', []) as $key => $viaje) {
                 $messages['viajes.'.$key.'.NumViajes.required'] = '(Viaje: '.$viaje['Id'].') El campo # es obligatorio';
                 $messages['viajes.'.$key.'.NumViajes.numeric'] = '(Viaje: '.$viaje['Id'].') El campo # debe ser numérico';

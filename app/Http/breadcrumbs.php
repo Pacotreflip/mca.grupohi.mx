@@ -247,24 +247,29 @@ Breadcrumbs::register('etapas.edit', function($breadcrumbs, $etapa) {
 });
 
 //ViajesNetos
-Breadcrumbs::register('viajes.netos.carga_manual', function($breadcrumbs) {
-    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajes.netos.create', ['action' => 'create']));
+Breadcrumbs::register('viajes_netos.index', function ($breadcrumbs) {
+    $breadcrumbs->push('VIAJES', route('viajes_netos.index'));
 });
 
-Breadcrumbs::register('viajes.netos.carga_manual_completa', function($breadcrumbs) {
-    $breadcrumbs->push('CARGA MANUAL COMPLETA', route('viajes.netos.create', ['action' => 'completa']));
+Breadcrumbs::register('viajes_netos.carga_manual', function($breadcrumbs) {
+    $breadcrumbs->parent('viajes_netos.index');
+    $breadcrumbs->push('REGISTRO MANUAL DE VIAJES', route('viajes_netos.create', ['action' => 'create']));
 });
 
-Breadcrumbs::register('viajes.netos.autorizar', function($breadcrumbs) {
-    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES', route('viajes.netos.edit', ['action' => 'autorizar']));
+Breadcrumbs::register('viajes_netos.carga_manual_completa', function($breadcrumbs) {
+    $breadcrumbs->push('CARGA MANUAL COMPLETA', route('viajes_netos.create', ['action' => 'completa']));
 });
 
-Breadcrumbs::register('viajes.netos.validar', function($breadcrumbs) {
-    $breadcrumbs->push('VALIDAR VIAJES', route('viajes.netos.edit', ['action' => 'validar']));
+Breadcrumbs::register('viajes_netos.autorizar', function($breadcrumbs) {
+    $breadcrumbs->push('AUTORIZACIÓN DE VIAJES', route('viajes_netos.edit', ['action' => 'autorizar']));
 });
 
-Breadcrumbs::register('viajes.netos.modificar', function($breadcrumbs) {
-    $breadcrumbs->push('MODIFICAR VIAJES', route('viajes.netos.edit', ['action' => 'modificar']));
+Breadcrumbs::register('viajes_netos.validar', function($breadcrumbs) {
+    $breadcrumbs->push('VALIDAR VIAJES', route('viajes_netos.edit', ['action' => 'validar']));
+});
+
+Breadcrumbs::register('viajes_netos.modificar', function($breadcrumbs) {
+    $breadcrumbs->push('MODIFICAR VIAJES', route('viajes_netos.edit', ['action' => 'modificar']));
 });
 
 //Conciliaciones

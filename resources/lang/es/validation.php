@@ -166,7 +166,9 @@ return [
         'FechaInicial'          => 'Fecha Inicial',
         'FechaFinal'            => 'Fecha Final',
         'fecha'                 => 'Fecha',
-        'folio'                 => 'Folio'
+        'folio'                 => 'Folio',
+        'Tipo'                  => 'Tipo de Viajes',
+        'Estado'                => 'Estado'
     ],
 
 ];

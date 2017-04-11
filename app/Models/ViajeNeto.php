@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 use Illuminate\Support\Facades\DB;
@@ -12,7 +13,7 @@ use App\User;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
-    
+
     protected $connection = 'sca';
     protected $table = 'viajesnetos';
     protected $primaryKey = 'IdViajeNeto';
@@ -83,7 +84,15 @@ class ViajeNeto extends Model
     }
     
     public function scopePorValidar($query) {
-        return $query->whereIn('Estatus', [0, 10, 20, 30]);
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
+            ->where(function($query){
+                $query
+                    ->whereNull('viajes.IdViaje')
+                    ->whereNull('viajesrechazados.IdViajeRechazado')
+                    ->whereIn('viajesnetos.Estatus', [0, 10, 20, 30]);
+            });
     }
 
     public function scopeValidados($query) {
@@ -233,13 +242,18 @@ class ViajeNeto extends Model
     }
     
     public function getImporte() {
-        if($this->material->tarifaMaterial){
-        return (($this->material->tarifaMaterial->PrimerKM * 1 * $this->camion->CubicacionParaPago) + 
-                ($this->material->tarifaMaterial->KMSubsecuente * $this->ruta->KmSubsecuentes * $this->camion->CubicacionParaPago) + 
-                ($this->material->tarifaMaterial->KMAdicional * $this->ruta->KmAdicionales * $this->camion->CubicacionParaPago));
-        }else{
+        if($this->ruta && $this->camion && $this->material) {
+            if($this->material->tarifaMaterial){
+                return (($this->material->tarifaMaterial->PrimerKM * 1 * $this->camion->CubicacionParaPago) +
+                    ($this->material->tarifaMaterial->KMSubsecuente * $this->ruta->KmSubsecuentes * $this->camion->CubicacionParaPago) +
+                    ($this->material->tarifaMaterial->KMAdicional * $this->ruta->KmAdicionales * $this->camion->CubicacionParaPago));
+            }else{
+                return 0;
+            }
+        } else {
             return 0;
         }
+
     }
     
     public function valido() {
@@ -450,9 +464,49 @@ class ViajeNeto extends Model
         }
         return '';
     }
+
+    public function getTipoAttribute() {
+        return in_array($this->Estatus, ['0', '1']) ? 'APLICACIÓN MÓVIL' : 'MANUAL';
+    }
+
+    public function getEstadoAttribute() {
+        switch ($this->Estatus) {
+            case 0 :
+                return "PENDIENTE DE VALIDAR";
+                break;
+            case 1:
+                if(count($this->viaje)) {
+                    return "VALIDADO";
+                } else {
+                    return "NO VALIDADO (DENEGADO)";
+                }
+                break;
+            case 20:
+                return "PENDIENTE DE VALIDAR";
+                break;
+            case 21:
+                if(count($this->viaje)) {
+                    return "VALIDADO";
+                } else {
+                    return "NO VALIDADO (DENEGADO)";
+                }
+                break;
+            case 22:
+                return "NO AUTORIZADO (RECHAZADO)";
+                break;
+            case 29 :
+                return "CARGADO";
+                break;
+            default: return "";
+        }
+    }
+
     public function getRegistroAttribute(){
         $creo = $this->Creo;
         if(is_numeric($creo)){
+            if(!count($this->usuario_registro)) {
+                dd($this->Creo);
+            }
             $registro = $this->usuario_registro->present()->NombreCompleto;
             return $registro;
         }else{
@@ -460,8 +514,92 @@ class ViajeNeto extends Model
             return $creo;
         }
     }
+
+    public function getAutorizoAttribute(){
+        return $this->Aprobo ? User::find($this->Aprobo)->present()->NombreCompleto : '';
+    }
+
+    public function getValidoAttribute(){
+         $valido = $this->attribute['Valido'];
+        return $valido ? User::find($valido)->present()->NombreCompleto : '';
+    }
+
+    public function getRechazoAttribute(){
+        $rechazo = $this->attribute['Rechazo'];
+        return $rechazo ? User::find($rechazo)->present()->NombreCompleto : '';
+    }
+
+    public function getDenegoAttribute(){
+        $denego = $this->attribute['Denego'];
+        return $denego ? User::find($denego)->present()->NombreCompleto : '';
+    }
+
     public function usuario_registro(){
-        return  $this->belongsTo(\Ghi\Core\Models\User::class, 'Creo');
+        return  $this->belongsTo(User::class, 'Creo');
+    }
+
+    public function scopeManualesAutorizados($query) {
+        return $query->where('Estatus', 20);
+    }
+
+    public function scopeManualesRechazados($query) {
+        return $query->where('Estatus', 22);
+    }
+
+    public function scopeManualesValidados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function($query){
+                $query->whereNotNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 21);
+            });
+    }
+
+    public function scopeManualesDenegados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function ($query) {
+                $query->whereNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 21);
+            });
+    }
+
+    public function scopeMovilesDenegados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function ($query) {
+                $query->whereNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 1);
+            });
+    }
+
+    public function scopeDenegados($query) {
+        return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function ($query) {
+                $query->whereNull('viajes.IdViaje')
+                    ->whereIn('viajesnetos.Estatus', [1, 11, 21]);
+            });
+    }
+
+    public function scopeMovilesValidados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function($query){
+                $query->whereNotNull('viajes.IdViaje')
+                    ->where('viajesnetos.Estatus', 1);
+            });
+    }
+
+    public function scopeMovilesAutorizados($query) {
+        return $query->where('Estatus', 0);
+    }
+
+    public function scopeManuales($query){
+        return $query->whereIn('Estatus', [20,21,22,29]);
+    }
+
+    public function scopeMoviles($query) {
+        return $query->whereIn('Estatus', [0,1]);
+    }
+
+    public function scopeAutorizados($query) {
+        return $query->whereIn('Estatus', [0,20]);
     }
     public function conflicto_entre_viajes(){
         return $this->hasMany(ConflictoEntreViajesDetalle::class, "idvije_neto", "IdViajeNeto");

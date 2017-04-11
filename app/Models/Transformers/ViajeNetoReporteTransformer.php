@@ -9,12 +9,9 @@
 namespace App\Models\Transformers;
 
 
-use App\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use phpDocumentor\Reflection\Types\Boolean;
 use Themsaid\Transformers\AbstractTransformer;
-use Illuminate\Database\Eloquent\Model;
 
 class ViajeNetoReporteTransformer extends AbstractTransformer
 {

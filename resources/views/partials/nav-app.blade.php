@@ -48,6 +48,9 @@
         Operación<span class="caret"></span>
     </a>
     <ul class="dropdown-menu" role="menu">
+
+        <li><a tabindex="-2" href="{{ route('viajes_netos.index') }}">Viajes</a></li>
+
         <li class="dropdown-submenu">
             <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Registrar Viajes</a>  
             <ul class="dropdown-menu">
@@ -55,26 +58,26 @@
                     <a tabindex="-1" class="dropdown-toggle" data-toggle="dropdown">Carga Manual</a>
                     <ul class="dropdown-menu">
                         @if(Auth::user()->can(['ingresar-viajes-manuales']))
-                        <li><a tabindex="-2" href="{{ route('viajes.netos.create', ['action' => 'manual']) }}">Ingresar Viajes</a></li>
+                        <li><a tabindex="-2" href="{{ route('viajes_netos.create', ['action' => 'manual']) }}">Ingresar Viajes</a></li>
                         @endif
                         @if(Auth::user()->can(['autorizar-viajes-manuales']))
-                        <li><a tabindex="-2" href="{{ route('viajes.netos.edit', ['action' => 'autorizar']) }}">Autorizar Viajes</a></li>
+                        <li><a tabindex="-2" href="{{ route('viajes_netos.edit', ['action' => 'autorizar']) }}">Autorizar Viajes</a></li>
                         @endif
                     </ul>
                 </li>
                 @if(Auth::user()->can(['ingresar-viajes-manuales-completos']))
-                <li><a href="{{ route('viajes.netos.create', ['action' => 'completa']) }}">Carga Manual Completa</a></li>
+                <li><a href="{{ route('viajes_netos.create', ['action' => 'completa']) }}">Carga Manual Completa</a></li>
                 @endif
             </ul>
         </li>
         @if(Auth::user()->can(['validar-viajes']))
-        <li><a href="{{ route('viajes.netos.edit', ['action' => 'validar']) }}">Validar Viajes</a></li>
+        <li><a href="{{ route('viajes_netos.edit', ['action' => 'validar']) }}">Validar Viajes</a></li>
         @endif
         @if (Auth::user()->can(['consultar-conciliacion'])) 
             <li><a href="{{ route('conciliaciones.index') }}">Conciliaciones</a></li>
         @endif
         @if(Auth::user()->can(['modificar-viajes']))
-        <li><a href="{{ route('viajes.netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>
+        <li><a href="{{ route('viajes_netos.edit', ['action' => 'modificar']) }}">Modificar Viajes</a></li>
         @endif
         @if(Auth::user()->can(['revertir-viajes']))
         <li><a href="{{ route('viajes.edit', ['action' => 'revertir']) }}">Revertir Viajes</a> </li>

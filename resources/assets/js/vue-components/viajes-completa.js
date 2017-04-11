@@ -183,7 +183,7 @@ Vue.component('viajes-manual-completa', {
             this.guardando = true;
             this.form.errors = [];
 
-            this.$http.post(App.host + '/viajes/netos/completa', this.form).then((response) => {
+            this.$http.post(App.host + '/viajes_netos/completa', this.form).then((response) => {
                 swal('', response.body.message, 'success');
                 this.guardando = false;
                 if(!response.body.rechazados.length) {

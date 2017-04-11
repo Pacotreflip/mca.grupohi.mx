@@ -12,6 +12,11 @@ require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
 window._ = require('underscore');
 require('./scripts');
+
+
+
+
+
 // Production
 window.Vue = require('vue/dist/vue.min.js');
 

@@ -1,8 +1,8 @@
 <h1>VIAJES</h1>
-{!! Breadcrumbs::render('viajes.netos.autorizar') !!}
+{!! Breadcrumbs::render('viajes_netos.autorizar') !!}
 <hr>
 <div class="table-responsive">
-    {!! Form::open(['id' => 'viaje_neto_autorizar' , 'method' => 'patch', 'route' => ['viajes.netos.autorizar']]) !!}
+    {!! Form::open(['id' => 'viaje_neto_autorizar' , 'method' => 'patch', 'route' => ['viajes_netos.autorizar']]) !!}
     <table id="viajes_netos_autorizar" class="table table-condensed">
         <thead>
             <tr>

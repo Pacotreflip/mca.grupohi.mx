@@ -2,11 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\ViajeNeto;
 use App\Reportes\ViajesNetos;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
-use Laracasts\Flash\Flash;
 
 class ReportesController extends Controller
 {
