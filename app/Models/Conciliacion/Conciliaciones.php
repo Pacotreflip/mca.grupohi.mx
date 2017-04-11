@@ -297,7 +297,7 @@ class Conciliaciones
                         'idviaje_neto'=>$viaje_neto->IdViajeNeto,
                         'idviaje' => $viaje_pendiente_conciliar->IdViaje,
                         'idmotivo'=>5,
-                        'detalle'=>"Viaje conciliado en conciliación " . $cd->idconciliacion . " de la empresa" . $c->empresa . " y el sindicato " . $c->sindicato . "",
+                        'detalle'=>"Este viaje ya ha sido presentado en la conciliación previa: Folio " . $cd->idconciliacion . " Empresa:" . $c->empresa . " Sindicato: " . $c->sindicato . ". Dado lo anterior no procede en esta conciliación.",
                         'Code' => $code,
                         'registro'=>auth()->user()->idusuario,
                     ]);
@@ -326,7 +326,8 @@ class Conciliaciones
                     'idviaje' => $viaje_validado->IdViaje,
                     'idmotivo'=>5,
                     'timestamp'=>Carbon::now()->toDateTimeString(),
-                    'detalle'=>"Viaje conciliado en conciliación " . $c->idconciliacion . " de la empresa " . $c->empresa . " y el sindicato " . $c->sindicato . "",
+                    'detalle'=>"<span style='text-align:left'><strong>Este viaje ya ha sido presentado en la conciliación previa:</strong> <br/><br/> "
+                    . "<ul><li> Folio: " . $c->idconciliacion . "</li><li> Empresa: " . $c->empresa . "</li><li> Sindicato: " . $c->sindicato . ". </li> <br/>Dado  lo anterior <strong>no procede</strong> en esta conciliación.</span>",
                     'Code' => $code,
                     'registro'=>auth()->user()->idusuario,
                 ];
