@@ -295,7 +295,7 @@ class ViajeNeto extends Model
 
         DB::connection('sca')->beginTransaction();
         try {
-            DB::connection("sca")->statement("call sca_sp_registra_viaje_fda("
+            $statement ="call sca_sp_registra_viaje_fda_v2("
                 .$data["Accion"].","
                 .$this->IdViajeNeto.","
                 ."0".","
@@ -314,15 +314,15 @@ class ViajeNeto extends Model
                 .$this->CubicacionCamion. ","
                 .($this->deductiva ? $this->deductiva->id : 'NULL'). ","
                 .($this->deductiva ? $this->deductiva->estatus : 'NULL') .
-                ",@a);"
-            );  
+                ",@a, @v);";
+            DB::connection("sca")->statement($statement);  
             
-            $result = DB::connection('sca')->select('SELECT @a');
+            $result = DB::connection('sca')->select('SELECT @a,@v');
             if($result[0]->{'@a'} == 'ok') {
                 $msg = $data['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
                 $tipo = $data['Accion'] == 1 ? 'success' : 'info';
             } else {
-                $msg = 'Error al procesar el viaje';
+                $msg = 'Error: ' . $result[0]->{'@v'};
                 $tipo = 'error';
             }            
             
