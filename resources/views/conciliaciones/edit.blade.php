@@ -15,7 +15,7 @@
                 CONCILIACIONES <small>(@{{ conciliacion.estado_str }})</small>
 
                 @if(Auth::user()->can(['ver-pdf']))
-                    <a v-if="conciliados.length" href="{{ route('pfd.conciliacion', $conciliacion) }}" class="btn btn-default btn-sm pull-right" style="margin-left: 5px"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
+                <a  href="{{ route('pfd.conciliacion', $conciliacion) }}" target="_blank" class="btn btn-default btn-sm pull-right" style="margin-left: 5px"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
                 @endif
 
                 <span v-if="conciliacion.estado == 0">

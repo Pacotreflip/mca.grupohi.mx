@@ -28,10 +28,10 @@ class PDFController extends Controller
     public function conciliacion($id)
     {
         $conciliacion = Conciliacion::findOrFail($id);
-        if(!count($conciliacion->conciliacionDetalles->where('estado', 1))) {
-            Flash::error('No se puede mostrar el PDF ya que la conciliación no tiene viajes conciliados');
-            return redirect()->back();
-        }
+//        if(!count($conciliacion->conciliacionDetalles->where('estado', 1))) {
+//            Flash::error('No se puede mostrar el PDF ya que la conciliación no tiene viajes conciliados');
+//            return redirect()->back();
+//        }
         $pdf = new PDFConciliacion('p', 'cm', 'Letter', $conciliacion);
         $pdf->create();
     }

@@ -4,8 +4,8 @@
 @include('partials.errors')
 <h1>
     CONCILIACIONES
-    @if(count($conciliacion->conciliacionDetalles->where('estado', 1)) && Auth::user()->can(['ver-pdf']))
-        <a href="{{ route('pfd.conciliacion', $conciliacion) }}" class="btn btn-default btn-sm pull-right"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
+    @if(Auth::user()->can(['ver-pdf']))
+        <a href="{{ route('pfd.conciliacion', $conciliacion) }}" target="_blank"  class="btn btn-default btn-sm pull-right"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
     @endif
 </h1>
 {!! Breadcrumbs::render('conciliaciones.show', $conciliacion) !!}
