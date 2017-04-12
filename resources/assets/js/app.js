@@ -10,6 +10,7 @@ require('bootstrap-fileinput');
 require('bootstrap-fileinput/js/locales/es.js');
 require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
+require('select2');
 window._ = require('underscore');
 require('./scripts');
 

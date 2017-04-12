@@ -78,11 +78,19 @@ class ViajeNeto extends Model
     public function deductiva() {
         return $this->hasOne(Deductiva::class, 'id_viaje_neto', 'IdViajeNeto');
     }
-    
+
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
     }
-    
+
+    public function scopeFechas($query,Array $fechas) {
+        return $query->whereBetween('viajesnetos.FechaLlegada', [$fechas['FechaInicial'], $fechas['FechaFinal']]);
+    }
+
     public function scopePorValidar($query) {
         return $query->select(DB::raw('viajesnetos.*'))
             ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
@@ -96,7 +104,13 @@ class ViajeNeto extends Model
     }
 
     public function scopeValidados($query) {
-        return $query->whereIn('Estatus', [1, 11, 21, 31]);
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function($query){
+                $query
+                    ->whereNotNull('viajes.IdViaje')
+                    ->whereIn('viajesnetos.Estatus', [0, 10, 20, 30]);
+            });
     }
 
     public static function autorizar($data) {
@@ -546,6 +560,10 @@ class ViajeNeto extends Model
         return $query->where('Estatus', 22);
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeManualesValidados($query) {
         return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
             ->where(function($query){
@@ -554,26 +572,34 @@ class ViajeNeto extends Model
             });
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeManualesDenegados($query) {
-        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje')
+                $query->whereNotNull('viajesrechazados.IdViajeRechazado')
                     ->where('viajesnetos.Estatus', 21);
             });
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeMovilesDenegados($query) {
-        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje')
+                $query->whereNotNull('viajesrechazados.IdViajeRechazado')
                     ->where('viajesnetos.Estatus', 1);
             });
     }
 
     public function scopeDenegados($query) {
-        return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+        return $query->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje')
+                $query->whereNotNull('viajesrechazados.IdViajeRechazado')
                     ->whereIn('viajesnetos.Estatus', [1, 11, 21]);
             });
     }
@@ -595,7 +621,7 @@ class ViajeNeto extends Model
     }
 
     public function scopeMoviles($query) {
-        return $query->whereIn('Estatus', [0,1]);
+        return $query->whereIn('viajesnetos.Estatus', [0,1]);
     }
 
     public function scopeAutorizados($query) {

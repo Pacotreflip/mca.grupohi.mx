@@ -1,74 +1,74 @@
 @extends('layout')
 
 @section('content')
-<h1>VIAJES</h1>
-{!! Breadcrumbs::render('viajes_netos.index') !!}
-<hr>
-<div id="app">
-    <global-errors></global-errors>
-    <viajes-index inline-template>
-        <section>
-            <app-errors v-bind:form="form"></app-errors>
-            <h3>BUSCAR VIAJES</h3>
-            {!! Form::open(['class' => 'form_buscar']) !!}
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>TIPO DE VIAJES (*)</label>
-                        <select name="Tipo" v-model="form.tipo" class="form-control">
-                            <option value="2">TODOS</option>
-                            <option value="0">CARGADOS MANUALMENTE</option>
-                            <option value="1">CARGADOS DESDE APLICACIÓN MÓVIL</option>
-                        </select>
+    <h1>VIAJES</h1>
+    {!! Breadcrumbs::render('viajes_netos.index') !!}
+    <hr>
+    <div id="app">
+        <global-errors></global-errors>
+        <viajes-index inline-template>
+            <section>
+                <div id="partials_errors">
+                @include('partials.errors')
+                </div>
+                <app-errors v-bind:form="form"></app-errors>
+                <h3>BUSCAR VIAJES</h3>
+                {!! Form::open(['class' => 'form_buscar']) !!}
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>FECHA INICIAL (*)</label>
+                            <input type="text" name="FechaInicial" class="form-control" v-datepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>FECHA FINAL (*)</label>
+                            <input type="text" name="FechaFinal" class="form-control" v-datepicker>
+                        </div>
                     </div>
                 </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>ESTADO</label>
-                        <select name="Estatus" class="form-control">
-                            <option value>TODOS</option>
-                            <option v-if="form.tipo == '0'" value="29">CARGADOS</option>
-                            <option v-if="form.tipo == '0'" value="20">PENDIENTES DE VALIDAR</option>
-                            <option v-if="form.tipo == '0'"  value="22">NO AUTORIZADOS (RECHAZADOS)</option>
-                            <option v-if="form.tipo == '0'"  value="211">VALIDADOS</option>
-                            <option v-if="form.tipo != '0'"  value="1">VALIDADOS</option>
-                            <option v-if="form.tipo != '0'"  value="0">PENDIENTES DE VALIDAR</option>
-                            <option value="21">NO VALIDADOS (DENEGADOS)</option>
-                            </span>
-                        </select>
-                    </div>
-                </div></div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>FECHA INICIAL (*)</label>
-                        <input type="text" name="FechaInicial" class="form-control" v-datepicker>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>FECHA FINAL (*)</label>
-                        <input type="text" name="FechaFinal" class="form-control" v-datepicker>
+
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label>TIPO DE VIAJES (*)</label>
+                            <select name="Tipo[]" class="form-control" multiple="multiple" v-select2>
+                                <optgroup label="CARGADOS MANUALMENTE">
+                                    <option value="CM_C">Manuales - Cargados</option>
+                                    <option value="CM_A">Manuales - Autorizados (Pend. Validar)</option>
+                                    <option value="CM_R">Manuales - Rechazados</option>
+                                    <option value="CM_V">Manuales - Validados</option>
+                                    <option value="CM_D">Manuales - Denegados</option>
+                                </optgroup>
+                                <optgroup label="CARGADOS DESDE APLICACIÓN MÓVIL">
+                                    <option value="M_V">Móviles - Validados</option>
+                                    <option value="M_A">Móviles - Pendientes de Validar</option>
+                                    <option value="M_D">Móviles - Denegados</option>
+                                </optgroup>
+                            </select>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <button class="btn btn-primary" type="submit" @click="buscar">
-                    <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
-                    <span v-else><i class="fa fa-search"></i> Buscar</span>
-                </button>
-                <button class="btn  btn-info" @click="pdf"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
-            </div>
-            <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
-            {!! Form::close() !!}
-            <hr>
-            <section v-if="viajes_netos.length" id="results">
-                <h3>
-                    RESULTADOS DE LA BÚSQUEDA
-                </h3>
-                <div class="table-responsive">
-                    <table class="table table-hover table-bordered small">
-                        <thead>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" @click="buscar">
+                        <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
+                        <span v-else><i class="fa fa-search"></i> Buscar</span>
+                    </button>
+                    <button class="btn  btn-info" @click="pdf"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
+                </div>
+                <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
+                {!! Form::close() !!}
+                <hr>
+                <section v-if="viajes_netos.length" id="results">
+                    <h3>
+                        RESULTADOS DE LA BÚSQUEDA
+                    </h3>
+                    <div class="table-responsive">
+                        <table class="table table-hover table-bordered small">
+                            <thead>
                             <tr>
                                 <th style="text-align: center"> # </th>
                                 <th style="text-align: center"> Tipo </th>
@@ -85,8 +85,8 @@
                                 <th style="text-align: center"> Validó </th>
                                 <th style="text-align: center"> Estado </th>
                             </tr>
-                        </thead>
-                        <tbody>
+                            </thead>
+                            <tbody>
                             <tr v-for="(viaje_neto, index) in viajes_netos">
                                 <td>@{{ index + 1 }}</td>
                                 <td>@{{ viaje_neto.tipo }}</td>
@@ -103,11 +103,11 @@
                                 <td>@{{ viaje_neto.valido }}</td>
                                 <td>@{{ viaje_neto.estado }}</td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
             </section>
-        </section>
-    </viajes-index>
-</div>
+        </viajes-index>
+    </div>
 @stop
