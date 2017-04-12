@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\Viaje;
+use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 use App\Models\ViajeNeto;
 use App\Models\Empresa;
@@ -16,6 +18,7 @@ use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\Camion;
 use App\Models\Material;
+use MongoDB\Driver\Query;
 
 class ViajesNetosController extends Controller
 {
@@ -117,63 +120,43 @@ class ViajesNetosController extends Controller
                     ];
                 }
             } else if ($request->get('action') == 'index') {
-
                 $this->validate($request, [
                     'FechaInicial' => 'required|date_format:"Y-m-d"',
                     'FechaFinal' => 'required|date_format:"Y-m-d"',
-                    'Tipo' => 'required|numeric',
-                    'Estatus' => 'numeric'
+                    'Tipo' => 'required|array',
                 ]);
 
-                switch ($request->get('Estatus')) {
-                    case '0' :
-                        if($request->get('Tipo') == '2') {
-                            $viajes = ViajeNeto::Autorizados();
-                        } else {
-                            $viajes = ViajeNeto::MovilesAutorizados();
-                        }
-                        break;
-                    case '1' :
-                        if($request->get('Tipo') == '2') {
-                            $viajes = ViajeNeto::Validados();
-                        } else {
-                            $viajes = ViajeNeto::MovilesValidados();
-                        }
-                        break;
-                    case '20' :
-                        $viajes = ViajeNeto::ManualesAutorizados();
-                        break;
-                    case '21' :
-                        if ($request->get('Tipo') == '0') {
-                            $viajes = ViajeNeto::ManualesDenegados();
-                        } else if ($request->get('Tipo') == '1') {
-                            $viajes = ViajeNeto::MovilesDenegados();
-                        } else if($request->get('Tipo') == '2') {
-                            $viajes = ViajeNeto::Denegados('IdViajeNeto');
-                        }
-                        break;
-                    case '211' :
-                        $viajes = ViajeNeto::ManualesValidados();
-                        break;
-                    case '22' :
-                        $viajes = ViajeNeto::ManualesRechazados();
-                        break;
-                    case '29' :
-                        $viajes = ViajeNeto::RegistradosManualmente();
-                        break;
-                    default :
+                $fechas = $request->only(['FechaInicial', 'FechaFinal']);
+                $query = ViajeNeto::whereNull('IdViajeNeto');
 
-                        if ($request->get('Tipo') == '0') {
-                            $viajes = ViajeNeto::Manuales();
-                        } else if ($request->get('Tipo') == '1') {
-                            $viajes = ViajeNeto::Moviles();
-                        } else if($request->get('Tipo') == '2') {
-                            $viajes = ViajeNeto::whereNotNull('IdViajeNeto');
-                        }
-                        break;
+                foreach($request->get('Tipo', []) as $tipo) {
+                    if($tipo == 'CM_C') {
+                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_A') {
+                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_V') {
+                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_R') {
+                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_D') {
+                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas));
+                    }
+                    if($tipo == 'M_V') {
+                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas));
+                    }
+                    if($tipo == 'M_A') {
+                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas));
+                    }
+                    if($tipo == 'M_D') {
+                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas));
+                    }
                 }
-
-                $viajes_netos = $viajes->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')]) ->get();
+                
+                $viajes_netos = $query->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
             }

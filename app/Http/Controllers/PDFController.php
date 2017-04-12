@@ -39,77 +39,52 @@ class PDFController extends Controller
 
     public function viajes_netos(Request $request)
     {
+        $this->validate($request, [
+            'FechaInicial' => 'required|date_format:"Y-m-d"',
+            'FechaFinal' => 'required|date_format:"Y-m-d"',
+            'Tipo' => 'required|array',
+        ]);
 
-        switch ($request->get('Estatus')) {
-            case '0' :
-                $estatus = 'PENDIENTES DE VALIDAR';
-                if ($request->get('Tipo') == '2') {
-                    $tipo = 'TODOS';
-                    $viajes = ViajeNeto::Autorizados();
-                } else {
-                    $tipo = 'CARGADOS DESDE APLICACIÓN MÓVIL';
-                    $viajes = ViajeNeto::MovilesAutorizados();
-                }
-                break;
-            case '1' :
-                $estatus = 'VALIDADOS';
-                if ($request->get('Tipo') == '2') {
-                    $tipo = 'TODOS';
-                    $viajes = ViajeNeto::Validados();
-                } else {
-                    $tipo = 'CARGADOS DESDE APLICACIÓN MÓVIL';
-                    $viajes = ViajeNeto::MovilesValidados();
-                }
-                break;
-            case '20' :
-                $estatus = 'CARGADOS';
-                $tipo = 'CARGADOS MANUALMENTE';
-                $viajes = ViajeNeto::ManualesAutorizados();
-                break;
-            case '21' :
-                $estatus = 'NO VALIDADOS (DENEGADOS)';
-                if ($request->get('Tipo') == '0') {
-                    $tipo = 'CARGADOS MANUALMENTE';
-                    $viajes = ViajeNeto::ManualesDenegados();
-                } else if ($request->get('Tipo') == '1') {
-                    $tipo = 'CARGADOS DESDE APLICACIÓN MÓVIL';
-                    $viajes = ViajeNeto::MovilesDenegados();
-                } else if($request->get('Tipo') == '2') {
-                    $tipo = 'TODOS';
-                    $viajes = ViajeNeto::Denegados('IdViajeNeto');
-                }
-                break;
-            case '211' :
-                $estatus = 'VALIDADOS';
-                $tipo = 'CARGADOS MANUALMENTE';
-                $viajes = ViajeNeto::ManualesValidados();
-                break;
-            case '22' :
-                $estatus = 'NO AUTORIZADOS (RECHAZADOS)';
-                $tipo = 'CARGADOS MANUALMENTE';
-                $viajes = ViajeNeto::ManualesRechazados();
-                break;
-            case '29' :
-                $estatus = 'CARGADOS';
-                $tipo = 'CARGADOS MANUALMENTE';
-                $viajes = ViajeNeto::RegistradosManualmente();
-                break;
-            default :
-                $estatus = 'TODOS';
-                if ($request->get('Tipo') == '0') {
-                    $tipo = 'CARGADOS MANUALMENTE';
-                    $viajes = ViajeNeto::Manuales();
-                } else if ($request->get('Tipo') == '1') {
-                    $tipo = 'CARGADOS DESDE APLICACIÓN MÓVIL';
-                    $viajes = ViajeNeto::Moviles();
-                } else if ($request->get('Tipo') == '2') {
-                    $tipo = 'TODOS';
-                    $viajes = ViajeNeto::whereNotNull('Estatus');
-                }
-                break;
+        $fechas = $request->only(['FechaInicial', 'FechaFinal']);
+        $query = ViajeNeto::whereNull('IdViajeNeto');
+        $tipos = [];
+
+        foreach($request->get('Tipo', []) as $tipo) {
+            if($tipo == 'CM_C') {
+                array_push($tipos, 'Manuales - Cargados');
+                $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas));
+            }
+            if($tipo == 'CM_A') {
+                array_push($tipos, 'Manuales - Autorizados (Pend. Validar)');
+                $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas));
+            }
+            if($tipo == 'CM_V') {
+                array_push($tipos, 'Manuales - Validados');
+                $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas));
+            }
+            if($tipo == 'CM_R') {
+                array_push($tipos, 'Manuales - Rechazados');
+                $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas));
+            }
+            if($tipo == 'CM_D') {
+                array_push($tipos, 'Manuales - Denegados');
+                $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas));
+            }
+            if($tipo == 'M_V') {
+                array_push($tipos, 'Móviles - Validados');
+                $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas));
+            }
+            if($tipo == 'M_A') {
+                array_push($tipos, 'Móviles - Pendientes de Validar');
+                $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas));
+            }
+            if($tipo == 'M_D') {
+                array_push($tipos, 'Móviles - Denegados');
+                $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas));
+            }
         }
 
-        $viajes_netos = $viajes->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+        $viajes_netos = $query->get();
 
         if(! $viajes_netos->count()) {
             Flash::error('Ningún viaje coincide con los datos de consulta');
@@ -118,8 +93,7 @@ class PDFController extends Controller
 
         $data = [
             'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
-            'tipo'         => $tipo,
-            'estatus'      => $estatus,
+            'tipos'         => $tipos,
             'rango'        => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"
         ];
 

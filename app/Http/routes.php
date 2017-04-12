@@ -16,7 +16,7 @@ Route::get('index', 'PagesController@index')->name('index');
 Route::get('proyectos', 'PagesController@proyectos')->name('proyectos');
 Route::get('origenes_usuarios', 'PagesController@origenes_usuarios')->name('origenes_usuarios.index');
 
-
+Route::get('prueba', 'ViajesNetosController@prueba');
 // Rutas de Autenticación
 Route::get('auth/login', [
         'as' => 'auth.login',
