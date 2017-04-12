@@ -404,7 +404,7 @@ Vue.component('conciliaciones-edit', {
                         swal({
                             type: 'error',
                             title: '¡Error!',
-                            text: response.detalles_nc.detalle,
+                            text: response.detalles_nc.detalle_alert,
                             html: true
                         });
                     }

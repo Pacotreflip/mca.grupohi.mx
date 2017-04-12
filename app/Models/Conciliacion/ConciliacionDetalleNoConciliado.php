@@ -22,6 +22,7 @@ class ConciliacionDetalleNoConciliado extends Model
         'idviaje',
         'Code',
         'detalle',
+        'detalle_alert',
         'timestamp',
         'estado',
         'registro'
