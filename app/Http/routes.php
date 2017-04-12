@@ -124,3 +124,6 @@ Route::get('conciliacion_info_carga/{filename}', 'ConciliacionesDetallesControll
 Route::get('viajes', 'ViajesController@index')->name('viajes.index');
 Route::patch('viajes/{viaje}', 'ViajesController@update');
 Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');
+
+//Rutas de corte de checador
+Route::get('corte/create', 'CorteController@create');
