@@ -653,17 +653,50 @@ class ViajeNeto extends Model
     public function getDescripcionConflictoAttribute(){
         $codigos =  "";
         if($this->en_conflicto_tiempo){
+            if((count($this->conflicto->detalles)-1) == 1){
+                $codigos =  "Este viaje entra en conflicto con otro viaje pues el tiempo entre ellos es menor a 30 minutos.";
+            }else{
+                $codigos =  "Este viaje entra en conflicto con ".(count($this->conflicto->detalles)-1)." viajes pues el tiempo entre ello es menor a 30 minutos.";
+            }
+            
             $detalles = $this->conflicto->detalles;
             foreach($detalles as $detalle){
-                if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
-                    $codigos.= $detalle->viaje_neto->Code . "[ Llegada: ".$detalle->viaje_neto->timestamp_llegada."] / ";
-                }
+                //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
+                    $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(16-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
+               // }
             }
+            $codigos = "\n Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
             return $codigos;
         }else{
             return "";
         }
     }
+    
+    public function getDescripcionConflictoAlertAttribute(){
+        //dd($this->conflicto);
+        $codigos =  "";
+        if($this->en_conflicto_tiempo){
+            if((count($this->conflicto->detalles)-1) == 1){
+                $codigos =  "Este viaje entra en conflicto con otro viaje pues el tiempo entre ellos es menor a 30 minutos.";
+            }else{
+                $codigos =  "Este viaje entra en conflicto con ".(count($this->conflicto->detalles)-1)." viajes pues el tiempo entre ello es menor a 30 minutos.";
+            }
+            $codigos.="<br/><br/><table class='table table-striped' style='font-size:0.8em'><thead>"
+                    . "<tr><th style='text-align:center'>Código</th><th style='text-align:center'>Salida</th><th style='text-align:center'>Llegada</th></tr></thead>";
+            $detalles = $this->conflicto->detalles;
+            foreach($detalles as $detalle){
+                //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
+                    $codigos.= "<tr><td>".$detalle->viaje_neto->Code. "</td><td>".$detalle->viaje_neto->timestamp_salida."</td><td>".$detalle->viaje_neto->timestamp_llegada."</td></tr>";
+               // }
+            }
+            $codigos.="</table>";
+            $codigos.= "<br>Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
+            return $codigos;
+        }else{
+            return "";
+        }
+    }
+    
     public function getTimestampLlegadaAttribute(){
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
         return $timestampLlegada;
