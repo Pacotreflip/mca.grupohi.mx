@@ -126,4 +126,4 @@ Route::patch('viajes/{viaje}', 'ViajesController@update');
 Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');
 
 //Rutas de corte de checador
-Route::get('corte/create', 'CorteController@create');
+Route::get('corte/create', 'CorteController@create')->name('corte.create');
