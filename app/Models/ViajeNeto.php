@@ -665,7 +665,7 @@ class ViajeNeto extends Model
                     $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(16-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
                // }
             }
-            $codigos = "\n Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
+            $codigos .= "\n Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
             return $codigos;
         }else{
             return "";
