@@ -184,7 +184,6 @@ class Conciliaciones
             $viaje_pendiente_conciliar =  Viaje::porConciliar()->where('viajes.IdViaje', '=', $viaje->IdViaje)->first();
            // dd($viaje_neto,$viaje_validado,$viaje_pendiente_conciliar);
         }
-        
         $id_conciliacion = $this->conciliacion->idconciliacion;
         if (!$viaje_neto) {
             $detalle_no_conciliado = [ 
@@ -199,34 +198,8 @@ class Conciliaciones
             $evaluacion["detalle"] = FALSE;
             $evaluacion["detalle_nc"] = $detalle_no_conciliado;
 
-        }else if($viaje_neto->en_conflicto_tiempo){
-            $detalle_no_conciliado = [
-                'idconciliacion' => $id_conciliacion,
-                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
-                'idmotivo'=>1,
-                'detalle'=>"".$viaje_neto->descripcion_conflicto,
-                'detalle_alert'=>"".$viaje_neto->descripcion_conflicto_alert,
-                'timestamp'=>Carbon::now()->toDateTimeString(),
-                'Code' => $viaje_neto->Code,
-                'registro'=>auth()->user()->idusuario,
-            ];
-            $evaluacion["detalle"] = FALSE;
-            $evaluacion["detalle_nc"] = $detalle_no_conciliado;
-        } 
-        else if ($viaje_neto && !$viaje_validado && !$viaje_rechazado && $viaje_neto->Estatus != 29 && $viaje_neto->Estatus != 22 ) {
-            $detalle_no_conciliado = [
-                'idconciliacion' => $id_conciliacion,
-                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
-                'idmotivo'=>2,
-                'detalle'=>"Viaje pendiente de proceso de validación. ". $complemento_detalle,
-                'detalle_alert'=>"Viaje pendiente de proceso de validación. ". $complemento_detalle,
-                'timestamp'=>Carbon::now()->toDateTimeString(),
-                'Code' => $viaje_neto->Code,
-                'registro'=>auth()->user()->idusuario,
-            ];
-            $evaluacion["detalle"] = FALSE;
-            $evaluacion["detalle_nc"] = $detalle_no_conciliado;
         }
+        
         else if ($viaje_neto && !$viaje_validado && !$viaje_rechazado && $viaje_neto->Estatus == 29 && $viaje_neto->Estatus != 22) {
             $detalle_no_conciliado = [
                 'idconciliacion' => $id_conciliacion,
@@ -246,7 +219,7 @@ class Conciliaciones
                 'idconciliacion' => $id_conciliacion,
                 'idviaje_neto'=>$viaje_neto->IdViajeNeto,
                 'idmotivo'=>2,
-                'detalle'=>"Viaje rechazado en proceso de validación ". $complemento_detalle,
+                'detalle'=>"Viaje rechazado en proceso de validación. En caso de tener duda favor de presentarlo a aclaración. ". $complemento_detalle,
                 'detalle_alert'=>"<span style='text-align:left'>Viaje rechazado en proceso de validación.<br/><br/>En caso de tener duda favor de presentarlo a alcaración.</span>",
                 'timestamp'=>Carbon::now()->toDateTimeString(),
                 'Code' => $viaje_neto->Code,
@@ -262,6 +235,35 @@ class Conciliaciones
                 'idmotivo'=>2,
                 'detalle'=>"Viaje manual ingresado no autorizado. En caso de tener duda favor de presentarlo a aclaración. ".' '. $complemento_detalle,
                 'detalle_alert'=>"<span style='text-align:left'>Viaje manual ingresado no autorizado.<br/><br/>En caso de tener duda favor de presentarlo a alcaración.</span>",
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje_neto->Code,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $evaluacion["detalle"] = FALSE;
+            $evaluacion["detalle_nc"] = $detalle_no_conciliado;
+        }
+        
+        else if ($viaje_neto && !$viaje_validado && !$viaje_rechazado && $viaje_neto->Estatus != 29 && $viaje_neto->Estatus != 22 ) {
+            $detalle_no_conciliado = [
+                'idconciliacion' => $id_conciliacion,
+                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>2,
+                'detalle'=>"Viaje pendiente de proceso de validación. ". $complemento_detalle,
+                'detalle_alert'=>"Viaje pendiente de proceso de validación. ". $complemento_detalle,
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje_neto->Code,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $evaluacion["detalle"] = FALSE;
+            $evaluacion["detalle_nc"] = $detalle_no_conciliado;
+        }
+        else if($viaje_neto->en_conflicto_tiempo){
+            $detalle_no_conciliado = [
+                'idconciliacion' => $id_conciliacion,
+                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>1,
+                'detalle'=>"".$viaje_neto->descripcion_conflicto,
+                'detalle_alert'=>"".$viaje_neto->descripcion_conflicto_alert,
                 'timestamp'=>Carbon::now()->toDateTimeString(),
                 'Code' => $viaje_neto->Code,
                 'registro'=>auth()->user()->idusuario,
