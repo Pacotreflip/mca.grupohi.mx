@@ -75,7 +75,39 @@ class ViajesNetosController extends Controller
                     ];
                 }
 
-            } else if ($request->get('action') == 'validar') {
+            }else if($request->get('action') == 'en_conflicto'){
+                if($request->get("tipo_busqueda") == "fecha"){
+                    $this->validate($request, [
+                        'FechaInicial' => 'required|date_format:"Y-m-d"',
+                        'FechaFinal' => 'required|date_format:"Y-m-d"',
+                    ]);
+                    $fechas = $request->only(['FechaInicial', 'FechaFinal']);
+                }
+                else{
+
+                    $codigo = $request->get("Codigo");
+                    if($codigo == ""){
+                        $codigo = null;
+                    }else{
+                        $codigo = $request->get("Codigo");
+                    }
+
+                }
+
+                
+                
+                if($request->get("tipo_busqueda") == "fecha"){
+                    $query = ViajeNeto::EnConflicto()->Fechas($fechas);
+                }else{
+                    $query = ViajeNeto::EnConflicto()->Codigo($codigo);
+                }
+
+                
+                $viajes_netos = $query->get();
+
+                $data = ViajeNetoTransformer::transform($viajes_netos);
+            } 
+            else if ($request->get('action') == 'validar') {
                 $data = [];
 
                 $this->validate($request, [
@@ -162,7 +194,15 @@ class ViajesNetosController extends Controller
             }
             return response()->json(['viajes_netos' => $data]);
         } else {
-            return response()->view('viajes_netos.index');
+            if ($request->get('action') == 'en_conflicto') {
+                return view('viajes_netos.index')
+                ->withAction('en_conflicto');
+                
+            }else{
+                return view('viajes_netos.index')
+                ->withAction('');
+            }
+            
         }
     }
 

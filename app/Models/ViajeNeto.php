@@ -90,7 +90,9 @@ class ViajeNeto extends Model
     public function scopeFechas($query,Array $fechas) {
         return $query->whereBetween('viajesnetos.FechaLlegada', [$fechas['FechaInicial'], $fechas['FechaFinal']]);
     }
-
+    public function scopeCodigo($query, $codigo) {
+        return $query->where('viajesnetos.Code', $codigo);
+    }
     public function scopePorValidar($query) {
         return $query->select(DB::raw('viajesnetos.*'))
             ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
@@ -627,6 +629,11 @@ class ViajeNeto extends Model
     public function scopeAutorizados($query) {
         return $query->whereIn('Estatus', [0,20]);
     }
+    
+    public function scopeEnConflicto($query) {
+        return $query->join('conflictos_entre_viajes_detalle_ultimo', 'viajesnetos.IdViajeNeto', '=', 'conflictos_entre_viajes_detalle_ultimo.idviaje_neto');
+    }
+    
     public function conflicto_entre_viajes(){
         return $this->hasMany(ConflictoEntreViajesDetalle::class, "idvije_neto", "IdViajeNeto");
     }

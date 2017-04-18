@@ -33345,12 +33345,12 @@ Vue.component('viajes-index', {
     },
 
     methods: {
-        buscar: function buscar(e) {
+        buscar_en_conflicto: function buscar_en_conflicto(e) {
             e.preventDefault();
             var _this = this;
 
-            var data = $('.form_buscar').serialize();
-            var url = App.host + '/viajes_netos?action=index';
+            var data = $('.form_buscar_en_conflicto').serialize();
+            var url = App.host + '/viajes_netos?action=en_conflicto';
 
             $.ajax({
                 type: 'GET',
@@ -33377,6 +33377,46 @@ Vue.component('viajes-index', {
                             type: 'error',
                             title: '¡Error!',
                             text: App.errorsToString(_error.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.cargando = false;
+                }
+            });
+        },
+        buscar: function buscar(e) {
+            e.preventDefault();
+            var _this = this;
+
+            var data = $('.form_buscar').serialize();
+            var url = App.host + '/viajes_netos?action=index';
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.cargando = true;
+                    _this.viajes_netos = [];
+                    _this.form.errors = [];
+                    $('#partials_errors').empty();
+                },
+                success: function success(response) {
+                    if (!response.viajes_netos.length) {
+                        swal('¡Sin Resultados!', 'Ningún viaje coincide con los datos de consulta', 'warning');
+                    } else {
+                        _this.viajes_netos = response.viajes_netos;
+                    }
+                },
+                error: function error(_error2) {
+                    if (_error2.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
+                    } else if (_error2.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error2.responseText)
                         });
                     }
                 },

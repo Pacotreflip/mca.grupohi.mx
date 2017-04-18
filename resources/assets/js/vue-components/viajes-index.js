@@ -34,6 +34,48 @@ Vue.component('viajes-index', {
     },
 
     methods: {
+        buscar_en_conflicto: function(e){
+            e.preventDefault(
+
+            );
+            var _this = this;
+
+            var data = $('.form_buscar_en_conflicto').serialize();
+            var url = App.host + '/viajes_netos?action=en_conflicto';
+
+            $.ajax({
+                type : 'GET',
+                url  : url,
+                data : data,
+                beforeSend : function () {
+                    _this.cargando = true;
+                    _this.viajes_netos = [];
+                    _this.form.errors = [];
+                    $('#partials_errors').empty();
+                },
+                success:function (response) {
+                    if(! response.viajes_netos.length) {
+                        swal('¡Sin Resultados!', 'Ningún viaje coincide con los datos de consulta', 'warning');
+                    } else {
+                        _this.viajes_netos = response.viajes_netos;
+                    }
+                },
+                error: function (error) {
+                    if(error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if(error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.cargando = false;
+                }
+            });
+        },
         buscar: function(e) {
             e.preventDefault(
 

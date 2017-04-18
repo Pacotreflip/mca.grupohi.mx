@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <h1>VIAJES</h1>
+    <h1>VIAJES @if($action == 'en_conflicto')EN CONFLICTO @endif</h1>
     {!! Breadcrumbs::render('viajes_netos.index') !!}
     <hr>
     <div id="app">
@@ -12,6 +12,49 @@
                 @include('partials.errors')
                 </div>
                 <app-errors v-bind:form="form"></app-errors>
+                
+                
+                
+                @if($action == 'en_conflicto')
+                <div class="form-group">
+                   
+                {!! Form::open(['class' => 'form_buscar_en_conflicto']) !!}
+                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>FECHA INICIAL</label>
+                            <input type="text" name="FechaInicial" class="form-control" v-datepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>FECHA FINAL </label>
+                            <input type="text" name="FechaFinal" class="form-control" v-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Ticket (Código)</label>
+                            <input type="text" name="Codigo" class="form-control">
+                        </div>
+                    </div>
+                   
+                </div>
+                
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" @click="buscar_en_conflicto">
+                        <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
+                        <span v-else><i class="fa fa-search"></i> Buscar</span>
+                    </button>
+                </div>
+                
+                {!! Form::close() !!}
+                </div>
+                @else
                 <h3>BUSCAR VIAJES</h3>
                 {!! Form::open(['class' => 'form_buscar']) !!}
 
@@ -51,7 +94,7 @@
                         </div>
                     </div>
                 </div>
-
+                
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit" @click="buscar">
                         <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
@@ -61,6 +104,9 @@
                 </div>
                 <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
                 {!! Form::close() !!}
+                @endif
+                
+                
                 <hr>
                 <section v-if="viajes_netos.length" id="results">
                     <h3>
