@@ -11,6 +11,7 @@ require('bootstrap-fileinput/js/locales/es.js');
 require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
 window._ = require('underscore');
+window.numeral = require('numeral');
 require('./scripts');
 
 //Production

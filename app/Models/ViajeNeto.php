@@ -515,6 +515,19 @@ class ViajeNeto extends Model
         }
     }
 
+    public function getRegistroPrimerToqueAttribute(){
+        $creo = $this->CreoPrimerToque;
+        if(is_numeric($creo)){
+            if(!count($this->usuario_registro_primer_toque)) {
+                dd($this->CreoPrimerToque);
+            }
+            $registro = $this->usuario_registro_primer_toque->present()->NombreCompleto;
+            return $registro;
+        }else{
+            return $creo;
+        }
+    }
+
     public function getAutorizoAttribute(){
         return $this->Aprobo ? User::find($this->Aprobo)->present()->NombreCompleto : '';
     }
@@ -536,6 +549,10 @@ class ViajeNeto extends Model
 
     public function usuario_registro(){
         return  $this->belongsTo(User::class, 'Creo');
+    }
+
+    public function usuario_registro_primer_toque(){
+        return  $this->belongsTo(User::class, 'CreoPrimerToque');
     }
 
     public function scopeManualesAutorizados($query) {
@@ -674,6 +691,7 @@ class ViajeNeto extends Model
 
     public function scopeCorte($query){
         return $query->whereIn('Estatus', [0,1])
-            ->where('CreoPrimerToque', auth()->user()->idusuario);
+            //->where('CreoPrimerToque', auth()->user()->idusuario);
+            ->where('CreoPrimerToque', 3814);
     }
 }

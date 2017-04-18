@@ -61,7 +61,6 @@ class CorteController extends Controller
             ]);
         }
 
-        dd($corte);
         return response()->view('corte.show')->withCorte($corte);
     }
 

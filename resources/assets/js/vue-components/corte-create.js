@@ -3,13 +3,13 @@ Vue.component('corte-create', {
         return {
             viajes_netos : [],
             form : {
+                datos: {},
                 errors : []
             },
             cargando : false,
             guardando : false
         }
     },
-
     directives: {
         datepicker : {
             inserted: function (el) {
@@ -40,7 +40,6 @@ Vue.component('corte-create', {
             }
         }
     },
-
     methods: {
         buscar: function (e) {
             e.preventDefault();
@@ -55,12 +54,26 @@ Vue.component('corte-create', {
                 data: data,
                 beforeSend: function () {
                     _this.cargando = true;
-                    _this.viajes_netos = [];
                 },
                 success: function (response) {
+                    if (! response.viajes_netos.length) {
+                        swal({
+                            type: 'warning',
+                            title: '¡Sin Resultados!',
+                            text: 'Ningún viaje coincide con los datos de consulta',
+                            showConfirmButton: true
+                        });
+                    }
+
                     _this.viajes_netos = response.viajes_netos;
+
+                    $.each($('#form_buscar').serializeArray(), function () {
+                        _this.form.datos[this.name] = this.value;
+                    });
                 },
                 error: function (error) {
+
+
                     if (error.status == 422) {
                         App.setErrorsOnForm(_this.form, error.responseJSON);
                     } else if (error.status == 500) {
@@ -72,7 +85,7 @@ Vue.component('corte-create', {
                     }
                 },
                 complete: function () {
-                    _this.cargando = true;
+                    _this.cargando = false;
                 }
             });
         },
@@ -90,8 +103,11 @@ Vue.component('corte-create', {
         },
 
         corte: function () {
-            console.log('corte');
-        }
 
+        },
+
+        formato: function (val) {
+            return numeral(val).format('0,0.00');
+        }
     }
 });

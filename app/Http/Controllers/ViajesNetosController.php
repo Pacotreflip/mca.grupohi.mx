@@ -190,7 +190,7 @@ class ViajesNetosController extends Controller
             }
             return response()->json(['viajes_netos' => $data]);
         } else {
-            return response()->view('viajes_netos.index');
+            return view('viajes_netos.index');
         }
     }
 
