@@ -78,11 +78,19 @@ class ViajeNeto extends Model
     public function deductiva() {
         return $this->hasOne(Deductiva::class, 'id_viaje_neto', 'IdViajeNeto');
     }
-    
+
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeRegistradosManualmente($query) {
         return $query->where('Estatus', 29);
     }
-    
+
+    public function scopeFechas($query,Array $fechas) {
+        return $query->whereBetween('viajesnetos.FechaLlegada', [$fechas['FechaInicial'], $fechas['FechaFinal']]);
+    }
+
     public function scopePorValidar($query) {
         return $query->select(DB::raw('viajesnetos.*'))
             ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
@@ -96,7 +104,13 @@ class ViajeNeto extends Model
     }
 
     public function scopeValidados($query) {
-        return $query->whereIn('Estatus', [1, 11, 21, 31]);
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+            ->where(function($query){
+                $query
+                    ->whereNotNull('viajes.IdViaje')
+                    ->whereIn('viajesnetos.Estatus', [0, 10, 20, 30]);
+            });
     }
 
     public static function autorizar($data) {
@@ -563,6 +577,10 @@ class ViajeNeto extends Model
         return $query->where('Estatus', 22);
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeManualesValidados($query) {
         return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
             ->where(function($query){
@@ -571,26 +589,34 @@ class ViajeNeto extends Model
             });
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeManualesDenegados($query) {
-        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje')
+                $query->whereNotNull('viajesrechazados.IdViajeRechazado')
                     ->where('viajesnetos.Estatus', 21);
             });
     }
 
+    /**
+     * @param $query
+     * @return mixed
+     */
     public function scopeMovilesDenegados($query) {
-        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+        return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje')
+                $query->whereNotNull('viajesrechazados.IdViajeRechazado')
                     ->where('viajesnetos.Estatus', 1);
             });
     }
 
     public function scopeDenegados($query) {
-        return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+        return $query->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
-                $query->whereNull('viajes.IdViaje')
+                $query->whereNotNull('viajesrechazados.IdViajeRechazado')
                     ->whereIn('viajesnetos.Estatus', [1, 11, 21]);
             });
     }
@@ -612,7 +638,7 @@ class ViajeNeto extends Model
     }
 
     public function scopeMoviles($query) {
-        return $query->whereIn('Estatus', [0,1]);
+        return $query->whereIn('viajesnetos.Estatus', [0,1]);
     }
 
     public function scopeAutorizados($query) {
@@ -644,17 +670,50 @@ class ViajeNeto extends Model
     public function getDescripcionConflictoAttribute(){
         $codigos =  "";
         if($this->en_conflicto_tiempo){
+            if((count($this->conflicto->detalles)-1) == 1){
+                $codigos =  "Este viaje entra en conflicto con otro viaje pues el tiempo entre ellos es menor a 30 minutos.";
+            }else{
+                $codigos =  "Este viaje entra en conflicto con ".(count($this->conflicto->detalles)-1)." viajes pues el tiempo entre ello es menor a 30 minutos.";
+            }
+            
             $detalles = $this->conflicto->detalles;
             foreach($detalles as $detalle){
-                if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
-                    $codigos.= $detalle->viaje_neto->Code . "[ Llegada: ".$detalle->viaje_neto->timestamp_llegada."] / ";
-                }
+                //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
+                    $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(16-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
+               // }
             }
+            $codigos .= "\n Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
             return $codigos;
         }else{
             return "";
         }
     }
+    
+    public function getDescripcionConflictoAlertAttribute(){
+        //dd($this->conflicto);
+        $codigos =  "";
+        if($this->en_conflicto_tiempo){
+            if((count($this->conflicto->detalles)-1) == 1){
+                $codigos =  "Este viaje entra en conflicto con otro viaje pues el tiempo entre ellos es menor a 30 minutos.";
+            }else{
+                $codigos =  "Este viaje entra en conflicto con ".(count($this->conflicto->detalles)-1)." viajes pues el tiempo entre ello es menor a 30 minutos.";
+            }
+            $codigos.="<br/><br/><table class='table table-striped' style='font-size:0.8em'><thead>"
+                    . "<tr><th style='text-align:center'>Código</th><th style='text-align:center'>Salida</th><th style='text-align:center'>Llegada</th></tr></thead>";
+            $detalles = $this->conflicto->detalles;
+            foreach($detalles as $detalle){
+                //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
+                    $codigos.= "<tr><td>".$detalle->viaje_neto->Code. "</td><td>".$detalle->viaje_neto->timestamp_salida."</td><td>".$detalle->viaje_neto->timestamp_llegada."</td></tr>";
+               // }
+            }
+            $codigos.="</table>";
+            $codigos.= "<br>Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
+            return $codigos;
+        }else{
+            return "";
+        }
+    }
+    
     public function getTimestampLlegadaAttribute(){
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
         return $timestampLlegada;

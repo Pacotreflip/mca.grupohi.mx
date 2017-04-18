@@ -191,15 +191,19 @@ class PDFViajesNetos extends Rotation
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, utf8_decode(Proyecto::find(Context::getId())->descripcion), '', 1, 'L');
 
-        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode('TIPO DE VIAJES :'), '', 0, 'LB');
-        $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, utf8_decode($this->data['tipo']), '', 1, 'L');
+        foreach($this->data['tipos'] as $key => $tipo) {
+            if($key == 0) {
+                $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+                $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode('TIPO DE VIAJES :'), '', 0, 'LB');
+                $this->SetFont('Arial', '', $this->txtContenidoTam);
+                $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, utf8_decode($tipo), '', 1, 'L');
+            } else {
+                $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode(''), '', 0, 'LB');
+                $this->SetFont('Arial', '', $this->txtContenidoTam);
+                $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, utf8_decode($tipo), '', 1, 'L');
+            }
 
-        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
-        $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode('ESTADO DE LOS VIAJES :'), '', 0, 'LB');
-        $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, utf8_decode($this->data['estatus']), '', 1, 'L');
+        }
 
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode('RANGO DE FECHAS:'), '', 0, 'L');
