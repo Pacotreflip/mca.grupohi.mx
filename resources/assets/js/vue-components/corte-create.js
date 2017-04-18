@@ -72,8 +72,6 @@ Vue.component('corte-create', {
                     });
                 },
                 error: function (error) {
-
-
                     if (error.status == 422) {
                         App.setErrorsOnForm(_this.form, error.responseJSON);
                     } else if (error.status == 500) {
@@ -90,20 +88,69 @@ Vue.component('corte-create', {
             });
         },
 
-        confirmar_corte: function () {
+        confirmar_corte: function (e) {
+            e.preventDefault();
+
+            var _this = this;
+
             swal({
                 title: "¿Desea continuar con el corte?",
-                text: "¿Esta seguro de que la información es correcta?",
-                type: "warning",
+                text: "A continuación escriba el motivo del corte",
+                type: "input",
                 showCancelButton: true,
+                inputPlaceholder: "Motivo del Corte",
                 confirmButtonText: "Si",
                 cancelButtonText: "No",
+                closeOnConfirm: false,
                 confirmButtonColor: "#ec6c62"
-            }, () => this.corte());
+            }, function(inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("¡Escriba el Motivo del Corte!");
+                    return false
+                }
+                swal({
+                    title: "",
+                    text: "",
+                    timer: 250,
+                    showConfirmButton: false,
+                    type: 'success'
+                });
+                _this.corte(inputValue);
+            });
         },
 
-        corte: function () {
+        corte: function (inputValue) {
+            var _this = this;
+            var url = App.host + '/corte';
+            _this.form.datos['motivo'] = inputValue;
+            var data = _this.form.datos;
 
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                beforeSend: function () {
+                    _this.guardando = true;
+                },
+                success: function (response) {
+                    window.location = response.path;
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
+                }
+            });
         },
 
         formato: function (val) {

@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Cortes\Corte;
 use App\Models\Cortes\CorteDetalle;
+use App\Models\Cortes\Cortes;
+use App\Models\Transformers\ViajeNetoTransformer;
+use App\Models\ViajeNeto;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -46,22 +49,10 @@ class CorteController extends Controller
      */
     public function store(Request $request)
     {
-        $corte = Corte::create([
-            'estatus'           => 1,
-            'id_checador'       => auth()->user()->idusuario,
-            'timestamp_inicial' => $request->get('fecha_inicial') . ' ' . $request->get('hora_inicial'),
-            'timestamp_final' => $request->get('fecha_final') . ' ' . $request->get('hora_final')
-        ]);
-
-        foreach($request->get('viajes_netos', []) as $viaje_neto) {
-            CorteDetalle::create([
-                'id_viajeneto' => $viaje_neto,
-                'id_corte'     => $corte->id,
-                'estatus'      => $i
-            ]);
+        $corte = (new Cortes($request->all()))->save();
+        if ($request->ajax()) {
+            return response()->json(['path' => route('corte.show', $corte)]);
         }
-
-        return response()->view('corte.show')->withCorte($corte);
     }
 
     /**
@@ -72,7 +63,10 @@ class CorteController extends Controller
      */
     public function show($id)
     {
-        //
+        $corte = Corte::find($id);
+        return view('cortes.show')
+            ->withCorte($corte)
+            ->withDetalles($corte->corte_detalles);
     }
 
     /**

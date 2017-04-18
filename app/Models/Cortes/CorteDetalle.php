@@ -13,7 +13,9 @@ class CorteDetalle extends Model
     protected $fillable = [
         'id_viajeneto',
         'id_corte',
-        'estatus'
+        'estatus',
+        'motivo',
+        'id_usuario'
     ];
 
     public function corte() {

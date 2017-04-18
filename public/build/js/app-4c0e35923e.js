@@ -28156,7 +28156,6 @@ Vue.component('corte-create', {
                     });
                 },
                 error: function error(_error) {
-
                     if (_error.status == 422) {
                         App.setErrorsOnForm(_this.form, _error.responseJSON);
                     } else if (_error.status == 500) {
@@ -28173,23 +28172,70 @@ Vue.component('corte-create', {
             });
         },
 
-        confirmar_corte: function confirmar_corte() {
-            var _this2 = this;
+        confirmar_corte: function confirmar_corte(e) {
+            e.preventDefault();
+
+            var _this = this;
 
             swal({
                 title: "¿Desea continuar con el corte?",
-                text: "¿Esta seguro de que la información es correcta?",
-                type: "warning",
+                text: "A continuación escriba el motivo del corte",
+                type: "input",
                 showCancelButton: true,
+                inputPlaceholder: "Motivo del Corte",
                 confirmButtonText: "Si",
                 cancelButtonText: "No",
+                closeOnConfirm: false,
                 confirmButtonColor: "#ec6c62"
-            }, function () {
-                return _this2.corte();
+            }, function (inputValue) {
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("¡Escriba el Motivo del Corte!");
+                    return false;
+                }
+                swal({
+                    title: "",
+                    text: "",
+                    timer: 250,
+                    showConfirmButton: false,
+                    type: 'success'
+                });
+                _this.corte(inputValue);
             });
         },
 
-        corte: function corte() {},
+        corte: function corte(inputValue) {
+            var _this = this;
+            var url = App.host + '/corte';
+            _this.form.datos['motivo'] = inputValue;
+            var data = _this.form.datos;
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    window.location = response.path;
+                },
+                error: function error(_error2) {
+                    if (_error2.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
+                    } else if (_error2.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error2.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+            });
+        },
 
         formato: function formato(val) {
             return numeral(val).format('0,0.00');

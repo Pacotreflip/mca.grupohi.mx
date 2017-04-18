@@ -8,17 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class Corte extends Model
 {
     protected $connection = 'sca';
-    protected $table = 'corte_checador';
+    protected $table = 'corte';
     protected $primaryKey = 'id';
     public $timestamps = false;
     protected $fillable = [
         'estatus',
         'id_checador',
         'timestamp_inicial',
-        'timestamp_final'
+        'timestamp_final',
+        'motivo'
     ];
 
     public function checador() {
         return $this->belongsTo(User::class, 'id_checador');
+    }
+
+    public function corte_detalles() {
+        return $this->hasMany(CorteDetalle::class, 'id_corte');
     }
 }

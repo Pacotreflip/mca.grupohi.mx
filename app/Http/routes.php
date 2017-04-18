@@ -127,3 +127,5 @@ Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');
 
 //Rutas de corte de checador
 Route::get('corte/create', 'CorteController@create')->name('corte.create');
+Route::post('corte', 'CorteController@store')->name('corte.store');
+Route::get('corte/{corte}', 'CorteController@show')->name('corte.show');
