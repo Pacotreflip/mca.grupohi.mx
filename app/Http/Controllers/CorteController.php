@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cortes\Corte;
+use App\Models\Cortes\CorteDetalle;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -31,8 +34,7 @@ class CorteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
-    {
+    public function create() {
         return view('cortes.create');
     }
 
@@ -44,7 +46,23 @@ class CorteController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $corte = Corte::create([
+            'estatus'           => 1,
+            'id_checador'       => auth()->user()->idusuario,
+            'timestamp_inicial' => $request->get('fecha_inicial') . ' ' . $request->get('hora_inicial'),
+            'timestamp_final' => $request->get('fecha_final') . ' ' . $request->get('hora_final')
+        ]);
+
+        foreach($request->get('viajes_netos', []) as $viaje_neto) {
+            CorteDetalle::create([
+                'id_viajeneto' => $viaje_neto,
+                'id_corte'     => $corte->id,
+                'estatus'      => $i
+            ]);
+        }
+
+        dd($corte);
+        return response()->view('corte.show')->withCorte($corte);
     }
 
     /**

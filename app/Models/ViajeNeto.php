@@ -663,11 +663,17 @@ class ViajeNeto extends Model
         }
         return "";
     }
+
     public function getUsuarioRechazoAttribute(){
         $usuario = User::find($this->Rechazo);
         if($usuario){
             return $usuario->present()->nombreCompleto;
         }
         return "";
+    }
+
+    public function scopeCorte($query){
+        return $query->whereIn('Estatus', [0,1])
+            ->where('CreoPrimerToque', auth()->user()->idusuario);
     }
 }

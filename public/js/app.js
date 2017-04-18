@@ -23939,7 +23939,7 @@ module.exports = exports['default'];
 
 },{}],23:[function(require,module,exports){
 /*!
- * vue-resource v1.2.1
+ * vue-resource v1.3.1
  * https://github.com/pagekit/vue-resource
  * Released under the MIT License.
  */
@@ -24593,7 +24593,15 @@ function Url(url, params) {
     options$$1 = merge({}, Url.options, self.$options, options$$1);
 
     Url.transforms.forEach(function (handler) {
-        transform = factory(handler, transform, self.$vm);
+
+        if (isString(handler)) {
+            handler = Url.transform[handler];
+        }
+
+        if (isFunction(handler)) {
+            transform = factory(handler, transform, self.$vm);
+        }
+
     });
 
     return transform(options$$1);
@@ -24613,7 +24621,8 @@ Url.options = {
  * Url transforms.
  */
 
-Url.transforms = [template, query, root];
+Url.transform = {template: template, query: query, root: root};
+Url.transforms = ['template', 'query', 'root'];
 
 /**
  * Encodes a Url parameter string.
@@ -24948,8 +24957,6 @@ var header = function (request, next) {
  * XMLHttp client (Browser).
  */
 
-var SUPPORTS_BLOB = typeof Blob !== 'undefined' && typeof FileReader !== 'undefined';
-
 var xhrClient = function (request) {
     return new PromiseObj(function (resolve) {
 
@@ -24985,16 +24992,16 @@ var xhrClient = function (request) {
             xhr.timeout = request.timeout;
         }
 
-        if (request.credentials === true) {
+        if (request.responseType && 'responseType' in xhr) {
+            xhr.responseType = request.responseType;
+        }
+
+        if (request.withCredentials || request.credentials) {
             xhr.withCredentials = true;
         }
 
         if (!request.crossOrigin) {
             request.headers.set('X-Requested-With', 'XMLHttpRequest');
-        }
-
-        if ('responseType' in xhr && SUPPORTS_BLOB) {
-            xhr.responseType = 'blob';
         }
 
         request.headers.forEach(function (value, name) {
@@ -25293,7 +25300,15 @@ function Http(options$$1) {
     defaults(options$$1 || {}, self.$options, Http.options);
 
     Http.interceptors.forEach(function (handler) {
-        client.use(handler);
+
+        if (isString(handler)) {
+            handler = Http.interceptor[handler];
+        }
+
+        if (isFunction(handler)) {
+            client.use(handler);
+        }
+
     });
 
     return client(new Request(options$$1)).then(function (response) {
@@ -25321,7 +25336,8 @@ Http.headers = {
     custom: {}
 };
 
-Http.interceptors = [before, method, body, jsonp, header, cors];
+Http.interceptor = {before: before, method: method, body: body, jsonp: jsonp, header: header, cors: cors};
+Http.interceptors = ['before', 'method', 'body', 'jsonp', 'header', 'cors'];
 
 ['get', 'delete', 'head', 'jsonp'].forEach(function (method$$1) {
 
@@ -25495,7 +25511,8 @@ require('sweetalert');
 require('jquery-treegrid/js/jquery.treegrid.js');
 window._ = require('underscore');
 require('./scripts');
-// Production
+
+//Production
 window.Vue = require('vue/dist/vue.min.js');
 
 // Development
@@ -26380,8 +26397,9 @@ require('./vue-components/conciliaciones-create');
 require('./vue-components/conciliaciones-edit');
 require('./vue-components/viajes-revertir');
 require('./vue-components/viajes-index');
+require('./vue-components/corte-create');
 
-},{"./vue-components/conciliaciones-create":38,"./vue-components/conciliaciones-edit":39,"./vue-components/errors":40,"./vue-components/fda-bancomaterial":41,"./vue-components/fda-material":42,"./vue-components/global-errors":43,"./vue-components/origenes-usuarios":44,"./vue-components/viajes-completa":48,"./vue-components/viajes-index":49,"./vue-components/viajes-manual":50,"./vue-components/viajes-modificar":51,"./vue-components/viajes-revertir":52,"./vue-components/viajes-validar":53}],38:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":38,"./vue-components/conciliaciones-edit":39,"./vue-components/corte-create":40,"./vue-components/errors":41,"./vue-components/fda-bancomaterial":42,"./vue-components/fda-material":43,"./vue-components/global-errors":44,"./vue-components/origenes-usuarios":45,"./vue-components/viajes-completa":49,"./vue-components/viajes-index":50,"./vue-components/viajes-manual":51,"./vue-components/viajes-modificar":52,"./vue-components/viajes-revertir":53,"./vue-components/viajes-validar":54}],38:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
@@ -27048,13 +27066,118 @@ Vue.component('conciliaciones-edit', {
 },{}],40:[function(require,module,exports){
 'use strict';
 
+Vue.component('corte-create', {
+    data: function data() {
+        return {
+            viajes_netos: [],
+            form: {
+                errors: []
+            },
+            cargando: false,
+            guardando: false
+        };
+    },
+
+    directives: {
+        datepicker: {
+            inserted: function inserted(el) {
+                $(el).datepicker({
+                    format: 'yyyy-mm-dd',
+                    language: 'es',
+                    autoclose: true,
+                    clearBtn: true,
+                    todayHighlight: true,
+                    endDate: '0d',
+                    startDate: '-1d'
+                });
+                $(el).val(App.timeStamp(1));
+            }
+        },
+        timepicker: {
+            inserted: function inserted(el) {
+                $(el).timepicker({
+                    'timeFormat': 'hh:mm:ss a',
+                    'showDuration': true
+                });
+                if ($(el).hasClass('time') && $(el).hasClass('start')) {
+                    $(el).val('12:00:00 am');
+                }
+                if ($(el).hasClass('time') && $(el).hasClass('end')) {
+                    $(el).val('11:59:59 pm');
+                }
+            }
+        }
+    },
+
+    methods: {
+        buscar: function buscar(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var data = $('#form_buscar').serialize();
+            var url = App.host + '/viajes_netos?action=corte';
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.cargando = true;
+                    _this.viajes_netos = [];
+                },
+                success: function success(response) {
+                    _this.viajes_netos = response.viajes_netos;
+                },
+                error: function error(_error) {
+                    if (_error.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error.responseJSON);
+                    } else if (_error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.cargando = true;
+                }
+            });
+        },
+
+        confirmar_corte: function confirmar_corte() {
+            var _this2 = this;
+
+            swal({
+                title: "¿Desea continuar con el corte?",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this2.corte();
+            });
+        },
+
+        corte: function corte() {
+            console.log('corte');
+        }
+
+    }
+});
+
+},{}],41:[function(require,module,exports){
+'use strict';
+
 Vue.component('app-errors', {
     props: ['form'],
 
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":45}],41:[function(require,module,exports){
+},{"./templates/errors.html":46}],42:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -27160,7 +27283,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],42:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -27249,7 +27372,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],43:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -27275,7 +27398,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":46}],44:[function(require,module,exports){
+},{"./templates/global-errors.html":47}],45:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -27350,13 +27473,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":47}],45:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":48}],46:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],46:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],47:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],48:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],49:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -27576,7 +27699,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],49:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-index', {
@@ -27694,7 +27817,7 @@ Vue.component('viajes-index', {
     }
 });
 
-},{}],50:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 'use strict';
 
 Array.prototype.removeValue = function (name, value) {
@@ -27859,7 +27982,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],51:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 // register modal component
@@ -28021,7 +28144,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-revertir', {
@@ -28158,7 +28281,7 @@ Vue.component('viajes-revertir', {
     }
 });
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 // register modal component

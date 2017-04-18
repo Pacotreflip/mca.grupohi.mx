@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 use App\Models\ViajeNeto;
 use App\Models\Empresa;
@@ -176,6 +177,16 @@ class ViajesNetosController extends Controller
                 $viajes_netos = $viajes->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')]) ->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
+            } else if($request->get('action') == 'corte') {
+                $horaInicial = Carbon::createFromFormat('g:i:s a', $request->get('hora_inicial'))->toTimeString();
+                $horaFinal = Carbon::createFromFormat('g:i:s a', $request->get('hora_final'))->toTimeString();
+                $timestamp_inicial = $request->get('fecha_inicial') . ' ' . $horaInicial;
+                $timestamp_final = $request->get('fecha_final') . ' ' . $horaFinal;
+
+                $viajes_netos = ViajeNeto::corte();
+                $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada,' ',HoraLlegada) AS datetime) between '{$timestamp_inicial}' and '{$timestamp_final}'");
+                $data = ViajeNetoTransformer::transform($viajes_netos->get());
+
             }
             return response()->json(['viajes_netos' => $data]);
         } else {

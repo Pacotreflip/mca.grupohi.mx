@@ -13,11 +13,7 @@ require('jquery-treegrid/js/jquery.treegrid.js');
 window._ = require('underscore');
 require('./scripts');
 
-
-
-
-
-// Production
+//Production
 window.Vue = require('vue/dist/vue.min.js');
 
 // Development
