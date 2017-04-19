@@ -33873,7 +33873,7 @@ Vue.component('corte-create', {
                         swal({
                             type: 'warning',
                             title: '¡Sin Resultados!',
-                            text: 'Ningún viaje coincide con los datos de consulta',
+                            text: 'No hay viajes disponibles para las fechas solicitadas',
                             showConfirmButton: true
                         });
                     }

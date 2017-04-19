@@ -15,6 +15,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Carbon::setLocale(config('app.locale'));
         View::composer('partials.nav-app', \App\Http\Composers\ProyectoComposer::class);
     }
 

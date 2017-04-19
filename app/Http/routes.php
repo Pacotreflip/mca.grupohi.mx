@@ -100,6 +100,11 @@ Route::group(['prefix' => 'pdf'], function () {
         'as' => 'pdf.viajes_netos',
         'uses' => 'PDFController@viajes_netos'
     ]);
+
+    Route::get('corte/{corte}', [
+        'as' => 'pdf.corte',
+        'uses' => 'PDFController@corte'
+    ]);
 });
 
 //Reportes Routes
@@ -129,3 +134,4 @@ Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');
 Route::get('corte/create', 'CorteController@create')->name('corte.create');
 Route::post('corte', 'CorteController@store')->name('corte.store');
 Route::get('corte/{corte}', 'CorteController@show')->name('corte.show');
+Route::get('corte', 'CorteController@index')->name('corte.index');

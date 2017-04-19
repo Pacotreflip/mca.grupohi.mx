@@ -160,6 +160,7 @@ return [
         Themsaid\Transformers\TransformersServiceProvider::class,
 
         Maatwebsite\Excel\ExcelServiceProvider::class,
+        Jenssegers\Date\DateServiceProvider::class,
 
     ],
 
@@ -219,6 +220,7 @@ return [
         'Rotation'  => Ghidev\Fpdf\Facades\Rotation::class,
         'MC_Table'  => Ghidev\Fpdf\Facades\MC_Table::class,
         'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
+        'Date'      => Jenssegers\Date\Date::class,
 
     ],
 

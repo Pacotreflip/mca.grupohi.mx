@@ -12,6 +12,7 @@ use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\DB;
 
 class CorteController extends Controller
 {
@@ -27,9 +28,13 @@ class CorteController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        $cortes = $this->buscar($request->buscar);
+
+        return view('cortes.index')
+            ->withCortes($cortes)
+            ->withBusqueda($request->buscar);
     }
 
     /**
@@ -64,9 +69,11 @@ class CorteController extends Controller
     public function show($id)
     {
         $corte = Corte::find($id);
+        $viajes_netos = ViajeNetoTransformer::transform($corte->viajes_netos());
+
         return view('cortes.show')
             ->withCorte($corte)
-            ->withDetalles($corte->corte_detalles);
+            ->withViajesNetos($viajes_netos);
     }
 
     /**
@@ -101,5 +108,17 @@ class CorteController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function buscar($busqueda, $howMany = 15) {
+        return Corte::porChecador()
+            ->where(function ($query) use ($busqueda) {
+                $query->where('id', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('motivo', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('id_checador', 'LIKE', '%'.$busqueda.'%')
+                ;
+            })
+            ->orderBy('timestamp', 'DESC')
+            ->paginate($howMany);
     }
 }

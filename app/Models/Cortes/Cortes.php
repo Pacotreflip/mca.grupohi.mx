@@ -10,7 +10,6 @@ namespace App\Models\Cortes;
 
 use App\Models\ViajeNeto;
 use Carbon\Carbon;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class Cortes
