@@ -34511,7 +34511,11 @@ Vue.component('viajes-index', {
     data: function data() {
         return {
             'viajes_netos': [],
+            'conflicto': [],
+            'viaje_neto_seleccionado': "",
+            'id_conflicto': "",
             'cargando': false,
+            'guardando': false,
             'form': {
                 'errors': []
             }
@@ -34539,16 +34543,20 @@ Vue.component('viajes-index', {
                     placeholder: "--SELECCIONE--"
                 });
             }
+        },
+
+        modal_conflicto: {
+            //data-toggle="modal" data-target="#detalles_conflicto"
         }
     },
 
     methods: {
-        buscar: function buscar(e) {
+        buscar_en_conflicto: function buscar_en_conflicto(e) {
             e.preventDefault();
             var _this = this;
 
-            var data = $('.form_buscar').serialize();
-            var url = App.host + '/viajes_netos?action=index';
+            var data = $('.form_buscar_en_conflicto').serialize();
+            var url = App.host + '/viajes_netos?action=en_conflicto';
 
             $.ajax({
                 type: 'GET',
@@ -34583,6 +34591,131 @@ Vue.component('viajes-index', {
                 }
             });
         },
+        buscar: function buscar(e) {
+            e.preventDefault();
+            var _this = this;
+
+            var data = $('.form_buscar').serialize();
+            var url = App.host + '/viajes_netos?action=index';
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.cargando = true;
+                    _this.viajes_netos = [];
+                    _this.form.errors = [];
+                    $('#partials_errors').empty();
+                },
+                success: function success(response) {
+                    if (!response.viajes_netos.length) {
+                        swal('¡Sin Resultados!', 'Ningún viaje coincide con los datos de consulta', 'warning');
+                    } else {
+                        _this.viajes_netos = response.viajes_netos;
+                    }
+                },
+                error: function error(_error2) {
+                    if (_error2.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
+                    } else if (_error2.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error2.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.cargando = false;
+                }
+            });
+        },
+
+        fetchDetalleConflicto: function fetchDetalleConflicto(id_conflicto, id_viaje) {
+            var _this2 = this;
+
+            //console.log('fetchDetalle',id_conflicto);
+            this.fetching = true;
+            var _this = this;
+            _this.viaje_neto_seleccionado = id_viaje;
+            _this.id_conflicto = id_conflicto;
+            //           console.log(_this.viaje_neto_seleccionado);
+            //            var url = $('#id_conciliacion').val();
+            this.$http.get('viajes_netos?action=detalle_conflicto&id_conflicto=' + id_conflicto + '&id_viaje=' + id_viaje).then(function (response) {
+                _this.conflicto = response.body;
+                _this2.fetching = false;
+            }, function (error) {
+                _this2.fetching = false;
+                App.setErrorsOnForm(_this.form, error.body);
+            });
+        },
+        confirmarPonerPagable: function confirmarPonerPagable(e) {
+            var _this3 = this;
+
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar?",
+                text: "¿Esta seguro de permitir que el viaje sea pagado?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this3.PonerPagable();
+            });
+        },
+        PonerPagable: function PonerPagable() {
+            var _this = this;
+            var url = $('.form_pagable').attr('action');
+            var data = $('.form_pagable').serialize() + '&IdViajeNeto=' + _this.viaje_neto_seleccionado + '&IdConflicto=' + _this.id_conflicto;
+            var idviaje_neto = _this.viaje_neto_seleccionado;
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'PATCH',
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    swal('¡Hecho!', 'Datos actualizados correctamente', 'success');
+                },
+                error: function error(_error3) {
+                    if (_error3.status == 422) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error3.responseJSON)
+                        });
+                    } else if (_error3.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error3.responseText)
+                        });
+                        //_this.fetchConciliacion();
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                    $('#detalles_conflicto').modal('hide');
+                }
+            });
+        },
+
+        detalle_conflicto: function detalle_conflicto(id_conflicto, id_viaje) {
+
+            this.fetchDetalleConflicto(id_conflicto, id_viaje);
+            $("#detalles_conflicto").modal("show");
+        },
+
+        detalle_conflicto_pagable: function detalle_conflicto_pagable(id_conflicto, id_viaje) {
+
+            this.fetchDetalleConflicto(id_conflicto, id_viaje);
+            $("#detalles_conflicto_pagable").modal("show");
+        },
 
         pdf: function pdf(e) {
             e.preventDefault();
@@ -34590,8 +34723,19 @@ Vue.component('viajes-index', {
             var url = App.host + '/pdf/viajes_netos';
 
             $('.form_buscar').attr('action', url);
+            $('.form_buscar').attr('target', '_blank');
             $('.form_buscar').attr('method', 'GET');
             $('.form_buscar').submit();
+        },
+        pdf_conflicto: function pdf_conflicto(e) {
+            e.preventDefault();
+
+            var url = App.host + '/pdf/viajes_netos_conflicto';
+
+            $('.form_buscar_en_conflicto').attr('action', url);
+            $('.form_buscar_en_conflicto').attr('target', '_blank');
+            $('.form_buscar_en_conflicto').attr('method', 'GET');
+            $('.form_buscar_en_conflicto').submit();
         }
     }
 });
