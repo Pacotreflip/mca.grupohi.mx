@@ -82,6 +82,9 @@
         @if(Auth::user()->can(['revertir-viajes']))
         <li><a href="{{ route('viajes.edit', ['action' => 'revertir']) }}">Revertir Viajes</a> </li>
         @endif
+        @if (Auth::user()->can(['consultar-viajes-conflicto']))
+        <li><a href="{{ route('viajes_netos.index', ['action' => 'en_conflicto']) }}">Viajes en Conflicto</a> </li>
+        @endif
         @if(Auth::user()->hasRole('checador') || Auth::user()->hasRole('jefe-acarreos'))
         <li><a href="{{ route('corte.index') }}">Corte de Checador</a> </li>
         @endif

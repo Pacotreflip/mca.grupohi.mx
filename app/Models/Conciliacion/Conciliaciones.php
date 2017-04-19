@@ -164,6 +164,7 @@ class Conciliaciones
             if($viaje_neto){
                 $viaje_rechazado = $viaje_neto->viaje_rechazado;
                 $viaje_validado = $viaje_neto->viaje;
+                $viaje_conflicto_pagable = $viaje_neto->conflicto_pagable;
             }else{
                 $viaje_rechazado = null;
                 $viaje_validado = null;
@@ -174,11 +175,13 @@ class Conciliaciones
             
         }else if($viaje_neto){
             $viaje_neto = $viaje_neto;
+            $viaje_conflicto_pagable = $viaje_neto->conflicto_pagable;
             $viaje_validado = $viaje_neto->viaje;
             $viaje_rechazado = $viaje_neto->viaje_rechazado;
             $viaje_pendiente_conciliar =  Viaje::porConciliar()->where('viajes.IdViajeNeto', '=', $viaje_neto->IdViajeNeto)->first();
         }else if($viaje){
             $viaje_neto = $viaje->viajeNeto;
+            $viaje_conflicto_pagable = $viaje_neto->conflicto_pagable;
             $viaje_rechazado = $viaje->viajeNeto->viaje_rechazado;
             $viaje_validado = $viaje;
             $viaje_pendiente_conciliar =  Viaje::porConciliar()->where('viajes.IdViaje', '=', $viaje->IdViaje)->first();
@@ -257,7 +260,7 @@ class Conciliaciones
             $evaluacion["detalle"] = FALSE;
             $evaluacion["detalle_nc"] = $detalle_no_conciliado;
         }
-        else if($viaje_neto->en_conflicto_tiempo){
+        else if($viaje_neto->en_conflicto_tiempo && !$viaje_conflicto_pagable){
             $detalle_no_conciliado = [
                 'idconciliacion' => $id_conciliacion,
                 'idviaje_neto'=>$viaje_neto->IdViajeNeto,

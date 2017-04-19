@@ -29,7 +29,10 @@ class ViajeNetoTransformer extends AbstractTransformer
             'tipo'              => $viaje_neto->tipo,
             'tiro'              => (String) $viaje_neto->tiro,
             'importe'           => $viaje_neto->getImporte(),
-            'valido'            => $viaje_neto->valido
+            'valido'            => $viaje_neto->valido,
+            'conflicto'         => ($viaje_neto->conflicto)?$viaje_neto->conflicto->id:'',
+            'conflicto_pdf'     => ($viaje_neto->conflicto)?($viaje_neto->conflicto_pagable)?'EN CONFLICTO PUESTO PAGABLE POR '.$viaje_neto->conflicto_pagable->usuario_aprobo_pago->present()->NombreCompleto.':'.$viaje_neto->conflicto_pagable->motivo:'EN CONFLICTO (NO PAGABLE)':'SIN CONFLICTO',
+            'conflicto_pagable' => ($viaje_neto->conflicto_pagable)?$viaje_neto->conflicto_pagable->id:'',
         ];
     }
 }

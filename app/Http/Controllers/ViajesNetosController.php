@@ -75,7 +75,66 @@ class ViajesNetosController extends Controller
                     ];
                 }
 
-            } else if ($request->get('action') == 'validar') {
+            }else if($request->get('action') == 'detalle_conflicto'){
+                $id_conflicto = $request->get("id_conflicto");
+                $id_viaje = $request->get("id_viaje");
+                $conflicto = \App\Models\Conflictos\ConflictoEntreViajes::find($id_conflicto);
+                $viaje = ViajeNeto::find($id_viaje);
+                $pagable = $viaje->conflicto_pagable;
+                $detalles = $conflicto->detalles;
+                if($pagable){
+                    $data["motivo"] = $pagable->motivo;
+                    $data["aprobo_pago"] = $pagable->usuario_aprobo_pago->present()->NombreCompleto;
+                }
+                else{
+                    $data["motivo"] = null;
+                    $data["aprobo_pago"] = null;
+                }
+                foreach($detalles as $detalle){
+                    $data["conflictos"][] = [
+                        "id"=>$detalle->viaje_neto->IdViajeNeto,
+                        "code"=>$detalle->viaje_neto->Code,
+                        "fecha_registro"=>$detalle->viaje_neto->timestamp_carga->format("d-m-Y h:i:s"),
+                        "fecha_salida"=>$detalle->viaje_neto->timestamp_salida->format("d-m-Y h:i:s"),
+                        "fecha_llegada"=>$detalle->viaje_neto->timestamp_llegada->format("d-m-Y h:i:s"),
+                    ];
+                }
+//                dd($data);
+//                $data = array(array("code"=>123,"fecha_registro"=>"2017-08-02 10:01:02", "fecha_salida"=>"2017-01-01 00:01:02", "fecha_llegada"=>"2017-01-01 00:01:02"),
+//                    array("code"=>122, "fecha_registro"=>"2017-01-02 00:01:02", "fecha_salida"=>"2017-01-02 00:01:02", "fecha_llegada"=>"2017-01-02 00:01:02"));
+                return response()->json( $data);
+            }else if($request->get('action') == 'en_conflicto'){
+                if($request->get("tipo_busqueda") == "fecha"){
+                    $this->validate($request, [
+                        'FechaInicial' => 'required|date_format:"Y-m-d"',
+                        'FechaFinal' => 'required|date_format:"Y-m-d"',
+                    ]);
+                    $fechas = $request->only(['FechaInicial', 'FechaFinal']);
+                }
+                else{
+
+                    $codigo = $request->get("Codigo");
+                    if($codigo == ""){
+                        $codigo = null;
+                    }else{
+                        $codigo = $request->get("Codigo");
+                    }
+
+                }
+                
+                if($request->get("tipo_busqueda") == "fecha"){
+                    $query = ViajeNeto::EnConflicto()->Fechas($fechas);
+                }else{
+                    $query = ViajeNeto::EnConflicto()->Codigo($codigo);
+                }
+
+                
+                $viajes_netos = $query->get();
+
+                $data = ViajeNetoTransformer::transform($viajes_netos);
+                //dd($data);
+            } 
+            else if ($request->get('action') == 'validar') {
                 $data = [];
 
                 $this->validate($request, [
@@ -172,7 +231,15 @@ class ViajesNetosController extends Controller
             }
             return response()->json(['viajes_netos' => $data]);
         } else {
-            return view('viajes_netos.index');
+            if ($request->get('action') == 'en_conflicto') {
+                return view('viajes_netos.index')
+                ->withAction('en_conflicto');
+                
+            }else{
+                return view('viajes_netos.index')
+                ->withAction('');
+            }
+            
         }
     }
 
@@ -282,6 +349,11 @@ class ViajesNetosController extends Controller
 
             $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
             return response()->json($viaje_neto->modificar($request));
+        }else if($request->get('type') == 'poner_pagable') {
+            
+            
+            $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
+            return response()->json($viaje_neto->poner_pagable($request));
         }
     }
 

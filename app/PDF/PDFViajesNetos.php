@@ -93,51 +93,72 @@ class PDFViajesNetos extends Rotation
             $this->SetTextColors(array('255,255,255'));
             $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES'), 0, 1, 'L');
             $this->SetFont('Arial', '', 5);
-            $this->SetStyles(array('DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'FD', 'DF', 'DF'));
+            $this->SetStyles(array('DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'FD', 'DF', 'DF','DF'));
+        $this->SetWidths(array(
+            0.02 * $this->WidthTotal,
+            0.04 * $this->WidthTotal,
+            0.045 * $this->WidthTotal,
+            0.065 * $this->WidthTotal,
+            0.075 * $this->WidthTotal,
+            0.06 * $this->WidthTotal,
+            0.06 * $this->WidthTotal,
+            0.06 * $this->WidthTotal,
+            0.03 * $this->WidthTotal,
+            0.0675 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.12 * $this->WidthTotal
+        ));
+        $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '','', '2'));
+        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetHeights(array(0.5));
+        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+        $this->Row(array(
+            "#",
+            "Tipo",
+            utf8_decode("Camión"),
+            utf8_decode("Código"),
+            "Fecha y Hora Llegada",
+            "Origen",
+            "Tiro",
+            "Material",
+            utf8_decode("Cub."),
+            "Importe",
+            utf8_decode("Registró"),
+            utf8_decode("Autorizó"),
+            utf8_decode("Validó"),
+            "Estado",
+            "Conflicto"));
+
+            $this->SetFont('Arial', '', 5);
             $this->SetWidths(array(
                 0.02 * $this->WidthTotal,
-                0.055 * $this->WidthTotal,
-                0.05 * $this->WidthTotal,
+                0.04 * $this->WidthTotal,
+                0.045 * $this->WidthTotal,
                 0.065 * $this->WidthTotal,
-                0.095 * $this->WidthTotal,
+                0.075 * $this->WidthTotal,
                 0.06 * $this->WidthTotal,
-                0.085 * $this->WidthTotal,
                 0.06 * $this->WidthTotal,
-                0.05 * $this->WidthTotal,
+                0.06 * $this->WidthTotal,
+                0.03 * $this->WidthTotal,
                 0.0675 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.12 * $this->WidthTotal
             ));
-            $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '2'));
-            $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
-            $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
-            $this->SetHeights(array(0.3));
-            $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
-            $this->Row(array(
-                "#",
-                "Tipo",
-                utf8_decode("Camión"),
-                utf8_decode("Código"),
-                "Fecha y Hora Llegada",
-                "Origen",
-                "Tiro",
-                "Material",
-                utf8_decode("Cubicación"),
-                "Importe",
-                utf8_decode("Registró"),
-                utf8_decode("Autorizó"),
-                utf8_decode("Validó"),
-                "Estado"));
-
-            $this->SetRounds(array('', '', '', '', '', '', '', '','', '', '', '', '', ''));
-            $this->SetRadius(array(0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0));
-            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->encola = "items";
+            $this->SetRounds(array('', '', '', '', '', '', '', '','', '', '', '', '','', ''));
+            $this->SetRadius(array(0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255','255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.35));
-            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L','L','L'));
+            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L','L','L','L'));
         }
     }
 
@@ -226,29 +247,30 @@ class PDFViajesNetos extends Rotation
         $this->SetTextColors(array('255,255,255'));
         $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES'), 0, 1, 'L');
         $this->SetFont('Arial', '', 6);
-        $this->SetStyles(array('DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'FD', 'DF', 'DF'));
+        $this->SetStyles(array('DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'FD', 'DF', 'DF','DF'));
         $this->SetWidths(array(
             0.02 * $this->WidthTotal,
-            0.055 * $this->WidthTotal,
-            0.05 * $this->WidthTotal,
+            0.04 * $this->WidthTotal,
+            0.045 * $this->WidthTotal,
             0.065 * $this->WidthTotal,
-            0.095 * $this->WidthTotal,
+            0.075 * $this->WidthTotal,
             0.06 * $this->WidthTotal,
-            0.085 * $this->WidthTotal,
             0.06 * $this->WidthTotal,
-            0.05 * $this->WidthTotal,
+            0.06 * $this->WidthTotal,
+            0.03 * $this->WidthTotal,
             0.0675 * $this->WidthTotal,
-            0.1 * $this->WidthTotal,
-            0.1 * $this->WidthTotal,
-            0.1 * $this->WidthTotal,
-            0.1 * $this->WidthTotal
+            0.09 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.09 * $this->WidthTotal,
+            0.12 * $this->WidthTotal
         ));
-        $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '2'));
-        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
-        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '','', '2'));
+        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
         $this->SetHeights(array(0.5));
-        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
         $this->Row(array(
             "#",
             "Tipo",
@@ -258,58 +280,61 @@ class PDFViajesNetos extends Rotation
             "Origen",
             "Tiro",
             "Material",
-            utf8_decode("Cubicación"),
+            utf8_decode("Cub."),
             "Importe",
             utf8_decode("Registró"),
             utf8_decode("Autorizó"),
             utf8_decode("Validó"),
-            "Estado"));
+            "Estado",
+            "Conflicto"));
 
         foreach ($this->data['viajes_netos'] as $key => $item) {
             $this->SetFont('Arial', '', 5);
             $this->SetWidths(array(
                 0.02 * $this->WidthTotal,
-                0.055 * $this->WidthTotal,
-                0.05 * $this->WidthTotal,
+                0.04 * $this->WidthTotal,
+                0.045 * $this->WidthTotal,
                 0.065 * $this->WidthTotal,
-                0.095 * $this->WidthTotal,
+                0.075 * $this->WidthTotal,
                 0.06 * $this->WidthTotal,
-                0.085 * $this->WidthTotal,
                 0.06 * $this->WidthTotal,
-                0.05 * $this->WidthTotal,
+                0.06 * $this->WidthTotal,
+                0.03 * $this->WidthTotal,
                 0.0675 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.12 * $this->WidthTotal
             ));
             $this->encola = "items";
-            $this->SetRounds(array('', '', '', '', '', '', '', '','', '', '', '', '', ''));
-            $this->SetRadius(array(0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0));
-            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetRounds(array('', '', '', '', '', '', '', '','', '', '', '', '','', ''));
+            $this->SetRadius(array(0, 0, 0,0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255','255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.35));
-            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L','L','L'));
+            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L','L','L','L'));
 
             if ($key + 1 == $numItems ) {
-                $this->SetRounds(array('4', '', '', '', '', '', '', '', '', '', '', '', '', '3'));
-                $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+                $this->SetRounds(array('4', '', '', '', '', '', '', '', '', '', '', '', '','', '3'));
+                $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0.2));
             }
             $this->SetWidths(array(
                 0.02 * $this->WidthTotal,
-                0.055 * $this->WidthTotal,
-                0.05 * $this->WidthTotal,
+                0.04 * $this->WidthTotal,
+                0.045 * $this->WidthTotal,
                 0.065 * $this->WidthTotal,
-                0.095 * $this->WidthTotal,
+                0.075 * $this->WidthTotal,
                 0.06 * $this->WidthTotal,
-                0.085 * $this->WidthTotal,
                 0.06 * $this->WidthTotal,
-                0.05 * $this->WidthTotal,
+                0.06 * $this->WidthTotal,
+                0.03 * $this->WidthTotal,
                 0.0675 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal,
-                0.1 * $this->WidthTotal
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.09 * $this->WidthTotal,
+                0.12 * $this->WidthTotal
             ));
 
             $this->encola = "items";
@@ -327,7 +352,10 @@ class PDFViajesNetos extends Rotation
                 utf8_decode($item['registro']),
                 utf8_decode($item['autorizo']),
                 utf8_decode($item['valido']),
-                utf8_decode($item['estado'])));
+                utf8_decode($item['estado']),
+                utf8_decode($item['conflicto_pdf'])
+                )
+                    );
 //                }
             $this->encola = "";
         }
