@@ -30,6 +30,9 @@ class ViajeNetoConflictoPagable extends Model {
         return $this->belongsTo(ViajeNeto::class, "idviaje_neto");
     }
     public function conflicto(){
-        return $this->belongsTo(Confli::class, "idconflicto");
+        return $this->belongsTo(ConflictoEntreViajes::class, "idconflicto");
+    }
+    public function usuario_aprobo_pago(){
+        return $this->belongsTo(\App\User::class,"aprobo_pago");
     }
 }

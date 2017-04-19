@@ -50,6 +50,7 @@
                         <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
                         <span v-else><i class="fa fa-search"></i> Buscar</span>
                     </button>
+                    <button class="btn  btn-info" @click="pdf_conflicto"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
                 </div>
                 
                 {!! Form::close() !!}
@@ -115,6 +116,7 @@
                     </h3>
                     
                     <div class="table-responsive">
+                        (P) Viaje en conflicto de tiempo pero con aprobación de pago registrada.
                         <table class="table table-hover table-bordered small">
                             <thead>
                             <tr>
@@ -152,15 +154,15 @@
                                 <td>@{{ viaje_neto.valido }}</td>
                                 <td>@{{ viaje_neto.estado }}</td>
                                 <td v-if ="viaje_neto.conflicto>0&&!viaje_neto.conflicto_pagable>0">
-                                    <a style="cursor: pointer" @click="detalle_conflicto(viaje_neto.conflicto, viaje_neto.id)" >@{{ viaje_neto.conflicto }}</a></td>
+                                    <a style="cursor: pointer" @click="detalle_conflicto(viaje_neto.conflicto, viaje_neto.id)" >Ver</a></td>
                                 <td v-if ="viaje_neto.conflicto>0&&viaje_neto.conflicto_pagable>0">
                                     
-                                    <a style="cursor: pointer" @click="detalle_conflicto_pagable(viaje_neto.conflicto, viaje_neto.id)" >Pagable @{{ viaje_neto.conflicto }}</a></td>
+                                    <a style="cursor: pointer" @click="detalle_conflicto_pagable(viaje_neto.conflicto, viaje_neto.id)" >(P) Ver</a></td>
                                 <td v-if ="!viaje_neto.conflicto>0">N/A</td>
                             </tr>
                             </tbody>
                         </table>
-                        
+                        (P) Viaje en conflicto de tiempo pero con aprobación de pago registrada.
                         <!-- Modal Editar Fecha y Folio -->
                         <div class="modal fade" id="detalles_conflicto" tabindex="-1" role="dialog">
                           <div class="modal-dialog" role="document">
@@ -174,6 +176,7 @@
                                   <input type="hidden" value="poner_pagable" name="type">
                                   
                                   <div class="row">
+                                      <div class="col-md-12">
                                       <table class="table">
                                         <thead>
                                       <tr >
@@ -192,7 +195,7 @@
                                       </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="detalle_conflicto in conflicto" v-bind:style="(detalle_conflicto.id==viaje_neto_seleccionado)?'color:#F00':''">
+                                            <tr  v-for="detalle_conflicto in conflicto.conflictos" v-bind:style="(detalle_conflicto.id==viaje_neto_seleccionado)?'color:#1c94c4':''" v-bind:class="(detalle_conflicto.id==viaje_neto_seleccionado)?'active':''">
                                           <td >
                                               @{{detalle_conflicto.code}}
                                           </td>
@@ -208,9 +211,9 @@
                                       </tr>
                                         </tbody>
                                   </table>
-                                      
+                                      </div>
                                   </div>
-                                  <div class="row" style="padding: 4px"><textarea name="motivo" class="form-control" placeholder="Ingrese el motivo para aprobar el pago."></textarea></div>
+                                  <div class="row" ><div class="col-md-12"><textarea name="motivo" class="form-control" placeholder="Ingrese el motivo para aprobar el pago."></textarea></div></div>
                                   {!! Form::close() !!}
                               </div>
                               <div class="modal-footer">
@@ -235,6 +238,7 @@
                                   <input type="hidden" value="poner_pagable" name="type">
                                   
                                   <div class="row">
+                                      <div class="col-md-12">
                                       <table class="table">
                                         <thead>
                                       <tr >
@@ -253,7 +257,7 @@
                                       </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="detalle_conflicto in conflicto" v-bind:style="(detalle_conflicto.id==viaje_neto_seleccionado)?'color:#F00':''">
+                                            <tr v-for="detalle_conflicto in conflicto.conflictos" v-bind:style="(detalle_conflicto.id==viaje_neto_seleccionado)?'color:#1c94c4':''" v-bind:class="(detalle_conflicto.id==viaje_neto_seleccionado)?'active':''">
                                           <td >
                                               @{{detalle_conflicto.code}}
                                           </td>
@@ -269,10 +273,13 @@
                                       </tr>
                                         </tbody>
                                   </table>
-                                      
+                                      </div>
                                   </div>
-                                  <div class="row" style="padding: 4px">Aprobó pago:</div>
-                                  <div class="row" style="padding: 4px">Motivo: </div>
+                                  <hr>
+                                  <div class="row" ><div class="col-md-3"><label>Aprobó pago:</label></div><div class="col-md-9">@{{conflicto.aprobo_pago}}</div></div>
+                                  <div class="row">
+                                      <div class="col-md-3"><label>Motivo:</label></div><div class="col-md-9">@{{conflicto.motivo}}</div>
+                                      </div>
                                   {!! Form::close() !!}
                               </div>
                               <div class="modal-footer">

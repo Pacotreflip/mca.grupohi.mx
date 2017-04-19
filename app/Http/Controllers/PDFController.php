@@ -101,6 +101,53 @@ class PDFController extends Controller
         $pdf->create();
     }
 
+    public function viajes_netos_conflicto(Request $request)
+    {
+        if($request->get("tipo_busqueda") == "fecha"){
+            $this->validate($request, [
+                'FechaInicial' => 'required|date_format:"Y-m-d"',
+                'FechaFinal' => 'required|date_format:"Y-m-d"',
+            ]);
+            $fechas = $request->only(['FechaInicial', 'FechaFinal']);
+        }
+        else{
+
+            $codigo = $request->get("Codigo");
+            if($codigo == ""){
+                $codigo = null;
+            }else{
+                $codigo = $request->get("Codigo");
+            }
+
+        }
+
+        if($request->get("tipo_busqueda") == "fecha"){
+            $query = ViajeNeto::EnConflicto()->Fechas($fechas);
+        }else{
+            $query = ViajeNeto::EnConflicto()->Codigo($codigo);
+        }
+
+
+        $viajes_netos = $query->get();
+
+//        $data = ViajeNetoTransformer::transform($viajes_netos);
+//
+//        $viajes_netos = $query->get();
+
+        if(! $viajes_netos->count()) {
+            Flash::error('Ningún viaje coincide con los datos de consulta');
+            return redirect()->back()->withInput();
+        }
+
+        $data = [
+            'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
+            'tipos'         => ["En Conflicto"],
+            'rango'        => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"
+        ];
+
+        $pdf = new PDFViajesNetos('L', 'cm', 'Letter', $data);
+        $pdf->create();
+    }
     /**
      * Store a newly created resource in storage.
      *

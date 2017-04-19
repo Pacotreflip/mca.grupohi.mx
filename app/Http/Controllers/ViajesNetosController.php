@@ -77,10 +77,21 @@ class ViajesNetosController extends Controller
 
             }else if($request->get('action') == 'detalle_conflicto'){
                 $id_conflicto = $request->get("id_conflicto");
+                $id_viaje = $request->get("id_viaje");
                 $conflicto = \App\Models\Conflictos\ConflictoEntreViajes::find($id_conflicto);
+                $viaje = ViajeNeto::find($id_viaje);
+                $pagable = $viaje->conflicto_pagable;
                 $detalles = $conflicto->detalles;
+                if($pagable){
+                    $data["motivo"] = $pagable->motivo;
+                    $data["aprobo_pago"] = $pagable->usuario_aprobo_pago->present()->NombreCompleto;
+                }
+                else{
+                    $data["motivo"] = null;
+                    $data["aprobo_pago"] = null;
+                }
                 foreach($detalles as $detalle){
-                    $data[] = [
+                    $data["conflictos"][] = [
                         "id"=>$detalle->viaje_neto->IdViajeNeto,
                         "code"=>$detalle->viaje_neto->Code,
                         "fecha_registro"=>$detalle->viaje_neto->timestamp_carga->format("d-m-Y h:i:s"),

@@ -135,12 +135,9 @@ Vue.component('viajes-index', {
             _this.id_conflicto = id_conflicto;
  //           console.log(_this.viaje_neto_seleccionado);
 //            var url = $('#id_conciliacion').val();
-            this.$http.get('viajes_netos?action=detalle_conflicto&id_conflicto='+id_conflicto).then(response => {
+            this.$http.get('viajes_netos?action=detalle_conflicto&id_conflicto='+id_conflicto+'&id_viaje='+id_viaje).then(response => {
                 _this.conflicto = response.body;
-                
-                //console.log("s",response.body.conflicto,_this.conflicto.detalle);
                 this.fetching = false;
-                //_this.fecha_cambio = _this.conciliacion.fecha;
             }, error => {
                 this.fetching = false;
                 App.setErrorsOnForm(_this.form, error.body);
@@ -216,8 +213,19 @@ Vue.component('viajes-index', {
             var url = App.host + '/pdf/viajes_netos';
 
             $('.form_buscar').attr('action', url);
+            $('.form_buscar').attr('target', '_blank');
             $('.form_buscar').attr('method', 'GET');
             $('.form_buscar').submit();
+        },
+        pdf_conflicto: function(e) {
+            e.preventDefault();
+
+            var url = App.host + '/pdf/viajes_netos_conflicto';
+
+            $('.form_buscar_en_conflicto').attr('action', url);
+            $('.form_buscar_en_conflicto').attr('target', '_blank');
+            $('.form_buscar_en_conflicto').attr('method', 'GET');
+            $('.form_buscar_en_conflicto').submit();
         }
     }
 });

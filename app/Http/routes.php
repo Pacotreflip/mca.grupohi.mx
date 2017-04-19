@@ -100,6 +100,11 @@ Route::group(['prefix' => 'pdf'], function () {
         'as' => 'pdf.viajes_netos',
         'uses' => 'PDFController@viajes_netos'
     ]);
+    
+    Route::get('viajes_netos_conflicto', [
+        'as' => 'pdf.viajes_netos_conflicto',
+        'uses' => 'PDFController@viajes_netos_conflicto'
+    ]);
 });
 
 //Reportes Routes
