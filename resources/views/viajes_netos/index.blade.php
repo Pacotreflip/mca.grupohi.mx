@@ -218,7 +218,9 @@
                               </div>
                               <div class="modal-footer">
                                 <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                @if (Auth::user()->can(['poner-viajes-conflicto-pagables']))
                                 <button type="button" class="btn btn-success" @click="confirmarPonerPagable">Es Pagable</button>
+                                @endif
                               </div>
                             </div><!-- /.modal-content -->
                           </div><!-- /.modal-dialog -->
