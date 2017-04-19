@@ -108,10 +108,12 @@
                 
                 
                 <hr>
+                
                 <section v-if="viajes_netos.length" id="results">
                     <h3>
                         RESULTADOS DE LA BÚSQUEDA
                     </h3>
+                    
                     <div class="table-responsive">
                         <table class="table table-hover table-bordered small">
                             <thead>
@@ -130,6 +132,7 @@
                                 <th style="text-align: center"> Autorizó </th>
                                 <th style="text-align: center"> Validó </th>
                                 <th style="text-align: center"> Estado </th>
+                                <th style="text-align: center"> Conflicto </th>
                             </tr>
                             </thead>
                             <tbody>
@@ -148,12 +151,141 @@
                                 <td>@{{ viaje_neto.autorizo }}</td>
                                 <td>@{{ viaje_neto.valido }}</td>
                                 <td>@{{ viaje_neto.estado }}</td>
+                                <td v-if ="viaje_neto.conflicto>0&&!viaje_neto.conflicto_pagable>0">
+                                    <a style="cursor: pointer" @click="detalle_conflicto(viaje_neto.conflicto, viaje_neto.id)" >@{{ viaje_neto.conflicto }}</a></td>
+                                <td v-if ="viaje_neto.conflicto>0&&viaje_neto.conflicto_pagable>0">
+                                    
+                                    <a style="cursor: pointer" @click="detalle_conflicto_pagable(viaje_neto.conflicto, viaje_neto.id)" >Pagable @{{ viaje_neto.conflicto }}</a></td>
+                                <td v-if ="!viaje_neto.conflicto>0">N/A</td>
                             </tr>
                             </tbody>
                         </table>
+                        
+                        <!-- Modal Editar Fecha y Folio -->
+                        <div class="modal fade" id="detalles_conflicto" tabindex="-1" role="dialog">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">DETALLES DEL CONFLICTO</h4>
+                              </div>
+                                <div class="modal-body"  >
+                                  {!! Form::open(['route' => ['viajes_netos.update'], 'method' => 'patch', 'class' => 'form_pagable']) !!}
+                                  <input type="hidden" value="poner_pagable" name="type">
+                                  
+                                  <div class="row">
+                                      <table class="table">
+                                        <thead>
+                                      <tr >
+                                          <td style="text-align: center">
+                                               Código (Ticket)
+                                          </td>
+                                          <td style="text-align: center">
+                                               Fecha Registro
+                                          </td>
+                                         <td style="text-align: center">
+                                               Fecha Salida
+                                          </td>
+                                          <td style="text-align: center">
+                                               Fecha Llegada
+                                          </td>
+                                      </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="detalle_conflicto in conflicto" v-bind:style="(detalle_conflicto.id==viaje_neto_seleccionado)?'color:#F00':''">
+                                          <td >
+                                              @{{detalle_conflicto.code}}
+                                          </td>
+                                          <td>
+                                              @{{detalle_conflicto.fecha_registro}}
+                                          </td>
+                                          <td>
+                                              @{{detalle_conflicto.fecha_salida}}
+                                          </td>
+                                          <td>
+                                              @{{detalle_conflicto.fecha_llegada}}
+                                          </td>
+                                      </tr>
+                                        </tbody>
+                                  </table>
+                                      
+                                  </div>
+                                  <div class="row" style="padding: 4px"><textarea name="motivo" class="form-control" placeholder="Ingrese el motivo para aprobar el pago."></textarea></div>
+                                  {!! Form::close() !!}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                                <button type="button" class="btn btn-success" @click="confirmarPonerPagable">Es Pagable</button>
+                              </div>
+                            </div><!-- /.modal-content -->
+                          </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        
+                        
+                        <!-- Modal Editar Fecha y Folio -->
+                        <div class="modal fade" id="detalles_conflicto_pagable" tabindex="-1" role="dialog">
+                          <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title">DETALLES DEL CONFLICTO</h4>
+                              </div>
+                                <div class="modal-body"  >
+                                  {!! Form::open(['route' => ['viajes_netos.update'], 'method' => 'patch', 'class' => 'form_pagable']) !!}
+                                  <input type="hidden" value="poner_pagable" name="type">
+                                  
+                                  <div class="row">
+                                      <table class="table">
+                                        <thead>
+                                      <tr >
+                                          <td style="text-align: center">
+                                               Código (Ticket)
+                                          </td>
+                                          <td style="text-align: center">
+                                               Fecha Registro
+                                          </td>
+                                         <td style="text-align: center">
+                                               Fecha Salida
+                                          </td>
+                                          <td style="text-align: center">
+                                               Fecha Llegada
+                                          </td>
+                                      </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr v-for="detalle_conflicto in conflicto" v-bind:style="(detalle_conflicto.id==viaje_neto_seleccionado)?'color:#F00':''">
+                                          <td >
+                                              @{{detalle_conflicto.code}}
+                                          </td>
+                                          <td>
+                                              @{{detalle_conflicto.fecha_registro}}
+                                          </td>
+                                          <td>
+                                              @{{detalle_conflicto.fecha_salida}}
+                                          </td>
+                                          <td>
+                                              @{{detalle_conflicto.fecha_llegada}}
+                                          </td>
+                                      </tr>
+                                        </tbody>
+                                  </table>
+                                      
+                                  </div>
+                                  <div class="row" style="padding: 4px">Aprobó pago:</div>
+                                  <div class="row" style="padding: 4px">Motivo: </div>
+                                  {!! Form::close() !!}
+                              </div>
+                              <div class="modal-footer">
+                                <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                              </div>
+                            </div><!-- /.modal-content -->
+                          </div><!-- /.modal-dialog -->
+                        </div><!-- /.modal -->
+                        
                     </div>
                 </section>
             </section>
+            
         </viajes-index>
     </div>
 @stop

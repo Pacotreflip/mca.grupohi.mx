@@ -2,7 +2,11 @@ Vue.component('viajes-index', {
     data: function() {
         return {
             'viajes_netos' : [],
+            'conflicto' : [],
+            'viaje_neto_seleccionado':"",
+            'id_conflicto':"",
             'cargando' : false,
+            'guardando' :false,
             'form' : {
                 'errors' : []
             },
@@ -30,6 +34,10 @@ Vue.component('viajes-index', {
                     placeholder: "--SELECCIONE--",
                 });
             }
+        },
+        
+        modal_conflicto:{
+            //data-toggle="modal" data-target="#detalles_conflicto"
         }
     },
 
@@ -117,6 +125,89 @@ Vue.component('viajes-index', {
                     _this.cargando = false;
                 }
             });
+        },
+        
+        fetchDetalleConflicto: function(id_conflicto, id_viaje) {
+            //console.log('fetchDetalle',id_conflicto);
+            this.fetching = true;
+            var _this = this;
+            _this.viaje_neto_seleccionado = id_viaje;
+            _this.id_conflicto = id_conflicto;
+ //           console.log(_this.viaje_neto_seleccionado);
+//            var url = $('#id_conciliacion').val();
+            this.$http.get('viajes_netos?action=detalle_conflicto&id_conflicto='+id_conflicto).then(response => {
+                _this.conflicto = response.body;
+                
+                //console.log("s",response.body.conflicto,_this.conflicto.detalle);
+                this.fetching = false;
+                //_this.fecha_cambio = _this.conciliacion.fecha;
+            }, error => {
+                this.fetching = false;
+                App.setErrorsOnForm(_this.form, error.body);
+            });
+        },
+        confirmarPonerPagable: function(e) {
+            e.preventDefault();
+
+            swal({
+                title: "¿Desea continuar?",
+                text: "¿Esta seguro de permitir que el viaje sea pagado?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si",
+                cancelButtonText: "No",
+                confirmButtonColor: "#ec6c62"
+            }, () => this.PonerPagable() );
+        },
+        PonerPagable: function () {
+            var _this = this;
+            var url = $('.form_pagable').attr('action');
+            var data = $('.form_pagable').serialize()+'&IdViajeNeto='+_this.viaje_neto_seleccionado+'&IdConflicto='+_this.id_conflicto;
+            var idviaje_neto = _this.viaje_neto_seleccionado;
+            $.ajax({
+                url: url,
+                data: data,
+                type: 'PATCH',
+                beforeSend: function () {
+                    _this.guardando = true;
+                },
+                success: function (response) {
+                    swal('¡Hecho!', 'Datos actualizados correctamente', 'success');
+                    
+                },
+                error:function(error) {
+                    if(error.status == 422) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseJSON)
+                        });
+                    } else if(error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                        //_this.fetchConciliacion();
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
+                    $('#detalles_conflicto').modal('hide');
+                }
+            });
+        },
+        
+        detalle_conflicto: function(id_conflicto,id_viaje){
+
+            this.fetchDetalleConflicto(id_conflicto,id_viaje);
+           $("#detalles_conflicto").modal("show");
+        },
+        
+        detalle_conflicto_pagable: function(id_conflicto,id_viaje){
+
+            this.fetchDetalleConflicto(id_conflicto,id_viaje);
+           $("#detalles_conflicto_pagable").modal("show");
         },
 
         pdf: function(e) {

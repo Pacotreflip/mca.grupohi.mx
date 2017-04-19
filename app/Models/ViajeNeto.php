@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Models\Conciliacion\ConciliacionDetalle;
 use Conflictos\ConflictoEntreViajesDetalle;
-
+use App\Models\Conflictos\ViajeNetoConflictoPagable;
 class ViajeNeto extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -350,7 +350,18 @@ class ViajeNeto extends Model
             throw $e;
         }
     }
-    
+    public function poner_pagable($request){
+        if(str_replace(" ", "", $request->get("motivo"))==""){
+            throw new \Exception("Indique el motivo para permitir el pago del viaje en conflicto");
+        }
+        
+        ViajeNetoConflictoPagable::create([
+            "idviaje_neto"=>$this->IdViajeNeto,
+            "idconflicto"=>$request->IdConflicto,
+            "motivo"=>$request->motivo,
+            "aprobo_pago"=>auth()->user()->idusuario
+        ]);
+    }
     public function modificar($request) {
         $data = $request->get('data');
         $viaje_aprobado = $this->viaje;
@@ -452,11 +463,14 @@ class ViajeNeto extends Model
     }
 
     public function viaje() {
-        return$this->hasOne(Viaje::class, 'IdViajeNeto');
+        return $this->hasOne(Viaje::class, 'IdViajeNeto');
+    }
+    public function conflicto_pagable() {
+        return $this->hasOne(ViajeNetoConflictoPagable::class, 'idviaje_neto');
     }
     
     public function viaje_rechazado() {
-        return$this->hasOne(ViajeRechazado::class, 'IdViajeNeto');
+        return $this->hasOne(ViajeRechazado::class, 'IdViajeNeto');
     }
 
     public function empresa () {
@@ -706,6 +720,10 @@ class ViajeNeto extends Model
     
     public function getTimestampLlegadaAttribute(){
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
+        return $timestampLlegada;
+    }
+    public function getTimestampCargaAttribute(){
+        $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaCarga.' '.$this->HoraCarga);
         return $timestampLlegada;
     }
     public function getTimestampSalidaAttribute(){

@@ -75,6 +75,23 @@ class ViajesNetosController extends Controller
                     ];
                 }
 
+            }else if($request->get('action') == 'detalle_conflicto'){
+                $id_conflicto = $request->get("id_conflicto");
+                $conflicto = \App\Models\Conflictos\ConflictoEntreViajes::find($id_conflicto);
+                $detalles = $conflicto->detalles;
+                foreach($detalles as $detalle){
+                    $data[] = [
+                        "id"=>$detalle->viaje_neto->IdViajeNeto,
+                        "code"=>$detalle->viaje_neto->Code,
+                        "fecha_registro"=>$detalle->viaje_neto->timestamp_carga->format("d-m-Y h:i:s"),
+                        "fecha_salida"=>$detalle->viaje_neto->timestamp_salida->format("d-m-Y h:i:s"),
+                        "fecha_llegada"=>$detalle->viaje_neto->timestamp_llegada->format("d-m-Y h:i:s"),
+                    ];
+                }
+//                dd($data);
+//                $data = array(array("code"=>123,"fecha_registro"=>"2017-08-02 10:01:02", "fecha_salida"=>"2017-01-01 00:01:02", "fecha_llegada"=>"2017-01-01 00:01:02"),
+//                    array("code"=>122, "fecha_registro"=>"2017-01-02 00:01:02", "fecha_salida"=>"2017-01-02 00:01:02", "fecha_llegada"=>"2017-01-02 00:01:02"));
+                return response()->json( $data);
             }else if($request->get('action') == 'en_conflicto'){
                 if($request->get("tipo_busqueda") == "fecha"){
                     $this->validate($request, [
@@ -93,8 +110,6 @@ class ViajesNetosController extends Controller
                     }
 
                 }
-
-                
                 
                 if($request->get("tipo_busqueda") == "fecha"){
                     $query = ViajeNeto::EnConflicto()->Fechas($fechas);
@@ -106,6 +121,7 @@ class ViajesNetosController extends Controller
                 $viajes_netos = $query->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
+                //dd($data);
             } 
             else if ($request->get('action') == 'validar') {
                 $data = [];
@@ -312,6 +328,11 @@ class ViajesNetosController extends Controller
 
             $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
             return response()->json($viaje_neto->modificar($request));
+        }else if($request->get('type') == 'poner_pagable') {
+            
+            
+            $viaje_neto = ViajeNeto::findOrFail($request->get('IdViajeNeto'));
+            return response()->json($viaje_neto->poner_pagable($request));
         }
     }
 
