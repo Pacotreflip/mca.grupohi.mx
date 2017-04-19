@@ -33947,6 +33947,7 @@ Vue.component('corte-create', {
                     _this.guardando = true;
                 },
                 success: function success(response) {
+                    _this.viajes_netos = [];
                     window.location = response.path;
                 },
                 error: function error(_error2) {

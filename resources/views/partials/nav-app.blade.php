@@ -82,6 +82,9 @@
         @if(Auth::user()->can(['revertir-viajes']))
         <li><a href="{{ route('viajes.edit', ['action' => 'revertir']) }}">Revertir Viajes</a> </li>
         @endif
+        @if(Auth::user()->hasRole('checador') || Auth::user()->hasRole('jefe-acarreos'))
+        <li><a href="{{ route('corte.index') }}">Corte de Checador</a> </li>
+        @endif
     </ul>
   </li>
 
@@ -95,8 +98,6 @@
       </ul>
   </li>
   @endif
-
-
 @else
   <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
 @endif

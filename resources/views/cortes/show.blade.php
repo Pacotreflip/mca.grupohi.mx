@@ -38,9 +38,6 @@
                 <th style="text-align: center"> Importe </th>
                 <th style="text-align: center"> Checador Primer Toque </th>
                 <th style="text-align: center"> Checador Segundo Toque </th>
-                <th style="text-align: center"> Autorizó </th>
-                <th style="text-align: center"> Validó </th>
-                <th style="text-align: center"> Estado </th>
             </tr>
             </thead>
             <tbody>
@@ -57,9 +54,6 @@
                 <td style="text-align: right">${{ number_format($viaje['importe'], 2, ",", ".") }}</td>
                 <td>{{ $viaje['registro_primer_toque'] }}</td>
                 <td>{{ $viaje['registro'] }}</td>
-                <td>{{ $viaje['autorizo'] }}</td>
-                <td>{{ $viaje['valido'] }}</td>
-                <td>{{ $viaje['estado'] }}</td>
             </tr>
             @endforeach
             </tbody>

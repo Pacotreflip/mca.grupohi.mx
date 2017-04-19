@@ -41,11 +41,11 @@
                 </div>
             </div>
             <div class="form-group">
-                <button type="submit" class="btn btn-primary" @click="buscar">
+                <button type="submit" class="btn btn-primary" v-bind:disabled="cargando" @click="buscar">
                     <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> BUSCAR</span>
                     <span v-else><i class="fa fa-search"></i> BUSCAR</span>
                 </button>
-                <button v-if="viajes_netos.length" class="btn btn-success pull-right" @click="confirmar_corte">
+                <button v-if="viajes_netos.length" class="btn btn-success pull-right" v-bind:disabled="guardando" @click="confirmar_corte">
                     <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i> GUARDAR CORTE</span>
                     <span v-else><i class="fa fa-save"></i> GUARDAR CORTE</span>
                 </button>
@@ -72,9 +72,6 @@
                                 <th style="text-align: center"> Importe </th>
                                 <th style="text-align: center"> Checador Primer Toque </th>
                                 <th style="text-align: center"> Checador Segundo Toque </th>
-                                <th style="text-align: center"> Autorizó </th>
-                                <th style="text-align: center"> Validó </th>
-                                <th style="text-align: center"> Estado </th>
                             </tr>
                         </thead>
                         <tbody>
@@ -90,9 +87,6 @@
                                 <td style="text-align: right">$@{{ formato(viaje_neto.importe) }}</td>
                                 <td>@{{ viaje_neto.registro_primer_toque }}</td>
                                 <td>@{{ viaje_neto.registro }}</td>
-                                <td>@{{ viaje_neto.autorizo }}</td>
-                                <td>@{{ viaje_neto.valido }}</td>
-                                <td>@{{ viaje_neto.estado }}</td>
                             </tr>
                         </tbody>
                     </table>

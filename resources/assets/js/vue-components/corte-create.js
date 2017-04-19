@@ -134,6 +134,7 @@ Vue.component('corte-create', {
                     _this.guardando = true;
                 },
                 success: function (response) {
+                    _this.viajes_netos = [];
                     window.location = response.path;
                 },
                 error: function (error) {
