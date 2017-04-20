@@ -57,7 +57,15 @@ class Conciliacion extends Model
     {
         return $this->belongsTo(Sindicato::class, 'idsindicato');
     }
-
+    public function getConciliacionDetallesNoConciliadosPDFAttribute(){
+        $detalle_pdf = [];
+       foreach($this->conciliacionDetallesNoConciliados as $detalle){
+           if($detalle->idmotivo != 5){
+               $detalle_pdf[] = $detalle;
+           }
+       }
+        return $detalle_pdf;
+    }
     public function materiales()
     {
         return DB::connection($this->connection)->select(DB::raw('
