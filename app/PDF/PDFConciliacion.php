@@ -116,40 +116,7 @@ class PDFConciliacion extends Rotation
         $this->setY($y_final_1 > $y_final_2 ? $y_final_1 : $y_final_2 );
         $this->Ln(1.1);
 
-        /*$this->SetFont('Arial', 'B', $this->txtSeccionTam);
-        $this->Cell(0.55 * $this->WidthTotal, 0.7, utf8_decode('Rutas'), 0, 1, 'L');
-
-        //Obtener Posiciones despues de title de rutas.
-        $y_inicial = $this->getY();
-        $x_inicial = $this->getX();
-        $this->setY($y_inicial);
-        $this->setX($x_inicial);
-
-        $this->rutas();
-
-        //Posiciones despues de details
-        $y_final = $this->getY();
-        $this->setY($y_inicial);
-        $alto = abs($y_final - $y_inicial);
-
-        //Round Rutas.
-        $this->SetWidths(array($this->WidthTotal));
-        $this->SetRounds(array('1234'));
-        $this->SetRadius(array(0.2));
-        $this->SetFills(array('255,255,255'));
-        $this->SetTextColors(array('0,0,0'));
-        $this->SetHeights(array($alto));
-        $this->SetStyles(array('DF'));
-        $this->SetAligns("L");
-        $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->setY($y_inicial);
-        $this->Row(array(""));
-
-        $this->setY($y_inicial);
-        $this->setX($x_inicial);
-        $this->rutas();
-       */
-
+        
         if ($this->encola != '') {
 
             if($this->encola == 'nuevo_material') {
@@ -396,7 +363,7 @@ class PDFConciliacion extends Rotation
             $this->SetHeights(array(0.6));
             $this->SetAligns(array('L'));
             $this->Row(array('MATERIAL : ' . utf8_decode($this->material->material)));
-
+            $this->encola = "items";
             $this->SetFont('Arial', '', 5);
             $this->SetWidths(array(0.125 * $this->WidthTotal, 0.075 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.1875 * $this->WidthTotal, 0.05 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
             $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
@@ -774,16 +741,6 @@ class PDFConciliacion extends Rotation
             $this->SetAligns(array('C','C','C','C','C'));
             $this->Row(array('#',utf8_decode('Ticket (Código)'),'Fecha / Hora Intento',utf8_decode( 'Registró Intento'), 'Motivo'));
             
-//            $this->SetWidths(array(0.030 * $this->WidthTotal,0.12 * $this->WidthTotal,0.12 * $this->WidthTotal,0.22 * $this->WidthTotal,0.51 * $this->WidthTotal));
-//            $this->SetFont('Arial', '', 6);
-//            $this->SetStyles(array('DF','DF','DF','DF','DF'));
-//            $this->SetRounds(array('1','','','','2'));
-//            $this->SetRadius(array(0.2,0,0,0,0.2));
-//            $this->SetFills(array('180,180,180','180,180,180','180,180,180','180,180,180','180,180,180'));
-//            $this->SetTextColors(array('0,0,0','0,0,0','0,0,0','0,0,0','0,0,0'));
-//            $this->SetHeights(array(0.5));
-//            $this->SetAligns(array('C','C','C','C','C'));
-//            $this->Row(array('#',utf8_decode('Ticket (Código)'),'Fecha / Hora Intento',utf8_decode( 'Registró Intento'), 'Motivo'));
         }
         $is = 1;
         foreach ($this->conciliacion->conciliacionDetallesNoConciliadosPDF as $detalle) {
