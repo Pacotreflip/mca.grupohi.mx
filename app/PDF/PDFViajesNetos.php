@@ -405,7 +405,7 @@ class PDFViajesNetos extends Rotation
         $this->SetMargins(1, 0.5, 1);
         $this->AliasNbPages();
         $this->AddPage();
-        $this->SetAutoPageBreak(true,4.5);
+        $this->SetAutoPageBreak(true,1.5);
         $this->items();
         $this->Ln(0.75);
         $this->Output('I', 'ConsultaViajesNetos.pdf', 1);
