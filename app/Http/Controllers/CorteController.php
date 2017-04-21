@@ -85,8 +85,11 @@ class CorteController extends Controller
     public function edit($id)
     {
         $corte = Corte::find($id);
+        $viajes_netos = ViajeNetoTransformer::transform($corte->viajes_netos());
+
         return view('cortes.edit')
-            ->withCorte($corte);
+            ->withCorte($corte)
+            ->withViajesNetos($viajes_netos);
     }
 
     /**

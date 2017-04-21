@@ -15,8 +15,7 @@
             <div class="panel-body">
                 <strong>CHECADOR: </strong> {{ $corte->checador->present()->nombreCompleto }}<br>
                 <strong>FECHA y HORA DEL CORTE: </strong> {{ $corte->timestamp->format('d-M-Y h:i:s a') }} <small>({{$corte->timestamp->diffForHumans()}})</small> <br>
-                <strong>NÚMERO DE VIAJES: </strong> {{$corte->corte_detalles->count() }} <br>
-                <strong>MOTIVO: </strong> {{ $corte->motivo }}
+                <strong>NÚMERO DE VIAJES: </strong> {{$corte->corte_detalles->count() }}
             </div>
         </div>
     </div>
