@@ -32,7 +32,7 @@ class TarifasMaterialController extends Controller
             return response()->json($material->tarifaMaterial->toArray());
         }
         return view('tarifas.material.index')
-                ->withMateriales(Material::all());
+                ->withTarifas(TarifaMaterial::all());
     }
 
     /**
