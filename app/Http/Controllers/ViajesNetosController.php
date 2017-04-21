@@ -219,15 +219,41 @@ class ViajesNetosController extends Controller
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
             } else if($request->get('action') == 'corte') {
-                $horaInicial = Carbon::createFromFormat('g:i:s a', $request->get('hora_inicial'))->toTimeString();
-                $horaFinal = Carbon::createFromFormat('g:i:s a', $request->get('hora_final'))->toTimeString();
-                $timestamp_inicial = $request->get('fecha_inicial') . ' ' . $horaInicial;
-                $timestamp_final = $request->get('fecha_final') . ' ' . $horaFinal;
+
+                $this->validate($request, [
+                    'turnos' => 'required|array',
+                    'fecha'  => 'required|date_format:"Y-m-d"'
+                ]);
 
                 $viajes_netos = ViajeNeto::corte();
-                $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada,' ',HoraLlegada) AS datetime) between '{$timestamp_inicial}' and '{$timestamp_final}'");
-                $data = ViajeNetoTransformer::transform($viajes_netos->get());
 
+                $turno_1 = $turno_2 = false;
+                foreach($request->get('turnos', []) as $turno) {
+                    if($turno == '1') {
+                        $turno_1 = true;
+                        $timestamp_inicial_1 = $request->get('fecha') . ' 07:00:00';
+                        $timestamp_final_1 = $request->get('fecha') . ' 18:59:59';
+                    }
+                    if($turno == '2') {
+                        $turno_2 = true;
+                        $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->addDay(1)->toDateString();
+                        $timestamp_inicial_2 = $request->fecha . ' 19:00:00';
+                        $timestamp_final_2 = $fecha . ' 06:59:59';
+                    }
+                }
+
+                if($turno_1 && $turno_2) {
+                    $viajes_netos->where(function ($query) use ($timestamp_final_1, $timestamp_final_2, $timestamp_inicial_1, $timestamp_inicial_2){
+                        $query->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_1}' and '{$timestamp_final_1}'")
+                            ->orWhereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_2}' and '{$timestamp_final_2}'");
+                    });
+                } else if($turno_1 && ! $turno_2) {
+                    $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_1}' and '{$timestamp_final_1}'");
+                } else if(! $turno_1 && $turno_2) {
+                    $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_2}' and '{$timestamp_final_2}'");
+                }
+
+                $data = ViajeNetoTransformer::transform($viajes_netos->get());
             }
             return response()->json(['viajes_netos' => $data]);
         } else {

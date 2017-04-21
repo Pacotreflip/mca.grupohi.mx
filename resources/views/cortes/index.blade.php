@@ -17,7 +17,6 @@
             <th>Folio</th>
             <th>Checador</th>
             <th>Fecha y Hora de Corte</th>
-            <th>Motivo</th>
         </tr>
         </thead>
         <tbody>
@@ -29,7 +28,6 @@
                     {{ $corte->timestamp->format('d-M-Y h:m a') }}
                     <small class="text-muted">({{ $corte->timestamp->diffForHumans() }})</small>
                 </td>
-                <td>{{ str_limit($corte->motivo, 70) }}</td>
             </tr>
             @endforeach
         </tbody>

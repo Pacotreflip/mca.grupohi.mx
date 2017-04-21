@@ -776,12 +776,9 @@ class ViajeNeto extends Model
     public function scopeCorte($query){
         return $query
             ->leftJoin('corte_detalle', 'viajesnetos.IdViajeNeto', '=', 'corte_detalle.id_viajeneto')
-            ->where(function ($query) {
-                $query
-                    ->whereNull('corte_detalle.id_viajeneto')
-                    ->whereIn('viajesnetos.Estatus', [0, 1])
-                    ->where('viajesnetos.Creo', auth()->user()->idusuario);
-                    //->where('viajesnetos.CreoPrimerToque', 3814);
-            });
+            ->whereNull('corte_detalle.id_viajeneto')
+            ->where('viajesnetos.Creo', auth()->user()->idusuario)
+            ->limit(25)
+            ->orderBy('viajesnetos.IdViajeNeto', 'DESC');
     }
 }

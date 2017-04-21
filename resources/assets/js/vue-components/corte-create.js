@@ -10,6 +10,20 @@ Vue.component('corte-create', {
             guardando : false
         }
     },
+
+    computed: {
+        manuales: function () {
+            return this.viajes_netos.filter(function (item) {
+                return item.estatus === 20 || item.estatus === 21 || item.estatus === 22 || item.estatus === 29;
+            });
+        },
+        moviles: function () {
+            return this.viajes_netos.filter(function (item) {
+                return item.estatus === 0 || item.estatus === 1;
+            });
+        }
+    }
+    ,
     directives: {
         datepicker : {
             inserted: function (el) {
@@ -22,23 +36,18 @@ Vue.component('corte-create', {
                     endDate: '0d',
                     startDate: '-1d'
                 });
+
                 $(el).val(App.timeStamp(1));
             }
         },
-        timepicker: {
+        select2: {
             inserted: function (el) {
-                $(el).timepicker({
-                    'timeFormat': 'hh:mm:ss a',
-                    'showDuration': true,
+                $(el).select2({
+                    placeholder: "--SELECCIONE--",
+                    closeOnSelect: false
                 });
-                if($(el).hasClass('time') && $(el).hasClass('start')) {
-                    $(el).val('12:00:00 am');
-                }
-                if($(el).hasClass('time') && $(el).hasClass('end')) {
-                    $(el).val('11:59:59 pm');
-                }
             }
-        }
+        },
     },
     methods: {
         buscar: function (e) {
@@ -54,8 +63,10 @@ Vue.component('corte-create', {
                 data: data,
                 beforeSend: function () {
                     _this.cargando = true;
+                    _this.form.errors = [];
                 },
                 success: function (response) {
+                    _this.viajes_netos = response.viajes_netos;
                     if (! response.viajes_netos.length) {
                         swal({
                             type: 'warning',
@@ -64,12 +75,7 @@ Vue.component('corte-create', {
                             showConfirmButton: true
                         });
                     }
-
-                    _this.viajes_netos = response.viajes_netos;
-
-                    $.each($('#form_buscar').serializeArray(), function () {
-                        _this.form.datos[this.name] = this.value;
-                    });
+                    _this.form.datos = $('#form_buscar').serialize();
                 },
                 error: function (error) {
                     if (error.status == 422) {
@@ -88,42 +94,37 @@ Vue.component('corte-create', {
             });
         },
 
-        confirmar_corte: function (e) {
+        confirmar_inicio: function (e) {
             e.preventDefault();
 
             var _this = this;
+            var url = App.host + '/viajes_netos/create?action=manual';
 
             swal({
-                title: "¿Desea continuar con el corte?",
-                text: "A continuación escriba el motivo del corte",
-                type: "input",
+                title: "¿Deseas dar inicio al corte?",
+                text: "Antes de crear el corte por favor registre los viajes manuales correspondientes al día del corte<br><br>" +
+                "Viajes manuales registrados: <strong>"+_this.manuales.length+"</strong><br><br>" +
+                "<div class='text-center'><a href='"+url+"'>->> IR AL REGISTRO MANUAL DE VIAJES <<-</a></div>",
+                type: "warning",
                 showCancelButton: true,
-                inputPlaceholder: "Motivo del Corte",
-                confirmButtonText: "Si",
-                cancelButtonText: "No",
+                confirmButtonColor: "#DD6B55",
+                confirmButtonText: "Si, Iniciar",
+                cancelButtonText: "No, cancelar",
                 closeOnConfirm: false,
-                confirmButtonColor: "#ec6c62"
-            }, function(inputValue) {
-                if (inputValue === false) return false;
-                if (inputValue === "") {
-                    swal.showInputError("¡Escriba el Motivo del Corte!");
-                    return false
+                showLoaderOnConfirm: true,
+                closeOnCancel: true,
+                html: true
+            },
+            function(isConfirm){
+                if (isConfirm) {
+                    _this.iniciar();
                 }
-                swal({
-                    title: "",
-                    text: "",
-                    timer: 250,
-                    showConfirmButton: false,
-                    type: 'success'
-                });
-                _this.corte(inputValue);
             });
         },
 
-        corte: function (inputValue) {
+        iniciar: function () {
             var _this = this;
             var url = App.host + '/corte';
-            _this.form.datos['motivo'] = inputValue;
             var data = _this.form.datos;
 
             $.ajax({
@@ -132,6 +133,7 @@ Vue.component('corte-create', {
                 data: data,
                 beforeSend: function () {
                     _this.guardando = true;
+                    _this.form.errors = [];
                 },
                 success: function (response) {
                     _this.viajes_netos = [];

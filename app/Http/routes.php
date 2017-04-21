@@ -140,3 +140,4 @@ Route::get('corte/create', 'CorteController@create')->name('corte.create');
 Route::post('corte', 'CorteController@store')->name('corte.store');
 Route::get('corte/{corte}', 'CorteController@show')->name('corte.show');
 Route::get('corte', 'CorteController@index')->name('corte.index');
+Route::get('corte/{corte}/edit', 'CorteController@edit')->name('corte.edit');

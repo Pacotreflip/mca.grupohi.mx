@@ -34,7 +34,8 @@ class Cortes
 
             $corte = $this->creaCorte();
 
-            $viajes_netos = ViajeNeto::corte()->whereRaw("CAST(CONCAT(FechaLlegada,' ',HoraLlegada) AS datetime) between '{$corte->timestamp_inicial}' and '{$corte->timestamp_final}'")->get();
+            $viajes_netos = ViajeNeto::corte()->whereRaw("CAST(CONCAT(FechaLlegada,' ',HoraLlegada) AS datetime) between '{$corte->timestamp_inicial}' and '{$corte->timestamp_final}'")->limit(25)
+                ->orderBy('viajesnetos.IdViajeNeto', 'DESC')->get();
             foreach ($viajes_netos as $viaje_neto) {
                 CorteDetalle::create([
                     'id_viajeneto' => $viaje_neto->IdViajeNeto,
@@ -53,18 +54,38 @@ class Cortes
     }
 
     public function creaCorte() {
-        $horaInicial = Carbon::createFromFormat('g:i:s a', $this->data['hora_inicial'])->toTimeString();
-        $horaFinal = Carbon::createFromFormat('g:i:s a', $this->data['hora_final'])->toTimeString();
-        $timestamp_inicial = $this->data['fecha_inicial'] . ' ' . $horaInicial;
-        $timestamp_final = $this->data['fecha_final'] . ' ' . $horaFinal;
+
+        $turno_1 = $turno_2 = false;
+        foreach($this->data['turnos'] as $turno) {
+            if($turno == '1') {
+                $turno_1 = true;
+                $timestamp_inicial_1 = $this->data['fecha'] . ' 07:00:00';
+                $timestamp_final_1 = $this->data['fecha'] . ' 18:59:59';
+            }
+            if($turno == '2') {
+                $turno_2 = true;
+                $fecha = Carbon::createFromFormat('Y-m-d', $this->data['fecha'])->addDay(1)->toDateString();
+                $timestamp_inicial_2 = $this->data['fecha'] . ' 19:00:00';
+                $timestamp_final_2 = $fecha . ' 06:59:59';
+            }
+        }
+
+        if($turno_1 && $turno_2) {
+            $timestamp_inicial = $timestamp_inicial_1;
+            $timestamp_final = $timestamp_final_2;
+        } else if($turno_1 && ! $turno_2) {
+            $timestamp_inicial = $timestamp_inicial_1;
+            $timestamp_final = $timestamp_final_1;
+        } else if(! $turno_1 && $turno_2) {
+            $timestamp_inicial = $timestamp_inicial_2;
+            $timestamp_final = $timestamp_final_2;
+        }
 
         return Corte::create([
             'estatus'           => 1,
-            //'id_checador'       => 3814,
             'id_checador'       => auth()->user()->idusuario,
             'timestamp_inicial' => $timestamp_inicial,
-            'timestamp_final'   => $timestamp_final,
-            'motivo'            => $this->data['motivo']
+            'timestamp_final'   => $timestamp_final
         ]);
     }
 }

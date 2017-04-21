@@ -15,28 +15,17 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>FECHA INICIAL (*)</label>
-                        <input type="text" name="fecha_inicial" class="form-control" v-datepicker>
+                        <label>FECHA DEL CORTE (*)</label>
+                        <input type="text" name="fecha" class="form-control" v-datepicker>
                     </div>
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label>HORA INICIAL (*)</label>
-                        <input type="text" name="hora_inicial" class="time start form-control"  v-timepicker>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>FECHA FINAL (*)</label>
-                        <input type="text" name="fecha_final" class="form-control" v-datepicker>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label>HORA FINAL (*)</label>
-                        <input type="text" name="hora_final" class="time end form-control"  v-timepicker>
+                        <label>TURNOS (*)</label>
+                        <select name="turnos[]" class="form-control" multiple="multiple" v-select2>
+                            <option value="1">Primer Turno</option>
+                            <option value="2">Segundo Turno</option>
+                        </select>
                     </div>
                 </div>
             </div>
@@ -45,9 +34,9 @@
                     <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> BUSCAR</span>
                     <span v-else><i class="fa fa-search"></i> BUSCAR</span>
                 </button>
-                <button v-if="viajes_netos.length" class="btn btn-success pull-right" v-bind:disabled="guardando" @click="confirmar_corte">
-                    <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i> GUARDAR CORTE</span>
-                    <span v-else><i class="fa fa-save"></i> GUARDAR CORTE</span>
+                <button v-if="viajes_netos.length" class="btn btn-success pull-right" v-bind:disabled="guardando" @click="confirmar_inicio">
+                    <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i> INICIAR CORTE</span>
+                    <span v-else><i class="fa fa-save"></i> INICIAR CORTE</span>
                 </button>
             </div>
             <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>

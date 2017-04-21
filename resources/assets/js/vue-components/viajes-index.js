@@ -32,6 +32,7 @@ Vue.component('viajes-index', {
             inserted: function (el) {
                 $(el).select2({
                     placeholder: "--SELECCIONE--",
+                    closeOnSelect: false
                 });
             }
         },

@@ -56,7 +56,7 @@ class CorteController extends Controller
     {
         $corte = (new Cortes($request->all()))->save();
         if ($request->ajax()) {
-            return response()->json(['path' => route('corte.show', $corte)]);
+            return response()->json(['path' => route('corte.edit', $corte)]);
         }
     }
 
@@ -84,7 +84,9 @@ class CorteController extends Controller
      */
     public function edit($id)
     {
-        //
+        $corte = Corte::find($id);
+        return view('cortes.edit')
+            ->withCorte($corte);
     }
 
     /**
@@ -114,7 +116,6 @@ class CorteController extends Controller
         return Corte::porChecador()
             ->where(function ($query) use ($busqueda) {
                 $query->where('id', 'LIKE', '%'.$busqueda.'%')
-                    ->orWhere('motivo', 'LIKE', '%'.$busqueda.'%')
                     ->orWhere('id_checador', 'LIKE', '%'.$busqueda.'%')
                 ;
             })
