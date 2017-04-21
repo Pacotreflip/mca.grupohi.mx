@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Material;
 use App\Models\Tarifas\TarifaMaterial;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 
 class TarifasMaterialController extends Controller
@@ -47,12 +48,25 @@ class TarifasMaterialController extends Controller
             'Fecha_Hora_Registra' => Carbon::now()->toDateTimeString(),
             'Registra' => auth()->user()->idusuario,
         ]);
+        //dd($request->get('InicioVigencia'));
+        //dd($request->get('InicioVigencia'),Carbon::createFromFormat("Y-m-d h:i:s",$request->get('InicioVigencia')." 00:00:00"));
+        $fin_vigencia = Carbon::createFromFormat("Y-m-d h:i:s",$request->get('InicioVigencia')." 00:00:00")->subSeconds(1);
+        //dd($fin_vigencia);
+        $tarifas = TarifaMaterial::where("FinVigencia")->where('IdMaterial', '=', $request->get('IdMaterial'))->get();
+        //dd($tarifas);
+        foreach($tarifas as $tarifa_old) {
+            $tarifa_old->FinVigencia = $fin_vigencia;
+            $tarifa_old->save();
+        }
         
-        $tarifa = TarifaMaterial::create($request->all());
+        TarifaMaterial::create($request->all());
+         return view('tarifas.material.index')
+        ->withTarifas(TarifaMaterial::all());
+                
         
-        return response()->json(['success' => true,
-            'updateUrl' => route('tarifas_material.update', $tarifa),
-            'message' => '¡TARIFA REGISTRADA CORRECTAMENTE!']);
+//        return response()->json(['success' => true,
+//            'updateUrl' => route('tarifas_material.update', $tarifa),
+//            'message' => '¡TARIFA REGISTRADA CORRECTAMENTE!']);
     }
 
     /**
@@ -70,6 +84,7 @@ class TarifasMaterialController extends Controller
         ]);
         
         $tarifas = TarifaMaterial::where('IdMaterial', '=', $request->get('IdMaterial'))->get();
+        
         foreach($tarifas as $tarifa_old) {
             $tarifa_old->Estatus = 0;
             $tarifa_old->save();
@@ -91,5 +106,11 @@ class TarifasMaterialController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function create()
+    {
+        $materiales = Material::orderBy("descripcion")->lists("Descripcion","IdMaterial");
+        $fecha_actual = date("d-m-Y");
+        return view('tarifas.material.create')->withMateriales($materiales)->withFechaActual($fecha_actual);
     }
 }

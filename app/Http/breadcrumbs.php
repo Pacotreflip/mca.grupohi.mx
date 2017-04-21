@@ -152,6 +152,10 @@ Breadcrumbs::register('camiones.edit', function($breadcrumbs, $camion){
 Breadcrumbs::register('tarifas_material.index', function($breadcrumbs){
     $breadcrumbs->push('TARIFAS POR MATERIAL', route('tarifas_material.index'));
 });
+Breadcrumbs::register('tarifas_material.create', function($breadcrumbs){
+    $breadcrumbs->parent('tarifas_material.index');
+    $breadcrumbs->push('NUEVA TARIFA POR MATERIAL', route('tarifas_material.create'));
+});
 
 //Catalogos->Tarifas por Peso
 
