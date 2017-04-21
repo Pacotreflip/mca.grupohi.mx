@@ -780,7 +780,7 @@ class ViajeNeto extends Model
                 $query
                     ->whereNull('corte_detalle.id_viajeneto')
                     ->whereIn('viajesnetos.Estatus', [0, 1])
-                    ->where('viajesnetos.CreoPrimerToque', auth()->user()->idusuario);
+                    ->where('viajesnetos.Creo', auth()->user()->idusuario);
                     //->where('viajesnetos.CreoPrimerToque', 3814);
             });
     }
