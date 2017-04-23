@@ -319,7 +319,7 @@ Breadcrumbs::register('corte.show', function ($breadcrumbs, $corte) {
 });
 
 Breadcrumbs::register('corte.edit', function ($breadcrumbs, $corte) {
-    $breadcrumbs->parent('corte.index');
-    $breadcrumbs->push("CORTE {$corte->id} DEL ({$corte->fecha})", route('corte.edit', $corte));
+    $breadcrumbs->parent('corte.show', $corte);
+    $breadcrumbs->push("MODIFICAR CORTE", route('corte.edit', $corte));
 });
 

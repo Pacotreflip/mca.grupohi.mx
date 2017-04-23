@@ -42451,8 +42451,9 @@ require('./vue-components/conciliaciones-edit');
 require('./vue-components/viajes-revertir');
 require('./vue-components/viajes-index');
 require('./vue-components/corte-create');
+require('./vue-components/corte-edit');
 
-},{"./vue-components/conciliaciones-create":40,"./vue-components/conciliaciones-edit":41,"./vue-components/corte-create":42,"./vue-components/errors":43,"./vue-components/fda-bancomaterial":44,"./vue-components/fda-material":45,"./vue-components/global-errors":46,"./vue-components/origenes-usuarios":47,"./vue-components/viajes-completa":51,"./vue-components/viajes-index":52,"./vue-components/viajes-manual":53,"./vue-components/viajes-modificar":54,"./vue-components/viajes-revertir":55,"./vue-components/viajes-validar":56}],40:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":40,"./vue-components/conciliaciones-edit":41,"./vue-components/corte-create":42,"./vue-components/corte-edit":43,"./vue-components/errors":44,"./vue-components/fda-bancomaterial":45,"./vue-components/fda-material":46,"./vue-components/global-errors":47,"./vue-components/origenes-usuarios":48,"./vue-components/viajes-completa":52,"./vue-components/viajes-index":53,"./vue-components/viajes-manual":54,"./vue-components/viajes-modificar":55,"./vue-components/viajes-revertir":56,"./vue-components/viajes-validar":57}],40:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
@@ -43284,13 +43285,222 @@ Vue.component('corte-create', {
 },{}],43:[function(require,module,exports){
 'use strict';
 
+Vue.component('corte-edit', {
+    data: function data() {
+        return {
+            'corte': {
+                'id': '',
+                'viajes_netos': []
+            },
+            'form': {
+                'errors': [],
+                'data': {
+                    'material': '',
+                    'origen': '',
+                    'observaciones': '',
+                    'cubicacion': '',
+                    'id_viajeneto': ''
+                }
+            },
+            'guardando': false,
+            'cargando': false,
+            'viaje': {}
+        };
+    },
+
+    created: function created() {
+        this.fetch();
+    },
+
+    computed: {
+        modified: function modified() {
+            this.corte.viajes_netos.filter(function (viaje_neto) {
+                return viaje_neto.modified;
+            });
+        }
+    },
+
+    methods: {
+        fetch: function fetch() {
+
+            var _this = this;
+            var id_corte = $('#id_corte').val();
+            var url = App.host + '/corte/' + id_corte + '/viajes_netos';
+            this.corte.id = id_corte;
+
+            $.ajax({
+                type: 'GET',
+                url: url,
+                beforeSend: function beforeSend() {
+                    _this.form.errors = [];
+                    _this.cargando = true;
+                },
+                success: function success(response) {
+                    _this.corte.viajes_netos = response.viajes_netos;
+                },
+                error: function error(_error) {
+                    if (_error.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error.responseJSON);
+                    } else if (_error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.cargando = false;
+                }
+            });
+        },
+
+        confirmar_cierre: function confirmar_cierre(e) {
+            var _this2 = this;
+
+            e.preventDefault();
+
+            swal({
+                title: "¡Cerrer Corte!",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si, cerrar",
+                cancelButtonText: "No, cancelar",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this2.cerrar();
+            });
+        },
+
+        editar: function editar(viaje) {
+            $('input[name=observaciones]').val('');
+            this.viaje = viaje;
+            this.form.data.material = viaje.id_material;
+            this.form.data.origen = viaje.id_origen;
+            this.form.data.cubicacion = viaje.cubicacion;
+            this.form.data.observaciones = viaje.observaciones;
+            this.form.data.id_viajeneto = viaje.id;
+            this.form.errors = [];
+            $('#edit_modal').modal('show');
+        },
+
+        confirmar_modificacion: function confirmar_modificacion(e) {
+            var _this3 = this;
+
+            e.preventDefault();
+
+            swal({
+                title: "Modificar Viaje",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si, Modificar",
+                cancelButtonText: "No, Cancelar",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this3.modificar();
+            });
+        },
+
+        modificar: function modificar() {
+            var _this = this;
+            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + _this.form.data.id_viajeneto;
+            var data = $('#form_modificar').serialize();
+
+            $.ajax({
+                type: 'PATCH',
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                    _this.form.errors = [];
+                },
+                success: function success(response) {
+                    $('#edit_modal').modal('hide');
+                    if (response.modified) {
+                        _this.fetch();
+                        swal({
+                            'type': 'success',
+                            'title': 'INFORMACIÓN',
+                            'text': 'Cambios aplicados correctamente'
+                        });
+                    }
+                },
+                error: function error(_error2) {
+                    if (_error2.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
+                    } else if (_error2.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error2.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+            });
+        },
+
+        formato: function formato(val) {
+            return numeral(val).format('0,0.00');
+        },
+
+        descartar: function descartar(viaje) {
+            var _this = this;
+            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + viaje.id + '?action=revertir_modificaciones';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'PATCH'
+                },
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    if (response.modified) {
+                        _this.fetch();
+                        swal({
+                            'type': 'success',
+                            'title': 'INFORMACIÓN',
+                            'text': 'Cambios aplicados correctamente'
+                        });
+                    }
+                },
+                error: function error(_error3) {
+                    if (_error3.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error3.responseJSON);
+                    } else if (_error3.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error3.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+
+            });
+        }
+    }
+});
+
+},{}],44:[function(require,module,exports){
+'use strict';
+
 Vue.component('app-errors', {
     props: ['form'],
 
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":48}],44:[function(require,module,exports){
+},{"./templates/errors.html":49}],45:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -43396,7 +43606,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],45:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -43485,7 +43695,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],46:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -43511,7 +43721,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":49}],47:[function(require,module,exports){
+},{"./templates/global-errors.html":50}],48:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -43586,13 +43796,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":50}],48:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":51}],49:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],49:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],50:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],51:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],52:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -43812,7 +44022,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],52:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-index', {
@@ -44049,7 +44259,7 @@ Vue.component('viajes-index', {
     }
 });
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 Array.prototype.removeValue = function (name, value) {
@@ -44214,7 +44424,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 // register modal component
@@ -44376,7 +44586,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-revertir', {
@@ -44513,7 +44723,7 @@ Vue.component('viajes-revertir', {
     }
 });
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 
 // register modal component

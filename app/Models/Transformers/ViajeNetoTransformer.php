@@ -22,6 +22,8 @@ class ViajeNetoTransformer extends AbstractTransformer
             'cubicacion'        => $viaje_neto->CubicacionCamion,
             'estado'            => $viaje_neto->estado,
             'estatus'           => $viaje_neto->Estatus,
+            'id_material'       => $viaje_neto->IdMaterial,
+            'id_origen'         => $viaje_neto->IdOrigen,
             'material'          => (String) $viaje_neto->material,
             'origen'            => (String) $viaje_neto->origen,
             'registro'          => $viaje_neto->registro,

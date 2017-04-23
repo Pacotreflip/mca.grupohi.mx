@@ -5,6 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Cortes\Corte;
 use App\Models\Cortes\CorteDetalle;
 use App\Models\Cortes\Cortes;
+use App\Models\Material;
+use App\Models\Origen;
+use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\ViajeNeto;
 use Carbon\Carbon;
@@ -69,7 +72,7 @@ class CorteController extends Controller
     public function show($id)
     {
         $corte = Corte::find($id);
-        $viajes_netos = ViajeNetoTransformer::transform($corte->viajes_netos());
+        $viajes_netos = ViajeNetoCorteTransformer::transform($corte->viajes_netos());
 
         return view('cortes.show')
             ->withCorte($corte)
@@ -85,11 +88,11 @@ class CorteController extends Controller
     public function edit($id)
     {
         $corte = Corte::find($id);
-        $viajes_netos = ViajeNetoTransformer::transform($corte->viajes_netos());
 
         return view('cortes.edit')
             ->withCorte($corte)
-            ->withViajesNetos($viajes_netos);
+            ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
+            ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'));
     }
 
     /**

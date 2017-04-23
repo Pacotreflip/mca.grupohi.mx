@@ -9,7 +9,7 @@
             <span v-if="fetching">
                 <div class="text-center"><i class="fa fa-spinner fa-pulse fa-2x"></i> <big>CARGANDO CONCILIACIÓN</big></div>
             </span>
-            <span v-else>
+            <span v-else v-cloak>
             <input name="id_conciliacion" type="hidden" id="id_conciliacion"  value="{{ route('conciliaciones.show', $conciliacion) }}">
             <h1>
                 CONCILIACIONES <small>(@{{ conciliacion.estado_str }})</small>

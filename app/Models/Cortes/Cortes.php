@@ -88,4 +88,53 @@ class Cortes
             'timestamp_final'   => $timestamp_final
         ]);
     }
+
+    public function modificar_viaje($id_corte, $id_viajeneto) {
+        $viaje_neto = ViajeNeto::find($id_viajeneto);
+        DB::connection('sca')->beginTransaction();
+
+        try {
+            $corte_cambio = $viaje_neto->corte_cambio ? $viaje_neto->corte_cambio : new CorteCambio();
+
+            $modified = false;
+            if ($this->data['cubicacion'] != $viaje_neto->CubicacionCamion) {
+                $corte_cambio->cubicacion_anterior = $viaje_neto->CubicacionCamion;
+                $corte_cambio->cubicacion_nueva = $this->data['cubicacion'];
+                $modified = true;
+            }
+            if ($this->data['material'] != $viaje_neto->IdMaterial) {
+                $corte_cambio->id_material_anterior = $viaje_neto->IdMaterial;
+                $corte_cambio->id_material_nuevo = $this->data['material'];
+                $modified = true;
+            }
+            if ($this->data['origen'] != $viaje_neto->IdOrigen) {
+                $corte_cambio->id_origen_anterior = $viaje_neto->IdOrigen;
+                $corte_cambio->id_origen_nuevo = $this->data['origen'];
+                $modified = true;
+            }
+
+            $corte_cambio->id_corte = $id_corte;
+            $corte_cambio->id_viajeneto = $id_viajeneto;
+            $corte_cambio->observaciones = $this->data['observaciones'];
+            $corte_cambio->registro = auth()->user()->idusuario;
+            $corte_cambio->save();
+
+            if ($modified) {
+                DB::connection('sca')->commit();
+            } else {
+                $corte_cambio = CorteCambio::where('id_viajeneto', $id_viajeneto);
+                if($corte_cambio) {
+                    $corte_cambio->delete();
+                }
+                DB::connection('sca')->rollback();
+            }
+        } catch (\Exception $e) {
+            DB::rollback();
+            throw $e;
+        }
+        return [
+            'viaje_neto' => $viaje_neto,
+            'modified'   => $modified
+        ];
+    }
 }

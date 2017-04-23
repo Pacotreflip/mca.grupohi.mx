@@ -11,7 +11,7 @@
     @include('partials.search-form')
 
     @if($cortes->count())
-    <table class="table table-striped table-hover">
+    <table class="table table-striped table-hover small">
         <thead>
         <tr>
             <th>Folio</th>

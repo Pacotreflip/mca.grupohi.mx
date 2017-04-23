@@ -305,26 +305,10 @@ class ViajesNetosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        $viaje = ViajeNeto::findOrFail($id);
-        if($request->get('action') == 'modificar') {
-            return response()->json([
-                'IdViajeNeto' => $viaje->IdViajeNeto,
-                'FechaLlegada' => $viaje->FechaLlegada,
-                'Tiro' => $viaje->tiro->Descripcion,
-                'IdTiro' => $viaje->tiro->IdTiro,
-                'Camion' => $viaje->camion->Economico,
-                'IdCamion' => $viaje->camion->IdCamion,
-                'HoraLlegada' => $viaje->HoraLlegada,
-                'Cubicacion' => $viaje->camion->CubicacionParaPago,
-                'Origen' => $viaje->origen->Descripcion,
-                'IdOrigen' => $viaje->origen->IdOrigen,
-                'Material' => $viaje->material->Descripcion,
-                'IdMaterial' => $viaje->material->IdMaterial,
-                'ShowModal' => false
-            ]);
-        }
+        $viaje_neto = ViajeNeto::findOrFail($id);
+        return response()->json(ViajeNetoTransformer::transform($viaje_neto));
     }
 
     /**
