@@ -27,6 +27,7 @@
             <thead>
             <tr>
                 <th style="text-align: center"> # </th>
+                <th style="text-align: center"> Tipo </th>
                 <th style="text-align: center"> Camión </th>
                 <th style="text-align: center"> Ticket (Código) </th>
                 <th style="text-align: center"> Fecha y Hora de Llegada </th>
@@ -43,6 +44,7 @@
             @foreach($viajes_netos as $key => $viaje)
                 <tr >
                 <td>{{ $key + 1 }}</td>
+                <td>{{ $viaje['tipo'] }}</td>
                 <td>{{ $viaje['camion'] }}</td>
                 <td>{{ $viaje['codigo'] }}</td>
                 <td>{{ $viaje['timestamp_llegada'] }}</td>

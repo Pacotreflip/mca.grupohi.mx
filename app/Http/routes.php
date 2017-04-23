@@ -141,5 +141,7 @@ Route::post('corte', 'CorteController@store')->name('corte.store');
 Route::get('corte/{corte}', 'CorteController@show')->name('corte.show');
 Route::get('corte', 'CorteController@index')->name('corte.index');
 Route::get('corte/{corte}/edit', 'CorteController@edit')->name('corte.edit');
+Route::patch('corte/{corte}', 'CorteController@update')->name('corte.update');
+
 Route::get('corte/{corte}/viajes_netos', 'CorteViajesController@index')->name('corte.viajes_netos.index');
 Route::patch('corte/{corte}/viajes_netos/{viaje_neto}', 'CorteViajesController@update')->name('corte.viajes_netos.update');

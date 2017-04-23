@@ -38,8 +38,8 @@ Vue.component('corte-edit', {
 
             var _this = this;
             var id_corte = $('#id_corte').val();
+            var estatus = $('#estatus').val();
             var url = App.host + '/corte/' + id_corte + '/viajes_netos';
-            this.corte.id = id_corte;
 
             $.ajax({
                 type: 'GET',
@@ -49,7 +49,7 @@ Vue.component('corte-edit', {
                     _this.cargando = true;
                 },
                 success: function (response) {
-                    _this.corte.viajes_netos = response.viajes_netos;
+                    _this.corte = response.corte;
                 },
                 error: function (error) {
                     if (error.status == 422) {
@@ -80,6 +80,31 @@ Vue.component('corte-edit', {
                 cancelButtonText: "No, cancelar",
                 confirmButtonColor: "#ec6c62"
             }, () => this.cerrar() );
+        },
+
+        cerrar: function () {
+            var _this = this;
+            var url = App.host + '/corte/' + _this.corte.id;
+
+            $.ajax({
+                type : 'POST',
+                url : url,
+                data : {
+                    _method : 'PATCH'
+                },
+                beforeSend: function () {
+                    _this.guardando = true;
+                },
+                success: function (response) {
+
+                },
+                error: function (error) {
+
+                },
+                complete: function () {
+
+                }
+            });
         },
 
         editar: function (viaje) {

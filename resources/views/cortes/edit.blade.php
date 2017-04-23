@@ -1,7 +1,11 @@
 @extends('layout')
 
 @section('content')
-<h1>CORTE {{ $corte->id }} <small>({{ $corte->fecha }})</small></h1>
+<h1>CORTE {{ $corte->id }} <small>({{ $corte->fecha }})</small>
+    @if($corte->estatus == 1)
+        <a href="{{ route('corte.update', $corte->id) }}" class="btn btn-success btn-sm pull-right" @click="cerrar"><i class="fa fa-check"></i> CERRAR</a>
+    @endif
+</h1>
 {!! Breadcrumbs::render('corte.edit', $corte) !!}
 <hr>
 @include('partials.errors')
@@ -38,6 +42,7 @@
                             <thead>
                             <tr>
                                 <th style="text-align: center"> # </th>
+                                <th style="text-align: center"> Tipo </th>
                                 <th style="text-align: center"> Camión </th>
                                 <th style="text-align: center"> Ticket (Código) </th>
                                 <th style="text-align: center"> Fecha y Hora de Llegada </th>
@@ -56,18 +61,19 @@
                             <tbody>
                                 <tr v-for="(viaje, index) in corte.viajes_netos">
                                     <td>@{{ index + 1 }}</td>
+                                    <td>@{{ viaje.tipo }}</td>
                                     <td>@{{ viaje.camion }}</td>
                                     <td>@{{ viaje.codigo }}</td>
                                     <td>@{{ viaje.timestamp_llegada }}</td>
-                                        <td style="color: red" v-if="viaje.origen_nuevo" title="NO"> @{{ viaje.origen }} </td>
-                                        <td v-else>@{{ viaje.origen }}</td>
+                                    <td style="color: red" v-if="viaje.origen_nuevo" title="NO"> @{{ viaje.origen }} </td>
+                                    <td v-else>@{{ viaje.origen }}</td>
                                     <td>@{{ viaje.tiro }}</td>
-                                        <td style="color: red" v-if="viaje.material_nuevo">@{{ viaje.material_nuevo }}</td>
-                                        <td v-else>@{{ viaje.material }}</td>
-                                        <td v-if="viaje.cubicacion_nueva" style="text-align: right; color: red">@{{ viaje.cubicacion_nueva }} m<sup>3</sup></td>
-                                        <td v-else style="text-align: right">@{{ viaje.cubicacion }} m<sup>3</sup></td>
-                                        <td v-if="viaje.importe_nuevo != null" style="text-align: right">$@{{ formato(viaje.importe_nuevo) }}</td>
-                                        <td v-else style="text-align: right">$@{{ formato(viaje.importe) }}</td>
+                                    <td style="color: red" v-if="viaje.material_nuevo">@{{ viaje.material_nuevo }}</td>
+                                    <td v-else>@{{ viaje.material }}</td>
+                                    <td v-if="viaje.cubicacion_nueva" style="text-align: right; color: red">@{{ viaje.cubicacion_nueva }} m<sup>3</sup></td>
+                                    <td v-else style="text-align: right">@{{ viaje.cubicacion }} m<sup>3</sup></td>
+                                    <td v-if="viaje.importe_nuevo != null" style="text-align: right">$@{{ formato(viaje.importe_nuevo) }}</td>
+                                    <td v-else style="text-align: right">$@{{ formato(viaje.importe) }}</td>
                                     <td>@{{ viaje.registro_primer_toque }}</td>
                                     <td>@{{ viaje.registro }}</td>
                                     <td>@{{ viaje.observaciones }}</td>
