@@ -1,18 +1,18 @@
 @extends('layout')
 
 @section('content')
-<h1>CORTE {{ $corte->id }} <small>({{ $corte->estado }})</small>
-    @if($corte->estatus == 1)
-        <a href="{{ route('corte.update', $corte->id) }}" class="btn btn-success btn-sm pull-right" @click="cerrar"><i class="fa fa-check"></i> CERRAR / TERMINAR</a>
-    @endif
-</h1>
-{!! Breadcrumbs::render('corte.edit', $corte) !!}
-<hr>
 @include('partials.errors')
 <div id="app">
     <global-errors></global-errors>
     <corte-edit inline-template>
         <section>
+            <h1>CORTE {{ $corte->id }} <small>({{ $corte->estado }})</small>
+                @if($corte->estatus == 1)
+                    <button class="btn btn-success btn-sm pull-right" @click="confirmar_cierre"><i class="fa fa-check"></i> CERRAR / TERMINAR</button>
+                @endif
+            </h1>
+            {!! Breadcrumbs::render('corte.edit', $corte) !!}
+            <hr>
             <input type="hidden" id="id_corte" value="{{$corte->id}}">
             <div class="row">
                 <div class="col-md-6">

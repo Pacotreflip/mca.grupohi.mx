@@ -104,7 +104,15 @@ class CorteController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $corte = Corte::find($id);
+        if($request->ajax()) {
+            if($request->action == 'cerrar') {
+                $cortes = new Cortes($request->all());
+                $cortes->cerrar($corte);
+
+                return response()->json(['path' => route('corte.show', $corte)]);
+            }
+        }
     }
 
     /**
@@ -122,7 +130,7 @@ class CorteController extends Controller
         return Corte::porChecador()
             ->where(function ($query) use ($busqueda) {
                 $query->where('id', 'LIKE', '%'.$busqueda.'%')
-                    ->orWhere('id_checador', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('id_checador', 'LIKE', '%'.$busqueda.'%');
                 ;
             })
             ->orderBy('timestamp', 'DESC')

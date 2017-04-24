@@ -43314,8 +43314,12 @@ Vue.component('corte-edit', {
 
     computed: {
         modified: function modified() {
-            this.corte.viajes_netos.filter(function (viaje_neto) {
-                return viaje_neto.modified;
+            var _this = this;
+            return _this.corte.viajes_netos.filter(function (viaje_neto) {
+                if (viaje_neto.modified) {
+                    return true;
+                }
+                return false;
             });
         }
     },
@@ -43325,8 +43329,9 @@ Vue.component('corte-edit', {
 
             var _this = this;
             var id_corte = $('#id_corte').val();
-            var url = App.host + '/corte/' + id_corte + '/viajes_netos';
             this.corte.id = id_corte;
+            var estatus = $('#estatus').val();
+            var url = App.host + '/corte/' + id_corte + '/viajes_netos';
 
             $.ajax({
                 type: 'GET',
@@ -43361,7 +43366,7 @@ Vue.component('corte-edit', {
             e.preventDefault();
 
             swal({
-                title: "¡Cerrer Corte!",
+                title: "¡Cerrar Corte!",
                 text: "¿Esta seguro de que la información es correcta?",
                 type: "warning",
                 showCancelButton: true,
@@ -43370,6 +43375,40 @@ Vue.component('corte-edit', {
                 confirmButtonColor: "#ec6c62"
             }, function () {
                 return _this2.cerrar();
+            });
+        },
+
+        cerrar: function cerrar() {
+            var _this = this;
+            var url = App.host + '/corte/' + _this.corte.id;
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'PATCH',
+                    action: 'cerrar'
+                },
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    window.location = response.path;
+                },
+                error: function error(_error2) {
+                    if (_error2.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
+                    } else if (_error2.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error2.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.cargando = false;
+                }
             });
         },
 
@@ -43427,14 +43466,14 @@ Vue.component('corte-edit', {
                         });
                     }
                 },
-                error: function error(_error2) {
-                    if (_error2.status == 422) {
-                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
-                    } else if (_error2.status == 500) {
+                error: function error(_error3) {
+                    if (_error3.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error3.responseJSON);
+                    } else if (_error3.status == 500) {
                         swal({
                             type: 'error',
                             title: '¡Error!',
-                            text: App.errorsToString(_error2.responseText)
+                            text: App.errorsToString(_error3.responseText)
                         });
                     }
                 },
@@ -43471,14 +43510,14 @@ Vue.component('corte-edit', {
                         });
                     }
                 },
-                error: function error(_error3) {
-                    if (_error3.status == 422) {
-                        App.setErrorsOnForm(_this.form, _error3.responseJSON);
-                    } else if (_error3.status == 500) {
+                error: function error(_error4) {
+                    if (_error4.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error4.responseJSON);
+                    } else if (_error4.status == 500) {
                         swal({
                             type: 'error',
                             title: '¡Error!',
-                            text: App.errorsToString(_error3.responseText)
+                            text: App.errorsToString(_error4.responseText)
                         });
                     }
                 },

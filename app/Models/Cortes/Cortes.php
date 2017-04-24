@@ -137,4 +137,20 @@ class Cortes
             'modified'   => $modified
         ];
     }
+
+    public function cerrar($corte) {
+        DB::connection('sca')->beginTransaction();
+        try {
+            if($corte->estatus == 1) {
+                $corte->estatus = 2;
+                $corte->save();
+            } else {
+                throw new \Exception('No se puede cerrar el corte ya que su estado actual es ' . $corte->estado);
+            }
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
+    }
 }

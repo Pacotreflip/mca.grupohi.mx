@@ -26,9 +26,13 @@ Vue.component('corte-edit', {
     },
 
     computed: {
-        modified: function () {
-            this.corte.viajes_netos.filter(function (viaje_neto) {
-                return viaje_neto.modified;
+        modified: function() {
+            var _this = this;
+            return _this.corte.viajes_netos.filter(function(viaje_neto) {
+                if(viaje_neto.modified) {
+                    return true;
+                }
+                return false;
             });
         }
     },
@@ -38,6 +42,7 @@ Vue.component('corte-edit', {
 
             var _this = this;
             var id_corte = $('#id_corte').val();
+            this.corte.id = id_corte;
             var estatus = $('#estatus').val();
             var url = App.host + '/corte/' + id_corte + '/viajes_netos';
 
@@ -49,7 +54,7 @@ Vue.component('corte-edit', {
                     _this.cargando = true;
                 },
                 success: function (response) {
-                    _this.corte = response.corte;
+                    _this.corte.viajes_netos = response.viajes_netos;
                 },
                 error: function (error) {
                     if (error.status == 422) {
@@ -72,14 +77,14 @@ Vue.component('corte-edit', {
             e.preventDefault();
 
             swal({
-                title: "¡Cerrer Corte!",
+                title: "¡Cerrar Corte!",
                 text: "¿Esta seguro de que la información es correcta?",
                 type: "warning",
                 showCancelButton: true,
                 confirmButtonText: "Si, cerrar",
                 cancelButtonText: "No, cancelar",
                 confirmButtonColor: "#ec6c62"
-            }, () => this.cerrar() );
+            }, () => this.cerrar());
         },
 
         cerrar: function () {
@@ -90,19 +95,28 @@ Vue.component('corte-edit', {
                 type : 'POST',
                 url : url,
                 data : {
-                    _method : 'PATCH'
+                    _method : 'PATCH',
+                    action : 'cerrar'
                 },
                 beforeSend: function () {
                     _this.guardando = true;
                 },
                 success: function (response) {
-
+                    window.location = response.path;
                 },
                 error: function (error) {
-
+                    if (error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
                 },
                 complete: function () {
-
+                    _this.cargando = false;
                 }
             });
         },
