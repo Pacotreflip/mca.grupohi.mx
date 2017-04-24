@@ -17,6 +17,7 @@
             <th>Folio</th>
             <th>Checador</th>
             <th>Fecha y Hora de Corte</th>
+            <th>Estado</th>
             <th>Editar</th>
             <th>PDF</th>
         </tr>
@@ -30,6 +31,7 @@
                     {{ $corte->timestamp->format('d-M-Y h:m a') }}
                     <small class="text-muted">({{ $corte->timestamp->diffForHumans() }})</small>
                 </td>
+                <td>{{ $corte->estado }}</td>
                 <td>
                     @if($corte->estatus == 1)
                         <a href="{{route('corte.edit', $corte)}}" class="btn btn-primary btn-xs"><span class="glyphicon glyphicon-pencil"></span></a>
@@ -39,9 +41,9 @@
                 </td>
                 <td>
                     @if($corte->estatus == 2)
-                        <a href="{{ route('pdf.corte', $corte) }}" class="btn btn-default btn-xs"><i class="fa fa-file-pdf-o"></i></a>
+                        <a href="{{ route('pdf.corte', $corte) }}" class="btn btn-info btn-xs"><i class="fa fa-file-pdf-o"></i></a>
                     @else
-                        <a class="btn btn-default btn-xs" disabled><i class="fa fa-file-pdf-o"></i></a>
+                        <a class="btn btn-info btn-xs" disabled><i class="fa fa-file-pdf-o"></i></a>
                     @endif
                 </td>
 

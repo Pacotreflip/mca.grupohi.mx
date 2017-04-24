@@ -55,4 +55,15 @@ class Corte extends Model
     public function getTimestampAttribute($timestamp) {
         return new Date($timestamp);
     }
+
+    public function getEstadoAttribute() {
+        switch ($this->estatus) {
+            case 1:
+                return 'INICIADO';
+                break;
+            case 2:
+                return 'CERRADO';
+                break;
+        }
+    }
 }

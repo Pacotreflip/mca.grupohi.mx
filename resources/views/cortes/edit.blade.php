@@ -1,9 +1,9 @@
 @extends('layout')
 
 @section('content')
-<h1>CORTE {{ $corte->id }} <small>({{ $corte->fecha }})</small>
+<h1>CORTE {{ $corte->id }} <small>({{ $corte->estado }})</small>
     @if($corte->estatus == 1)
-        <a href="{{ route('corte.update', $corte->id) }}" class="btn btn-success btn-sm pull-right" @click="cerrar"><i class="fa fa-check"></i> CERRAR</a>
+        <a href="{{ route('corte.update', $corte->id) }}" class="btn btn-success btn-sm pull-right" @click="cerrar"><i class="fa fa-check"></i> CERRAR / TERMINAR</a>
     @endif
 </h1>
 {!! Breadcrumbs::render('corte.edit', $corte) !!}

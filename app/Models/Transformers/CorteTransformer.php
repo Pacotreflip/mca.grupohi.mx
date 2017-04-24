@@ -22,6 +22,7 @@ class CorteTransformer extends AbstractTransformer
             'id'            => $corte->id,
             'fecha'         => $corte->fecha,
             'estatus'       => $corte->estatus,
+            'estado'        => $corte->estado,
             'viajes_netos'  => ViajeNetoCorteTransformer::transform($corte->viajes_netos()),
             'folio'     => $conciliacion->Folio,
             'rango'     => $conciliacion->rango,
