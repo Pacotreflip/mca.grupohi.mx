@@ -291,7 +291,7 @@ class PDFCorte extends Rotation
                 utf8_decode($item['registro']),
                 utf8_decode($item['material_nuevo']),
                 utf8_decode($item['origen_nuevo']),
-                utf8_decode($item['cubicacion_nueva']),
+                $item['cubicacion_nueva'] ? $item['cubicacion_nueva']. " m3" : "",
                 utf8_decode($item['observaciones'])
             ));
 //                }

@@ -110,7 +110,7 @@ class CorteController extends Controller
                 $cortes = new Cortes($request->all());
                 $cortes->cerrar($corte);
 
-                return response()->json(['path' => route('corte.show', $corte)]);
+                return response()->json(['path' => route('pdf.corte', $corte)]);
             }
         }
     }

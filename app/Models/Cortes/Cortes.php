@@ -34,7 +34,7 @@ class Cortes
 
             $corte = $this->creaCorte();
 
-            $viajes_netos = ViajeNeto::corte()->whereRaw("CAST(CONCAT(FechaLlegada,' ',HoraLlegada) AS datetime) between '{$corte->timestamp_inicial}' and '{$corte->timestamp_final}'")->limit(25)
+            $viajes_netos = ViajeNeto::corte()->whereRaw("CAST(CONCAT(FechaLlegada,' ',HoraLlegada) AS datetime) between '{$corte->timestamp_inicial}' and '{$corte->timestamp_final}'")
                 ->orderBy('viajesnetos.IdViajeNeto', 'DESC')->get();
             foreach ($viajes_netos as $viaje_neto) {
                 CorteDetalle::create([

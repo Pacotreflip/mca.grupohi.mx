@@ -798,7 +798,6 @@ class ViajeNeto extends Model
             ->leftJoin('corte_detalle', 'viajesnetos.IdViajeNeto', '=', 'corte_detalle.id_viajeneto')
             ->whereNull('corte_detalle.id_viajeneto')
             ->where('viajesnetos.Creo', auth()->user()->idusuario)
-            ->limit(25)
             ->orderBy('viajesnetos.IdViajeNeto', 'DESC');
     }
 

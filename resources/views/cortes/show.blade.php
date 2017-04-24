@@ -65,7 +65,11 @@
                     <td>{{ $viaje['registro'] }}</td>
                     <td>{{ $viaje['origen_nuevo'] }}</td>
                     <td>{{ $viaje['material_nuevo'] }}</td>
-                    <td>{{ $viaje['cubicacion_nueva'] }}</td>
+                    @if($viaje['cubicacion_nueva'])
+                    <td style="text-align: right">{{ $viaje['cubicacion_nueva'] }} m<sup>3</sup></td>
+                    @else
+                        <td></td>
+                    @endif
                     <td>{{ $viaje['observaciones'] }}</td>
                 </tr>
                 @endforeach
