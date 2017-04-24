@@ -90,7 +90,6 @@ class CorteViajesController extends Controller
             CorteCambio::where('id_viajeneto', $id_viajeneto)->delete();
             return response()->json([
                 'viaje_neto' => ViajeNetoCorteTransformer::transform(ViajeNeto::find($id_viajeneto)),
-                'modified'   => true
             ]);
         }
 
@@ -104,8 +103,7 @@ class CorteViajesController extends Controller
         $result = (new Cortes($request->all()))->modificar_viaje($id_corte, $id_viajeneto);
         if ($request->ajax()) {
             return response()->json([
-                'viaje_neto' => ViajeNetoCorteTransformer::transform($result['viaje_neto']),
-                'modified' => $result['modified']
+                'viaje_neto' => ViajeNetoCorteTransformer::transform($result['viaje_neto'])
             ]);
         }
     }

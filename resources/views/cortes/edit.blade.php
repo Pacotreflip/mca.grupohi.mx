@@ -8,7 +8,14 @@
         <section>
             <h1>CORTE {{ $corte->id }} <small>({{ $corte->estado }})</small>
                 @if($corte->estatus == 1)
-                    <button class="btn btn-success btn-sm pull-right" @click="confirmar_cierre"><i class="fa fa-check"></i> CERRAR / TERMINAR</button>
+                    <button v-bind:disabled="guardando" class="btn btn-success btn-sm pull-right" @click="confirmar_cierre">
+                        <span v-if="guardando">
+                            <i class="fa fa-spinner fa-spin"></i> CERRANDO
+                        </span>
+                        <span v-else>
+                            <i class="fa fa-check"></i> CERRAR / TERMINAR
+                        </span>
+                    </button>
                 @endif
             </h1>
             {!! Breadcrumbs::render('corte.edit', $corte) !!}
@@ -29,14 +36,15 @@
                 </div>
             </div>
             <hr>
-            <section id="tabla_viajes" v-if="corte.viajes_netos.length">
+            <section id="tabla_viajes">
                 <span v-if="cargando">
                     <div class="text-center">
                         <big><i class="fa fa-spinner fa-spin"></i> CARGANDO VIAJES </big>
                     </div>
                 </span>
-                <span v-else>
+                <span v-else-if="corte.viajes_netos.length">
                     <h3>VIAJES DEL CORTE</h3>
+                    <p class="small">La información en color <strong style="color: red">rojo</strong> señala los cambios proipuestos por el checador.</p>
                     <div class="table-responsive">
                         <table class="table table-hover table-striped table-bordered small">
                             <thead>
@@ -65,14 +73,14 @@
                                     <td>@{{ viaje.camion }}</td>
                                     <td>@{{ viaje.codigo }}</td>
                                     <td>@{{ viaje.timestamp_llegada }}</td>
-                                    <td style="color: red" v-if="viaje.origen_nuevo" title="NO"> @{{ viaje.origen }} </td>
+                                    <td style="color: red" v-if="viaje.origen_nuevo"> <strong>@{{ viaje.origen_nuevo }}</strong> </td>
                                     <td v-else>@{{ viaje.origen }}</td>
                                     <td>@{{ viaje.tiro }}</td>
-                                    <td style="color: red" v-if="viaje.material_nuevo">@{{ viaje.material_nuevo }}</td>
+                                    <td style="color: red" v-if="viaje.material_nuevo"><strong>@{{ viaje.material_nuevo }}</strong></td>
                                     <td v-else>@{{ viaje.material }}</td>
-                                    <td v-if="viaje.cubicacion_nueva" style="text-align: right; color: red">@{{ viaje.cubicacion_nueva }} m<sup>3</sup></td>
+                                    <td v-if="viaje.cubicacion_nueva" style="text-align: right; color: red"><strong>@{{ viaje.cubicacion_nueva }} m<sup>3</sup></strong></td>
                                     <td v-else style="text-align: right">@{{ viaje.cubicacion }} m<sup>3</sup></td>
-                                    <td v-if="viaje.importe_nuevo != null" style="text-align: right">$@{{ formato(viaje.importe_nuevo) }}</td>
+                                    <td v-if="viaje.importe_nuevo" style="text-align: right; color: red"><strong>$@{{ formato(viaje.importe_nuevo) }}</strong></td>
                                     <td v-else style="text-align: right">$@{{ formato(viaje.importe) }}</td>
                                     <td>@{{ viaje.registro_primer_toque }}</td>
                                     <td>@{{ viaje.registro }}</td>
@@ -91,11 +99,11 @@
             </section>
 
             <!-- Modal de Modificación-->
-            <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal fade" id="edit_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
                 <div class="modal-dialog" role="document">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <button @click="doSomethingOnHidden" type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                             <h4 class="modal-title" id="myModalLabel">MODIFICAR VIAJE</h4>
                         </div>
                         {!! Form::open(['id' => 'form_modificar']) !!}
@@ -105,7 +113,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="material">MATERIAL</label>
-                                        <select name="material" class="form-control" v-model="form.data.material">
+                                        <select name="material" class="form-control" v-model="form.data.id_material">
                                             <option value>-- SELECCIONE --</option>
                                             @foreach($materiales as $key => $material)
                                             <option value="{{$key}}">{{$material}}</option>
@@ -116,7 +124,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label for="origen">ORIGEN</label>
-                                        <select name="origen" class="form-control" v-model="form.data.origen">
+                                        <select name="origen" class="form-control" v-model="form.data.id_origen">
                                             <option value>-- SELECCIONE --</option>
                                             @foreach($origenes as $key => $origen)
                                                 <option value="{{$key}}">{{$origen}}</option>
@@ -135,13 +143,13 @@
                                 <div class="col-md-12">
                                     <div class="form-group">
                                         <label for="cubicacion">OBSERVACIONES</label>
-                                        <input type="text" name="observaciones" class="form-control" v-model="form.data.observaciones">
+                                        <input type="text" name="observaciones" class="form-control">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+                            <button type="button" @click="doSomethingOnHidden" class="btn btn-default" data-dismiss="modal">Cerrar</button>
                             <button type="submit" @click="confirmar_modificacion" class="btn btn-primary">Guardar Cambios</button>
                         </div>
                         {!! Form::close() !!}

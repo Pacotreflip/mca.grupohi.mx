@@ -107,7 +107,7 @@ class PDFController extends Controller
     public function corte($id) {
         $corte = Corte::findOrFail($id);
 
-        $pdf = new PDFCorte('p', 'cm', 'Letter', $corte);
+        $pdf = new PDFCorte('l', 'cm', 'Letter', $corte);
         $pdf->create();
     }
 

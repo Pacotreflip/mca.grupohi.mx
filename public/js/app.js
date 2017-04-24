@@ -33986,16 +33986,17 @@ Vue.component('corte-edit', {
             'form': {
                 'errors': [],
                 'data': {
-                    'material': '',
-                    'origen': '',
+                    'id_material': '',
+                    'id_origen': '',
                     'observaciones': '',
                     'cubicacion': '',
-                    'id_viajeneto': ''
+                    'id': ''
                 }
             },
             'guardando': false,
             'cargando': false,
-            'viaje': {}
+            'viaje': {},
+            'index': ''
         };
     },
 
@@ -34016,6 +34017,8 @@ Vue.component('corte-edit', {
     },
 
     methods: {
+        doSomethingOnHidden: function doSomethingOnHidden() {},
+
         fetch: function fetch() {
 
             var _this = this;
@@ -34072,7 +34075,6 @@ Vue.component('corte-edit', {
         cerrar: function cerrar() {
             var _this = this;
             var url = App.host + '/corte/' + _this.corte.id;
-
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -34087,6 +34089,7 @@ Vue.component('corte-edit', {
                     window.location = response.path;
                 },
                 error: function error(_error2) {
+                    _this.cargando = false;
                     if (_error2.status == 422) {
                         App.setErrorsOnForm(_this.form, _error2.responseJSON);
                     } else if (_error2.status == 500) {
@@ -34096,21 +34099,21 @@ Vue.component('corte-edit', {
                             text: App.errorsToString(_error2.responseText)
                         });
                     }
-                },
-                complete: function complete() {
-                    _this.cargando = false;
                 }
             });
         },
 
         editar: function editar(viaje) {
-            $('input[name=observaciones]').val('');
+
+            $('input[name=observaciones]').val(viaje.observaciones);
             this.viaje = viaje;
-            this.form.data.material = viaje.id_material;
-            this.form.data.origen = viaje.id_origen;
-            this.form.data.cubicacion = viaje.cubicacion;
-            this.form.data.observaciones = viaje.observaciones;
-            this.form.data.id_viajeneto = viaje.id;
+
+            this.form.data.id_material = viaje.id_material_nuevo ? viaje.id_material_nuevo : viaje.id_material;
+            this.form.data.id_origen = viaje.id_orige_nuevo ? viaje.id_origen_nuevo : viaje.id_origen;
+            this.form.data.cubicacion = viaje.cubicacion_nueva ? viaje.cubicacion_nueva : viaje.cubicacion;
+            this.form.data.id = viaje.id;
+            this.index = this.corte.viajes_netos.indexOf(viaje);
+
             this.form.errors = [];
             $('#edit_modal').modal('show');
         },
@@ -34119,7 +34122,6 @@ Vue.component('corte-edit', {
             var _this3 = this;
 
             e.preventDefault();
-
             swal({
                 title: "Modificar Viaje",
                 text: "¿Esta seguro de que la información es correcta?",
@@ -34135,7 +34137,7 @@ Vue.component('corte-edit', {
 
         modificar: function modificar() {
             var _this = this;
-            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + _this.form.data.id_viajeneto;
+            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + _this.form.data.id;
             var data = $('#form_modificar').serialize();
 
             $.ajax({
@@ -34147,9 +34149,9 @@ Vue.component('corte-edit', {
                     _this.form.errors = [];
                 },
                 success: function success(response) {
+                    Vue.set(_this.corte.viajes_netos, _this.index, response.viaje_neto);
                     $('#edit_modal').modal('hide');
-                    if (response.modified) {
-                        _this.fetch();
+                    if (response.viaje_neto.modified) {
                         swal({
                             'type': 'success',
                             'title': 'INFORMACIÓN',
@@ -34192,14 +34194,12 @@ Vue.component('corte-edit', {
                     _this.guardando = true;
                 },
                 success: function success(response) {
-                    if (response.modified) {
-                        _this.fetch();
-                        swal({
-                            'type': 'success',
-                            'title': 'INFORMACIÓN',
-                            'text': 'Cambios aplicados correctamente'
-                        });
-                    }
+                    Vue.set(_this.corte.viajes_netos, _this.corte.viajes_netos.indexOf(viaje), response.viaje_neto);
+                    swal({
+                        'type': 'success',
+                        'title': 'INFORMACIÓN',
+                        'text': 'Cambios aplicados correctamente'
+                    });
                 },
                 error: function error(_error4) {
                     if (_error4.status == 422) {

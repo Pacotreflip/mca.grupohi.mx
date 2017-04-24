@@ -1,23 +1,24 @@
 Vue.component('corte-edit', {
     data: function() {
         return {
-            'corte' : {
-                'id' : '',
-                'viajes_netos' : []
+            'corte': {
+                'id': '',
+                'viajes_netos': []
             },
-            'form' : {
-                'errors' : [],
-                'data' : {
-                    'material' : '',
-                    'origen' : '',
-                    'observaciones' : '',
-                    'cubicacion' : '',
-                    'id_viajeneto' :''
+            'form': {
+                'errors': [],
+                'data': {
+                    'id_material': '',
+                    'id_origen': '',
+                    'observaciones': '',
+                    'cubicacion': '',
+                    'id': ''
                 },
             },
-            'guardando'  : false,
-            'cargando'   : false,
-            'viaje'      : {}
+            'guardando': false,
+            'cargando': false,
+            'viaje': {},
+            'index' : ''
         }
     },
 
@@ -38,6 +39,10 @@ Vue.component('corte-edit', {
     },
 
     methods: {
+        doSomethingOnHidden: function () {
+
+        },
+
         fetch: function () {
 
             var _this = this;
@@ -90,7 +95,6 @@ Vue.component('corte-edit', {
         cerrar: function () {
             var _this = this;
             var url = App.host + '/corte/' + _this.corte.id;
-
             $.ajax({
                 type : 'POST',
                 url : url,
@@ -105,6 +109,7 @@ Vue.component('corte-edit', {
                     window.location = response.path;
                 },
                 error: function (error) {
+                    _this.cargando = false;
                     if (error.status == 422) {
                         App.setErrorsOnForm(_this.form, error.responseJSON);
                     } else if (error.status == 500) {
@@ -114,28 +119,27 @@ Vue.component('corte-edit', {
                             text: App.errorsToString(error.responseText)
                         });
                     }
-                },
-                complete: function () {
-                    _this.cargando = false;
                 }
             });
         },
 
         editar: function (viaje) {
-            $('input[name=observaciones]').val('');
+
+            $('input[name=observaciones]').val(viaje.observaciones);
             this.viaje = viaje;
-            this.form.data.material = viaje.id_material;
-            this.form.data.origen = viaje.id_origen;
-            this.form.data.cubicacion = viaje.cubicacion;
-            this.form.data.observaciones = viaje.observaciones;
-            this.form.data.id_viajeneto = viaje.id;
+
+            this.form.data.id_material = viaje.id_material_nuevo ? viaje.id_material_nuevo : viaje.id_material;
+            this.form.data.id_origen = viaje.id_orige_nuevo ? viaje.id_origen_nuevo : viaje.id_origen;
+            this.form.data.cubicacion = viaje.cubicacion_nueva ? viaje.cubicacion_nueva : viaje.cubicacion;
+            this.form.data.id = viaje.id;
+            this.index = this.corte.viajes_netos.indexOf(viaje);
+
             this.form.errors = [];
             $('#edit_modal').modal('show');
         },
 
         confirmar_modificacion: function(e) {
             e.preventDefault();
-
             swal({
                 title: "Modificar Viaje",
                 text: "¿Esta seguro de que la información es correcta?",
@@ -149,7 +153,7 @@ Vue.component('corte-edit', {
 
         modificar: function () {
             var _this = this;
-            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + _this.form.data.id_viajeneto;
+            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + _this.form.data.id;
             var data = $('#form_modificar').serialize();
 
             $.ajax({
@@ -161,9 +165,9 @@ Vue.component('corte-edit', {
                     _this.form.errors = [];
                 },
                 success: function (response) {
+                    Vue.set(_this.corte.viajes_netos, _this.index, response.viaje_neto);
                     $('#edit_modal').modal('hide');
-                    if(response.modified) {
-                        _this.fetch();
+                    if(response.viaje_neto.modified) {
                         swal({
                             'type' : 'success',
                             'title' : 'INFORMACIÓN',
@@ -206,14 +210,12 @@ Vue.component('corte-edit', {
                     _this.guardando = true;
                 },
                 success: function (response) {
-                    if(response.modified) {
-                        _this.fetch();
-                        swal({
-                            'type' : 'success',
-                            'title' : 'INFORMACIÓN',
-                            'text' : 'Cambios aplicados correctamente'
-                        });
-                    }
+                    Vue.set(_this.corte.viajes_netos, _this.corte.viajes_netos.indexOf(viaje), response.viaje_neto);
+                    swal({
+                        'type' : 'success',
+                        'title' : 'INFORMACIÓN',
+                        'text' : 'Cambios aplicados correctamente'
+                    });
                 },
                 error: function (error) {
                     if (error.status == 422) {

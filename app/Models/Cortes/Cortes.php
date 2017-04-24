@@ -118,6 +118,7 @@ class Cortes
             $corte_cambio->observaciones = $this->data['observaciones'];
             $corte_cambio->registro = auth()->user()->idusuario;
             $corte_cambio->save();
+            $viaje_neto = ViajeNeto::find($id_viajeneto);
 
             if ($modified) {
                 DB::connection('sca')->commit();
@@ -132,9 +133,10 @@ class Cortes
             DB::rollback();
             throw $e;
         }
+
+        $viaje_neto = ViajeNeto::find($id_viajeneto);
         return [
-            'viaje_neto' => $viaje_neto,
-            'modified'   => $modified
+            'viaje_neto' => $viaje_neto
         ];
     }
 
