@@ -85,6 +85,9 @@
         @if (Auth::user()->can(['consultar-viajes-conflicto']))
         <li><a href="{{ route('viajes_netos.index', ['action' => 'en_conflicto']) }}">Viajes en Conflicto</a> </li>
         @endif
+        @if(Auth::user()->can(['consultar-cortes-checador']))
+        <li><a href="{{ route('corte.index') }}">Corte de Checador</a> </li>
+        @endif
     </ul>
   </li>
 
@@ -98,8 +101,6 @@
       </ul>
   </li>
   @endif
-
-
 @else
   <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
 @endif

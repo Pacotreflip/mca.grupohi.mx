@@ -11,3 +11,5 @@ require('./vue-components/conciliaciones-create');
 require('./vue-components/conciliaciones-edit');
 require('./vue-components/viajes-revertir');
 require('./vue-components/viajes-index');
+require('./vue-components/corte-create');
+require('./vue-components/corte-edit');

@@ -80,8 +80,17 @@
             todayHighlight: true,
             endDate: '0d'
         });
-        $('#form_reporte_viajes_netos .date').val(App.timeStamp(1));
-        $('#form_reporte_viajes_netos .time.start').val('12:00:00 am');
-        $('#form_reporte_viajes_netos .time.end').val('11:59:59 pm');
+
+        if(! $('#form_reporte_viajes_netos .date').val()) {
+            $('#form_reporte_viajes_netos .date').val(App.timeStamp(1));
+        }
+
+        if(! $('#form_reporte_viajes_netos .time.start').val()) {
+            $('#form_reporte_viajes_netos .time.start').val('12:00:00 am');
+        }
+
+        if(! $('#form_reporte_viajes_netos .time.end').val()) {
+            $('#form_reporte_viajes_netos .time.end').val('11:59:59 pm');
+        }
     </script>
 @stop

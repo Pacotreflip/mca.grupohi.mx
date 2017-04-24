@@ -218,6 +218,42 @@ class ViajesNetosController extends Controller
                 $viajes_netos = $query->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
+            } else if($request->get('action') == 'corte') {
+
+                $this->validate($request, [
+                    'turnos' => 'required|array',
+                    'fecha'  => 'required|date_format:"Y-m-d"'
+                ]);
+
+                $viajes_netos = ViajeNeto::corte();
+
+                $turno_1 = $turno_2 = false;
+                foreach($request->get('turnos', []) as $turno) {
+                    if($turno == '1') {
+                        $turno_1 = true;
+                        $timestamp_inicial_1 = $request->get('fecha') . ' 07:00:00';
+                        $timestamp_final_1 = $request->get('fecha') . ' 18:59:59';
+                    }
+                    if($turno == '2') {
+                        $turno_2 = true;
+                        $fecha = Carbon::createFromFormat('Y-m-d', $request->get('fecha'))->addDay(1)->toDateString();
+                        $timestamp_inicial_2 = $request->fecha . ' 19:00:00';
+                        $timestamp_final_2 = $fecha . ' 06:59:59';
+                    }
+                }
+
+                if($turno_1 && $turno_2) {
+                    $viajes_netos->where(function ($query) use ($timestamp_final_1, $timestamp_final_2, $timestamp_inicial_1, $timestamp_inicial_2){
+                        $query->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_1}' and '{$timestamp_final_1}'")
+                            ->orWhereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_2}' and '{$timestamp_final_2}'");
+                    });
+                } else if($turno_1 && ! $turno_2) {
+                    $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_1}' and '{$timestamp_final_1}'");
+                } else if(! $turno_1 && $turno_2) {
+                    $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_2}' and '{$timestamp_final_2}'");
+                }
+
+                $data = ViajeNetoTransformer::transform($viajes_netos->get());
             }
             return response()->json(['viajes_netos' => $data]);
         } else {
@@ -269,26 +305,10 @@ class ViajesNetosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show(Request $request, $id)
+    public function show($id)
     {
-        $viaje = ViajeNeto::findOrFail($id);
-        if($request->get('action') == 'modificar') {
-            return response()->json([
-                'IdViajeNeto' => $viaje->IdViajeNeto,
-                'FechaLlegada' => $viaje->FechaLlegada,
-                'Tiro' => $viaje->tiro->Descripcion,
-                'IdTiro' => $viaje->tiro->IdTiro,
-                'Camion' => $viaje->camion->Economico,
-                'IdCamion' => $viaje->camion->IdCamion,
-                'HoraLlegada' => $viaje->HoraLlegada,
-                'Cubicacion' => $viaje->camion->CubicacionParaPago,
-                'Origen' => $viaje->origen->Descripcion,
-                'IdOrigen' => $viaje->origen->IdOrigen,
-                'Material' => $viaje->material->Descripcion,
-                'IdMaterial' => $viaje->material->IdMaterial,
-                'ShowModal' => false
-            ]);
-        }
+        $viaje_neto = ViajeNeto::findOrFail($id);
+        return response()->json(ViajeNetoTransformer::transform($viaje_neto));
     }
 
     /**

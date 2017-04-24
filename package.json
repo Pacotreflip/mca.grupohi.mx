@@ -15,6 +15,7 @@
     "jquery-treegrid": "^0.3.0",
     "jquery-ui": "^1.12.1",
     "laravel-elixir": "^4.0.0",
+    "numeral": "^2.0.6",
     "roboto-fontface": "^0.6.0",
     "select2": "^4.0.3",
     "sweetalert": "^1.1.3",

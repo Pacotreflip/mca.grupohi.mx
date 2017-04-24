@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\Cortes\CorteCambio;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
@@ -269,9 +270,28 @@ class ViajeNeto extends Model
         } else {
             return 0;
         }
-
     }
-    
+
+    public function getImporteNuevo() {
+        if($this->corte_cambio) {
+            if($this->corte_cambio->cubicacion_nueva) {
+                if($this->ruta && $this->camion && $this->material) {
+                    if($this->material->tarifaMaterial){
+                        return (($this->material->tarifaMaterial->PrimerKM * 1 * $this->corte_cambio->cubicacion_nueva) +
+                            ($this->material->tarifaMaterial->KMSubsecuente * $this->ruta->KmSubsecuentes * $this->corte_cambio->cubicacion_nueva) +
+                            ($this->material->tarifaMaterial->KMAdicional * $this->ruta->KmAdicionales * $this->corte_cambio->cubicacion_nueva));
+                    }else{
+                        return 0;
+                    }
+                } else {
+                    return 0;
+                }
+            }
+        } else {
+            return null;
+        }
+    }
+
     public function valido() {
         if(!isset($this->ruta)) {
             return false;
@@ -468,7 +488,7 @@ class ViajeNeto extends Model
     public function conflicto_pagable() {
         return $this->hasOne(ViajeNetoConflictoPagable::class, 'idviaje_neto');
     }
-    
+
     public function viaje_rechazado() {
         return $this->hasOne(ViajeRechazado::class, 'IdViajeNeto');
     }
@@ -545,6 +565,19 @@ class ViajeNeto extends Model
         }
     }
 
+    public function getRegistroPrimerToqueAttribute(){
+        $creo = $this->CreoPrimerToque;
+        if(is_numeric($creo)){
+            if(!count($this->usuario_registro_primer_toque)) {
+                dd($this->CreoPrimerToque);
+            }
+            $registro = $this->usuario_registro_primer_toque->present()->NombreCompleto;
+            return $registro;
+        }else{
+            return $creo;
+        }
+    }
+
     public function getAutorizoAttribute(){
         return $this->Aprobo ? User::find($this->Aprobo)->present()->NombreCompleto : '';
     }
@@ -566,6 +599,10 @@ class ViajeNeto extends Model
 
     public function usuario_registro(){
         return  $this->belongsTo(User::class, 'Creo');
+    }
+
+    public function usuario_registro_primer_toque(){
+        return  $this->belongsTo(User::class, 'CreoPrimerToque');
     }
 
     public function scopeManualesAutorizados($query) {
@@ -747,6 +784,7 @@ class ViajeNeto extends Model
         }
         return "";
     }
+
     public function getUsuarioRechazoAttribute(){
         $usuario = User::find($this->Rechazo);
         if($usuario){
@@ -754,4 +792,17 @@ class ViajeNeto extends Model
         }
         return "";
     }
+
+    public function scopeCorte($query){
+        return $query
+            ->leftJoin('corte_detalle', 'viajesnetos.IdViajeNeto', '=', 'corte_detalle.id_viajeneto')
+            ->whereNull('corte_detalle.id_viajeneto')
+            ->where('viajesnetos.Creo', auth()->user()->idusuario)
+            ->orderBy('viajesnetos.IdViajeNeto', 'DESC');
+    }
+
+    public function corte_cambio() {
+        return $this->hasOne(CorteCambio::class, 'id_viajeneto', 'IdViajeNeto');
+    }
+
 }

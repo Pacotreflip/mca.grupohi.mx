@@ -305,3 +305,25 @@ Breadcrumbs::register('viajes.revertir', function($breadcrumbs) {
 Breadcrumbs::register('reportes.viajes_netos', function($breadcrumbs) {
     $breadcrumbs->push('VIAJES NETOS', route('reportes.viajes_netos.create'));
 });
+
+
+//Corte de Checador
+Breadcrumbs::register('corte.index', function($breadcrumbs) {
+    $breadcrumbs->push('CORTES DE CHECADOR', route('corte.index'));
+});
+
+Breadcrumbs::register('corte.create', function($breadcrumbs) {
+    $breadcrumbs->parent('corte.index');
+    $breadcrumbs->push('CORTE DEL DÍA', route('corte.create'));
+});
+
+Breadcrumbs::register('corte.show', function ($breadcrumbs, $corte) {
+    $breadcrumbs->parent('corte.index');
+    $breadcrumbs->push("CORTE {$corte->id}", route('corte.show', $corte));
+});
+
+Breadcrumbs::register('corte.edit', function ($breadcrumbs, $corte) {
+    $breadcrumbs->parent('corte.show', $corte);
+    $breadcrumbs->push("MODIFICAR CORTE", route('corte.edit', $corte));
+});
+

@@ -64,7 +64,7 @@ class ConciliacionesController extends Controller
     public function create()
     {
         return view('conciliaciones.create')
-            ->withEmpresas(Empresa::ORDERbY('razonSocial', 'ASC')->lists('razonSocial', 'IdEmpresa'))
+            ->withEmpresas(Empresa::orderBy('razonSocial', 'ASC')->lists('razonSocial', 'IdEmpresa'))
             ->withSindicatos(Sindicato::orderBy('nombreCorto', 'ASC')->lists('nombreCorto', 'IdSindicato'));
     }
 

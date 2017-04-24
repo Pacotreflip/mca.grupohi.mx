@@ -16,7 +16,6 @@ Route::get('index', 'PagesController@index')->name('index');
 Route::get('proyectos', 'PagesController@proyectos')->name('proyectos');
 Route::get('origenes_usuarios', 'PagesController@origenes_usuarios')->name('origenes_usuarios.index');
 
-Route::get('prueba', 'ViajesNetosController@prueba');
 // Rutas de Autenticación
 Route::get('auth/login', [
         'as' => 'auth.login',
@@ -87,6 +86,7 @@ Route::patch('viajes_netos', 'ViajesNetosController@update')->name('viajes_netos
 Route::group(['prefix' => 'viajes_netos'], function() {
     Route::patch('autorizar', 'ViajesNetosController@update')->name('viajes_netos.autorizar');
 });
+Route::get('viajes_netos/{viaje_neto}', 'ViajesNetosController@show')->name('viajes_netos.show');
 
 //PDF Routes
 Route::group(['prefix' => 'pdf'], function () {
@@ -99,6 +99,11 @@ Route::group(['prefix' => 'pdf'], function () {
     Route::get('viajes_netos', [
         'as' => 'pdf.viajes_netos',
         'uses' => 'PDFController@viajes_netos'
+    ]);
+
+    Route::get('corte/{corte}', [
+        'as' => 'pdf.corte',
+        'uses' => 'PDFController@corte'
     ]);
     
     Route::get('viajes_netos_conflicto', [
@@ -129,3 +134,14 @@ Route::get('conciliacion_info_carga/{filename}', 'ConciliacionesDetallesControll
 Route::get('viajes', 'ViajesController@index')->name('viajes.index');
 Route::patch('viajes/{viaje}', 'ViajesController@update');
 Route::get('viajes/edit', 'ViajesController@edit')->name('viajes.edit');
+
+//Rutas de corte de checador
+Route::get('corte/create', 'CorteController@create')->name('corte.create');
+Route::post('corte', 'CorteController@store')->name('corte.store');
+Route::get('corte/{corte}', 'CorteController@show')->name('corte.show');
+Route::get('corte', 'CorteController@index')->name('corte.index');
+Route::get('corte/{corte}/edit', 'CorteController@edit')->name('corte.edit');
+Route::patch('corte/{corte}', 'CorteController@update')->name('corte.update');
+
+Route::get('corte/{corte}/viajes_netos', 'CorteViajesController@index')->name('corte.viajes_netos.index');
+Route::patch('corte/{corte}/viajes_netos/{viaje_neto}', 'CorteViajesController@update')->name('corte.viajes_netos.update');
