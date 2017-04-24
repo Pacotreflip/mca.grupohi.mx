@@ -42,25 +42,33 @@
                 <th style="text-align: center"> Importe </th>
                 <th style="text-align: center"> Checador Primer Toque </th>
                 <th style="text-align: center"> Checador Segundo Toque </th>
+                <th style="text-align: center">Origen Nuevo</th>
+                <th style="text-align: center">Material Nuevo</th>
+                <th style="text-align: center">Cubic. Nueva</th>
+                <th style="text-align: center">Observaciones</th>
             </tr>
             </thead>
             <tbody>
-            @foreach($viajes_netos as $key => $viaje)
+                @foreach($viajes_netos as $key => $viaje)
                 <tr >
-                <td>{{ $key + 1 }}</td>
-                <td>{{ $viaje['tipo'] }}</td>
-                <td>{{ $viaje['camion'] }}</td>
-                <td>{{ $viaje['codigo'] }}</td>
-                <td>{{ $viaje['timestamp_llegada'] }}</td>
-                <td>{{ $viaje['origen'] }}</td>
-                <td>{{ $viaje['tiro'] }}</td>
-                <td>{{ $viaje['material'] }}</td>
-                <td style="text-align: right">{{ $viaje['cubicacion'] }} m<sup>3</sup></td>
-                <td style="text-align: right">${{ number_format($viaje['importe'], 2, ",", ".") }}</td>
-                <td>{{ $viaje['registro_primer_toque'] }}</td>
-                <td>{{ $viaje['registro'] }}</td>
-            </tr>
-            @endforeach
+                    <td>{{ $key + 1 }}</td>
+                    <td>{{ $viaje['tipo'] }}</td>
+                    <td>{{ $viaje['camion'] }}</td>
+                    <td>{{ $viaje['codigo'] }}</td>
+                    <td>{{ $viaje['timestamp_llegada'] }}</td>
+                    <td>{{ $viaje['origen'] }}</td>
+                    <td>{{ $viaje['tiro'] }}</td>
+                    <td>{{ $viaje['material'] }}</td>
+                    <td style="text-align: right">{{ $viaje['cubicacion'] }} m<sup>3</sup></td>
+                    <td style="text-align: right">${{ number_format($viaje['importe'], 2, ",", ".") }}</td>
+                    <td>{{ $viaje['registro_primer_toque'] }}</td>
+                    <td>{{ $viaje['registro'] }}</td>
+                    <td>{{ $viaje['origen_nuevo'] }}</td>
+                    <td>{{ $viaje['material_nuevo'] }}</td>
+                    <td>{{ $viaje['cubicacion_nueva'] }}</td>
+                    <td>{{ $viaje['observaciones'] }}</td>
+                </tr>
+                @endforeach
             </tbody>
         </table>
     </div>
