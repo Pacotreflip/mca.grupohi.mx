@@ -19,11 +19,13 @@ class CorteCambio extends Model
         'cubicacion_anterior',
         'cubicacion_nueva',
         'registro',
-        'observaciones',
+        'justificacion',
         'id_material_anterior',
         'id_material_nuevo',
         'id_origen_anterior',
-        'id_origen_nuevo'
+        'id_origen_nuevo',
+        'id_tiro_anterior',
+        'id_tiro_nuevo'
     ];
     public $timestamps = false;
 

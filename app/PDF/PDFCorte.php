@@ -97,14 +97,14 @@ class PDFCorte extends Rotation
             $this->SetTextColors(array('255,255,255'));
             $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES'), 0, 1, 'L');
             $this->SetFont('Arial', 'B', 6);
-            $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
+            $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
             $this->widths_items();
-            $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '','2'));
-            $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
-            $this->SetFills(array('180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '', '','2'));
+            $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+            $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.3));
-            $this->SetAligns(array('C', 'C', 'C', 'C','C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+            $this->SetAligns(array('C', 'C', 'C', 'C', 'C','C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
             $this->Row(array(
                 "#",
                 utf8_decode("Camión"),
@@ -113,21 +113,22 @@ class PDFCorte extends Rotation
                 "Origen",
                 "Tiro",
                 "Material",
-                utf8_decode("Cubic."),
+                utf8_decode("Cubic. (m3)"),
                 "Importe",
                 utf8_decode("Checador Primer Toque"),
                 utf8_decode("Checador Segundo Toque"),
-                "Material Nuevo",
                 "Origen Nuevo",
-                "Cubic. Nueva",
-                "Obs."));
+                "Tiro Nuevo",
+                "Material Nuevo",
+                "Cubic. Nueva (m3)",
+                utf8_decode("Justificación")));
 
-            $this->SetRounds(array('', '', '', '', '', '', '', '','', '', '', '', '', '', ''));
-            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
-            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetRounds(array('', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.35));
-            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L', 'L', 'L', 'R', 'L'));
+            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L', 'L', 'L', 'L', 'R', 'L'));
         }
     }
 
@@ -151,17 +152,18 @@ class PDFCorte extends Rotation
             0.053 * 19.59,
             0.083 * 19.59,
             0.063 * 19.59,
-            0.098 * 19.59,
-            0.098 * 19.59,
-            0.098 * 19.59,
+            0.083 * 19.59,
+            0.083 * 19.59,
+            0.083 * 19.59,
+            0.05 * 19.59,
             0.073 * 19.59,
-            0.073 * 19.59,
-            0.118 * 19.59,
-            0.118 * 19.59,
-            0.098 * 19.59,
-            0.098 * 19.59,
-            0.073 * 19.59,
-            0.168  * 19.59,
+            0.1 * 19.59,
+            0.1 * 19.59,
+            0.083 * 19.59,
+            0.083 * 19.59,
+            0.083 * 19.59,
+            0.05 * 19.59,
+            0.175 * 19.59
         ));
     }
 
@@ -232,14 +234,14 @@ class PDFCorte extends Rotation
         $this->SetTextColors(array('255,255,255'));
         $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES'), 0, 1, 'L');
         $this->SetFont('Arial', '', 6);
-        $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
+        $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
         $this->widths_items();
-        $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '', '2'));
-        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
-        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2'));
+        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
         $this->SetHeights(array(0.3));
-        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
         $this->Row(array(
             "#",
             utf8_decode("Camión"),
@@ -248,36 +250,39 @@ class PDFCorte extends Rotation
             "Origen",
             "Tiro",
             "Material",
-            utf8_decode("Cubic."),
+            utf8_decode("Cubic. (m3)"),
             "Importe",
             utf8_decode("Checador Primer Toque"),
             utf8_decode("Checador Segundo Toque"),
-            "Material Nuevo",
             "Origen Nuevo",
-            "Cubic. Nueva",
-            "Obs."));
+            "Tiro Nuevo",
+            "Material Nuevo",
+            "Cubic. Nueva (m3)",
+            utf8_decode("Justificación")));
 
         foreach (ViajeNetoCorteTransformer::transform($this->corte->viajes_netos()) as $key => $item) {
             $this->SetFont('Arial', '', 5);
             $this->widths_items();
 
             $this->encola = "items";
-            $this->SetRounds(array('', '', '', '','', '', '', '', '','', '', '', '', '', ''));
-            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0));
-            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetRounds(array('', '', '', '', '','', '', '', '', '','', '', '', '', '', ''));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.35));
-            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L', 'R', 'R', 'L', 'L', 'L', 'L', 'R', 'L'));
+            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L', 'L', 'L', 'L', 'R', 'L'));
 
             if ($key + 1 == $numItems ) {
-                $this->SetRounds(array('4', '', '', '', '',  '', '', '', '', '', '', '', '', '', '3'));
-                $this->SetRadius(array(0.2, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+                $this->SetRounds(array('4', '', '', '', '', '',  '', '', '', '', '', '', '', '', '', '3'));
+                $this->SetRadius(array(0.2, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
             }
             $this->widths_items();
 
 
             $this->encola = "items";
 //                for($cont = 0; $cont < 50; $cont ++){
+
+
             $this->Row(array($key + 1,
                 $item['camion'],
                 $item['codigo'],
@@ -285,14 +290,15 @@ class PDFCorte extends Rotation
                 utf8_decode($item['origen']),
                 utf8_decode($item['tiro']),
                 utf8_decode($item['material']),
-                $item['cubicacion'] . " m3",
+                $item['cubicacion'],
                 "$ ".number_format($item['importe'], 2, '.', ','),
                 utf8_decode($item['registro_primer_toque']),
                 utf8_decode($item['registro']),
-                utf8_decode($item['material_nuevo']),
-                utf8_decode($item['origen_nuevo']),
-                $item['cubicacion_nueva'] ? $item['cubicacion_nueva']. " m3" : "",
-                utf8_decode($item['observaciones'])
+                utf8_decode($item['corte_cambio']['origen_nuevo']),
+                utf8_decode($item['corte_cambio']['tiro_nuevo']),
+                utf8_decode($item['corte_cambio']['material_nuevo']),
+                utf8_decode($item['corte_cambio']['cubicacion_nueva']),
+                utf8_decode($item['corte_cambio']['justificacion'])
             ));
 //                }
             $this->encola = "";
