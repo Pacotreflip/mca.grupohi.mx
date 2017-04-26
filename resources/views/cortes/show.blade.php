@@ -43,9 +43,10 @@
                 <th style="text-align: center"> Checador Primer Toque </th>
                 <th style="text-align: center"> Checador Segundo Toque </th>
                 <th style="text-align: center">Origen Nuevo</th>
+                <th style="text-align: center">Tiro Nuevo</th>
                 <th style="text-align: center">Material Nuevo</th>
-                <th style="text-align: center">Cubic. Nueva</th>
-                <th style="text-align: center">Observaciones</th>
+                <th style="text-align: center">Cubicación Nueva</th>
+                <th style="text-align: center">Justificación</th>
             </tr>
             </thead>
             <tbody>
@@ -63,14 +64,15 @@
                     <td style="text-align: right">${{ number_format($viaje['importe'], 2, ",", ".") }}</td>
                     <td>{{ $viaje['registro_primer_toque'] }}</td>
                     <td>{{ $viaje['registro'] }}</td>
-                    <td>{{ $viaje['origen_nuevo'] }}</td>
-                    <td>{{ $viaje['material_nuevo'] }}</td>
-                    @if($viaje['cubicacion_nueva'])
-                    <td style="text-align: right">{{ $viaje['cubicacion_nueva'] }} m<sup>3</sup></td>
+                    <td>{{ $viaje['corte_cambio']['origen_nuevo'] }}</td>
+                    <td>{{ $viaje['corte_cambio']['tiro_nuevo'] }}</td>
+                    <td>{{ $viaje['corte_cambio']['material_nuevo'] }}</td>
+                    @if($viaje['corte_cambio']['cubicacion_nueva'])
+                    <td>{{ $viaje['corte_cambio']['cubicacion_nueva'] }} m<sup>3</sup></td>
                     @else
                         <td></td>
                     @endif
-                    <td>{{ $viaje['observaciones'] }}</td>
+                    <td>{{ $viaje['corte_cambio']['justificacion'] }}</td>
                 </tr>
                 @endforeach
             </tbody>
