@@ -8,15 +8,14 @@
     </h1>
     {!! Breadcrumbs::render('corte.index') !!}
     <hr>
-    @include('partials.search-form')
 
     @if($cortes->count())
-    <table class="table table-striped table-hover small">
+    <table class="table table-striped table-hover small" id="index_cortes">
         <thead>
         <tr>
             <th>Folio</th>
             <th>Checador</th>
-            <th>Fecha y Hora de Corte</th>
+            <th>Fecha y Hora del Corte</th>
             <th>Número de viajes</th>
             <th>Estado</th>
             <th>Editar</th>
@@ -26,7 +25,7 @@
         <tbody>
             @foreach($cortes as $corte)
             <tr>
-                <td><a href="{{ route('corte.show', $corte) }}"># {{ $corte->id }}</a></td>
+                <td><a href="{{ route('corte.show', $corte) }}">{{ $corte->id }}</a></td>
                 <td>{{ $corte->checador->present()->nombreCompleto }}</td>
                 <td>
                     {{ $corte->timestamp->format('d-M-Y h:m a') }}
@@ -54,8 +53,32 @@
         </tbody>
     </table>
     @endif
-    <div class="text-center">
-        {!! $cortes->appends(['buscar' => $busqueda])->render() !!}
-    </div>
+@endsection
+@section('scripts')
+    <script>
+        var val_config = {
+            auto_filter: true,
 
+            col_0: 'input',
+            col_1: 'select',
+            col_2: 'input',
+            col_3: 'select',
+            col_4: 'select',
+            col_5: 'none',
+            col_6: 'none',
+
+            base_path: App.tablefilterBasePath,
+            paging: false,
+            rows_counter: false,
+            rows_counter_text: 'Cortes de Checador: ',
+            btn_reset: true,
+            btn_reset_text: 'Limpiar',
+            clear_filter_text: 'Limpiar',
+            loader: true,
+            help_instructions: false,
+            extensions: [{ name: 'sort' }]
+        };
+        var tf = new TableFilter('index_cortes', val_config);
+        tf.init();
+    </script>
 @endsection

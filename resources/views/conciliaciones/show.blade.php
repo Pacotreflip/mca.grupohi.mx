@@ -75,9 +75,9 @@
             @else
                 <li class="tab-conciliacion"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
             @endif
-                @if(count($conciliacion->conciliacionDetallesNoConciliados))
+            @if(count($conciliacion->conciliacionDetallesNoConciliados))
                 <li class="tab-conciliacion"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
-                @endif
+            @endif
         @endif
     </ul>
     <div class="tab-content">

@@ -34,11 +34,10 @@ class CorteController extends Controller
      */
     public function index(Request $request)
     {
-        $cortes = $this->buscar($request->buscar);
+        $cortes = Corte::porChecador()->get();
 
         return view('cortes.index')
-            ->withCortes($cortes)
-            ->withBusqueda($request->buscar);
+            ->withCortes($cortes);
     }
 
     /**
@@ -130,16 +129,5 @@ class CorteController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function buscar($busqueda, $howMany = 15) {
-        return Corte::porChecador()
-            ->where(function ($query) use ($busqueda) {
-                $query->where('id', 'LIKE', '%'.$busqueda.'%')
-                    ->orWhere('id_checador', 'LIKE', '%'.$busqueda.'%');
-                ;
-            })
-            ->orderBy('timestamp', 'DESC')
-            ->paginate($howMany);
     }
 }
