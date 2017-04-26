@@ -8,6 +8,7 @@ use App\Models\Cortes\Cortes;
 use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\ViajeNeto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CorteViajesController extends Controller
 {
@@ -92,15 +93,22 @@ class CorteViajesController extends Controller
                 'viaje_neto' => ViajeNetoCorteTransformer::transform(ViajeNeto::find($id_viajeneto)),
             ]);
         }
+        if($request->action == 'confirmar') {
+            $result = (new Cortes($request->all()))->confirmar_viaje($id_corte, $id_viajeneto);
+            return response()->json([
+                'viaje_neto' => ViajeNetoCorteTransformer::transform($result['viaje_neto'])
+            ]);
+        }
 
         $this->validate($request, [
             'material' => 'required|numeric|exists:sca.materiales,IdMaterial',
             'origen' => 'required|numeric|exists:sca.origenes,IdOrigen',
             'cubicacion' => 'required|numeric',
-            'observaciones' => 'required|string'
+            'justificacion' => 'required|string'
         ]);
 
         $result = (new Cortes($request->all()))->modificar_viaje($id_corte, $id_viajeneto);
+
         if ($request->ajax()) {
             return response()->json([
                 'viaje_neto' => ViajeNetoCorteTransformer::transform($result['viaje_neto'])

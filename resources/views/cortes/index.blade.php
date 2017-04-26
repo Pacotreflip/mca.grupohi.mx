@@ -17,6 +17,7 @@
             <th>Folio</th>
             <th>Checador</th>
             <th>Fecha y Hora de Corte</th>
+            <th>Número de viajes</th>
             <th>Estado</th>
             <th>Editar</th>
             <th>PDF</th>
@@ -31,6 +32,7 @@
                     {{ $corte->timestamp->format('d-M-Y h:m a') }}
                     <small class="text-muted">({{ $corte->timestamp->diffForHumans() }})</small>
                 </td>
+                <td>{{ $corte->corte_detalles->count() }}</td>
                 <td>{{ $corte->estado }}</td>
                 <td>
                     @if($corte->estatus == 1)

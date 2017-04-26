@@ -8,6 +8,7 @@
 
 namespace App\Models\Cortes;
 
+use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\ViajeNeto;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -42,7 +43,6 @@ class Cortes
                     'id_corte' => $corte->id,
                     'estatus' => 1,
                     'id_usuario' => auth()->user()->idusuario
-                    //'id_usuario' => 3814
                 ]);
             }
             DB::connection('sca')->commit();
@@ -94,7 +94,11 @@ class Cortes
         DB::connection('sca')->beginTransaction();
 
         try {
-            $corte_cambio = $viaje_neto->corte_cambio ? $viaje_neto->corte_cambio : new CorteCambio();
+            if($viaje_neto->corte_cambio) {
+                $viaje_neto->corte_cambio->delete();
+            }
+
+            $corte_cambio = new CorteCambio();
 
             $modified = false;
             if ($this->data['cubicacion'] != $viaje_neto->CubicacionCamion) {
@@ -112,32 +116,27 @@ class Cortes
                 $corte_cambio->id_origen_nuevo = $this->data['origen'];
                 $modified = true;
             }
+            if($this->data['tiro'] != $viaje_neto->IdTiro) {
+                $corte_cambio->id_tiro_anterior = $viaje_neto->IdTiro;
+                $corte_cambio->id_tiro_nuevo = $this->data['tiro'];
+                $modified = true;
+            }
 
             $corte_cambio->id_corte = $id_corte;
             $corte_cambio->id_viajeneto = $id_viajeneto;
-            $corte_cambio->observaciones = $this->data['observaciones'];
+            $corte_cambio->justificacion = $this->data['justificacion'];
             $corte_cambio->registro = auth()->user()->idusuario;
-            $corte_cambio->save();
-            $viaje_neto = ViajeNeto::find($id_viajeneto);
 
-            if ($modified) {
-                DB::connection('sca')->commit();
-            } else {
-                $corte_cambio = CorteCambio::where('id_viajeneto', $id_viajeneto);
-                if($corte_cambio) {
-                    $corte_cambio->delete();
-                }
-                DB::connection('sca')->rollback();
+            if($modified) {
+                $corte_cambio->save();
             }
+            DB::connection('sca')->commit();
         } catch (\Exception $e) {
             DB::rollback();
             throw $e;
         }
 
-        $viaje_neto = ViajeNeto::find($id_viajeneto);
-        return [
-            'viaje_neto' => $viaje_neto
-        ];
+        return $this->confirmar_viaje($id_corte, $id_viajeneto);
     }
 
     public function cerrar($corte) {
@@ -150,6 +149,24 @@ class Cortes
                 throw new \Exception('No se puede cerrar el corte ya que su estado actual es ' . $corte->estado);
             }
             DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            throw $e;
+        }
+    }
+
+    public function confirmar_viaje($id_corte, $id_viajeneto) {
+        DB::connection('sca')->beginTransaction();
+        try {
+            DB::connection('sca')
+                ->table('corte_detalle')
+                ->where('id_corte', $id_corte)
+                ->where('id_viajeneto', $id_viajeneto)
+                ->update(['confirmado' => 1]);
+
+            DB::connection('sca')->commit();
+            return ['viaje_neto' => ViajeNeto::find($id_viajeneto)];
+
         } catch (\Exception $e) {
             DB::connection('sca')->rollback();
             throw $e;

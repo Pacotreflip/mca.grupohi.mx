@@ -7,6 +7,7 @@ use App\Models\Cortes\CorteDetalle;
 use App\Models\Cortes\Cortes;
 use App\Models\Material;
 use App\Models\Origen;
+use App\Models\Tiro;
 use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\ViajeNeto;
@@ -89,10 +90,15 @@ class CorteController extends Controller
     {
         $corte = Corte::find($id);
 
-        return view('cortes.edit')
-            ->withCorte($corte)
-            ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
-            ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'));
+        if($corte->estatus == 1) {
+            return view('cortes.edit')
+                ->withCorte($corte)
+                ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
+                ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdTiro'))
+                ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'));
+        } else if($corte->estatus == 2) {
+            return redirect()->route('corte.show', $corte);
+        }
     }
 
     /**
