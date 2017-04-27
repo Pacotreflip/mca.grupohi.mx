@@ -12,6 +12,7 @@ use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\ViajeNeto;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -72,11 +73,26 @@ class CorteController extends Controller
     public function show($id)
     {
         $corte = Corte::find($id);
-        $viajes_netos = ViajeNetoCorteTransformer::transform($corte->viajes_netos());
+        $detalles_confirmados = CorteDetalle::where(['id_corte' => $corte->id, 'estatus' => 2])->get();
+        $viajes_confirmados = new Collection();
+        foreach ($detalles_confirmados as $detalle) {
+            $viajes_confirmados->push($detalle->viajeNeto);
+        }
+
+        $detalles_no_confirmados = CorteDetalle::where(['id_corte' => $corte->id, 'estatus' => 1])->get();
+        $viajes_no_confirmados = new Collection();
+        foreach ($detalles_no_confirmados as $detalle) {
+            $viajes_no_confirmados->push($detalle->viajeNeto);
+        }
+
+        $confirmados = ViajeNetoCorteTransformer::transform($viajes_confirmados);
+        $no_confirmados = ViajeNetoCorteTransformer::transform($viajes_no_confirmados);
+
 
         return view('cortes.show')
             ->withCorte($corte)
-            ->withViajesNetos($viajes_netos);
+            ->with(['confirmados' => $confirmados,
+                'no_confirmados' => $no_confirmados]);
     }
 
     /**

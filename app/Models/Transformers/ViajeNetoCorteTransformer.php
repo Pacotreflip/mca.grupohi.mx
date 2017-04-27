@@ -34,7 +34,7 @@ class ViajeNetoCorteTransformer extends AbstractTransformer
             'tiro'              => (String) $viaje_neto->tiro,
             'importe'           => $viaje_neto->getImporte(),
             'corte_cambio'      => $viaje_neto->corte_cambio ? CorteCambioTransformer::transform($viaje_neto->corte_cambio) : null,
-            'confirmed'         => $viaje_neto->corte_detalle->confirmado,
+            'confirmed'         => $viaje_neto->corte_detalle->estatus == 2,
         ];
 
         return $result;

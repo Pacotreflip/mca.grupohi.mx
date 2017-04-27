@@ -162,7 +162,7 @@ class Cortes
                 ->table('corte_detalle')
                 ->where('id_corte', $id_corte)
                 ->where('id_viajeneto', $id_viajeneto)
-                ->update(['confirmado' => 1]);
+                ->update(['estatus' => 2]);
 
             DB::connection('sca')->commit();
             return ['viaje_neto' => ViajeNeto::find($id_viajeneto)];

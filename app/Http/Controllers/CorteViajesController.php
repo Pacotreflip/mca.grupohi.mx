@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cortes\Corte;
 use App\Models\Cortes\CorteCambio;
+use App\Models\Cortes\CorteDetalle;
 use App\Models\Cortes\Cortes;
 use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\ViajeNeto;
@@ -89,6 +90,12 @@ class CorteViajesController extends Controller
     {
         if($request->action == 'revertir_modificaciones') {
             CorteCambio::where('id_viajeneto', $id_viajeneto)->delete();
+            DB::connection('sca')
+                ->table('corte_detalle')
+                ->where('id_corte', $id_corte)
+                ->where('id_viajeneto', $id_viajeneto)
+                ->update(['estatus' => 1]);
+
             return response()->json([
                 'viaje_neto' => ViajeNetoCorteTransformer::transform(ViajeNeto::find($id_viajeneto)),
             ]);
