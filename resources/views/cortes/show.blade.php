@@ -2,10 +2,9 @@
 
 @section('content')
     <h1>CORTE {{ $corte->id }} <small>({{ $corte->estado }})</small>
-        @if($corte->estatus == 2)
         <a href="{{ route('pdf.corte', $corte) }}" class="btn btn-success pull-right"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
-        @elseif($corte->estatus == 1)
-        <a href="{{ route('corte.edit', $corte) }}" class="btn btn-primary pull-right"><i class="fa fa-pencil"></i> EDITAR CORTE</a>
+        @if($corte->estatus == 1)
+        <a href="{{ route('corte.edit', $corte) }}" class="btn btn-primary pull-right" style="margin-right: 5px"><i class="fa fa-pencil"></i> EDITAR CORTE</a>
         @endif
     </h1>
     {!! Breadcrumbs::render('corte.show', $corte) !!}

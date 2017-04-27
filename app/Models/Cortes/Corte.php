@@ -39,6 +39,23 @@ class Corte extends Model
         return $viajes_netos;
     }
 
+    public function viajes_netos_confirmados()
+    {
+        $result = new Collection();
+        foreach (CorteDetalle::where(['id_corte' => $this->id, 'estatus' => 2])->get() as $detalle) {
+            $result->push($detalle->viajeNeto);
+        }
+        return $result;
+    }
+
+    public function viajes_netos_no_confirmados() {
+        $result = new Collection();
+        foreach (CorteDetalle::where(['id_corte' => $this->id, 'estatus' => 1])->get() as $detalle) {
+            $result->push($detalle->viajeNeto);
+        }
+        return $result;
+    }
+
     public function getFechaAttribute() {
         return $this->timestamp->format('d-M-Y');
     }

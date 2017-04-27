@@ -41,11 +41,7 @@
                     @endif
                 </td>
                 <td>
-                    @if($corte->estatus == 2)
-                        <a href="{{ route('pdf.corte', $corte) }}" class="btn btn-info btn-xs"><i class="fa fa-file-pdf-o"></i></a>
-                    @else
-                        <a class="btn btn-info btn-xs" disabled><i class="fa fa-file-pdf-o"></i></a>
-                    @endif
+                    <a href="{{ route('pdf.corte', $corte) }}" class="btn btn-info btn-xs"><i class="fa fa-file-pdf-o"></i></a>
                 </td>
 
             </tr>

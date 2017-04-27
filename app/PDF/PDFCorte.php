@@ -85,7 +85,7 @@ class PDFCorte extends Rotation
         $this->setY($y_final_1 );
         $this->Ln(0.5);
 
-        if ($this->encola == 'items') {
+        if ($this->encola == 'items_confirmados') {
             $this->SetWidths(array(0));
             $this->SetFills(array('255,255,255'));
             $this->SetTextColors(array('1,1,1'));
@@ -95,10 +95,10 @@ class PDFCorte extends Rotation
             $this->Row(Array(''));
             $this->SetFont('Arial', 'B', $this->txtSeccionTam);
             $this->SetTextColors(array('255,255,255'));
-            $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES'), 0, 1, 'L');
+            $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES CONFIRMADOS ('. $this->corte->viajes_netos_confirmados()->count().')'), 0, 1, 'L');
             $this->SetFont('Arial', 'B', 6);
             $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
-            $this->widths_items();
+            $this->widths_items_confirmados();
             $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '', '','2'));
             $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
             $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
@@ -130,6 +130,47 @@ class PDFCorte extends Rotation
             $this->SetHeights(array(0.35));
             $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L', 'L', 'L', 'L', 'R', 'L'));
         }
+
+        if ($this->encola == "items_no_confirmados") {
+            $this->SetWidths(array(0));
+            $this->SetFills(array('255,255,255'));
+            $this->SetTextColors(array('1,1,1'));
+            $this->SetRounds(array('0'));
+            $this->SetRadius(array(0));
+            $this->SetHeights(array(0));
+            $this->Row(Array(''));
+            $this->SetFont('Arial', 'B', $this->txtSeccionTam);
+            $this->SetTextColors(array('255,255,255'));
+            $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES NO CONFIRMADOS ('.$this->corte->viajes_netos_no_confirmados()->count().')'), 0, 1, 'L');
+            $this->SetFont('Arial', 'B', 6);
+            $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
+            $this->widths_items_no_confirmados();
+            $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '','2'));
+            $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+            $this->SetFills(array('180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetHeights(array(0.3));
+            $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+            $this->Row(array(
+                "#",
+                utf8_decode("Camión"),
+                utf8_decode("Código"),
+                "Fecha y Hora Llegada",
+                "Origen",
+                "Tiro",
+                "Material",
+                utf8_decode("Cubic. (m3)"),
+                "Importe",
+                utf8_decode("Checador Primer Toque"),
+                utf8_decode("Checador Segundo Toque")));
+
+            $this->SetRounds(array('', '', '', '', '', '', '', '', '', '', ''));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetHeights(array(0.35));
+            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L'));
+        }
     }
 
 
@@ -146,7 +187,7 @@ class PDFCorte extends Rotation
         $this->Cell(0.45 * $this->WidthTotal, 0.7, utf8_decode('Detalles'), 0, 1, 'L');
     }
 
-    public function widths_items() {
+    public function widths_items_confirmados() {
         $this->SetWidths(array(
             0.035 * 19.59,
             0.053 * 19.59,
@@ -164,6 +205,22 @@ class PDFCorte extends Rotation
             0.083 * 19.59,
             0.05 * 19.59,
             0.175 * 19.59
+        ));
+    }
+
+    public function widths_items_no_confirmados() {
+        $this->SetWidths(array(
+            0.078 * 19.59,
+            0.096 * 19.59,
+            0.125 * 19.59,
+            0.105 * 19.59,
+            0.125 * 19.59,
+            0.125 * 19.59,
+            0.125 * 19.59,
+            0.093 * 19.59,
+            0.11 * 19.59,
+            0.14 * 19.59,
+            0.14 * 19.59
         ));
     }
 
@@ -219,9 +276,9 @@ class PDFCorte extends Rotation
         $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, utf8_decode($this->corte->corte_detalles->count()), '', 1, 'L');
     }
 
-    function items()
+    function items_confirmados()
     {
-        $numItems = count($this->corte->viajes_netos());
+        $numItems = count($this->corte->viajes_netos_confirmados());
 
         $this->SetWidths(array(0));
         $this->SetFills(array('255,255,255'));
@@ -232,10 +289,10 @@ class PDFCorte extends Rotation
         $this->Row(Array(''));
         $this->SetFont('Arial', 'B', $this->txtSeccionTam);
         $this->SetTextColors(array('255,255,255'));
-        $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES'), 0, 1, 'L');
+        $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES CONFIRMADOS ('. $this->corte->viajes_netos_confirmados()->count().')'), 0, 1, 'L');
         $this->SetFont('Arial', '', 6);
         $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF', 'DF'));
-        $this->widths_items();
+        $this->widths_items_confirmados();
         $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '2'));
         $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
         $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
@@ -260,11 +317,11 @@ class PDFCorte extends Rotation
             "Cubic. Nueva (m3)",
             utf8_decode("Justificación")));
 
-        foreach (ViajeNetoCorteTransformer::transform($this->corte->viajes_netos()) as $key => $item) {
+        foreach (ViajeNetoCorteTransformer::transform($this->corte->viajes_netos_confirmados()) as $key => $item) {
             $this->SetFont('Arial', '', 5);
-            $this->widths_items();
+            $this->widths_items_confirmados();
 
-            $this->encola = "items";
+            $this->encola = "items_confirmados";
             $this->SetRounds(array('', '', '', '', '','', '', '', '', '','', '', '', '', '', ''));
             $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0));
             $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
@@ -276,10 +333,10 @@ class PDFCorte extends Rotation
                 $this->SetRounds(array('4', '', '', '', '', '',  '', '', '', '', '', '', '', '', '', '3'));
                 $this->SetRadius(array(0.2, 0, 0, 0, 0, 0,0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
             }
-            $this->widths_items();
+            $this->widths_items_confirmados();
 
 
-            $this->encola = "items";
+            $this->encola = "items_confirmados";
 //                for($cont = 0; $cont < 50; $cont ++){
 
 
@@ -305,6 +362,79 @@ class PDFCorte extends Rotation
         }
     }
 
+    function items_no_confirmados()
+    {
+        $numItems = count($this->corte->viajes_netos_no_confirmados());
+
+        $this->SetWidths(array(0));
+        $this->SetFills(array('255,255,255'));
+        $this->SetTextColors(array('1,1,1'));
+        $this->SetRounds(array('0'));
+        $this->SetRadius(array(0));
+        $this->SetHeights(array(0));
+        $this->Row(Array(''));
+        $this->SetFont('Arial', 'B', $this->txtSeccionTam);
+        $this->SetTextColors(array('255,255,255'));
+        $this->CellFitScale($this->WidthTotal, 1, utf8_decode('VIAJES NO CONFIRMADOS ('.$this->corte->viajes_netos_no_confirmados()->count().')'), 0, 1, 'L');
+        $this->SetFont('Arial', '', 6);
+        $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF', 'FD', 'DF','DF', 'DF', 'DF', 'DF'));
+        $this->widths_items_no_confirmados();
+        $this->SetRounds(array('1', '', '', '', '', '', '', '', '', '', '2'));
+        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+        $this->SetFills(array('180,180,180', '180,180,180','180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+        $this->SetTextColors(array('0,0,0', '0,0,0','0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetHeights(array(0.3));
+        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
+        $this->Row(array(
+            "#",
+            utf8_decode("Camión"),
+            utf8_decode("Código"),
+            "Fecha y Hora Llegada",
+            "Origen",
+            "Tiro",
+            "Material",
+            utf8_decode("Cubic. (m3)"),
+            "Importe",
+            utf8_decode("Checador Primer Toque"),
+            utf8_decode("Checador Segundo Toque")));
+
+        foreach (ViajeNetoCorteTransformer::transform($this->corte->viajes_netos_no_confirmados()) as $key => $item) {
+            $this->SetFont('Arial', '', 5);
+            $this->widths_items_no_confirmados();
+
+            $this->encola = "items_no_confirmados";
+            $this->SetRounds(array('', '', '', '', '','', '', '', '', '',''));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetHeights(array(0.35));
+            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L','L', 'R', 'R', 'L', 'L'));
+
+            if ($key + 1 == $numItems ) {
+                $this->SetRounds(array('4', '', '', '', '', '', '', '', '', '', '3'));
+                $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0.2));
+            }
+            $this->widths_items_no_confirmados();
+
+
+            $this->encola = "items_no_confirmados";
+
+            $this->Row(array($key + 1,
+                $item['camion'],
+                $item['codigo'],
+                $item['timestamp_llegada'],
+                utf8_decode($item['origen']),
+                utf8_decode($item['tiro']),
+                utf8_decode($item['material']),
+                $item['cubicacion'],
+                "$ ".number_format($item['importe'], 2, '.', ','),
+                utf8_decode($item['registro_primer_toque']),
+                utf8_decode($item['registro'])
+            ));
+            $this->encola = "";
+        }
+    }
+
     function Footer()
     {
         $this->SetY($this->GetPageHeight() - 1);
@@ -317,15 +447,31 @@ class PDFCorte extends Rotation
         $this->SetY($this->GetPageHeight() - 1.3);
         $this->SetFont('Arial', 'B', $this->txtFooterTam);
         $this->Cell(6.5, .4, utf8_decode('Formato generado desde el módulo de Control de Acarreos.'), 0, 0, 'L');
+
+        if($this->corte->estatus == 1) {
+            $this->SetFont('Arial', '', 75);
+            $this->SetTextColor(204, 204, 204);
+            $this->RotatedText(1.5, 21, utf8_decode("PENDIENTE DE CIERRE"), 39);
+            $this->SetTextColor('0,0,0');
+        }
+
+    }
+
+    function RotatedText($x,$y,$txt,$angle)
+    {
+        $this->Rotate($angle,$x,$y);
+        $this->Text($x,$y,$txt);
+        $this->Rotate(0);
     }
 
     function create() {
         $this->SetMargins(1, 0.5, 1);
         $this->AliasNbPages();
         $this->AddPage();
-        $this->SetAutoPageBreak(true,4.5);
-        $this->items();
+        $this->SetAutoPageBreak(true,2);
+        $this->items_confirmados();
         $this->Ln(0.75);
+        $this->items_no_confirmados();
         $this->Output('I', "Corte{$this->corte->id}.pdf", 1);
         exit;
     }
