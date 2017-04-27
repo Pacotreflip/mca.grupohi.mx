@@ -140,11 +140,13 @@ Vue.component('corte-edit', {
                 this.form.data.id_tiro = viaje.corte_cambio.tiro_nuevo ? viaje.corte_cambio.tiro_nuevo.IdTiro : viaje.id_tiro;
                 this.form.data.id_material = viaje.corte_cambio.material_nuevo ? viaje.corte_cambio.material_nuevo.IdMaterial : viaje.id_material;
                 this.form.data.cubicacion = viaje.corte_cambio.cubicacion_nueva ? viaje.corte_cambio.cubicacion_nueva : viaje.cubicacion;
+                this.form.data.justificacion = viaje.corte_cambio.justificacion;
             } else {
                 this.form.data.id_origen = viaje.id_origen;
                 this.form.data.id_tiro = viaje.id_tiro;
                 this.form.data.id_material = viaje.id_material;
                 this.form.data.cubicacion = viaje.cubicacion;
+                this.form.data.justificacion = '';
             }
             this.form.data.id = viaje.id;
             this.form.errors = [];
