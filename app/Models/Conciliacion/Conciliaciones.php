@@ -670,7 +670,7 @@ class Conciliaciones
         
     }
     private function registraViajeNeto($viaje){
-        
+        $viaje_neto = null;
         $origen = $this->getOrigen($viaje->origen);
         $tiro = $this->getTiro($viaje->tiro);
         $ruta = $this->getRuta($origen->IdOrigen, $tiro->IdTiro);
@@ -697,30 +697,49 @@ class Conciliaciones
         --'Estatus',
         --'Code',
         --'CubicacionCamion'*/
-        $extra = [
-            'FechaCarga' => Carbon::now()->toDateString(),
-            'HoraCarga' => Carbon::now()->toTimeString(),
-            'FechaLlegada' => $viaje->fecha_llegada,
-            'HoraLlegada' => $viaje->hora_llegada,
-            'FechaSalida' => $fecha_salida->toDateString(),
-            'HoraSalida' => $fecha_salida->toTimeString(),
-            'IdProyecto' => 1,
-            'IdOrigen' => $origen->IdOrigen,
-            'IdTiro' =>  $tiro->IdTiro,
-            'IdMaterial' =>  $material->IdMaterial,
-            'IdCamion' =>  $camion->IdCamion,
-            'Creo' => auth()->user()->idusuario,
-            'Aprobo' => auth()->user()->idusuario,
-            'FechaHoraAprobacion' => date("Y-m-d h:i:s"),
-            'Estatus' => 20,
-            'Code' => $viaje->ticket,
-            'CubicacionCamion' => $viaje->cubicacion,
-            'Observaciones' => 'Registro automático desde conciliación',
-            'IdEmpresa'=>$this->conciliacion->idempresa,
-            'IdSindicato'=>$this->conciliacion->idsindicato
-        ];
-
-        $viaje_neto = ViajeNeto::create($extra);
+        
+        
+        if(!$camion){
+            $detalle_no_conciliado = [
+                'idconciliacion' => $this->conciliacion->idconciliacion,
+//                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>6,
+                'detalle'=>"Económico de camión no existe en el padrón del sistema.",
+                'detalle_alert'=>"Económico de camión no existe en el padrón del sistema.",
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje->ticket,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $this->registraDetalleNoConciliado($detalle_no_conciliado);
+        }else{
+            $extra = [
+                'FechaCarga' => Carbon::now()->toDateString(),
+                'HoraCarga' => Carbon::now()->toTimeString(),
+                'FechaLlegada' => $viaje->fecha_llegada,
+                'HoraLlegada' => $viaje->hora_llegada,
+                'FechaSalida' => $fecha_salida->toDateString(),
+                'HoraSalida' => $fecha_salida->toTimeString(),
+                'IdProyecto' => 1,
+                'IdOrigen' => $origen->IdOrigen,
+                'IdTiro' =>  $tiro->IdTiro,
+                'IdMaterial' =>  $material->IdMaterial,
+                'IdCamion' =>  $camion->IdCamion,
+                'Creo' => auth()->user()->idusuario,
+                'Aprobo' => auth()->user()->idusuario,
+                'FechaHoraAprobacion' => date("Y-m-d h:i:s"),
+                'Estatus' => 20,
+                'Code' => $viaje->ticket,
+                'CubicacionCamion' => $viaje->cubicacion,
+                'Observaciones' => 'Registro automático desde conciliación',
+                'IdEmpresa'=>$this->conciliacion->idempresa,
+                'IdSindicato'=>$this->conciliacion->idsindicato
+            ];
+            $viaje_neto = ViajeNeto::create($extra);
+        }
+        
+        
+        
+        
         return $viaje_neto;
     }
    

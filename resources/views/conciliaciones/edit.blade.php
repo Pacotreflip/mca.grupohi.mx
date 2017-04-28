@@ -54,6 +54,7 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>TIPO DE BÚSQUEDA (*)</label>
+                                    @if (Auth::user()->has(['conciliacion_historico'])) 
                                     {!! Form::select('Tipo', [
                                     '' => '--SELECCIONE--',
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
@@ -61,6 +62,14 @@
                                     '3' => 'CARGAR EXCEL',
                                     '4' => 'CARGAR EXCEL COMPLETA'
                                      ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
+                                     @else
+                                     {!! Form::select('Tipo', [
+                                    '' => '--SELECCIONE--',
+                                    '1' => 'BÚSQUEDA POR CÓDIGO',
+                                    '2' => 'BÚSQUEDA AVANZADA',
+                                    '3' => 'CARGAR EXCEL',
+                                     ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
+                                     @endif
                                 </div>
                             </div>
                             <span v-show="tipo == '1'">
