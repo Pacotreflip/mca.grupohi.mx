@@ -34,7 +34,9 @@ class ViajeNeto extends Model
         'Creo',
         'Estatus',
         'Code',
-        'CubicacionCamion'
+        'CubicacionCamion',
+        'IdEmpresa',
+        'IdSindicato'
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;

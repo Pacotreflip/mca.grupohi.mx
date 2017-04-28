@@ -58,7 +58,8 @@
                                     '' => '--SELECCIONE--',
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
                                     '2' => 'BÚSQUEDA AVANZADA',
-                                    '3' => 'CARGAR EXCEL'
+                                    '3' => 'CARGAR EXCEL',
+                                    '4' => 'CARGAR EXCEL COMPLETA'
                                      ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
                                 </div>
                             </div>
@@ -84,7 +85,7 @@
                                     </div>
                                 </div>
                             </span>
-                            <span v-show="tipo == '3'">
+                            <span v-show="tipo == '3' || tipo== '4'">
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label>CARGAR EXCEL (*)</label>
