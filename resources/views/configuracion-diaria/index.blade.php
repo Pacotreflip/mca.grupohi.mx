@@ -80,24 +80,17 @@
                                         </select>
                                     </td>
                                     <td>
-                                        <select v-on:change="set_ubicacion(user)" name="ubicacion" class="form-control input-sm" v-bind:disabled="user.configuracion.tipo == ''" v-model="user.configuracion.ubicacion.id">
-                                            <option value>-- SELECCIONE --</option>
-                                            <option v-if="user.configuracion.tipo == 'T'" v-for="tiro in con_esquema" v-bind:value="tiro.id">@{{ tiro.descripcion }}</option>
-                                            <option V-else-if="user.configuracion.tipo == 'O'" v-for="origen in origenes" v-bind:value="origen.id">@{{ origen.descripcion }}</option>
+                                        <select v-on:change="set_ubicacion(user, $event)" name="ubicacion" class="form-control input-sm" v-bind:disabled="user.configuracion.tipo == ''">
+                                            <option v-bind:selected="user.configuracion.ubicacion.id == ''" value>-- SELECCIONE --</option>
+                                            <option v-bind:selected="user.configuracion.ubicacion.id == tiro.id" v-if="user.configuracion.tipo == 'T'" v-for="tiro in con_esquema" v-bind:value="tiro.id">@{{ tiro.descripcion }}</option>
+                                            <option v-bind:selected="user.configuracion.ubicacion.id == origen.id" V-else-if="user.configuracion.tipo == 'O'" v-for="origen in origenes" v-bind:value="origen.id">@{{ origen.descripcion }}</option>
                                         </select>
                                     </td>
                                     <td v-if="user.configuracion.ubicacion.id != ''">
-                                        <span v-if="user.configuracion.tipo == 'T'">
-                                             <select class="form-control" name="perfil" v-model="user.configuracion.id_perfil">
-                                                 <option value>-- SELECCIONE --</option>
-                                                 <option v-for="perfil in user.configuracion.ubicacion.esquema.perfiles" v-bind:value="perfil.id">@{{ perfil.name }}</option>
-                                             </select>
-                                        </span>
-                                        <span v-else-if="user.configuracion.tipo == 'O'">
-                                            <select class="form-control" name="perfil">
-                                                <option value>-- SELECCIONE --</option>
-                                            </select>
-                                        </span>
+                                         <select class="form-control" name="perfil" v-model="user.configuracion.id_perfil">
+                                             <option value>-- SELECCIONE --</option>
+                                             <option v-for="perfil in user.configuracion.ubicacion.esquema.perfiles" v-bind:value="perfil.id">@{{ perfil.name }}</option>
+                                         </select>
                                     </td>
                                     <td v-else>
                                        <select class="form-control" disabled="disabled">

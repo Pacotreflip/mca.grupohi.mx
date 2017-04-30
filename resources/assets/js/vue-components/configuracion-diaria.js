@@ -110,15 +110,74 @@ Vue.component('configuracion-diaria', {
                     tiro.guardando = true;
                 },
                 success: function (response) {
-                    var nuevo_tiro = response.tiro;
-                    nuevo_tiro.guardando = false;
-                    Vue.set(_this.tiros, _this.tiros.indexOf(tiro) , nuevo_tiro);
+                    if(response.status_code == 200) {
+                        var nuevo_tiro = response.tiro;
+                        nuevo_tiro.guardando = false;
+                        Vue.set(_this.tiros, _this.tiros.indexOf(tiro) , nuevo_tiro);
+                        swal({
+                            type : 'success',
+                            title : '¡Configuración Correcta!',
+                            text : 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + nuevo_tiro.esquema.name + '</strong>',
+                            html : true
+                        });
+                    } else if(response.status_code == 304){
+                        swal({
+                            type : 'warning',
+                            title : '¡Alerta!',
+                            text : 'El tiro <strong>' + tiro.descripcion + '</strong><br> se esta utilizando en ' + response.num + ' configuarciones<br><strong>¿Realmente desea cambiar el esquema del tiro? </strong><br><small>¡Se borrarán dichas configuraciones!</small>',
+                            html : true,
+                            showCancelButton: true,
+                            confirmButtonText: "Si, cambiar",
+                            cancelButtonText: "No, cancelar",
+                        }, () => _this.force_cambiar_esquema(tiro));
+                    }
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        swal({
+                            type : 'error',
+                            title : '¡Error!',
+                            text : App.errorsToString(error.responseJSON)
+                        });
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    tiro.guardando = false;
+                }
+            });
+        },
+
+        force_cambiar_esquema: function (tiro) {
+            var _this = this;
+            var url = App.host + '/tiros/' + tiro.id;
+            var data = {
+                'id_tiro' : tiro.id,
+                'id_esquema' : tiro.esquema.id,
+                '_method' : 'PATCH',
+                'action' : 'force_cambiar_esquema'
+            };
+
+            $.ajax({
+                type : 'POST',
+                url  : url,
+                data : data,
+                beforeSend: function () {
+                    tiro.guardando = true;
+                },
+                success: function (response) {
+                    _this.initialize();
                     swal({
                         type : 'success',
                         title : '¡Configuración Correcta!',
-                        text : 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + nuevo_tiro.esquema.name + '</strong>',
+                        text : 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + response.tiro.esquema.name + '</strong>',
                         html : true
-                    })
+                    });
                 },
                 error: function (error) {
                     if (error.status == 422) {
@@ -161,19 +220,20 @@ Vue.component('configuracion-diaria', {
             return result;
         },
 
-        set_ubicacion: function (user) {
-            if(user.configuracion.tipo == 'T') {
-                Vue.set(this.checadores[this.checadores.indexOf(user)].configuracion, 'ubicacion', this.tiro_by_id(user.configuracion.ubicacion.id));
-            } else if(user.configuracion.tipo == 'O') {
-                Vue.set(this.checadores[this.checadores.indexOf(user)].configuracion, 'ubicacion', this.origen_by_id(user.configuracion.ubicacion.id));
+        set_ubicacion: function (user, e) {
+            var id = $(e.currentTarget).val();
+            if (user.configuracion.tipo == 'T') {
+                Vue.set(user.configuracion, 'ubicacion', this.tiro_by_id(id));
+            } else if (user.configuracion.tipo == 'O') {
+                Vue.set(user.configuracion, 'ubicacion', this.origen_by_id(id));
             }
-            Vue.set(this.checadores[this.checadores.indexOf(user)].configuracion, 'id_perfil', '');
+            Vue.set(user.configuracion, 'id_perfil', '');
         },
 
         clear_ubicacion: function (user) {
-            Vue.set(this.checadores[this.checadores.indexOf(user)].configuracion, 'ubicacion', {
-                id : '',
-                descripcion : ''
+            Vue.set(user.configuracion, 'ubicacion', {
+                id: '',
+                descripcion: ''
             });
         }
     }

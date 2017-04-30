@@ -13,7 +13,7 @@ class OrigenTransformer extends AbstractTransformer
         return [
             'id' => $model->IdOrigen,
             'descripcion' => $model->Descripcion,
-            'perfil' => Perfiles::whereNull('id_esquema')->first()
+            'esquema' => ['perfiles' => Perfiles::whereNull('id_esquema')->get()]
         ];
     }
 }
