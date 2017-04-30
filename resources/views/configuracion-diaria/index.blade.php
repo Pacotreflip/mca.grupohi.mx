@@ -73,7 +73,7 @@
                                     <td>@{{ user.nombre  }}</td>
                                     <td>@{{ user.usuario }}</td>
                                     <td>
-                                        <select name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
+                                        <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>
                                             <option value="O">Origen</option>
                                             <option value="T">Tiro</option>

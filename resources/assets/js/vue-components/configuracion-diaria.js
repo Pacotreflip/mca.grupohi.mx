@@ -167,6 +167,13 @@ Vue.component('configuracion-diaria', {
             } else if(user.configuracion.tipo == 'O') {
                 Vue.set(this.checadores[this.checadores.indexOf(user)].configuracion, 'ubicacion', this.origen_by_id(user.configuracion.ubicacion.id));
             }
+        },
+
+        clear_ubicacion: function (user) {
+            Vue.set(this.checadores[this.checadores.indexOf(user)].configuracion, 'ubicacion', {
+                id : '',
+                descripcion : ''
+            });
         }
     }
 });
