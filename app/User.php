@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\ConfiguracionDiaria\Configuracion;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
@@ -55,9 +56,19 @@ class User extends Model implements AuthenticatableContract,
         return $this->belongsToMany(Models\Origen::class, 'origen_x_usuario', 'idusuario_intranet', 'idorigen');
     }
 
+    public function scopeChecadores($query) {
+        return $query->whereHas('roles', function($q) {
+            $q->where('roles.id', 7);
+        });
+    }
+
     public function roles()
     {
         return $this->belongsToMany(Config::get('entrust.role'), Config::get('entrust.role_user_table'), 'user_id', 'role_id')->where('id_proyecto', Context::getId());
+    }
+
+    public function configuracion() {
+        return $this->hasOne(Configuracion::class, 'id_usuario');
     }
 
     public function __toString()

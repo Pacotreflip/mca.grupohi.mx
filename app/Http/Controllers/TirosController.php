@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transformers\TiroTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 use Carbon\Carbon;
 use App\Models\Tiro;
@@ -30,7 +30,7 @@ class TirosController extends Controller
     {
         if($request->ajax()) {
             return response()->json(Tiro::with('origenes')->get()->toArray());
-            
+
         }
         return view('tiros.index')
                 ->withTiros(Tiro::all());
@@ -100,10 +100,23 @@ class TirosController extends Controller
     public function update(Requests\EditTiroRequest $request, $id)
     {
         $tiro = Tiro::findOrFail($id);
-        $tiro->update($request->all());
-        
-        Flash::success('¡TIRO ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('tiros.show', $tiro);
+
+        if($request->ajax()) {
+            if($request->action == 'cambiar_esquema') {
+                $this->validate($request, [
+                    'id_esquema' => 'required|exists:sca.configuracion_esquemas_cat,id'
+                ]);
+                $tiro->IdEsquema = $request->id_esquema;
+                $tiro->save();
+
+                return response()->json(['tiro' => TiroTransformer::transform($tiro)]);
+            }
+        } else {
+            $tiro->update($request->all());
+
+            Flash::success('¡TIRO ACTUALIZADO CORRECTAMENTE!');
+            return redirect()->route('tiros.show', $tiro);
+        }
     }
 
     /**
