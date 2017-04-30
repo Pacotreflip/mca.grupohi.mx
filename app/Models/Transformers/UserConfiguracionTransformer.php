@@ -21,7 +21,7 @@ class UserConfiguracionTransformer extends AbstractTransformer
             'nombre'        => $model->present()->nombreCompleto,
             'usuario'       => $model->usuario,
             'configuracion' => $model->configuracion ? [
-                'id_perfil' => $model->id_perfil,
+                'id_perfil' => $model->configuracion->id_perfil,
                 'tipo'      => $model->configuracion ? $model->configuracion->tipo : '',
                 'ubicacion' => $model->configuracion->origen ? OrigenTransformer::transform($model->configuracion->origen) : TiroTransformer::transform($model->configuracion->tiro),
             ] : null,
