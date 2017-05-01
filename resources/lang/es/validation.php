@@ -168,7 +168,10 @@ return [
         'fecha'                 => 'Fecha',
         'folio'                 => 'Folio',
         'Tipo'                  => 'Tipo de Viajes',
-        'Estado'                => 'Estado'
+        'Estado'                => 'Estado',
+        'id_ubicacion'          => 'Ubicación',
+        'id_perfil'             => 'Perfil',
+        'tipo'                  => 'Tipo'
     ],
 
 ];

@@ -59,6 +59,7 @@ Vue.component('configuracion-diaria', {
                                 id_perfil : ''
                             });
                         }
+                        Vue.set(checador, 'guardando', false);
                     });
                     _this.tiros = response.tiros;
                     _this.tiros.forEach(function (tiro) {
@@ -234,6 +235,53 @@ Vue.component('configuracion-diaria', {
             Vue.set(user.configuracion, 'ubicacion', {
                 id: '',
                 descripcion: ''
+            });
+        },
+        guardar_configuracion: function (user) {
+            var data = {
+                'id_usuario' : user.id,
+                'tipo' : user.configuracion.tipo,
+                'id_ubicacion' : user.configuracion.ubicacion.id,
+                'id_perfil' : user.configuracion.id_perfil
+            };
+
+            var _this = this;
+            var url = App.host + '/configuracion-diaria';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                beforeSend: function () {
+                    user.guardando = true;
+                },
+                success: function (response) {
+                    Vue.set(_this.checadores, _this.checadores.indexOf(user), response.checador);
+                    swal({
+                        type : 'success',
+                        title : '¡Configuración Correcta!',
+                        text: 'Configuración establecida correctamente<br> para el usuario </strong>' + user.nombre +'</strong>',
+                        html: true
+                    });
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        swal({
+                            type : 'error',
+                            title : '¡Error!',
+                            text : App.errorsToString(error.responseJSON)
+                        });
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    user.guardando = false;
+                }
             });
         }
     }

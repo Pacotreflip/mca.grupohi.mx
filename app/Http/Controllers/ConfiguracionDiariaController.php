@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\ConfiguracionDiaria\Esquema;
 use App\Models\ConfiguracionDiaria\Perfiles;
 use App\Models\Origen;
@@ -62,7 +63,33 @@ class ConfiguracionDiariaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        if($request->ajax()) {
+            $this->validate($request, [
+                'tipo' => 'required',
+                'id_ubicacion' => 'required',
+                'id_perfil' => 'required'
+            ]);
+
+            $user = User::find($request->id_usuario);
+            if($user->configuracion) {
+                $user->configuracion->delete();
+            }
+            $configuracion = new Configuracion();
+            $configuracion->id_usuario = $request->id_usuario;
+            $configuracion->tipo = $request->tipo;
+            $configuracion->id_perfil = $request->id_perfil;
+            $configuracion->registro = auth()->user()->idusuario;
+
+            if($request->tipo == 'O') {
+                $configuracion->id_origen = $request->id_ubicacion;
+            } else if ($request->tipo == 'T') {
+                $configuracion->id_tiro = $request->id_ubicacion;
+            }
+            $configuracion->save();
+            return response()->json([
+                'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario))
+            ]);
+        }
     }
 
     /**

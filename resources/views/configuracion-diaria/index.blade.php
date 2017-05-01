@@ -73,7 +73,7 @@
                                     <td>@{{ user.nombre  }}</td>
                                     <td>@{{ user.usuario }}</td>
                                     <td>
-                                        <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
+                                        <select v-on:change="clear_ubicacion(user, $event)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>
                                             <option value="O">Origen</option>
                                             <option value="T">Tiro</option>
@@ -98,8 +98,8 @@
                                        </select>
                                     </td>
                                     <td>
-                                        <button class="btn btn-xs btn-success" v-bind:disabled="guardando">
-                                            <i v-if="guardando" class="fa fa-spinner fa-spin fa-lg"></i>
+                                        <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" v-bind:disabled="guardando">
+                                            <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-save fa-lg"></i>
                                         </button>
                                     </td>
