@@ -50,11 +50,13 @@
                         <hr>
                         <h3>CONCILIAR VIAJES</h3>
                         {!! Form::open(['route' => ['conciliaciones.detalles.store', $conciliacion->idconciliacion], 'class' => 'form_buscar', 'files' => true]) !!}
+                         
                         <div class="row">
+                            @if (Auth::user()->hasRole('conciliacion_historico')) 
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>TIPO DE BÚSQUEDA (*)</label>
-                                    @if (Auth::user()->has(['conciliacion_historico'])) 
+                                   
                                     {!! Form::select('Tipo', [
                                     '' => '--SELECCIONE--',
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
@@ -62,16 +64,24 @@
                                     '3' => 'CARGAR EXCEL',
                                     '4' => 'CARGAR EXCEL COMPLETA'
                                      ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
-                                     @else
-                                     {!! Form::select('Tipo', [
+                                     
+                                </div>
+                            </div>
+                            @else
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>TIPO DE BÚSQUEDA (*)</label>
+                                   
+                                    {!! Form::select('Tipo', [
                                     '' => '--SELECCIONE--',
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
                                     '2' => 'BÚSQUEDA AVANZADA',
                                     '3' => 'CARGAR EXCEL',
                                      ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
-                                     @endif
+                                     
                                 </div>
                             </div>
+                            @endif
                             <span v-show="tipo == '1'">
                                 <div class="col-md-6">
                                     <div class="input-group">
