@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Facades\Context;
 use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\ConfiguracionDiaria\Esquema;
 use App\Models\ConfiguracionDiaria\Perfiles;
@@ -12,7 +13,10 @@ use App\Models\Transformers\OrigenTransformer;
 use App\Models\Transformers\TiroTransformer;
 use App\Models\Transformers\UserConfiguracionTransformer;
 use App\User;
+use App\User_1;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConfiguracionDiariaController extends Controller
 {
@@ -31,12 +35,13 @@ class ConfiguracionDiariaController extends Controller
     {
         if($request->ajax()) {
             if($request->type == 'init') {
+               // $users = DB::connection('sca')->select("select * from igh.usuario where (select count(*) from sca_configuracion.roles inner join sca_configuracion.role_user on sca_configuracion.roles.id = sca_configuracion.role_user.role_id where sca_configuracion.role_user.user_id = igh.usuario.idusuario and roles.name = 'checador' and id_proyecto = ".Context::getId().") >= 1"));
                 return response()->json([
                     'origenes' => OrigenTransformer::transform(Origen::orderBy('Descripcion', 'ASC')->get()),
                     'tiros'    => TiroTransformer::transform(Tiro::orderBy('Descripcion', 'ASC')->get()),
                     'esquemas' => EsquemaConfiguracionTransformer::transform(Esquema::orderBy('name', 'ASC')->get()),
                     'perfiles' => Perfiles::orderBy('name', 'ASC')->get(),
-                    'checadores' => UserConfiguracionTransformer::transform(User::checadores()->get())
+                    'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get())
                 ]);
             }
         } else {
