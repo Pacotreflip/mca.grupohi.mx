@@ -359,6 +359,9 @@ class Conciliaciones
             $no_autorizado_manual = ($viaje_neto->Estatus == 22)?TRUE:FALSE;
         }
         //dd($conciliado_esta_conciliacion, $viaje_neto);
+        if($rechazado){
+            $viaje_neto->viaje_rechazado->delete();
+	}
         if($modificado && $conciliado_otra_conciliacion){
             $detalle_no_conciliado = [
                 'idconciliacion' => $this->conciliacion->idconciliacion,
