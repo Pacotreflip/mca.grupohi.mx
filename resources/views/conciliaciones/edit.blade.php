@@ -149,7 +149,6 @@
                                 </div>
                                 <div class="panel-body">
                                     <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
-                                    <button v-if="conciliacion.estado == 0" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
                                     <strong>Folio: </strong>@{{ conciliacion.folio }}
                                     <hr>
                                     <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>

@@ -166,6 +166,9 @@ class Conciliaciones
     }
     
     public function cargarExcelProcesoCompleto(UploadedFile $data) {
+        $fecha_conciliacion = Carbon::createFromFormat('Y-m-d', $this->conciliacion->fecha_conciliacion);
+		$fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-03-31');
+		dd($fecha_conciliacion, $fecha_minima,$fecha_conciliacion->diffInDays($fecha_minima),$fecha_minima->diffInDays($fecha_conciliacion));
         $reader = Excel::load($data->getRealPath())->get();
         $i = 0;
         $y = 0;
