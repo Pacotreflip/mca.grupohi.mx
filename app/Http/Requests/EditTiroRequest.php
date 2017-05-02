@@ -23,6 +23,10 @@ class EditTiroRequest extends Request
      */
     public function rules()
     {
+        if($this->ajax()) {
+            return [];
+        }
+
         return [
             'Descripcion' => 'required|unique:sca.tiros,Descripcion,'.$this->route('tiros').',IdTiro'
         ];

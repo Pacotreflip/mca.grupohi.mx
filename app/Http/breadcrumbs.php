@@ -323,3 +323,7 @@ Breadcrumbs::register('corte.edit', function ($breadcrumbs, $corte) {
     $breadcrumbs->push("MODIFICAR CORTE", route('corte.edit', $corte));
 });
 
+//Configuración diaria
+Breadcrumbs::register('configuracion-diaria.index', function ($breadcrumbs) {
+    $breadcrumbs->push("CONFIGURAR");
+});

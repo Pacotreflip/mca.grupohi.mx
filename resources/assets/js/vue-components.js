@@ -13,3 +13,4 @@ require('./vue-components/viajes-revertir');
 require('./vue-components/viajes-index');
 require('./vue-components/corte-create');
 require('./vue-components/corte-edit');
+require('./vue-components/configuracion-diaria');

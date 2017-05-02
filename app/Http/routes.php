@@ -145,3 +145,8 @@ Route::patch('corte/{corte}', 'CorteController@update')->name('corte.update');
 
 Route::get('corte/{corte}/viajes_netos', 'CorteViajesController@index')->name('corte.viajes_netos.index');
 Route::patch('corte/{corte}/viajes_netos/{viaje_neto}', 'CorteViajesController@update')->name('corte.viajes_netos.update');
+
+
+//Rutas de Configuración Diaria
+Route::get('configuracion-diaria', 'ConfiguracionDiariaController@index')->name('configuracion-diaria.index');
+Route::post('configuracion-diaria', 'ConfiguracionDiariaController@store');

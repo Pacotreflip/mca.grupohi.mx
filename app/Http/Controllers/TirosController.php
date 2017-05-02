@@ -2,10 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transformers\TiroTransformer;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 use Carbon\Carbon;
 use App\Models\Tiro;
@@ -30,7 +30,7 @@ class TirosController extends Controller
     {
         if($request->ajax()) {
             return response()->json(Tiro::with('origenes')->get()->toArray());
-            
+
         }
         return view('tiros.index')
                 ->withTiros(Tiro::all());
@@ -100,10 +100,45 @@ class TirosController extends Controller
     public function update(Requests\EditTiroRequest $request, $id)
     {
         $tiro = Tiro::findOrFail($id);
-        $tiro->update($request->all());
-        
-        Flash::success('¡TIRO ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('tiros.show', $tiro);
+
+        if($request->ajax()) {
+            if($request->action == 'cambiar_esquema') {
+                $this->validate($request, [
+                    'id_esquema' => 'required|exists:sca.configuracion_esquemas_cat,id'
+                ]);
+
+                if($tiro->configuraciones_diarias->count()) {
+                    return response([
+                        'status_code' => 304,
+                        'num' => $tiro->configuraciones_diarias->count()
+                    ]);
+                } else {
+                    $tiro->IdEsquema = $request->id_esquema;
+                    $tiro->save();
+
+                    return response()->json([
+                        'tiro' => TiroTransformer::transform($tiro),
+                        'status_code' => 200
+                    ]);
+                }
+            } elseif ($request->action == 'force_cambiar_esquema') {
+                foreach ($tiro->configuraciones_diarias as $cd) {
+                    $cd->delete();
+                }
+                $tiro->IdEsquema = $request->id_esquema;
+                $tiro->save();
+
+                return response()->json([
+                    'tiro' => TiroTransformer::transform($tiro),
+                    'status_code' => 200
+                ]);
+            }
+        } else {
+            $tiro->update($request->all());
+
+            Flash::success('¡TIRO ACTUALIZADO CORRECTAMENTE!');
+            return redirect()->route('tiros.show', $tiro);
+        }
     }
 
     /**

@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use App\Models\ConfiguracionDiaria\Configuracion;
+use App\Models\ConfiguracionDiaria\Esquema;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 
@@ -35,5 +37,13 @@ class Tiro extends Model
     
     public function origenes() {
         return $this->belongsToMany(Origen::class, 'rutas', 'IdTiro', 'IdOrigen');
+    }
+
+    public function esquema() {
+        return $this->belongsTo(Esquema::class, 'IdEsquema');
+    }
+
+    public function configuraciones_diarias() {
+        return $this->hasMany(Configuracion::class, 'id_tiro');
     }
 }
