@@ -7,10 +7,12 @@ use App\Models\Cortes\CorteDetalle;
 use App\Models\Cortes\Cortes;
 use App\Models\Material;
 use App\Models\Origen;
+use App\Models\Tiro;
 use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\ViajeNeto;
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -33,11 +35,10 @@ class CorteController extends Controller
      */
     public function index(Request $request)
     {
-        $cortes = $this->buscar($request->buscar);
+        $cortes = Corte::porChecador()->get();
 
         return view('cortes.index')
-            ->withCortes($cortes)
-            ->withBusqueda($request->buscar);
+            ->withCortes($cortes);
     }
 
     /**
@@ -72,11 +73,14 @@ class CorteController extends Controller
     public function show($id)
     {
         $corte = Corte::find($id);
-        $viajes_netos = ViajeNetoCorteTransformer::transform($corte->viajes_netos());
+
+        $confirmados = ViajeNetoCorteTransformer::transform($corte->viajes_netos_confirmados());
+        $no_confirmados = ViajeNetoCorteTransformer::transform($corte->viajes_netos_no_confirmados());
 
         return view('cortes.show')
             ->withCorte($corte)
-            ->withViajesNetos($viajes_netos);
+            ->with(['confirmados' => $confirmados,
+                'no_confirmados' => $no_confirmados]);
     }
 
     /**
@@ -89,10 +93,15 @@ class CorteController extends Controller
     {
         $corte = Corte::find($id);
 
-        return view('cortes.edit')
-            ->withCorte($corte)
-            ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
-            ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'));
+        if($corte->estatus == 1) {
+            return view('cortes.edit')
+                ->withCorte($corte)
+                ->withOrigenes(Origen::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdOrigen'))
+                ->withTiros(Tiro::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdTiro'))
+                ->withMateriales(Material::orderBy('Descripcion', 'ASC')->lists('Descripcion', 'IdMaterial'));
+        } else if($corte->estatus == 2) {
+            return redirect()->route('corte.show', $corte);
+        }
     }
 
     /**
@@ -124,16 +133,5 @@ class CorteController extends Controller
     public function destroy($id)
     {
         //
-    }
-
-    public function buscar($busqueda, $howMany = 15) {
-        return Corte::porChecador()
-            ->where(function ($query) use ($busqueda) {
-                $query->where('id', 'LIKE', '%'.$busqueda.'%')
-                    ->orWhere('id_checador', 'LIKE', '%'.$busqueda.'%');
-                ;
-            })
-            ->orderBy('timestamp', 'DESC')
-            ->paginate($howMany);
     }
 }

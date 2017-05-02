@@ -4,10 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Models\Cortes\Corte;
 use App\Models\Cortes\CorteCambio;
+use App\Models\Cortes\CorteDetalle;
 use App\Models\Cortes\Cortes;
 use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\ViajeNeto;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CorteViajesController extends Controller
 {
@@ -88,8 +90,20 @@ class CorteViajesController extends Controller
     {
         if($request->action == 'revertir_modificaciones') {
             CorteCambio::where('id_viajeneto', $id_viajeneto)->delete();
+            DB::connection('sca')
+                ->table('corte_detalle')
+                ->where('id_corte', $id_corte)
+                ->where('id_viajeneto', $id_viajeneto)
+                ->update(['estatus' => 1]);
+
             return response()->json([
                 'viaje_neto' => ViajeNetoCorteTransformer::transform(ViajeNeto::find($id_viajeneto)),
+            ]);
+        }
+        if($request->action == 'confirmar') {
+            $result = (new Cortes($request->all()))->confirmar_viaje($id_corte, $id_viajeneto);
+            return response()->json([
+                'viaje_neto' => ViajeNetoCorteTransformer::transform($result['viaje_neto'])
             ]);
         }
 
@@ -97,10 +111,11 @@ class CorteViajesController extends Controller
             'material' => 'required|numeric|exists:sca.materiales,IdMaterial',
             'origen' => 'required|numeric|exists:sca.origenes,IdOrigen',
             'cubicacion' => 'required|numeric',
-            'observaciones' => 'required|string'
+            'justificacion' => 'required|string'
         ]);
 
         $result = (new Cortes($request->all()))->modificar_viaje($id_corte, $id_viajeneto);
+
         if ($request->ajax()) {
             return response()->json([
                 'viaje_neto' => ViajeNetoCorteTransformer::transform($result['viaje_neto'])
