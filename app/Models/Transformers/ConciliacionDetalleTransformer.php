@@ -2,7 +2,6 @@
 
 namespace App\Models\Transformers;
 
-use App\Models\Viaje;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Themsaid\Transformers\AbstractTransformer;
