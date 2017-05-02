@@ -360,6 +360,9 @@ class Conciliaciones
         }
         //dd($conciliado_esta_conciliacion, $viaje_neto);
         if($rechazado){
+            $ea = $viaje_neto->Estatus;
+            $viaje_neto->estatus = $ea - 1 ;
+            $viaje_neto->save();
             $viaje_neto->viaje_rechazado->delete();
 	}
         if($modificado && $conciliado_otra_conciliacion){
@@ -553,6 +556,14 @@ class Conciliaciones
         $origen = $this->getOrigen($data->origen);
         if($viaje_neto->IdOrigen != $origen->IdOrigen){ $modificado = TRUE;}
         if($viaje_neto->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;}
+        if($viaje_neto->viaje){
+            if($viaje_neto->viaje->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE;}
+            if($viaje_neto->viaje->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE;}
+            if($viaje_neto->viaje->IdMaterial != $material->IdMaterial){ $modificado = TRUE;}
+            if($viaje_neto->viaje->IdTiro != $tiro->IdTiro){ $modificado = TRUE;}
+            if($viaje_neto->viaje->IdOrigen != $origen->IdOrigen){ $modificado = TRUE;}
+            if($viaje_neto->viaje->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;}
+        }
         return $modificado;
     }
     private function modificarViajeValidado(ViajeNeto $viaje_neto, $data){
