@@ -171,8 +171,8 @@ class Conciliaciones
         $y = 0;
         //dd("aqui", count($reader));
         foreach ($reader as $row) {
-            $codigo_evaluar = ($row->ticket == "MANUAL" || $row->ticket == NULL)?NULL: $row->ticket;
-            if(strlen($codigo_evaluar)<10){
+            $codigo_evaluar = (str_replace(" ", "", $row->ticket) == "MANUAL" || $row->ticket == NULL)?NULL: $row->ticket;
+            if(strlen($codigo_evaluar)<10 && $codigo_evaluar){
                 $codigo_evaluar = str_repeat("0",10- strlen($codigo_evaluar)).$codigo_evaluar;
             }
             $this->procesamientoCompletoViaje($codigo_evaluar, $row);
