@@ -80,9 +80,9 @@ class ConfiguracionDiariaController extends Controller
             $configuracion->id_perfil = $request->id_perfil;
             $configuracion->registro = auth()->user()->idusuario;
 
-            if($request->tipo == 'O') {
+            if($request->tipo == 0) {
                 $configuracion->id_origen = $request->id_ubicacion;
-            } else if ($request->tipo == 'T') {
+            } else if ($request->tipo == 1) {
                 $configuracion->id_tiro = $request->id_ubicacion;
             }
             $configuracion->save();

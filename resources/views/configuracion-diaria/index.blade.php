@@ -73,17 +73,20 @@
                                     <td>@{{ user.nombre  }}</td>
                                     <td>@{{ user.usuario }}</td>
                                     <td>
-                                        <select v-on:change="clear_ubicacion(user, $event)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
+                                        <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>
-                                            <option value="O">Origen</option>
-                                            <option value="T">Tiro</option>
+                                            <option value="0">Origen</option>
+                                            <option value="1">Tiro</option>
                                         </select>
                                     </td>
                                     <td>
-                                        <select v-on:change="set_ubicacion(user, $event)" name="ubicacion" class="form-control input-sm" v-bind:disabled="user.configuracion.tipo == ''">
+                                        <select v-if="user.configuracion.tipo == 0" v-on:change="set_ubicacion(user, $event)" name="ubicacion" class="form-control input-sm" v-bind:disabled="user.configuracion.tipo == ''">
                                             <option v-bind:selected="user.configuracion.ubicacion.id == ''" value>-- SELECCIONE --</option>
-                                            <option v-bind:selected="user.configuracion.ubicacion.id == tiro.id" v-if="user.configuracion.tipo == 'T'" v-for="tiro in con_esquema" v-bind:value="tiro.id">@{{ tiro.descripcion }}</option>
-                                            <option v-bind:selected="user.configuracion.ubicacion.id == origen.id" V-else-if="user.configuracion.tipo == 'O'" v-for="origen in origenes" v-bind:value="origen.id">@{{ origen.descripcion }}</option>
+                                            <option v-bind:selected="user.configuracion.ubicacion.id == origen.id"  v-for="origen in origenes" v-bind:value="origen.id">@{{ origen.descripcion }}</option>
+                                        </select>
+                                        <select v-else-if="user.configuracion.tipo == 1" v-on:change="set_ubicacion(user, $event)" name="ubicacion" class="form-control input-sm" v-bind:disabled="user.configuracion.tipo == ''">
+                                            <option v-bind:selected="user.configuracion.ubicacion.id == ''" value>-- SELECCIONE --</option>
+                                            <option v-bind:selected="user.configuracion.ubicacion.id == tiro.id"  v-for="tiro in con_esquema" v-bind:value="tiro.id">@{{ tiro.descripcion }}</option>
                                         </select>
                                     </td>
                                     <td v-if="user.configuracion.ubicacion.id != ''">

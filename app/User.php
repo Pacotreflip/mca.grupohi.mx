@@ -58,7 +58,7 @@ class User extends Model implements AuthenticatableContract,
 
     public function scopeChecadores($query) {
         return $query->whereHas('roles', function($q) {
-            $q->where('roles.id', 7);
+            $q->where('roles.name', 'checador');
         });
     }
 

@@ -34040,9 +34040,9 @@ Vue.component('configuracion-diaria', {
 
         set_ubicacion: function set_ubicacion(user, e) {
             var id = $(e.currentTarget).val();
-            if (user.configuracion.tipo == 'T') {
+            if (user.configuracion.tipo == 1) {
                 Vue.set(user.configuracion, 'ubicacion', this.tiro_by_id(id));
-            } else if (user.configuracion.tipo == 'O') {
+            } else if (user.configuracion.tipo == 0) {
                 Vue.set(user.configuracion, 'ubicacion', this.origen_by_id(id));
             }
             Vue.set(user.configuracion, 'id_perfil', '');
@@ -34054,6 +34054,7 @@ Vue.component('configuracion-diaria', {
                 descripcion: ''
             });
         },
+
         guardar_configuracion: function guardar_configuracion(user) {
             var data = {
                 'id_usuario': user.id,
