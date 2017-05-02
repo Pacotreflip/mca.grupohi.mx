@@ -88,7 +88,9 @@
         @if(Auth::user()->can(['consultar-cortes-checador']))
         <li><a href="{{ route('corte.index') }}">Corte de Checador</a> </li>
         @endif
+        @if(Auth::user()->can(['configuracion-diaria']))
         <li><a href="{{ route('configuracion-diaria.index') }}">Configuración Diaria</a> </li>
+        @endif
     </ul>
   </li>
 
