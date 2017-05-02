@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Cortes\CorteCambio;
+use App\Models\Cortes\CorteDetalle;
 use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
@@ -34,7 +35,9 @@ class ViajeNeto extends Model
         'Creo',
         'Estatus',
         'Code',
-        'CubicacionCamion'
+        'CubicacionCamion',
+        'IdEmpresa',
+        'IdSindicato'
     ];
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
@@ -803,6 +806,11 @@ class ViajeNeto extends Model
 
     public function corte_cambio() {
         return $this->hasOne(CorteCambio::class, 'id_viajeneto', 'IdViajeNeto');
+    }
+
+    public function corte_detalle() {
+        return $this->hasOne(CorteDetalle::class, 'id_viajeneto');
+
     }
 
 }

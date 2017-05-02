@@ -33143,9 +33143,8 @@ require('./vue-components/viajes-revertir');
 require('./vue-components/viajes-index');
 require('./vue-components/corte-create');
 require('./vue-components/corte-edit');
-require('./vue-components/configuracion-diaria');
 
-},{"./vue-components/conciliaciones-create":40,"./vue-components/conciliaciones-edit":41,"./vue-components/configuracion-diaria":42,"./vue-components/corte-create":43,"./vue-components/corte-edit":44,"./vue-components/errors":45,"./vue-components/fda-bancomaterial":46,"./vue-components/fda-material":47,"./vue-components/global-errors":48,"./vue-components/origenes-usuarios":49,"./vue-components/viajes-completa":53,"./vue-components/viajes-index":54,"./vue-components/viajes-manual":55,"./vue-components/viajes-modificar":56,"./vue-components/viajes-revertir":57,"./vue-components/viajes-validar":58}],40:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":40,"./vue-components/conciliaciones-edit":41,"./vue-components/corte-create":42,"./vue-components/corte-edit":43,"./vue-components/errors":44,"./vue-components/fda-bancomaterial":45,"./vue-components/fda-material":46,"./vue-components/global-errors":47,"./vue-components/origenes-usuarios":48,"./vue-components/viajes-completa":52,"./vue-components/viajes-index":53,"./vue-components/viajes-manual":54,"./vue-components/viajes-modificar":55,"./vue-components/viajes-revertir":56,"./vue-components/viajes-validar":57}],40:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
@@ -33813,300 +33812,6 @@ Vue.component('conciliaciones-edit', {
 },{}],42:[function(require,module,exports){
 'use strict';
 
-/**
- * Created by JFEsquivel on 27/04/2017.
- */
-
-Vue.component('configuracion-diaria', {
-    data: function data() {
-        return {
-            checadores: [],
-            tiros: [],
-            origenes: [],
-            esquemas: [],
-            form: {
-                errors: []
-            },
-            guardando: false,
-            cargando: false
-        };
-    },
-
-    created: function created() {
-        this.initialize();
-    },
-
-    computed: {
-        con_esquema: function con_esquema() {
-            return this.tiros.filter(function (tiro) {
-                if (tiro.esquema.id != '') {
-                    return true;
-                }
-                return false;
-            });
-        }
-    },
-
-    methods: {
-        initialize: function initialize() {
-            var _this = this;
-            var url = App.host + '/configuracion-diaria';
-
-            $.ajax({
-                type: 'GET',
-                url: url,
-                data: {
-                    type: 'init'
-                },
-                beforeSend: function beforeSend() {
-                    _this.cargando = true;
-                },
-                success: function success(response) {
-                    _this.checadores = response.checadores;
-                    _this.checadores.forEach(function (checador) {
-                        if (!checador.configuracion) {
-                            Vue.set(checador, 'configuracion', {
-                                tipo: '',
-                                ubicacion: {
-                                    id: '',
-                                    descripcion: ''
-                                },
-                                id_perfil: ''
-                            });
-                        }
-                        Vue.set(checador, 'guardando', false);
-                    });
-                    _this.tiros = response.tiros;
-                    _this.tiros.forEach(function (tiro) {
-                        if (!tiro.esquema) {
-                            Vue.set(tiro, 'esquema', {
-                                'id': '',
-                                'name': ''
-                            });
-                        }
-                        Vue.set(tiro, 'guardando', false);
-                    });
-
-                    _this.origenes = response.origenes;
-                    _this.esquemas = response.esquemas;
-                },
-                error: function error(_error) {
-                    if (_error.status == 422) {
-                        App.setErrorsOnForm(_this.form, _error.responseJSON);
-                    } else if (_error.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error.responseText)
-                        });
-                    }
-                },
-                complete: function complete() {
-                    _this.cargando = false;
-                }
-            });
-        },
-
-        cambiar_esquema: function cambiar_esquema(tiro, e) {
-            e.preventDefault();
-            var _this = this;
-            var url = App.host + '/tiros/' + tiro.id;
-            var data = {
-                'id_tiro': tiro.id,
-                'id_esquema': tiro.esquema.id,
-                '_method': 'PATCH',
-                'action': 'cambiar_esquema'
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                beforeSend: function beforeSend() {
-                    tiro.guardando = true;
-                },
-                success: function success(response) {
-                    if (response.status_code == 200) {
-                        var nuevo_tiro = response.tiro;
-                        nuevo_tiro.guardando = false;
-                        Vue.set(_this.tiros, _this.tiros.indexOf(tiro), nuevo_tiro);
-                        swal({
-                            type: 'success',
-                            title: '¡Configuración Correcta!',
-                            text: 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + nuevo_tiro.esquema.name + '</strong>',
-                            html: true
-                        });
-                    } else if (response.status_code == 304) {
-                        swal({
-                            type: 'warning',
-                            title: '¡Alerta!',
-                            text: 'El tiro <strong>' + tiro.descripcion + '</strong><br> se esta utilizando en ' + response.num + ' configuarciones<br><strong>¿Realmente desea cambiar el esquema del tiro? </strong><br><small>¡Se borrarán dichas configuraciones!</small>',
-                            html: true,
-                            showCancelButton: true,
-                            confirmButtonText: "Si, cambiar",
-                            cancelButtonText: "No, cancelar"
-                        }, function () {
-                            return _this.force_cambiar_esquema(tiro);
-                        });
-                    }
-                },
-                error: function error(_error2) {
-                    if (_error2.status == 422) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error2.responseJSON)
-                        });
-                    } else if (_error2.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error2.responseText)
-                        });
-                    }
-                },
-                complete: function complete() {
-                    tiro.guardando = false;
-                }
-            });
-        },
-
-        force_cambiar_esquema: function force_cambiar_esquema(tiro) {
-            var _this = this;
-            var url = App.host + '/tiros/' + tiro.id;
-            var data = {
-                'id_tiro': tiro.id,
-                'id_esquema': tiro.esquema.id,
-                '_method': 'PATCH',
-                'action': 'force_cambiar_esquema'
-            };
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                beforeSend: function beforeSend() {
-                    tiro.guardando = true;
-                },
-                success: function success(response) {
-                    _this.initialize();
-                    swal({
-                        type: 'success',
-                        title: '¡Configuración Correcta!',
-                        text: 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + response.tiro.esquema.name + '</strong>',
-                        html: true
-                    });
-                },
-                error: function error(_error3) {
-                    if (_error3.status == 422) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error3.responseJSON)
-                        });
-                    } else if (_error3.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error3.responseText)
-                        });
-                    }
-                },
-                complete: function complete() {
-                    tiro.guardando = false;
-                }
-            });
-        },
-
-        tiro_by_id: function tiro_by_id(id) {
-            var result = {};
-            this.con_esquema.forEach(function (tiro) {
-                if (tiro.id == id) {
-                    result = tiro;
-                }
-            });
-            return result;
-        },
-
-        origen_by_id: function origen_by_id(id) {
-            var result = {};
-            this.origenes.forEach(function (origen) {
-                if (origen.id == id) {
-                    result = origen;
-                }
-            });
-            return result;
-        },
-
-        set_ubicacion: function set_ubicacion(user, e) {
-            var id = $(e.currentTarget).val();
-            if (user.configuracion.tipo == 'T') {
-                Vue.set(user.configuracion, 'ubicacion', this.tiro_by_id(id));
-            } else if (user.configuracion.tipo == 'O') {
-                Vue.set(user.configuracion, 'ubicacion', this.origen_by_id(id));
-            }
-            Vue.set(user.configuracion, 'id_perfil', '');
-        },
-
-        clear_ubicacion: function clear_ubicacion(user) {
-            Vue.set(user.configuracion, 'ubicacion', {
-                id: '',
-                descripcion: ''
-            });
-        },
-        guardar_configuracion: function guardar_configuracion(user) {
-            var data = {
-                'id_usuario': user.id,
-                'tipo': user.configuracion.tipo,
-                'id_ubicacion': user.configuracion.ubicacion.id,
-                'id_perfil': user.configuracion.id_perfil
-            };
-
-            var _this = this;
-            var url = App.host + '/configuracion-diaria';
-
-            $.ajax({
-                type: 'POST',
-                url: url,
-                data: data,
-                beforeSend: function beforeSend() {
-                    user.guardando = true;
-                },
-                success: function success(response) {
-                    Vue.set(_this.checadores, _this.checadores.indexOf(user), response.checador);
-                    swal({
-                        type: 'success',
-                        title: '¡Configuración Correcta!',
-                        text: 'Configuración establecida correctamente<br> para el usuario </strong>' + user.nombre + '</strong>',
-                        html: true
-                    });
-                },
-                error: function error(_error4) {
-                    if (_error4.status == 422) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error4.responseJSON)
-                        });
-                    } else if (_error4.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(_error4.responseText)
-                        });
-                    }
-                },
-                complete: function complete() {
-                    user.guardando = false;
-                }
-            });
-        }
-    }
-});
-
-},{}],43:[function(require,module,exports){
-'use strict';
-
 Vue.component('corte-create', {
     data: function data() {
         return {
@@ -34268,7 +33973,7 @@ Vue.component('corte-create', {
     }
 });
 
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Vue.component('corte-edit', {
@@ -34623,7 +34328,7 @@ Vue.component('corte-edit', {
     }
 });
 
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -34632,7 +34337,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":50}],46:[function(require,module,exports){
+},{"./templates/errors.html":49}],45:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -34738,7 +34443,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],47:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -34827,7 +34532,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -34853,7 +34558,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":51}],49:[function(require,module,exports){
+},{"./templates/global-errors.html":50}],48:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -34928,13 +34633,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":52}],50:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":51}],49:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
-},{}],52:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
-},{}],53:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -35154,7 +34859,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-index', {
@@ -35391,7 +35096,7 @@ Vue.component('viajes-index', {
     }
 });
 
-},{}],55:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 Array.prototype.removeValue = function (name, value) {
@@ -35556,7 +35261,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],56:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 // register modal component
@@ -35718,7 +35423,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],57:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-revertir', {
@@ -35855,7 +35560,7 @@ Vue.component('viajes-revertir', {
     }
 });
 
-},{}],58:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 
 // register modal component
