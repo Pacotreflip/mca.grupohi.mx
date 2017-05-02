@@ -303,11 +303,12 @@ class Conciliaciones
             $viaje_neto = ViajeNeto::where('Code', '=', $code)->first();
             if(!$viaje_neto && $datos){
                 $camion = Camion::where('economico', $datos->camion)->first();
-                $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $datos->fecha_llegada)->where('HoraLlegada', $datos->hora_llegada)->first();
+                $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $datos->fecha_llegada->toDateString())->where('HoraLlegada', $datos->hora_llegada->toTimeString())->first();
             }
         }else{
             $camion = Camion::where('economico', $datos->camion)->first();
-            $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $datos->fecha_llegada)->where('HoraLlegada', $datos->hora_llegada)->first();
+            $viaje_neto = ViajeNeto::where('IdCamion', $camion ? $camion->IdCamion : null)->where('FechaLlegada', $datos->fecha_llegada->toDateString())->where('HoraLlegada', $datos->hora_llegada->toTimeString())->first();
+			
         }
         if(!$viaje_neto){
             $viaje_neto = $this->procesoCompletoViajeNetoManual($datos);
