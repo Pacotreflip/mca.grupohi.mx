@@ -4,6 +4,7 @@ namespace App\Models\Cortes;
 
 use App\Models\Material;
 use App\Models\Origen;
+use App\Models\Tiro;
 use App\Models\ViajeNeto;
 use Illuminate\Database\Eloquent\Model;
 
@@ -18,11 +19,13 @@ class CorteCambio extends Model
         'cubicacion_anterior',
         'cubicacion_nueva',
         'registro',
-        'observaciones',
+        'justificacion',
         'id_material_anterior',
         'id_material_nuevo',
         'id_origen_anterior',
-        'id_origen_nuevo'
+        'id_origen_nuevo',
+        'id_tiro_anterior',
+        'id_tiro_nuevo'
     ];
     public $timestamps = false;
 
@@ -36,5 +39,9 @@ class CorteCambio extends Model
 
     public function origen_nuevo() {
         return $this->belongsTo(Origen::class, 'id_origen_nuevo');
+    }
+
+    public function tiro_nuevo() {
+        return $this->belongsTo(Tiro::class, 'id_tiro_nuevo');
     }
 }

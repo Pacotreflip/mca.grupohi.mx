@@ -9577,6 +9577,11 @@ select.grande {
   text-align: center;
   font-weight: 700; }
 
+.tab-corte {
+  width: 33%;
+  text-align: center;
+  font-weight: 700; }
+
 ul#detail-tabs a {
   color: #575757;
   text-decoration: none; }

@@ -33984,11 +33984,13 @@ Vue.component('corte-edit', {
                 'viajes_netos': []
             },
             'form': {
+                'busqueda': '',
                 'errors': [],
                 'data': {
                     'id_material': '',
                     'id_origen': '',
-                    'observaciones': '',
+                    'id_tiro': '',
+                    'justificacion': '',
                     'cubicacion': '',
                     'id': ''
                 }
@@ -34008,17 +34010,26 @@ Vue.component('corte-edit', {
         modified: function modified() {
             var _this = this;
             return _this.corte.viajes_netos.filter(function (viaje_neto) {
-                if (viaje_neto.modified) {
+                if (viaje_neto.corte_cambio) {
                     return true;
                 }
                 return false;
+            });
+        },
+
+        resultados: function resultados() {
+            var _this = this;
+            return this.corte.viajes_netos.filter(function (viaje_neto) {
+                if (viaje_neto.codigo == _this.form.busqueda.replace(/ /g, '')) {
+                    return true;
+                } else {
+                    return false;
+                }
             });
         }
     },
 
     methods: {
-        doSomethingOnHidden: function doSomethingOnHidden() {},
-
         fetch: function fetch() {
 
             var _this = this;
@@ -34103,19 +34114,31 @@ Vue.component('corte-edit', {
             });
         },
 
-        editar: function editar(viaje) {
-
-            $('input[name=observaciones]').val(viaje.observaciones);
-            this.viaje = viaje;
-
-            this.form.data.id_material = viaje.id_material_nuevo ? viaje.id_material_nuevo : viaje.id_material;
-            this.form.data.id_origen = viaje.id_orige_nuevo ? viaje.id_origen_nuevo : viaje.id_origen;
-            this.form.data.cubicacion = viaje.cubicacion_nueva ? viaje.cubicacion_nueva : viaje.cubicacion;
+        editar: function editar(e) {
+            e.preventDefault();
+            var viaje = this.viaje;
+            if (viaje.corte_cambio) {
+                this.form.data.id_origen = viaje.corte_cambio.origen_nuevo ? viaje.corte_cambio.origen_nuevo.IdOrigen : viaje.id_origen;
+                this.form.data.id_tiro = viaje.corte_cambio.tiro_nuevo ? viaje.corte_cambio.tiro_nuevo.IdTiro : viaje.id_tiro;
+                this.form.data.id_material = viaje.corte_cambio.material_nuevo ? viaje.corte_cambio.material_nuevo.IdMaterial : viaje.id_material;
+                this.form.data.cubicacion = viaje.corte_cambio.cubicacion_nueva ? viaje.corte_cambio.cubicacion_nueva : viaje.cubicacion;
+                this.form.data.justificacion = viaje.corte_cambio.justificacion;
+            } else {
+                this.form.data.id_origen = viaje.id_origen;
+                this.form.data.id_tiro = viaje.id_tiro;
+                this.form.data.id_material = viaje.id_material;
+                this.form.data.cubicacion = viaje.cubicacion;
+                this.form.data.justificacion = '';
+            }
             this.form.data.id = viaje.id;
-            this.index = this.corte.viajes_netos.indexOf(viaje);
-
             this.form.errors = [];
             $('#edit_modal').modal('show');
+        },
+
+        informacion: function informacion(viaje) {
+            this.viaje = viaje;
+            this.index = this.corte.viajes_netos.indexOf(viaje);
+            $('#info_modal').modal('show');
         },
 
         confirmar_modificacion: function confirmar_modificacion(e) {
@@ -34150,14 +34173,14 @@ Vue.component('corte-edit', {
                 },
                 success: function success(response) {
                     Vue.set(_this.corte.viajes_netos, _this.index, response.viaje_neto);
+                    _this.viaje = response.viaje_neto;
                     $('#edit_modal').modal('hide');
-                    if (response.viaje_neto.modified) {
-                        swal({
-                            'type': 'success',
-                            'title': 'INFORMACIÓN',
-                            'text': 'Cambios aplicados correctamente'
-                        });
-                    }
+                    $('#info_modal').modal('hide');
+                    swal({
+                        'type': 'success',
+                        'title': 'INFORMACIÓN',
+                        'text': 'Cambios aplicados correctamente'
+                    });
                 },
                 error: function error(_error3) {
                     if (_error3.status == 422) {
@@ -34180,9 +34203,27 @@ Vue.component('corte-edit', {
             return numeral(val).format('0,0.00');
         },
 
-        descartar: function descartar(viaje) {
+        confirmar_descartar: function confirmar_descartar() {
+            var _this4 = this;
+
+            e.preventDefault();
+            swal({
+                title: "Revertir Modificaciones",
+                text: "¿Esta seguro de desea revertir los cambios hechos en el viaje?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si, Revertir",
+                cancelButtonText: "No, Cancelar",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this4.descartar();
+            });
+        },
+
+        descartar: function descartar(e) {
+            e.preventDefault();
             var _this = this;
-            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + viaje.id + '?action=revertir_modificaciones';
+            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + this.viaje.id + '?action=revertir_modificaciones';
 
             $.ajax({
                 type: 'POST',
@@ -34194,11 +34235,12 @@ Vue.component('corte-edit', {
                     _this.guardando = true;
                 },
                 success: function success(response) {
-                    Vue.set(_this.corte.viajes_netos, _this.corte.viajes_netos.indexOf(viaje), response.viaje_neto);
+                    Vue.set(_this.corte.viajes_netos, _this.index, response.viaje_neto);
+                    _this.viaje = response.viaje_neto;
                     swal({
                         'type': 'success',
                         'title': 'INFORMACIÓN',
-                        'text': 'Cambios aplicados correctamente'
+                        'text': 'Cambios revertidos correctamente'
                     });
                 },
                 error: function error(_error4) {
@@ -34215,8 +34257,73 @@ Vue.component('corte-edit', {
                 complete: function complete() {
                     _this.guardando = false;
                 }
-
             });
+        },
+
+        confirmar_confirmacion: function confirmar_confirmacion(e) {
+            var _this5 = this;
+
+            e.preventDefault();
+            swal({
+                title: "Confirmar el viaje",
+                text: "¿Esta seguro de que la información es correcta?",
+                type: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Si, Confirmar",
+                cancelButtonText: "No, Cancelar",
+                confirmButtonColor: "#ec6c62"
+            }, function () {
+                return _this5.confirmar_viaje();
+            });
+        },
+
+        confirmar_viaje: function confirmar_viaje() {
+            var _this = this;
+            var url = App.host + '/corte/' + _this.corte.id + '/viajes_netos/' + _this.viaje.id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'PATCH',
+                    action: 'confirmar'
+                },
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    $('#info_modal').modal('hide');
+                    Vue.set(_this.corte.viajes_netos, _this.index, response.viaje_neto);
+                    swal({
+                        'type': 'success',
+                        'title': 'INFORMACIÓN',
+                        'text': 'Viaje Confirmado Correctamente'
+                    });
+                },
+                error: function error(_error5) {
+                    if (_error5.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error5.responseJSON);
+                    } else if (_error5.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error5.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+            });
+        },
+
+        buscar: function buscar(e) {
+            e.preventDefault();
+            this.form.errors = [];
+            if (this.resultados.length) {
+                this.informacion(this.resultados[0]);
+            } else {
+                this.form.errors.push('Ningún viaje coincide con la búsqueda');
+            }
         }
     }
 });
