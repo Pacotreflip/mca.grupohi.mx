@@ -17,8 +17,8 @@ class ConciliacionDetalleTransformer extends AbstractTransformer
             'cubicacion_camion'      => $detalle->viaje_neto->CubicacionCamion,
             'camion'                 => $detalle->viaje_neto->camion->Economico,
             'material'               => $detalle->viaje_neto->material->Descripcion,
-            'importe'                => number_format($detalle->viaje_neto->Importe, 2, '.', ','),
-            'code'                   => $detalle->viaje_neto->code,
+            'importe'                => ($detalle->viaje_neto->viaje)?number_format($detalle->viaje_neto->viaje->Importe, 2, '.', ','):0.00,
+            'code'                   => $detalle->viaje_neto->Code,
             'estado'                 => $detalle->estado,
             'cancelacion'            => $detalle->estado == 1 ? [] : [
                 'motivo' => $detalle->cancelacion->motivo,
