@@ -176,7 +176,6 @@ class ConciliacionesController extends Controller
 
     public function show(Request $request, $id) {
         if($request->ajax()) {
-
             $conciliacion = ConciliacionTransformer::transform(Conciliacion::find($id));
             return response()->json([
                 'status_code' => 200,
