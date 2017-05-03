@@ -62,7 +62,7 @@
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
                                     '2' => 'BÚSQUEDA AVANZADA',
                                     '3' => 'CARGAR EXCEL',
-                                    '4' => 'CARGAR EXCEL COMPLETA'
+                                    '4' => 'CARGA EXCEL COMPLETA'
                                      ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
                                      
                                 </div>

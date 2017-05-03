@@ -73,12 +73,17 @@ class ConciliacionesDetallesController extends Controller
             return redirect()->back();
         }else if($request->get('Tipo') == '4') {
             $conciliacion = Conciliacion::find($id);
+            $fecha_conciliacion = Carbon::createFromFormat('Y-m-d', $conciliacion->fecha_conciliacion);
+            $fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-03-31');
+            if(!($fecha_minima->format("Ymd")>=$fecha_conciliacion->format("Ymd"))){
+                Flash::error("Esta concilación no puede ser procesada con la opción: Carga Excel Completa");
+                return redirect()->back();
+            }else{
 
-            $output = (new Conciliaciones($conciliacion))->cargarExcelProcesoCompleto($request->file('excel'));
-            //return response()->json($output);
-
-            Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['registros'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['registros_nc'] . '</li>');
-            return redirect()->back();
+                $output = (new Conciliaciones($conciliacion))->cargarExcelProcesoCompleto($request->file('excel'));
+                Flash::success('<li><strong>VIAJES CONCILIADOS: </strong>' . $output['registros'] . '</li><li>' . '<strong>VIAJES NO CONCILIADOS: </strong>' . $output['registros_nc'] . '</li>');
+                return redirect()->back();
+            }
         }
 
         if($request->ajax()) {
