@@ -27,6 +27,7 @@ use App\Models\Tiro;
 use App\Models\Ruta;
 use App\Models\Cronometria;
 use App\Models\Tarifas\TarifaMaterial;
+use App\Models\Conflictos\ViajeNetoConflictoPagable;
 class Conciliaciones
 {
 
@@ -188,8 +189,8 @@ class Conciliaciones
 
         return [
                 'status_code' => 201,
-                'registros'   => $i,
-                'registros_nc'   => $y,
+                'registros'   => count($detalles),
+                'registros_nc'   => count($reader)-count($detalles),
                 'detalles'    => $detalles,
                 'detalles_nc'    => $detalles_nc,
                 'importe'     => $this->conciliacion->importe_f,
@@ -326,6 +327,7 @@ class Conciliaciones
         $modificado = $this->viajeModificado($viaje_neto, $datos_viaje);
         $validado = ($viaje_neto->viaje)?TRUE:FALSE;
         $rechazado = ($viaje_neto->viaje_rechazado)?TRUE:FALSE;
+        
         IF($validado){
             if($viaje_neto->viaje->conciliacionDetalles){
                 $detalle_conciliacion =  $viaje_neto->viaje->conciliacionDetalles->where('estado', 1)->where('idconciliacion',$this->conciliacion->idconciliacion)->first();
@@ -539,6 +541,16 @@ class Conciliaciones
         return $viaje;
     }
     private function conciliaViaje($viaje_neto){
+        $en_conflicto_tiempo = $viaje_neto->en_conflicto_tiempo;
+        if($en_conflicto_tiempo){
+            //dd($viaje_neto->conflicto->id);
+            ViajeNetoConflictoPagable::create([
+                "idviaje_neto"=>$viaje_neto->IdViajeNeto,
+                "idconflicto"=>$viaje_neto->conflicto->id,
+                "motivo"=>'Aprobación automática por carga de histórico',
+                "aprobo_pago"=>auth()->user()->idusuario
+            ]);
+        }
         $detalle = [
             'idconciliacion' => $this->conciliacion->idconciliacion,
             'idviaje_neto' => $viaje_neto->IdViajeNeto,
