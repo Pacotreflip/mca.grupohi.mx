@@ -27,6 +27,7 @@ use App\Models\Tiro;
 use App\Models\Ruta;
 use App\Models\Cronometria;
 use App\Models\Tarifas\TarifaMaterial;
+use App\Models\Conflictos\ViajeNetoConflictoPagable;
 class Conciliaciones
 {
 
@@ -166,16 +167,23 @@ class Conciliaciones
     }
     
     public function cargarExcelProcesoCompleto(UploadedFile $data) {
+        $fecha_conciliacion = Carbon::createFromFormat('Y-m-d', $this->conciliacion->fecha_conciliacion);
+        $fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-03-31');
+        if(!($fecha_minima->format("Ymd")>=$fecha_conciliacion->format("Ymd"))){
+            throw new \Exception("Esta concilación no puede ser procesada con la opción: Carga Excel Completa");
+        }
         $reader = Excel::load($data->getRealPath())->get();
         $i = 0;
         $y = 0;
-        //dd("aqui", count($reader));
+        //dd("aqui", $reader);
         foreach ($reader as $row) {
-            $codigo_evaluar = (str_replace(" ", "", $row->ticket) == "MANUAL" || $row->ticket == NULL)?NULL: $row->ticket;
-            if(strlen($codigo_evaluar)<10 && $codigo_evaluar){
-                $codigo_evaluar = str_repeat("0",10- strlen($codigo_evaluar)).$codigo_evaluar;
+            if($row->camion){
+                $codigo_evaluar = (str_replace(" ", "", $row->ticket) == "MANUAL" || $row->ticket == NULL)?NULL: $row->ticket;
+                if(strlen($codigo_evaluar)<10 && $codigo_evaluar){
+                    $codigo_evaluar = str_repeat("0",10- strlen($codigo_evaluar)).$codigo_evaluar;
+                }
+                $this->procesamientoCompletoViaje($codigo_evaluar, $row);
             }
-            $this->procesamientoCompletoViaje($codigo_evaluar, $row);
         }
         
         $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
@@ -183,8 +191,8 @@ class Conciliaciones
 
         return [
                 'status_code' => 201,
-                'registros'   => $i,
-                'registros_nc'   => $y,
+                'registros'   => count($detalles),
+                'registros_nc'   => (count($detalles_nc)),
                 'detalles'    => $detalles,
                 'detalles_nc'    => $detalles_nc,
                 'importe'     => $this->conciliacion->importe_f,
@@ -321,6 +329,7 @@ class Conciliaciones
         $modificado = $this->viajeModificado($viaje_neto, $datos_viaje);
         $validado = ($viaje_neto->viaje)?TRUE:FALSE;
         $rechazado = ($viaje_neto->viaje_rechazado)?TRUE:FALSE;
+        
         IF($validado){
             if($viaje_neto->viaje->conciliacionDetalles){
                 $detalle_conciliacion =  $viaje_neto->viaje->conciliacionDetalles->where('estado', 1)->where('idconciliacion',$this->conciliacion->idconciliacion)->first();
@@ -534,6 +543,16 @@ class Conciliaciones
         return $viaje;
     }
     private function conciliaViaje($viaje_neto){
+        $en_conflicto_tiempo = $viaje_neto->en_conflicto_tiempo;
+        if($en_conflicto_tiempo){
+            //dd($viaje_neto->conflicto->id);
+            ViajeNetoConflictoPagable::create([
+                "idviaje_neto"=>$viaje_neto->IdViajeNeto,
+                "idconflicto"=>$viaje_neto->conflicto->id,
+                "motivo"=>'Aprobación automática por carga de histórico',
+                "aprobo_pago"=>auth()->user()->idusuario
+            ]);
+        }
         $detalle = [
             'idconciliacion' => $this->conciliacion->idconciliacion,
             'idviaje_neto' => $viaje_neto->IdViajeNeto,
