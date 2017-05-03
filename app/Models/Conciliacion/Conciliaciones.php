@@ -175,13 +175,15 @@ class Conciliaciones
         $reader = Excel::load($data->getRealPath())->get();
         $i = 0;
         $y = 0;
-        //dd("aqui", count($reader));
+        //dd("aqui", $reader);
         foreach ($reader as $row) {
-            $codigo_evaluar = (str_replace(" ", "", $row->ticket) == "MANUAL" || $row->ticket == NULL)?NULL: $row->ticket;
-            if(strlen($codigo_evaluar)<10 && $codigo_evaluar){
-                $codigo_evaluar = str_repeat("0",10- strlen($codigo_evaluar)).$codigo_evaluar;
+            if($row->camion){
+                $codigo_evaluar = (str_replace(" ", "", $row->ticket) == "MANUAL" || $row->ticket == NULL)?NULL: $row->ticket;
+                if(strlen($codigo_evaluar)<10 && $codigo_evaluar){
+                    $codigo_evaluar = str_repeat("0",10- strlen($codigo_evaluar)).$codigo_evaluar;
+                }
+                $this->procesamientoCompletoViaje($codigo_evaluar, $row);
             }
-            $this->procesamientoCompletoViaje($codigo_evaluar, $row);
         }
         
         $detalles = ConciliacionDetalleTransformer::transform(ConciliacionDetalle::where('idconciliacion', '=', $this->conciliacion->idconciliacion)->get());
@@ -190,7 +192,7 @@ class Conciliaciones
         return [
                 'status_code' => 201,
                 'registros'   => count($detalles),
-                'registros_nc'   => count($reader)-count($detalles),
+                'registros_nc'   => (count($detalles_nc)),
                 'detalles'    => $detalles,
                 'detalles_nc'    => $detalles_nc,
                 'importe'     => $this->conciliacion->importe_f,
