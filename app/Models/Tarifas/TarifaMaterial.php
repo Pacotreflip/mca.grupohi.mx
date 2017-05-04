@@ -18,7 +18,8 @@ class TarifaMaterial extends Model
         'KMAdicional', 
         'Fecha_Hora_Registra', 
         'Registra',
-        'InicioVigencia'
+        'InicioVigencia',
+        'FinVigencia'
     ];
     protected $dates = ["Fecha_Hora_Registra","InicioVigencia","FinVigencia"];
     protected $presenter = ModelPresenter::class;

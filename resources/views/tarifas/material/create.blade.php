@@ -43,13 +43,13 @@
         </div>
         <div class="row">
             <div class="col-md-4">
-                {!! Form::number('PrimerKM', null, ['class' => 'form-control', 'placeholder' => '0']) !!}
+                {!! Form::text('PrimerKM', null, ['class' => 'form-control', 'placeholder' => '0']) !!}
             </div>
             <div class="col-md-4">
-                {!! Form::number('KMSubsecuente', null, ['class' => 'form-control', 'placeholder' => '0']) !!}
+                {!! Form::text('KMSubsecuente', null, ['class' => 'form-control', 'placeholder' => '0']) !!}
             </div>
             <div class="col-md-4">
-                {!! Form::number('KMAdicional', null, ['class' => 'form-control', 'placeholder' => '0']) !!}
+                {!! Form::text('KMAdicional', null, ['class' => 'form-control', 'placeholder' => '0']) !!}
             </div>
         </div>
     </div>
