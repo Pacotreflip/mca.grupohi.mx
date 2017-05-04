@@ -18,7 +18,6 @@
                 <th>Fin de Vigencia</th>
                 <th>Registro</th>
                 <th>Fecha Hora Registro</th>
-                <th>Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -37,7 +36,6 @@
                 <td>{{ $tarifa->FinVigenciaTarifa }}</td>
                 <td>{{ $tarifa->registro->present()->NombreCompleto }}</td>
                 <td>{{ $tarifa->Fecha_Hora_Registra->format("d-m-Y h:i:s") }}</td>
-                <td>{!! Form::submit('MODIFICAR', ['class' => 'btn btn-success form-control'])!!}</td>
             </tr>
             {!! Form::close() !!}
             @endforeach
