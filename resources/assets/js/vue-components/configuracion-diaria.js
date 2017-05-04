@@ -9,6 +9,7 @@ Vue.component('configuracion-diaria', {
             tiros      : [],
             origenes   : [],
             esquemas   : [],
+            perfiles   : [],
             form: {
                 errors : []
             },
@@ -25,6 +26,22 @@ Vue.component('configuracion-diaria', {
         con_esquema: function () {
             return this.tiros.filter(function(tiro) {
                 if(tiro.esquema.id != '') {
+                    return true;
+                }
+                return false;
+            });
+        },
+        para_origen: function () {
+            return this.perfiles.filter(function(perfil) {
+                if(perfil.id_esquema == '1') {
+                    return true;
+                }
+                return false;
+            });
+        },
+        para_tiro: function () {
+            return this.perfiles.filter(function(perfil) {
+                if(perfil.id_esquema == '2') {
                     return true;
                 }
                 return false;
@@ -73,6 +90,7 @@ Vue.component('configuracion-diaria', {
                     });
 
                     _this.origenes = response.origenes;
+                    _this.perfiles = response.perfiles;
                     _this.esquemas = response.esquemas;
                 },
                 error      : function (error) {
@@ -203,7 +221,7 @@ Vue.component('configuracion-diaria', {
 
         tiro_by_id: function (id) {
             var result = {};
-            this.con_esquema.forEach(function (tiro) {
+            this.tiros.forEach(function (tiro) {
                 if (tiro.id == id) {
                     result = tiro;
                 }
