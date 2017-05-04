@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout_width')
 
 @section('content')
     <h1>CONFIGURACIÓN DIARIA</h1>
@@ -18,7 +18,7 @@
                         <h3>CONFIGURACIÓN DE TIROS</h3>
                         <hr>
                         <div class="table-responsive">
-                            <table class="table table-condensed small">
+                            <table class="table table-condensed small" >
                                 <thead>
                                 <tr>
                                     <th style="text-align: center">#</th>
@@ -50,7 +50,7 @@
                     </div>
 
                     <!-- Configuración de Checadores-->
-                    <div v-if="checadores.length" class="col-md-7 col-md-offset-1">
+                    <div v-if="checadores.length" class="col-md-8" style="border-left: #808080 1px solid">
                         <h3>CONFIGURACIÓN DE CHECADORES</h3>
                         <p><small><sup>1</sup> Se enlistarán todos los origenes y tiros, excepto aquellos tiros que no tengan un esquema definido.</small></p>
                         <hr>
