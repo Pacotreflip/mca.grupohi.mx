@@ -12,7 +12,7 @@ class ConciliacionDetalleTransformer extends AbstractTransformer
     public function transformModel(Model $detalle) {
         $output = [
             'idconciliacion_detalle' => $detalle->idconciliacion_detalle,
-            'id'                     => $detalle->idviaje_neto,
+            'id'                     => ($detalle->viaje_neto->viaje)?$detalle->viaje_neto->viaje->IdViaje:0,
             'timestamp_llegada'      => $detalle->viaje_neto->FechaLlegada.' ('.$detalle->viaje_neto->HoraLlegada.')',
             'cubicacion_camion'      => $detalle->viaje_neto->CubicacionCamion,
             'camion'                 => $detalle->viaje_neto->camion->Economico,

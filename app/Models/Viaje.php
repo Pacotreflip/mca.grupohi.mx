@@ -8,6 +8,7 @@ use DaveJamesMiller\Breadcrumbs\Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Carbon\Carbon;
 
 class Viaje extends Model
 {
@@ -73,11 +74,16 @@ class Viaje extends Model
 
             DB::connection('sca')->table('cambio_cubicacion')->insertGetId([
                 'IdViaje'      => $this->IdViaje,
+                'IdViajeNeto'      => $this->IdViajeNeto,
                 'VolumenViejo' => $this->CubicacionCamion,
-                'VolumenNuevo' => $request->get('cubicacion')
+                'VolumenNuevo' => $request->get('cubicacion'),
+                'FechaRegistro' => Carbon::now()
             ]);
 
             $this->CubicacionCamion = $request->get('cubicacion');
+            $viaje_neto = $this->viajeNeto;
+            $viaje_neto->CubicacionCamion = $request->get('cubicacion');
+            $viaje_neto->save();
             $this->save();
 
             DB::connection("sca")->statement("call calcular_Volumen_Importe(".$this->IdViajeNeto.");");
