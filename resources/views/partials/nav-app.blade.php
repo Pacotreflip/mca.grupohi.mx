@@ -43,6 +43,9 @@
     </ul>
   </li>
   @endif
+  @role('administrador-sistema')
+  <li>{!! link_to_route('administracion', 'Administracion') !!}</li>
+  @endrole
   <li class="dropdown">
     <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
         Operación<span class="caret"></span>
