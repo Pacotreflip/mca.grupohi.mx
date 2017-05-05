@@ -576,6 +576,12 @@ class Conciliaciones
         if($viaje_neto->IdOrigen != $origen->IdOrigen){ $modificado = TRUE;}
         if($viaje_neto->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;}
         if($viaje_neto->viaje){
+            #Obtiene tarifas aplicadas al viaje
+            $tprimer_km = $viaje_neto->viaje->TPrimerKM;
+            $tkm_subsecuentes = $viaje_neto->viaje->TKMSubsecuente;
+            $tkm_adicionales = $viaje_neto->viaje->TKMAdicional;
+            #Obtiene tarifas reales a aplicar al viaje
+            
             if($viaje_neto->viaje->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE;}
             if($viaje_neto->viaje->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE;}
             if($viaje_neto->viaje->IdMaterial != $material->IdMaterial){ $modificado = TRUE;}
