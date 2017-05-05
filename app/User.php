@@ -3,7 +3,6 @@
 namespace App;
 
 use App\Models\ConfiguracionDiaria\Configuracion;
-use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
@@ -68,5 +67,22 @@ class User extends Model implements AuthenticatableContract,
     public function __toString()
     {
         return $this->present()->nombreCompleto;
+    }
+
+    public function detachRole($role)
+    {
+        if (is_object($role)) {
+            $role = $role->getKey();
+        }
+
+        if (is_array($role)) {
+            $role = $role['id'];
+        }
+
+        DB::connection('sca')->table('sca_configuracion.role_user')->where([
+            'user_id' => $this->idusuario,
+            'role_id' => $role,
+            'id_proyecto' => Context::getId()
+        ])->delete();
     }
 }

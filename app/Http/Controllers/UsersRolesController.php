@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Entrust\Role;
 use App\User;
+use App\User_1;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
@@ -93,9 +94,9 @@ class UsersRolesController extends Controller
     public function destroy(Request $request, $id_user, $id_role)
     {
         if($request->ajax()) {
-            $user = User::find($id_user);
+            $user = User_1::find($id_user);
             $role = Role::find($id_role);
-            $user->roles()->detach($role);
+            $user->detachRole($role);
 
             return response()->json([
                 'success' => true
