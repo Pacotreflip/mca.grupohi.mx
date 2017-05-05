@@ -6,6 +6,7 @@ use App\Facades\Context;
 use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\ConfiguracionDiaria\Esquema;
 use App\Models\ConfiguracionDiaria\Perfiles;
+use App\Models\Entrust\Role;
 use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\Transformers\EsquemaConfiguracionTransformer;
@@ -45,7 +46,9 @@ class ConfiguracionDiariaController extends Controller
                 ]);
             }
         } else {
-            return view('configuracion-diaria.index');
+            $rol = Role::where('name', 'checador')->first();
+            return view('configuracion-diaria.index')
+                ->with(['rol' => $rol]);
         }
     }
 

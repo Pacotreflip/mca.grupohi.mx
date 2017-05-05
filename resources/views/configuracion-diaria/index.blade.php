@@ -7,7 +7,7 @@
 
     <div id="app">
         <global-errors></global-errors>
-        <configuracion-diaria inline-template>
+        <configuracion-diaria inline-template rol_checador="{{ $rol->id }}">
             <section>
                 <div v-if="cargando" class="row">
                     <h4 style="text-align: center"><i class="fa fa-spinner fa-spin fa-lg"></i> CARGANDO </h4>
@@ -27,7 +27,8 @@
                                     <th style="text-align: center">Ubicación </th>
                                     <th style="text-align: center">Perfil</th>
                                     <th style="text-align: center">Guardar</th>
-                                    <th style="text-align: center">Eliminar Configuración</th>
+                                    <th style="text-align: center">Limpiar Configuración</th>
+                                    <th style="text-align: center">Eliminar Checador</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -74,9 +75,15 @@
                                         </button>
                                     </td>
                                     <td style="text-align: center">
-                                        <button @click="quitar_configuracion(user)" type="button" class="btn btn-xs btn-danger" :disabled=" ! user.configuracion.id">
+                                        <button @click="quitar_configuracion(user)" type="button" class="btn btn-xs btn-warning" :disabled=" ! user.configuracion.id">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-undo fa-lg"></i>
+                                        </button>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <button @click="confirmar_quitar_checador(user)" type="button" class="btn btn-xs btn-danger">
+                                            <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
+                                            <i v-else class="fa fa-remove fa-lg"></i>
                                         </button>
                                     </td>
                                 </tr>
