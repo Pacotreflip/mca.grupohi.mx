@@ -275,12 +275,73 @@ Vue.component('configuracion-diaria', {
                     user.guardando = true;
                 },
                 success: function (response) {
-                    Vue.set(_this.checadores, _this.checadores.indexOf(user), response.checador);
+                    var checador = response.checador;
+                    checador.guardando = false;
+                    Vue.set(_this.checadores, _this.checadores.indexOf(user), checador);
                     swal({
                         type : 'success',
                         title : '¡Configuración Correcta!',
                         text: 'Configuración establecida correctamente<br> para el usuario </strong>' + user.nombre +'</strong>',
                         html: true
+                    });
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        swal({
+                            type : 'error',
+                            title : '¡Error!',
+                            text : App.errorsToString(error.responseJSON)
+                        });
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    user.guardando = false;
+                }
+            });
+        },
+
+        quitar_configuracion: function (user) {
+            var _this = this;
+            swal({
+                type : 'warning',
+                title : '¡Alerta!',
+                text : '¿Realmente desea eliminar la configuración para el checador<br>'+user.nombre+'?',
+                html : true,
+                showCancelButton: true,
+                confirmButtonText: "Si, eliminar",
+                cancelButtonText: "No, cancelar",
+            }, () => _this.eliminar(user));
+        },
+
+        eliminar:function (user) {
+            var url = App.host + '/configuracion-diaria/' + user.configuracion.id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'DELETE'
+                },
+                beforeSend: function () {
+                    user.guardando = true;
+                },
+                success: function () {
+                    swal({
+                        type: 'success',
+                        text: 'Configuración eliminada correctamente',
+                        title: 'Información'
+                    });
+                    Vue.set(user, 'configuracion',{
+                        tipo : '',
+                        ubicacion : {
+                            id : '',
+                            descripcion : ''
+                        }, id_perfil : ''
                     });
                 },
                 error: function (error) {

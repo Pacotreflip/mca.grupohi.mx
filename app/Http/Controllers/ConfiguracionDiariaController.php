@@ -139,6 +139,9 @@ class ConfiguracionDiariaController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $configuracion = Configuracion::find($id);
+        $configuracion->delete();
+
+        return response()->json(['success' => true]);
     }
 }
