@@ -33310,14 +33310,14 @@ Vue.component('conciliaciones-edit', {
         manuales: function manuales() {
             var _this = this;
             return _this.conciliacion.detalles.filter(function (detalle) {
-                return detalle.estatus_viaje === 20 && detalle.estado === 1;
+                return detalle.estatus_viaje >= 20 && detalle.estatus_viaje <= 29 && detalle.estado === 1;
             });
         },
 
         moviles: function moviles() {
             var _this = this;
             return _this.conciliacion.detalles.filter(function (detalle) {
-                return detalle.estatus_viaje === 0 && detalle.estado === 1;
+                return detalle.estatus_viaje >= 0 && detalle.estatus_viaje <= 9 && detalle.estado === 1;
             });
         }
     },
@@ -33818,12 +33818,14 @@ Vue.component('conciliaciones-edit', {
  */
 
 Vue.component('configuracion-diaria', {
+    props: ['rol_checador'],
     data: function data() {
         return {
             checadores: [],
             tiros: [],
             origenes: [],
             esquemas: [],
+            perfiles: [],
             form: {
                 errors: []
             },
@@ -33840,6 +33842,22 @@ Vue.component('configuracion-diaria', {
         con_esquema: function con_esquema() {
             return this.tiros.filter(function (tiro) {
                 if (tiro.esquema.id != '') {
+                    return true;
+                }
+                return false;
+            });
+        },
+        para_origen: function para_origen() {
+            return this.perfiles.filter(function (perfil) {
+                if (perfil.id_esquema == '1') {
+                    return true;
+                }
+                return false;
+            });
+        },
+        para_tiro: function para_tiro() {
+            return this.perfiles.filter(function (perfil) {
+                if (perfil.id_esquema == '2') {
                     return true;
                 }
                 return false;
@@ -33888,6 +33906,7 @@ Vue.component('configuracion-diaria', {
                     });
 
                     _this.origenes = response.origenes;
+                    _this.perfiles = response.perfiles;
                     _this.esquemas = response.esquemas;
                 },
                 error: function error(_error) {
@@ -34020,7 +34039,7 @@ Vue.component('configuracion-diaria', {
 
         tiro_by_id: function tiro_by_id(id) {
             var result = {};
-            this.con_esquema.forEach(function (tiro) {
+            this.tiros.forEach(function (tiro) {
                 if (tiro.id == id) {
                     result = tiro;
                 }
@@ -34074,7 +34093,9 @@ Vue.component('configuracion-diaria', {
                     user.guardando = true;
                 },
                 success: function success(response) {
-                    Vue.set(_this.checadores, _this.checadores.indexOf(user), response.checador);
+                    var checador = response.checador;
+                    checador.guardando = false;
+                    Vue.set(_this.checadores, _this.checadores.indexOf(user), checador);
                     swal({
                         type: 'success',
                         title: '¡Configuración Correcta!',
@@ -34099,6 +34120,115 @@ Vue.component('configuracion-diaria', {
                 },
                 complete: function complete() {
                     user.guardando = false;
+                }
+            });
+        },
+
+        quitar_configuracion: function quitar_configuracion(user) {
+            var _this = this;
+            swal({
+                type: 'warning',
+                title: '¡Alerta!',
+                text: '¿Realmente desea eliminar la configuración para el checador<br>' + user.nombre + '?',
+                html: true,
+                showCancelButton: true,
+                confirmButtonText: "Si, eliminar",
+                cancelButtonText: "No, cancelar"
+            }, function () {
+                return _this.eliminar(user);
+            });
+        },
+
+        eliminar: function eliminar(user) {
+            var url = App.host + '/configuracion-diaria/' + user.configuracion.id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'DELETE'
+                },
+                beforeSend: function beforeSend() {
+                    user.guardando = true;
+                },
+                success: function success() {
+                    swal({
+                        type: 'success',
+                        text: 'Configuración eliminada correctamente',
+                        title: 'Información'
+                    });
+                    Vue.set(user, 'configuracion', {
+                        tipo: '',
+                        ubicacion: {
+                            id: '',
+                            descripcion: ''
+                        }, id_perfil: ''
+                    });
+                },
+                error: function error(_error5) {
+                    if (_error5.status == 422) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error5.responseJSON)
+                        });
+                    } else if (_error5.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error5.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    user.guardando = false;
+                }
+            });
+        },
+
+        confirmar_quitar_checador: function confirmar_quitar_checador(user) {
+            var _this = this;
+            swal({
+                type: 'warning',
+                title: '¡Alerta!',
+                text: "¿Realmente desea quitar el permiso de 'Checador' para el usuario<br><strong>" + user.nombre + "</strong>?",
+                html: true,
+                showCancelButton: true,
+                confirmButtonText: "Si, quitar",
+                cancelButtonText: "No, cancelar"
+            }, function () {
+                return _this.quitar_checador(user);
+            });
+        },
+
+        quitar_checador: function quitar_checador(user) {
+            var _this = this;
+            var url = App.host + '/user/' + user.id + '/roles/' + _this.rol_checador;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'DELETE'
+                },
+                beforeSend: function beforeSend() {
+                    user.guardando = true;
+                },
+                success: function success() {
+                    Vue.delete(_this.checadores, _this.checadores.indexOf(user));
+                },
+                error: function error(_error6) {
+                    if (_error6.status == 422) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error6.responseJSON)
+                        });
+                    } else if (_error6.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error6.responseText)
+                        });
+                    }
                 }
             });
         }

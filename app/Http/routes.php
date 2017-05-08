@@ -150,6 +150,10 @@ Route::patch('corte/{corte}/viajes_netos/{viaje_neto}', 'CorteViajesController@u
 //Rutas de Configuración Diaria
 Route::get('configuracion-diaria', 'ConfiguracionDiariaController@index')->name('configuracion-diaria.index');
 Route::post('configuracion-diaria', 'ConfiguracionDiariaController@store');
+Route::delete('configuracion-diaria/{id}', 'ConfiguracionDiariaController@destroy');
+
+//Rutas de Roles y Permisos
+Route::resource('user.roles', 'UsersRolesController');
 
 //Rutas de Administración
 Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador-sistema']], function () {

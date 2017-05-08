@@ -3,12 +3,14 @@
  */
 
 Vue.component('configuracion-diaria', {
+    props: ['rol_checador'],
     data: function () {
         return {
             checadores : [],
             tiros      : [],
             origenes   : [],
             esquemas   : [],
+            perfiles   : [],
             form: {
                 errors : []
             },
@@ -25,6 +27,22 @@ Vue.component('configuracion-diaria', {
         con_esquema: function () {
             return this.tiros.filter(function(tiro) {
                 if(tiro.esquema.id != '') {
+                    return true;
+                }
+                return false;
+            });
+        },
+        para_origen: function () {
+            return this.perfiles.filter(function(perfil) {
+                if(perfil.id_esquema == '1') {
+                    return true;
+                }
+                return false;
+            });
+        },
+        para_tiro: function () {
+            return this.perfiles.filter(function(perfil) {
+                if(perfil.id_esquema == '2') {
                     return true;
                 }
                 return false;
@@ -73,6 +91,7 @@ Vue.component('configuracion-diaria', {
                     });
 
                     _this.origenes = response.origenes;
+                    _this.perfiles = response.perfiles;
                     _this.esquemas = response.esquemas;
                 },
                 error      : function (error) {
@@ -203,7 +222,7 @@ Vue.component('configuracion-diaria', {
 
         tiro_by_id: function (id) {
             var result = {};
-            this.con_esquema.forEach(function (tiro) {
+            this.tiros.forEach(function (tiro) {
                 if (tiro.id == id) {
                     result = tiro;
                 }
@@ -257,7 +276,9 @@ Vue.component('configuracion-diaria', {
                     user.guardando = true;
                 },
                 success: function (response) {
-                    Vue.set(_this.checadores, _this.checadores.indexOf(user), response.checador);
+                    var checador = response.checador;
+                    checador.guardando = false;
+                    Vue.set(_this.checadores, _this.checadores.indexOf(user), checador);
                     swal({
                         type : 'success',
                         title : '¡Configuración Correcta!',
@@ -282,6 +303,111 @@ Vue.component('configuracion-diaria', {
                 },
                 complete: function () {
                     user.guardando = false;
+                }
+            });
+        },
+
+        quitar_configuracion: function (user) {
+            var _this = this;
+            swal({
+                type : 'warning',
+                title : '¡Alerta!',
+                text : '¿Realmente desea eliminar la configuración para el checador<br>'+user.nombre+'?',
+                html : true,
+                showCancelButton: true,
+                confirmButtonText: "Si, eliminar",
+                cancelButtonText: "No, cancelar",
+            }, () => _this.eliminar(user));
+        },
+
+        eliminar:function (user) {
+            var url = App.host + '/configuracion-diaria/' + user.configuracion.id;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'DELETE'
+                },
+                beforeSend: function () {
+                    user.guardando = true;
+                },
+                success: function () {
+                    swal({
+                        type: 'success',
+                        text: 'Configuración eliminada correctamente',
+                        title: 'Información'
+                    });
+                    Vue.set(user, 'configuracion',{
+                        tipo : '',
+                        ubicacion : {
+                            id : '',
+                            descripcion : ''
+                        }, id_perfil : ''
+                    });
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        swal({
+                            type : 'error',
+                            title : '¡Error!',
+                            text : App.errorsToString(error.responseJSON)
+                        });
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    user.guardando = false;
+                }
+            });
+        },
+
+        confirmar_quitar_checador: function (user) {
+            var _this = this;
+            swal({
+                type : 'warning',
+                title : '¡Alerta!',
+                text : "¿Realmente desea quitar el permiso de 'Checador' para el usuario<br><strong>"+user.nombre+"</strong>?",
+                html : true,
+                showCancelButton: true,
+                confirmButtonText: "Si, quitar",
+                cancelButtonText: "No, cancelar",
+            }, () => _this.quitar_checador(user));
+        },
+
+        quitar_checador: function (user) {
+            var _this = this;
+            var url = App.host + '/user/' + user.id + '/roles/' + _this.rol_checador;
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method: 'DELETE'
+                },
+                beforeSend: function () {
+                    user.guardando = true;
+                },
+                success: function () {
+                    Vue.delete(_this.checadores, _this.checadores.indexOf(user));
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        swal({
+                            type : 'error',
+                            title : '¡Error!',
+                            text : App.errorsToString(error.responseJSON)
+                        });
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
                 }
             });
         }

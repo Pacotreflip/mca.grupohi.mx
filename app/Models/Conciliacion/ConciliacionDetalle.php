@@ -30,7 +30,7 @@ class ConciliacionDetalle extends Model
     }
     
     public function viaje_neto() {
-        return $this->belongsTo(ViajeNeto::class,'IdViajeNeto', 'idviaje_neto');
+        return $this->belongsTo(ViajeNeto::class,'idviaje_neto');
     }
 
     public function conciliacion() {

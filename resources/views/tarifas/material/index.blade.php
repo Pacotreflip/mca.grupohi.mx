@@ -2,11 +2,11 @@
 
 @section('content')
 <div class='success'></div>
-<h1>{{ strtoupper(trans('strings.tarifas_material')) }}</h1>
+<h1>{{ strtoupper(trans('strings.tarifas_material')) }} <a href="{{ route('tarifas_material.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Nueva Tarifa</a></h1>
 {!! Breadcrumbs::render('tarifas_material.index') !!}
 <hr>
 <div class="errores"></div>
-<div class="table-responsive col-md-6 col-md-offset-3">
+<div class="table-responsive col-md-12">
     <table class="table table-hover table-bordered">
         <thead>
             <tr>
@@ -14,23 +14,28 @@
                 <th>Tarifa 1er. KM</th>
                 <th>Tarifa KM Subsecuentes</th>
                 <th>Tarifa KM Adicionales</th>
-                <th>Acciones</th>
+                <th>Inicio de Vigencia</th>
+                <th>Fin de Vigencia</th>
+                <th>Registro</th>
+                <th>Fecha Hora Registro</th>
             </tr>
         </thead>
         <tbody>
-            @foreach($materiales as $material)
-            @if($material->tarifaMaterial()->count())
-            {!! Form::model($material->tarifaMaterial, ['class' => 'tarifa_create', 'method' => 'PATCH', 'route' => ['tarifas_material.update', $material->tarifaMaterial]]) !!}
-            @else
-            {!! Form::open(['class' => 'tarifa_create', 'route' => 'tarifas_material.store']) !!}
-            @endif
-            {!! Form::hidden('IdMaterial', $material->IdMaterial) !!}
-            <tr>
-                <td>{{ $material->Descripcion }}</td>
-                <td>{!! Form::number('PrimerKM', null, ['step' => 'any', 'class' => 'form-control'])!!}</td>
-                <td>{!! Form::number('KMSubsecuente', null, ['step' => 'any', 'class' => 'form-control']) !!}</td>
-                <td>{!! Form::number('KMAdicional', null, ['step' => 'any', 'class' => 'form-control']) !!}</td>
-                <td>{!! Form::submit('GUARDAR', ['class' => 'btn btn-success form-control'])!!}</td>
+            @foreach($tarifas as $tarifa)
+            {!! Form::model($tarifa, ['class' => 'tarifa_create', 'method' => 'GET', 'route' => ['tarifas_material.edit', $tarifa]]) !!}
+            @if($tarifa->FinVigenciaTarifa == 'VIGENTE')
+            <tr style="background-color: azure">
+                @else
+                <tr>
+                @endif
+                <td>{{ $tarifa->material->Descripcion }}{!! Form::hidden('IdMaterial', $tarifa->material->IdMaterial) !!}</td>
+                <td>{{ $tarifa->PrimerKM }}</td>
+                <td>{{ $tarifa->KMSubsecuente }}</td>
+                <td>{{ $tarifa->KMAdicional }}</td>
+                <td>{{ $tarifa->InicioVigencia->format("d-m-Y h:i:s") }}</td>
+                <td>{{ $tarifa->FinVigenciaTarifa }}</td>
+                <td>{{ $tarifa->registro->present()->NombreCompleto }}</td>
+                <td>{{ $tarifa->Fecha_Hora_Registra->format("d-m-Y h:i:s") }}</td>
             </tr>
             {!! Form::close() !!}
             @endforeach

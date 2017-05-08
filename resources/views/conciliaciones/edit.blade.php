@@ -62,7 +62,7 @@
                                     '1' => 'BÚSQUEDA POR CÓDIGO',
                                     '2' => 'BÚSQUEDA AVANZADA',
                                     '3' => 'CARGAR EXCEL',
-                                    '4' => 'CARGAR EXCEL COMPLETA'
+                                    '4' => 'CARGA EXCEL COMPLETA'
                                      ], '1', ['v-model' => 'tipo', 'class' => 'form-control']) !!}
                                      
                                 </div>
@@ -149,7 +149,6 @@
                                 </div>
                                 <div class="panel-body">
                                     <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
-                                    <button v-if="conciliacion.estado == 0" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
                                     <strong>Folio: </strong>@{{ conciliacion.folio }}
                                     <hr>
                                     <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
