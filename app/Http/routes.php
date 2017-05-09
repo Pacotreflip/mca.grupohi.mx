@@ -159,3 +159,5 @@ Route::resource('user.roles', 'UserRolesController');
 Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador-sistema']], function () {
     Route::get('/', 'PagesController@administracion')->name('administracion');
 });
+
+Route::get('prueba', 'PruebaController@prueba');

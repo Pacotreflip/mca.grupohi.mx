@@ -17,7 +17,8 @@
         "ghidev/fpdf": "dev-master",
         "themsaid/laravel-model-transformers": "^1.0",
         "maatwebsite/excel": "~2.1.0",
-        "jenssegers/date": "^3.2"
+        "jenssegers/date": "^3.2",
+        "league/csv": "^8.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
