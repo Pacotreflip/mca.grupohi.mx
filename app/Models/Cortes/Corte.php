@@ -65,7 +65,7 @@ class Corte extends Model
             return $query->where('id_checador', auth()->user()->idusuario);
         }
         if(auth()->user()->hasRole('jefe-acarreos')) {
-            return $query->all();
+            return $query;
         }
     }
 

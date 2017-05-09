@@ -153,7 +153,7 @@ Route::post('configuracion-diaria', 'ConfiguracionDiariaController@store');
 Route::delete('configuracion-diaria/{id}', 'ConfiguracionDiariaController@destroy');
 
 //Rutas de Roles y Permisos
-Route::resource('user.roles', 'UsersRolesController');
+Route::resource('user.roles', 'UserRolesController');
 
 //Rutas de Administración
 Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador-sistema']], function () {

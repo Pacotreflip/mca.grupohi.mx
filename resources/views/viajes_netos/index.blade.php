@@ -12,9 +12,7 @@
                 @include('partials.errors')
                 </div>
                 <app-errors v-bind:form="form"></app-errors>
-                
-                
-                
+
                 @if($action == 'en_conflicto')
                 <div class="form-group">
                    
@@ -58,7 +56,7 @@
                 @else
                 <h3>BUSCAR VIAJES</h3>
                 {!! Form::open(['class' => 'form_buscar']) !!}
-
+                <input type="hidden" name="type" value>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -102,6 +100,7 @@
                         <span v-else><i class="fa fa-search"></i> Buscar</span>
                     </button>
                     <button class="btn  btn-info" @click="pdf"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
+                    <button class="btn  btn-success" @click="excel"><i class="fa fa-file-excel-o"></i> EXCEL</button>
                 </div>
                 <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
                 {!! Form::close() !!}

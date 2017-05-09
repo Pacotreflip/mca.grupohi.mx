@@ -86,9 +86,8 @@ Vue.component('viajes-index', {
             });
         },
         buscar: function(e) {
-            e.preventDefault(
-
-            );
+            e.preventDefault();
+            $('input[name=type]').val('');
             var _this = this;
 
             var data = $('.form_buscar').serialize();
@@ -171,7 +170,6 @@ Vue.component('viajes-index', {
                 },
                 success: function (response) {
                     swal('¡Hecho!', 'Datos actualizados correctamente', 'success');
-                    
                 },
                 error:function(error) {
                     if(error.status == 422) {
@@ -227,6 +225,16 @@ Vue.component('viajes-index', {
             $('.form_buscar_en_conflicto').attr('target', '_blank');
             $('.form_buscar_en_conflicto').attr('method', 'GET');
             $('.form_buscar_en_conflicto').submit();
+        },
+
+        excel: function (e) {
+            e.preventDefault();
+            var url = App.host + '/viajes_netos';
+
+            $('input[name=type]').val('excel');
+            $('.form_buscar').attr('action', url);
+            $('.form_buscar').attr('method', 'GET');
+            $('.form_buscar').submit();
         }
     }
 });
