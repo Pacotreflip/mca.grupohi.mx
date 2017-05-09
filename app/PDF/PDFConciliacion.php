@@ -515,7 +515,8 @@ class PDFConciliacion extends Rotation
         }
 
         //Total
-        $total = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND v.Estatus=0 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'))[0];
+        $total_anterior = DB::connection('sca')->select(DB::raw('SELECT count(v.IdViaje) as NumViajes, v.FechaLlegada, v.IdMaterial, v.IdOrigen, v.IdTiro, v.CubicacionCamion, v.Distancia as Distancia, sum(v.CubicacionCamion) as CubicacionCamionSum, sum(v.VolumenPrimerKM) as Vol1KM, sum(v.VolumenKMSubsecuentes) as VolSub, sum(v.VolumenKMAdicionales) as VolAdic, sum(v.ImportePrimerKM) as Imp1Km, sum(v.ImporteKMSubsecuentes) as ImpSub, sum(v.ImporteKMAdicionales) as ImpAdc, sum(v.Importe) as Importe FROM conciliacion_detalle c LEFT JOIN viajes v USING (IdViaje) WHERE c.estado=1 AND v.Estatus=0 AND c.idconciliacion=' . $this->conciliacion->idconciliacion . ' GROUP BY c.idconciliacion;'));
+        $total = (key_exists(0, $total_anterior))?$total_anterior[0]:null ;
         $this->SetWidths(array(0.6875 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.0625 * $this->WidthTotal, 0.09375 * $this->WidthTotal, 0.09375 * $this->WidthTotal));
         $this->SetFont('Arial', '', 6.5);
         $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'DF'));
@@ -526,7 +527,12 @@ class PDFConciliacion extends Rotation
         $this->SetRounds(array('', '', '', '', ''));
         $this->SetRadius(array(0, 0, 0, 0, 0));
         $this->encola = 'total';
-        $this->Row(array(utf8_decode('TOTAL VIAJES APLICACIÓN MÓVIL'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
+        if($total){
+            $this->Row(array(utf8_decode('TOTAL VIAJES APLICACIÓN MÓVIL'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
+        }else{
+            $this->Row(array(utf8_decode('TOTAL VIAJES APLICACIÓN MÓVIL'), 0, '', number_format((0), 2, '.', ','), number_format(utf8_decode(0), 2, '.', ',')));
+ 
+        }
         $this->encola = '';
     }
 
