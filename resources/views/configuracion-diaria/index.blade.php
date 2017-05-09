@@ -7,19 +7,15 @@
 
     <div id="app">
         <global-errors></global-errors>
-        <configuracion-diaria inline-template>
+        <configuracion-diaria inline-template rol_checador="{{ $rol->id }}">
             <section>
                 <div v-if="cargando" class="row">
                     <h4 style="text-align: center"><i class="fa fa-spinner fa-spin fa-lg"></i> CARGANDO </h4>
                 </div>
                 <div v-else class="row">
-                    <!-- Configuración de Tiros -->
-
                     <!-- Configuración de Checadores-->
                     <div v-if="checadores.length" class="col-md-12" >
                         <h3>CONFIGURACIÓN DE CHECADORES</h3>
-                        <p><small><sup>1</sup> Se enlistarán todos los origenes y tiros, excepto aquellos tiros que no tengan un esquema definido.</small></p>
-                        <hr>
                         <div class="table-responsive">
                             <table class="table small">
                                 <thead>
@@ -28,9 +24,11 @@
                                     <th style="text-align: center">Nombre</th>
                                     <th style="text-align: center">Usuario Intranet</th>
                                     <th style="text-align: center">Origen / Tiro</th>
-                                    <th style="text-align: center">Ubicación <sup>1</sup></th>
+                                    <th style="text-align: center">Ubicación </th>
                                     <th style="text-align: center">Perfil</th>
                                     <th style="text-align: center">Guardar</th>
+                                    <th style="text-align: center">Limpiar Configuración</th>
+                                    <th style="text-align: center">Eliminar Checador</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -70,10 +68,22 @@
                                            <option value>-- SELECCIONE --</option>
                                        </select>
                                     </td>
-                                    <td>
-                                        <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" v-bind:disabled="guardando">
+                                    <td style="text-align: center">
+                                        <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" :disabled="guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-save fa-lg"></i>
+                                        </button>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <button @click="quitar_configuracion(user)" type="button" class="btn btn-xs btn-warning" :disabled=" ! user.configuracion.id">
+                                            <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
+                                            <i v-else class="fa fa-undo fa-lg"></i>
+                                        </button>
+                                    </td>
+                                    <td style="text-align: center">
+                                        <button @click="confirmar_quitar_checador(user)" type="button" class="btn btn-xs btn-danger">
+                                            <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
+                                            <i v-else class="fa fa-remove fa-lg"></i>
                                         </button>
                                     </td>
                                 </tr>

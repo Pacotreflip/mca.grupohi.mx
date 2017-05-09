@@ -10,10 +10,15 @@
 <div >
     <div class="row">
         <div class="col-md-6">
+            @if(Auth::user()->can(['descargar-excel-conciliaciones']))
+                <a  href="{{ route('xls.conciliaciones') }}" class="btn btn-primary btn-sm pull-left" style="margin-left: 5px"><i class="fa fa-file-excel-o"></i> DESCARGAR XLS</a>
+            @endif
+        </div>
+        <div class="col-md-6">
             @if(Request::get('buscar')!= "")
-             <h4>
-            Resultados para: <strong>{{Request::get('buscar')}}</strong>
-        </h4>
+            <h4>
+                Resultados para: <strong>{{Request::get('buscar')}}</strong>
+            </h4>
             @endif
         </div>
         <div class="col-md-6 text-right" >

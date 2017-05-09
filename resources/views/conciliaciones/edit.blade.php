@@ -17,7 +17,9 @@
                 @if(Auth::user()->can(['ver-pdf']))
                 <a  href="{{ route('pfd.conciliacion', $conciliacion) }}" target="_blank" class="btn btn-default btn-sm pull-right" style="margin-left: 5px"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
                 @endif
-
+                @if(Auth::user()->can(['descargar-excel-conciliacion']))
+                <a  href="{{ route('xls.conciliacion', $conciliacion) }}" class="btn btn-default btn-sm pull-right" style="margin-left: 5px"><i class="fa fa-file-excel-o"></i> DESCARGAR XLS</a>
+                @endif
                 <span v-if="conciliacion.estado == 0">
                     @if (Auth::user()->can(['cancelar-conciliacion']))
                     <a href="{{ route('conciliaciones.destroy', $conciliacion->idconciliacion) }}" class="btn btn-danger btn-sm pull-right" @click="cancelar($event)"><i class="fa fa-close"></i> CANCELAR</a>
