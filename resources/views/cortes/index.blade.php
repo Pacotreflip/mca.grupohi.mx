@@ -74,7 +74,9 @@
             help_instructions: false,
             extensions: [{ name: 'sort' }]
         };
-        var tf = new TableFilter('index_cortes', val_config);
-        tf.init();
+        if($('#index_cortes').length) {
+            var tf = new TableFilter('index_cortes', val_config);
+            tf.init();
+        }
     </script>
 @endsection

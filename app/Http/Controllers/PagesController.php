@@ -35,4 +35,8 @@ class PagesController extends Controller
         return view('origenes_usuarios.index')
                 ->withUsuarios(User::list_proyecto($request->session()->get('id')));
     }
+
+    public function administracion() {
+        return view('administracion.permisos');
+    }
 }
