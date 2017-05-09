@@ -99,7 +99,7 @@ class XLSController extends Controller
         Excel::create('Conciliaciones'.'_'.$now->format("Y-m-d")."__".$now->format("h:i:s"), function($excel) use($conciliaciones) {
             $excel->sheet('Conciliaciones', function($sheet) use($conciliaciones) {
                 $sheet->row(1, array(
-                    'Folio Global','Folio','Fecha','Empresa','Sindicato','Cantidad Viajes','Volumen', 'Importe', 
+                    'Folio Global','Folio','Fecha','Empresa','Sindicato','Cantidad Viajes','Volumen', 'Importe', 'Estatus'
                 ));
                 $i = 2;
                 foreach($conciliaciones as $conciliacion){
@@ -112,7 +112,8 @@ class XLSController extends Controller
                         ($conciliacion->sindicato)?$conciliacion->sindicato->Descripcion:'', 
                         count($conciliacion->viajes()), 
                         $conciliacion->volumen_f, 
-                        $conciliacion->importe_f
+                        $conciliacion->importe_f,
+                        $conciliacion->estado_str
                     ));
                     $i++;
                 }
