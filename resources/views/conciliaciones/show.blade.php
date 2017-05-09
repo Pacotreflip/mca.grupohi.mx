@@ -7,6 +7,9 @@
     @if(Auth::user()->can(['ver-pdf']))
         <a href="{{ route('pfd.conciliacion', $conciliacion) }}" target="_blank"  class="btn btn-default btn-sm pull-right"><i class="fa fa-file-pdf-o"></i> VER PDF</a>
     @endif
+    @if(Auth::user()->can(['descargar-excel-conciliacion']))
+        <a  href="{{ route('xls.conciliacion', $conciliacion) }}" class="btn btn-default btn-sm pull-right" style="margin-left: 5px"><i class="fa fa-file-excel-o"></i> DESCARGAR XLS</a>
+    @endif
 </h1>
 {!! Breadcrumbs::render('conciliaciones.show', $conciliacion) !!}
 <section id="info">

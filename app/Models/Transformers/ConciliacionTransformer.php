@@ -34,7 +34,7 @@ class ConciliacionTransformer extends AbstractTransformer
                 'cancelo' => User::find($conciliacion->cancelacion->idcancelo)->present()->nombreCompleto,
                 'timestamp' => $conciliacion->cancelacion->timestamp_cancelacion
             ],
-            'fecha'     => $conciliacion->fecha_conciliacion,
+            'fecha'     => $conciliacion->fecha_conciliacion->format("d-m-Y"),
             'folio'     => $conciliacion->Folio,
             'rango'     => $conciliacion->rango,
             'importe_viajes_manuales' => $conciliacion->importe_viajes_manuales_f,
