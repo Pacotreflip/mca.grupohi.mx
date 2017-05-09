@@ -69,19 +69,19 @@
                                        </select>
                                     </td>
                                     <td style="text-align: center">
-                                        <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" :disabled="guardando">
+                                        <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" :disabled="user.guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-save fa-lg"></i>
                                         </button>
                                     </td>
                                     <td style="text-align: center">
-                                        <button @click="quitar_configuracion(user)" type="button" class="btn btn-xs btn-warning" :disabled=" ! user.configuracion.id">
+                                        <button @click="quitar_configuracion(user)" type="button" class="btn btn-xs btn-warning" :disabled=" ! user.configuracion.id || user.guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-undo fa-lg"></i>
                                         </button>
                                     </td>
                                     <td style="text-align: center">
-                                        <button @click="confirmar_quitar_checador(user)" type="button" class="btn btn-xs btn-danger">
+                                        <button @click="confirmar_quitar_checador(user)" type="button" class="btn btn-xs btn-danger" :disabled="user.guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-remove fa-lg"></i>
                                         </button>

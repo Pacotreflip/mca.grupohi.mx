@@ -25,50 +25,52 @@ class ViajesController extends Controller
      */
     public function index(Request $request)
     {
-        if($request->get('tipo') == 'conciliar') {
-            $this->validate($request, [
-                'IdCamion' => 'exists:sca.camiones,IdCamion',
-                'FechaInicial' => 'required|date_format:"Y-m-d"',
-                'FechaFinal' => 'required|date_format:"Y-m-d"',
-            ]);
+        if($request->ajax()) {
+            if($request->get('tipo') == 'conciliar') {
+                $this->validate($request, [
+                    'IdCamion' => 'exists:sca.camiones,IdCamion',
+                    'FechaInicial' => 'required|date_format:"Y-m-d"',
+                    'FechaFinal' => 'required|date_format:"Y-m-d"',
+                ]);
 
-            if($request->has('IdCamion')) {
-                $viajes  = Viaje::porConciliar()
-                    ->where('IdCamion', '=', $request->get('IdCamion'))
-                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
-                    ->orderBy('IdCamion', 'ASC')
-                    ->orderBy('FechaLlegada', 'ASC')
-                    ->orderBy('HoraLlegada', 'ASC')
-                    ->get();
-            } else {
-                $viajes  = Viaje::porConciliar()
-                    ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
-                    ->orderBy('IdCamion', 'ASC')
-                    ->orderBy('FechaLlegada', 'ASC')
-                    ->orderBy('HoraLlegada', 'ASC')
-                    ->get();
+                if($request->has('IdCamion')) {
+                    $viajes  = Viaje::porConciliar()
+                        ->where('IdCamion', '=', $request->get('IdCamion'))
+                        ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                        ->orderBy('IdCamion', 'ASC')
+                        ->orderBy('FechaLlegada', 'ASC')
+                        ->orderBy('HoraLlegada', 'ASC')
+                        ->get();
+                } else {
+                    $viajes  = Viaje::porConciliar()
+                        ->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                        ->orderBy('IdCamion', 'ASC')
+                        ->orderBy('FechaLlegada', 'ASC')
+                        ->orderBy('HoraLlegada', 'ASC')
+                        ->get();
+                }
+
+                $filter = $viajes->filter(function ($viaje){
+                    return $viaje->disponible();
+                });
+
+
+                $data = ViajeTransformer::transform($filter);
+
+            } else if ($request->get('tipo') == 'revertir') {
+                $this->validate($request, [
+                    'FechaInicial' => 'required|date_format:"Y-m-d"',
+                    'FechaFinal' => 'required|date_format:"Y-m-d"',
+                ]);
+                $viajes = Viaje::ParaRevertir()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
+                $data = ViajeTransformerRevertir::transform($viajes);
             }
 
-            $filter = $viajes->filter(function ($viaje){
-                return $viaje->disponible();
-            });
-
-
-            $data = ViajeTransformer::transform($filter);
-
-        } else if ($request->get('tipo') == 'revertir') {
-            $this->validate($request, [
-                'FechaInicial' => 'required|date_format:"Y-m-d"',
-                'FechaFinal' => 'required|date_format:"Y-m-d"',
+            return response()->json([
+                'status_code' => 200,
+                'data' => $data
             ]);
-            $viajes = Viaje::ParaRevertir()->whereBetween('FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])->get();
-            $data = ViajeTransformerRevertir::transform($viajes);
         }
-
-        return response()->json([
-            'status_code' => 200,
-            'data' => $data
-        ]);
     }
 
     /**

@@ -69,7 +69,7 @@
         // initialize input widgets first
         $('#form_reporte_viajes_netos .time').timepicker({
             'timeFormat' : 'hh:mm:ss a',
-            'showDuration': true,
+            'showDuration': true
         });
 
         $('#form_reporte_viajes_netos .date').datepicker({

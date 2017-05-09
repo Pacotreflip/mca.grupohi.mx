@@ -7,17 +7,10 @@
  * Time: 03:12 PM
  */
 
-namespace App\Models\Viaje;
-
-use App\Models\Viaje;
-
+namespace App\Models\Viajes;
+use Laracasts\Flash\Flash;
 class Viajes
 {
-    /**
-     * @var Viaje
-     */
-    protected $viaje;
-
     /**
      * @var
      */
@@ -25,14 +18,21 @@ class Viajes
 
     /**
      * Viajes constructor.
-     * @param Viaje $viaje
+     * @param $data
      */
-    public function __construct(Viaje $viaje)
+    public function __construct($data)
     {
-        $this->viaje = $viaje;
+        $this->data = $data;
     }
 
-    public function revertir($data) {
-
+    public function excel() {
+        if(! count($this->data['viajes_netos'])) {
+            Flash::error('Ningún viaje neto coincide con los datos de consulta');
+            return redirect()->back()->withInput();
+        } else {
+            return response()->view('viajes_netos.partials.table', ['data' => $this->data])
+                ->header('Content-type','text/csv')
+                ->header('Content-Disposition' , 'filename=Viajes_Netos_'.date("d-m-Y").'_'.date("H.i.s",time()).'.cvs');
+        }
     }
 }

@@ -3,13 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Transformers\ViajeNetoTransformer;
-use App\Models\Viaje;
-use Illuminate\Database\Query\Builder;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 use App\Models\ViajeNeto;
 use App\Models\Empresa;
@@ -18,7 +15,7 @@ use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\Camion;
 use App\Models\Material;
-use MongoDB\Driver\Query;
+use App\Models\Viajes\Viajes;
 
 class ViajesNetosController extends Controller
 {
@@ -99,9 +96,7 @@ class ViajesNetosController extends Controller
                         "fecha_llegada"=>$detalle->viaje_neto->timestamp_llegada->format("d-m-Y h:i:s"),
                     ];
                 }
-//                dd($data);
-//                $data = array(array("code"=>123,"fecha_registro"=>"2017-08-02 10:01:02", "fecha_salida"=>"2017-01-01 00:01:02", "fecha_llegada"=>"2017-01-01 00:01:02"),
-//                    array("code"=>122, "fecha_registro"=>"2017-01-02 00:01:02", "fecha_salida"=>"2017-01-02 00:01:02", "fecha_llegada"=>"2017-01-02 00:01:02"));
+
                 return response()->json( $data);
             }else if($request->get('action') == 'en_conflicto'){
                 if($request->get("tipo_busqueda") == "fecha"){
@@ -132,8 +127,7 @@ class ViajesNetosController extends Controller
                 $viajes_netos = $query->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
-                //dd($data);
-            } 
+            }
             else if ($request->get('action') == 'validar') {
                 $data = [];
 
@@ -218,6 +212,15 @@ class ViajesNetosController extends Controller
                 $viajes_netos = $query->get();
 
                 $data = ViajeNetoTransformer::transform($viajes_netos);
+
+                if($request->has('excel')) {
+                    $data = [
+                        'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
+                        'tipos' => $tipos,
+                        'rango' => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"
+                    ];
+                    return (new Viajes($data))->excel();
+                }
             } else if($request->get('action') == 'corte') {
 
                 $this->validate($request, [
@@ -252,11 +255,65 @@ class ViajesNetosController extends Controller
                 } else if(! $turno_1 && $turno_2) {
                     $viajes_netos->whereRaw("CAST(CONCAT(FechaLlegada, ' ', HoraLlegada) AS datetime) between '{$timestamp_inicial_2}' and '{$timestamp_final_2}'");
                 }
-
                 $data = ViajeNetoTransformer::transform($viajes_netos->get());
             }
             return response()->json(['viajes_netos' => $data]);
         } else {
+            if($request->type =='excel') {
+                $this->validate($request, [
+                    'FechaInicial' => 'required|date_format:"Y-m-d"',
+                    'FechaFinal' => 'required|date_format:"Y-m-d"',
+                    'Tipo' => 'required|array',
+                ]);
+
+                $fechas = $request->only(['FechaInicial', 'FechaFinal']);
+                $query = ViajeNeto::whereNull('IdViajeNeto');
+                $tipos = [];
+
+                foreach($request->get('Tipo', []) as $tipo) {
+                    if($tipo == 'CM_C') {
+                        array_push($tipos, 'Manuales - Cargados');
+                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_A') {
+                        array_push($tipos, 'Manuales - Autorizados (Pend. Validar)');
+                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_V') {
+                        array_push($tipos, 'Manuales - Validados');
+                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_R') {
+                        array_push($tipos, 'Manuales - Rechazados');
+                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas));
+                    }
+                    if($tipo == 'CM_D') {
+                        array_push($tipos, 'Manuales - Denegados');
+                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas));
+                    }
+                    if($tipo == 'M_V') {
+                        array_push($tipos, 'Móviles - Validados');
+                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas));
+                    }
+                    if($tipo == 'M_A') {
+                        array_push($tipos, 'Móviles - Pendientes de Validar');
+                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas));
+                    }
+                    if($tipo == 'M_D') {
+                        array_push($tipos, 'Móviles - Denegados');
+                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas));
+                    }
+                }
+
+                $viajes_netos = $query->get();
+                $data = [
+                        'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
+                        'tipos' => $tipos,
+                        'rango' => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"
+                ];
+                return (new Viajes($data))->excel();
+
+            } else
             if ($request->get('action') == 'en_conflicto') {
                 return view('viajes_netos.index')
                 ->withAction('en_conflicto');
