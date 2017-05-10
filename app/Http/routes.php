@@ -176,4 +176,5 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador
 
 Route::group(['prefix' => 'csv'],function () {
     Route::get('rutas', 'CSVController@rutas')->name('csv.rutas');
+    Route::get('origenes', 'CSVController@origenes')->name('csv.origenes');
 });

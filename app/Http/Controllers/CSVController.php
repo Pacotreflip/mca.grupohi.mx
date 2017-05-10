@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\CSV\CSV;
+use App\Models\Origen;
 use App\Models\Ruta;
 use Illuminate\Support\Facades\DB;
 
@@ -23,7 +24,7 @@ class CSVController extends Controller
             ->join('tipo_ruta', 'rutas.IdTipoRuta', '=', 'tipo_ruta.IdTipoRuta')
             ->join('cronometrias', 'rutas.IdRuta', '=', 'cronometrias.IdRuta')
             ->join('igh.usuario', 'rutas.Registra', '=', 'igh.usuario.idusuario')
-            ->select(DB::raw("CONCAT(rutas.clave,rutas.IdRuta)"),
+            ->select(DB::raw("CONCAT(rutas.Clave,rutas.IdRuta)"),
                 "origenes.Descripcion as Origen",
                 "tiros.Descripcion as Tiro",
                 "tipo_ruta.Descripcion as Tipo",
@@ -42,6 +43,16 @@ class CSVController extends Controller
     }
 
     public function origenes() {
-        $headers = ["", "", "", "", "", "", "", "", "", "", ""];
+        $headers = ["Clave", "Tipo", "Descripción", "Fecha y Hora Registro", "Estatus"];
+        $items = Origen::join('tiposorigenes', 'origenes.IdTipoOrigen', '=', 'tiposorigenes.IdTipoOrigen')
+            ->select(
+                DB::raw("CONCAT(origenes.Clave,origenes.IdOrigen)"),
+                "tiposorigenes.Descripcion as Tipo",
+                "origenes.Descripcion",
+                DB::raw("CONCAT(origenes.FechaAlta, '', origenes.HoraAlta) as FechaHoraAlta"),
+                "origenes.Estatus")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('origenes');
     }
 }
