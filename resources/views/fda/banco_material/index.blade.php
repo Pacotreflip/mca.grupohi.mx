@@ -1,7 +1,9 @@
 @extends('layout')
 
 @section('content')
-<h1>FACTOR DE ABUNDAMIENTO</h1>
+<h1>FACTOR DE ABUNDAMIENTO
+    <a href="{{ route('csv.fda-banco-material') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+</h1>
 {!! Breadcrumbs::render('fda_banco_material.index') !!}
 <hr>
 @include('partials.errors')
@@ -10,7 +12,7 @@
     <fda-bancomaterial inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
-            <div class="form-horizontal rcorners col-md-8 col-md-offset-2">
+            <div class="form-horizontal rcorners ">
                 <div class="form-group">
                     <legend class="scheduler-border text-center"><small><i class="fa fa-cubes"></i> NUEVO FACTOR DE ABUNDAMIENTO</small></legend>
                     <label class="control-label col-sm-1">Banco</label>
@@ -43,9 +45,9 @@
                     <span v-else><i class="fa fa-save"></i> Guardar</span>
                 </button>
             </div>
-            <div class="table-responsive col-md-8 col-md-offset-2 rcorners">
+            <div v-if="factores.length" class="table-responsive rcorners">
                 <legend class="scheduler-border text-center"><small><i class="fa fa-list"></i> FACTORES DE ABUNDAMIENTO</small></legend>
-                <table v-if="factores.length" class="table table-hover">
+                <table v-if="factores.length" class="table table-hover small">
                     <thead>
                         <tr>
                             <th>Banco</th>
@@ -61,7 +63,7 @@
                             <td>
                                 <input style="width: 100px" type="number" step="any" class="form-control input-sm" v-model="fda.FactorAbundamiento"></td>
                             <td>
-                                <button class="btn btn-primary btn-sm" type="submit" @click="actualizar(fda)">
+                                <button class="btn btn-primary btn-xs" type="submit" @click="actualizar(fda)">
                                     <span v-if="fda.guardando"><i class="fa fa-spinner fa-spin"></i></span>
                                     <span v-else><i class="fa fa-save"></i></span>
                                 </button>

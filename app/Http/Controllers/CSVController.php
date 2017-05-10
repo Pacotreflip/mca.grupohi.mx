@@ -7,6 +7,7 @@ use App\Models\Camion;
 use App\Models\CentroCosto;
 use App\Models\Empresa;
 use App\Models\Etapa;
+use App\Models\FDA\FDABancoMaterial;
 use App\Models\FDA\FDAMaterial;
 use App\Models\Material;
 use App\Models\Origen;
@@ -148,17 +149,35 @@ class CSVController extends Controller
     }
 
     public function fda_material() {
-        $headers = ["ID", "Material", "Factod de Abundamiento", "Fecha y Hora Registro", "Estatus", "Registró"];
+        $headers = ["ID", "Material", "Factor de Abundamiento", "Fecha y Hora Registro", "Estatus", "Registró"];
         $items = FDAMaterial::leftJoin("materiales", "factorabundamiento.IdMaterial", "=", "materiales.IdMaterial")
+            ->leftJoin("igh.usuario", "factorabundamiento.Registra", "=", "igh.usuario.usuario")
             ->select(
                 "factorabundamiento.IdFactorAbundamiento",
                 "materiales.Descripcion as Material",
                 "factorabundamiento.FactorAbundamiento",
                 "factorabundamiento.TimestampAlta",
                 "factorabundamiento.Estatus",
-                "factorabundamiento.Registra")
+                DB::raw("CONCAT(igh.usuario.nombre, ' ', igh.usuario.apaterno, ' ', igh.usuario.amaterno)"))
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('fda_material');
+    }
+
+    public function fda_banco_material() {
+        $headers = ["Banco", "Material", "Factor de Abundamiento", "Fecha y Hora Registro", "Estatus", "Registró"];
+        $items = FDABancoMaterial::leftJoin("materiales", "factorabundamiento_material.IdMaterial", "=", "materiales.IdMaterial")
+            ->leftJoin("origenes", "factorabundamiento_material.IdBanco", "=", "origenes.IdOrigen")
+            ->leftJoin("igh.usuario", "factorabundamiento_material.Registra", "=", "igh.usuario.usuario")
+            ->select(
+                "origenes.Descripcion as Banco",
+                "materiales.Descripcion as Material",
+                "factorabundamiento_material.FactorAbundamiento",
+                "factorabundamiento_material.TimestampAlta",
+                "factorabundamiento_material.Estatus",
+                DB::raw("CONCAT(igh.usuario.nombre, ' ', igh.usuario.apaterno, ' ', igh.usuario.amaterno)"))
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('fda_banco_material');
     }
 }
