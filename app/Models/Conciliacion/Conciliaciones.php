@@ -501,7 +501,7 @@ class Conciliaciones
         $this->getMaterial($viaje->material);
         $this->getCamion($viaje->camion);
     }
-    private function validaViaje($viaje_neto,$tarifa){
+    private function validaViaje($viaje_neto,$tarifa = 0){
         if(!($tarifa > 0)){
             $tarifa = "null";
         }
