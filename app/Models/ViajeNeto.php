@@ -301,7 +301,7 @@ class ViajeNeto extends Model
         } else { 
             $min = $this->ruta->cronometria->TiempoMinimo;
             $tol = $this->ruta->cronometria->Tolerancia;
-            if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
+            if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
                 return false;
             } else {
                 return true;
@@ -313,7 +313,7 @@ class ViajeNeto extends Model
         $min = $this->ruta ? $this->ruta->cronometria->TiempoMinimo : null;
         $tol = $this->ruta ? $this->ruta->cronometria->Tolerancia : null;
         
-        if($this->getTiempo() == 0 && $this->Estatus == 0) {
+        if($this->getTiempo() == 0 && $this->Estatus == 0 && $this->IdPerfil!=3) {
             return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
         } else if($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))) {
             return 'El viaje no puede ser registrado porque no cumple con los tiempos de cronometría de la ruta';

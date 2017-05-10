@@ -171,9 +171,9 @@
                                     </div>
                                     <div class="form-group" slot="footer">
                                         <button class="btn btn-info btn-sm" @click="viaje.ShowModal = false">Cerrar</button>        
-                                        <button class="btn btn-success btn-sm" @click="validar(viaje)">
+                                        <button v-bind:class="(viaje.Valido)?'btn btn-success btn-sm':'btn btn-danger btn-sm'"  @click="validar(viaje)" >
                                             <span v-if="guardando"><i class="fa fa-spinner fa-spin"></i></span>
-                                            <span v-else>Validar</span>
+                                            <span v-else>Continuar</span>
                                         </button>
                                     </div>
                                 </modal-validar>

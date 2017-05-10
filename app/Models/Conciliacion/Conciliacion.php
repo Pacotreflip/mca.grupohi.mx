@@ -35,7 +35,7 @@ class Conciliacion extends Model
         'IdRegistro',
         'Folio'
     ];
-    protected $dates = ['timestamp', 'FechaHoraCierre', 'FechaHoraAprobacion'];
+    protected $dates = ['timestamp','fecha_conciliacion', 'FechaHoraCierre', 'FechaHoraAprobacion'];
     protected $presenter = ModelPresenter::class;
 
     public function rutas()

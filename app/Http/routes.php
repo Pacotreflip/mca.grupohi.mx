@@ -112,6 +112,20 @@ Route::group(['prefix' => 'pdf'], function () {
     ]);
 });
 
+//XLS Routes
+Route::group(['prefix' => 'xls'], function () {
+
+    Route::get('conciliacion/{id}', [
+        'as'   => 'xls.conciliacion',
+        'uses' => 'XLSController@conciliacion'
+    ]);
+    Route::get('conciliaciones', [
+        'as'   => 'xls.conciliaciones',
+        'uses' => 'XLSController@conciliaciones'
+    ]);
+
+});
+
 //Reportes Routes
 Route::group(['prefix' => 'reportes'], function () {
     Route::get('viajes_netos/create', [

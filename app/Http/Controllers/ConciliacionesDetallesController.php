@@ -73,8 +73,8 @@ class ConciliacionesDetallesController extends Controller
             return redirect()->back();
         }else if($request->get('Tipo') == '4') {
             $conciliacion = Conciliacion::find($id);
-            $fecha_conciliacion = Carbon::createFromFormat('Y-m-d', $conciliacion->fecha_conciliacion);
-            $fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-03-31');
+            $fecha_conciliacion = $conciliacion->fecha_conciliacion;
+            $fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-04-09');
             if(!($fecha_minima->format("Ymd")>=$fecha_conciliacion->format("Ymd"))){
                 Flash::error("Esta concilación no puede ser procesada con la opción: Carga Excel Completa");
                 return redirect()->back();

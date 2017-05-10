@@ -28,7 +28,7 @@ class ViajeNetoTransformer extends AbstractTransformer
             'origen'            => (String) $viaje_neto->origen,
             'registro'          => $viaje_neto->registro,
             'registro_primer_toque' => $viaje_neto->registro_primer_toque,
-            'timestamp_llegada' => $viaje_neto->FechaLlegada.' ('.$viaje_neto->HoraLlegada.')',
+            'timestamp_llegada' => $viaje_neto->FechaLlegada.' '.$viaje_neto->HoraLlegada.'',
             'tipo'              => $viaje_neto->tipo,
             'tiro'              => (String) $viaje_neto->tiro,
             'importe'           => $viaje_neto->getImporte(),

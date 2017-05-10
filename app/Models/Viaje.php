@@ -127,4 +127,11 @@ class Viaje extends Model
             throw $e;
         }
     }
+    public function getTipoAttribute(){
+        if($this->Estatus>=0 && $this->Estatus<=9){
+             return 'Móvil';
+        }else{
+            return 'Manual';
+        }
+    }
 }

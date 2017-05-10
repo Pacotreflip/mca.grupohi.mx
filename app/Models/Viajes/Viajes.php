@@ -8,7 +8,7 @@
  */
 
 namespace App\Models\Viajes;
-
+use Laracasts\Flash\Flash;
 class Viajes
 {
     /**
