@@ -7,6 +7,8 @@
  * Time: 05:34 PM
  */
 
+namespace App\CSV;
+
 use League\Csv\Reader;
 use Illuminate\Support\Facades\Schema;
 use League\Csv\Writer;
@@ -18,7 +20,7 @@ class CSV
      */
     protected $headers;
     /**
-     * @var array
+     * @var
      */
     protected $items;
 
@@ -27,16 +29,19 @@ class CSV
      * @param $headers array
      * @param $items array
      */
-    public function __construct(array $headers,array $items)
+    public function __construct(array $headers, $items)
     {
         $this->headers = $headers;
         $this->items = $items;
     }
 
     public function generate($name) {
-        $csv = Writer::createFromFileObject(new \SplFileObject());
-        $csv->insertOne(Schema::getColumnListing('origenes'));
-        $csv->insertOne($this->headers);
+        $csv = Writer::createFromFileObject(new \SplTempFileObject());
+        if(is_array($this->headers[0])) {
+            $csv->insertAll($this->headers);
+        } else {
+            $csv->insertOne($this->headers);
+        }
         foreach ($this->items as $item) {
             $csv->insertOne($item->toArray());
         }

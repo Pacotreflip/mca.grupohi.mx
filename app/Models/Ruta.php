@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Conciliacion\Conciliacion;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 
@@ -27,9 +28,12 @@ class Ruta extends Model
         'HoraAlta'
         ];
     protected $presenter = ModelPresenter::class;
-    
     public $timestamps = false;
-    
+    protected $dates = ['FechaHoraAlta'];
+
+    public function getFechaHoraAltaAttribute() {
+        return Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaAlta . ' ' . $this->HoraAlta);
+    }
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }

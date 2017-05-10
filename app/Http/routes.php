@@ -160,4 +160,6 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador
     Route::get('/', 'PagesController@administracion')->name('administracion');
 });
 
-Route::get('prueba', 'PruebaController@prueba');
+Route::group(['prefix' => 'csv'],function () {
+    Route::get('rutas', 'CSVController@rutas')->name('csv.rutas');
+});
