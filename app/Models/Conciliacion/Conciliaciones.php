@@ -502,6 +502,9 @@ class Conciliaciones
         $this->getCamion($viaje->camion);
     }
     private function validaViaje($viaje_neto,$tarifa){
+        if(!($tarifa > 0)){
+            $tarifa = null;
+        }
         
         $statement ="call sca_sp_registra_viaje_fda_v3(1,"
             .$viaje_neto->IdViajeNeto.","
