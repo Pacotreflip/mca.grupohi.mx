@@ -6,6 +6,8 @@ use App\CSV\CSV;
 use App\Models\Camion;
 use App\Models\CentroCosto;
 use App\Models\Empresa;
+use App\Models\Etapa;
+use App\Models\FDA\FDAMaterial;
 use App\Models\Material;
 use App\Models\Origen;
 use App\Models\Ruta;
@@ -135,5 +137,28 @@ class CSVController extends Controller
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('centros_costo');
+    }
+
+    public function etapas_proyecto() {
+        $headers = ["ID", "Descripción", "Estatus"];
+        $items = Etapa::select("IdEtapaProyecto", "Descripcion", "Estatus")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('etapas_proyecto');
+    }
+
+    public function fda_material() {
+        $headers = ["ID", "Material", "Factod de Abundamiento", "Fecha y Hora Registro", "Estatus", "Registró"];
+        $items = FDAMaterial::leftJoin("materiales", "factorabundamiento.IdMaterial", "=", "materiales.IdMaterial")
+            ->select(
+                "factorabundamiento.IdFactorAbundamiento",
+                "materiales.Descripcion as Material",
+                "factorabundamiento.FactorAbundamiento",
+                "factorabundamiento.TimestampAlta",
+                "factorabundamiento.Estatus",
+                "factorabundamiento.Registra")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('fda_material');
     }
 }

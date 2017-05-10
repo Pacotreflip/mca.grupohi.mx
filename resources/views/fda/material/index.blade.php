@@ -1,7 +1,9 @@
 @extends('layout')
 
 @section('content')
-<h1>FACTOR DE ABUNDAMIENTO</h1>
+<h1>FACTOR DE ABUNDAMIENTO
+    <a href="{{ route('csv.fda-material') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+</h1>
 {!! Breadcrumbs::render('fda_material.index') !!}
 <hr>
 <div id="app">
@@ -9,7 +11,7 @@
     <fda-material inline-template>
         <section>
             <app-errors v-bind:form="form"></app-errors>
-            <div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
+            <div class="form-horizontal rcorners">
                 <legend class="text-center"><small><i class="fa fa-cube"></i> NUEVO FACTOR DE ABUNDAMIENTO</small></legend>
                 <div class="form-group">
                     <label class="control-label col-sm-2">Material</label>
@@ -33,10 +35,9 @@
                     <span v-else><i class="fa fa-save"></i> Guardar</span>
                 </button>
             </div>      
-            <hr class="col-md-6 col-md-offset-3">
-            <div class="table-responsive rcorners col-md-6 col-md-offset-3">
+            <div class="table-responsive rcorners">
                 <legend class="text-center"><small><i class="fa fa-list"></i> FACTORES DE ABUMDAMIENTO</small></legend>
-                <table v-if="factores.length" class="table table-hover">
+                <table v-if="factores.length" class="table table-hover small">
                     <thead>
                         <tr>
                             <th>Material</th>
@@ -51,7 +52,7 @@
                                 <input class="input-sm form-control" v-model="factor.FactorAbundamiento" type="number" step="any">
                             </td>
                             <td>
-                                <button class="btn btn-sm btn-primary" type="submit" @click="actualizar(factor)">
+                                <button class="btn btn-xs btn-primary" type="submit" @click="actualizar(factor)">
                                     <span v-if="factor.guardando"><i class="fa fa-spinner fa-spin"></i></span>
                                     <span v-else><i class="fa fa-save"></i></span>
                                 </button>
