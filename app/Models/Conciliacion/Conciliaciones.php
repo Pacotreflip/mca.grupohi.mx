@@ -168,7 +168,7 @@ class Conciliaciones
     
     public function cargarExcelProcesoCompleto(UploadedFile $data) {
         $fecha_conciliacion = $this->conciliacion->fecha_conciliacion;
-        $fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-03-31');
+        $fecha_minima = Carbon::createFromFormat('Y-m-d', '2017-04-09');
         if(!($fecha_minima->format("Ymd")>=$fecha_conciliacion->format("Ymd"))){
             throw new \Exception("Esta concilación no puede ser procesada con la opción: Carga Excel Completa");
         }
@@ -399,7 +399,7 @@ class Conciliaciones
             }
             
             if(!$validado && !$modificado && !$conciliado_esta_conciliacion){
-                if($this->validaViaje($viaje_neto)){
+                if($this->validaViaje($viaje_neto, $datos_viaje->tarifa)){
                     $this->conciliaViaje($viaje_neto);
                 }
                 
@@ -408,7 +408,7 @@ class Conciliaciones
             }else if(!$validado && $modificado && !$conciliado_esta_conciliacion){
                 $this->modificarViaje($viaje_neto, $datos_viaje);
                 
-                if($this->validaViaje($viaje_neto)){
+                if($this->validaViaje($viaje_neto, $datos_viaje->tarifa)){
                     $this->conciliaViaje($viaje_neto);
                 }
             }else if(!$validado && $modificado && $conciliado_esta_conciliacion){
@@ -420,12 +420,12 @@ class Conciliaciones
             }else if($validado && !$modificado && $conciliado_esta_conciliacion){
             }else if($validado && $modificado && !$conciliado_esta_conciliacion){
                 $this->modificarViajeValidado($viaje_neto, $datos_viaje);
-                if($this->validaViaje($viaje_neto)){
+                if($this->validaViaje($viaje_neto, $datos_viaje->tarifa)){
                     $this->conciliaViaje($viaje_neto);
                 }
             }else if($validado && $modificado && $conciliado_esta_conciliacion){
                 $this->modificarViajeValidado($viaje_neto, $datos_viaje);
-                if($this->validaViaje($viaje_neto)){
+                if($this->validaViaje($viaje_neto, $datos_viaje->tarifa)){
                     $this->conciliaViaje($viaje_neto);
                 }
             }
@@ -501,9 +501,9 @@ class Conciliaciones
         $this->getMaterial($viaje->material);
         $this->getCamion($viaje->camion);
     }
-    private function validaViaje($viaje_neto){
+    private function validaViaje($viaje_neto,$tarifa){
         
-        $statement ="call sca_sp_registra_viaje_fda_v2(1,"
+        $statement ="call sca_sp_registra_viaje_fda_v3(1,"
             .$viaje_neto->IdViajeNeto.","
             ."0".","
             ."0".","
@@ -514,7 +514,7 @@ class Conciliaciones
             .($viaje_neto->IdEmpresa ? $viaje_neto->IdEmpresa : 'NULL').","
             .auth()->user()->idusuario.",'m','m',0,0,"
             .$viaje_neto->CubicacionCamion.","
-            .$viaje_neto->CubicacionCamion. ",NULL,NULL,@a, @v);";
+            .$viaje_neto->CubicacionCamion. ",NULL,NULL,".$tarifa.",@a, @v);";
         DB::connection("sca")->statement($statement);  
 
         $result = DB::connection('sca')->select('SELECT @a,@v');
@@ -577,11 +577,34 @@ class Conciliaciones
         if($viaje_neto->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;}
         if($viaje_neto->viaje){
             #Obtiene tarifas aplicadas al viaje
-            $tprimer_km = $viaje_neto->viaje->TPrimerKM;
-            $tkm_subsecuentes = $viaje_neto->viaje->TKMSubsecuente;
-            $tkm_adicionales = $viaje_neto->viaje->TKMAdicional;
+            $tasignada_primer_km = $viaje_neto->viaje->TPrimerKM;
+            $tasignada_km_subsecuentes = $viaje_neto->viaje->TKMSubsecuente;
+            //$tkm_adicionales = $viaje_neto->viaje->TKMAdicional;
             #Obtiene tarifas reales a aplicar al viaje
+            $tarifas = DB::connection("sca")->select("select 
+		PrimerKM, 
+		KMSubsecuente, 
+                KMAdicional
+                FROM tarifas 
+                WHERE idMaterial = ".$material->IdMaterial." and  "
+                    . "InicioVigencia <= '".$viaje_neto->timestamp_llegada."'  and IFNULL(FinVigencia,NOW()) >= '".$viaje_neto->timestamp_llegada."'"
+                    . " and estatus = 1");
+            //dd($tarifas);
+            $treal_primer_km = (key_exists(0, $tarifas))?$tarifas[0]->PrimerKM:null;
+            $treal_km_subsecuentes = (key_exists(0, $tarifas))?$tarifas[0]->KMSubsecuente:null;
+            //dd($treal_primer_km);
+            #Obtiene tarifas personalizadas a aplicar 
             
+            $tpersonalizada_primer_km = ($data->tarifa)? ($data->tarifa/50):null;
+            //dd($data->tarifa);
+            $tpersonalizada_km_subsecuentes = $tpersonalizada_primer_km;
+            
+            //dd($data->ticket,$tpersonalizada_primer_km, $treal_primer_km, $tasignada_primer_km);
+            if($tpersonalizada_primer_km){
+                if($tpersonalizada_primer_km != $tasignada_primer_km){$modificado = TRUE;}
+            }else{
+                if($treal_primer_km != $tasignada_primer_km){$modificado = TRUE;}
+            }
             if($viaje_neto->viaje->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE;}
             if($viaje_neto->viaje->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE;}
             if($viaje_neto->viaje->IdMaterial != $material->IdMaterial){ $modificado = TRUE;}
