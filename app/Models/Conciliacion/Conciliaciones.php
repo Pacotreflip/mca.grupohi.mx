@@ -547,7 +547,8 @@ class Conciliaciones
     }
     private function conciliaViaje($viaje_neto){
         $en_conflicto_tiempo = $viaje_neto->en_conflicto_tiempo;
-        if($en_conflicto_tiempo){
+        $conflicto_pagable = $viaje_neto->conflicto_pagable;
+        if($en_conflicto_tiempo && !$conflicto_pagable){
             //dd($viaje_neto->conflicto->id);
             ViajeNetoConflictoPagable::create([
                 "idviaje_neto"=>$viaje_neto->IdViajeNeto,
