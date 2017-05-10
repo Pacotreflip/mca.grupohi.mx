@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CSV\CSV;
 use App\Models\Camion;
+use App\Models\Material;
 use App\Models\Origen;
 use App\Models\Ruta;
 use App\Models\Tiro;
@@ -95,5 +96,12 @@ class CSVController extends Controller
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('camiones');
+    }
+
+    public function materiales() {
+        $headers = ["ID", "Descripción", "Estatus"];
+        $items = Material::select("IdMaterial", "Descripcion", "Estatus")->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('materiales');
     }
 }
