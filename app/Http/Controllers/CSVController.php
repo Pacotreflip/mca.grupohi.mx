@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CSV\CSV;
 use App\Models\Camion;
+use App\Models\CentroCosto;
 use App\Models\Empresa;
 use App\Models\Material;
 use App\Models\Origen;
@@ -119,5 +120,20 @@ class CSVController extends Controller
         $items = Sindicato::select("IdSindicato", "Descripcion", "NombreCorto", "Estatus")->get();
         $csv = new CSV($headers, $items);
         $csv->generate('sindicatos');
+    }
+
+    public function centros_costos() {
+        $headers = ["ID", "Descripción", "Cuenta", "Centro de Costo Padre", "Estatus"];
+        $items = CentroCosto::leftJoin("centroscosto as padres", "centroscosto.IdPadre", "=", "padres.IdCentroCosto")
+            ->select(
+                "centroscosto.IdCentroCosto",
+                "centroscosto.Descripcion",
+                "centroscosto.Cuenta",
+                "padres.Descripcion as padre",
+                "centroscosto.Estatus")
+            ->orderBy("centroscosto.IdCentroCosto", "ASC")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('centros_costo');
     }
 }

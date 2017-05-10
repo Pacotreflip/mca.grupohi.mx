@@ -3,11 +3,13 @@
 @section('content')
 <h1>{{ strtoupper(trans('strings.centroscostos')) }}
   <a href="{{ route('centroscostos.create', 0) }}" class="btn btn-success pull-right centrocosto_create"><i class="fa fa-plus"></i> NUEVO CENTRO DE COSTO</a>
+    <a href="{{ route('csv.centros-costos') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+
 </h1>
 {!! Breadcrumbs::render('centroscostos.index') !!}
 <hr>
-<div class="table-responsive col-md-8 col-md-offset-2">
-    <table id='centros_costos_table' class="table table-hover">
+<div class="table-responsive">
+    <table id='centros_costos_table' class="table table-hover small">
         <thead>
             <tr>
                 <th>Centro de Costo</th>
