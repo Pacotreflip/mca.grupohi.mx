@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\CSV\CSV;
 use App\Models\Camion;
+use App\Models\Empresa;
 use App\Models\Material;
 use App\Models\Origen;
 use App\Models\Ruta;
@@ -104,4 +105,12 @@ class CSVController extends Controller
         $csv = new CSV($headers, $items);
         $csv->generate('materiales');
     }
+
+    public function empresas() {
+        $headers = ["ID", "Razón Social", "RFC", "Estatus"];
+        $items = Empresa::select("IdEmpresa", "razonSocial", "RFC", "Estatus")->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('empresas');
+    }
+
 }
