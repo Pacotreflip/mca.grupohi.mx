@@ -186,5 +186,7 @@ Route::group(['prefix' => 'csv'],function () {
     Route::get('etapas-proyecto', 'CSVController@etapas_proyecto')->name('csv.etapas-proyecto');
     Route::get('fda-material', 'CSVController@fda_material')->name('csv.fda-material');
     Route::get('fda-banco-material', 'CSVController@fda_banco_material')->name('csv.fda-banco-material');
-
+    Route::get('marcas', 'CSVController@marcas')->name('csv.marcas');
+    Route::get('operadores', 'CSVController@operadores')->name('csv.operadores');
+    Route::get('tarifas-material', 'CSVController@tarifas_material')->name('csv.tarifas-material');
 });

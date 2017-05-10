@@ -9,10 +9,13 @@ use App\Models\Empresa;
 use App\Models\Etapa;
 use App\Models\FDA\FDABancoMaterial;
 use App\Models\FDA\FDAMaterial;
+use App\Models\Marca;
 use App\Models\Material;
+use App\Models\Operador;
 use App\Models\Origen;
 use App\Models\Ruta;
 use App\Models\Sindicato;
+use App\Models\Tarifas\TarifaMaterial;
 use App\Models\Tiro;
 use Illuminate\Support\Facades\DB;
 
@@ -79,7 +82,7 @@ class CSVController extends Controller
 
     public function camiones() {
         $headers = ["Economico", "Sindicato", "Empresa", "Placas del Camión", "Placas de la Caja", "Marca", "Modelo", "Propietario", "Operador", "Aseguradora", "Poliza de Seguro", "Vigencia Seguro", "Cubicación Real", "Cubicación Para Pago", "Estatus"];
-        $items = Camion::leftJoin('igh.usuario', 'camiones.IdOperador', '=', 'igh.usuario.idusuario')
+        $items = Camion::leftJoin('operadores', 'camiones.IdOperador', '=', 'operadores.IdOperador')
             ->leftJoin('sindicatos', 'camiones.IdSindicato', '=', 'sindicatos.IdSindicato')
             ->leftJoin('empresas', 'camiones.IdEmpresa', '=', 'empresas.IdEmpresa')
             ->leftJoin('marcas', 'camiones.IdMarca', '=', 'marcas.IdMarca')
@@ -92,7 +95,7 @@ class CSVController extends Controller
                 "marcas.Descripcion as Marca",
                 "camiones.Modelo",
                 "camiones.Propietario",
-                DB::raw("CONCAT(igh.usuario.nombre, ' ', igh.usuario.apaterno, ' ', igh.usuario.amaterno)"),
+                "operadores.Nombre",
                 "camiones.Aseguradora",
                 "camiones.PolizaSeguro",
                 "camiones.VigenciaPolizaSeguro",
@@ -179,5 +182,41 @@ class CSVController extends Controller
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('fda_banco_material');
+    }
+
+    public function marcas() {
+        $headers = ["ID","Descripción", "Estatus"];
+        $items = Marca::select("IdMarca", "Descripcion", "Estatus")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('marcas');
+    }
+
+    public function operadores() {
+        $headers = ["ID","Nombre", "Dirección", "Número de Licencia", "Vigencia de Licencia", "Fecha Registro", "Fecha de Baja", "Estatus"];
+        $items = Operador::select("IdOperador", "Nombre", "Direccion", "NoLicencia", "VigenciaLicencia", "FechaAlta", "FechaBaja", "Estatus")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('operadores');
+    }
+
+    public function tarifas_material() {
+        $headers = ["ID", "Material", "Primer KM", "KM Subsecuente", "KM Adicional", "Fecha y Hora Registro", "Estatus", "Registra", "Inicio Vigencia", "Fin Vigencia"];
+        $items = TarifaMaterial::leftJoin('materiales', 'tarifas.IdMaterial', '=', 'materiales.IdMaterial')
+            ->leftJoin('igh.usuario', 'tarifas.Registra', '=', 'igh.usuario.idusuario')
+            ->select(
+                "tarifas.IdTarifa",
+                "materiales.Descripcion",
+                "tarifas.PrimerKM",
+                "tarifas.KMSubsecuente",
+                "tarifas.KMAdicional",
+                "tarifas.Fecha_Hora_Registra",
+                "tarifas.Estatus",
+                DB::raw("CONCAT(igh.usuario.nombre, ' ', igh.usuario.apaterno, ' ', igh.usuario.amaterno)"),
+                "tarifas.InicioVigencia",
+                "tarifas.FinVigencia")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('tarifas_material');
     }
 }

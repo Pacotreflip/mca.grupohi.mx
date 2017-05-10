@@ -2,12 +2,15 @@
 
 @section('content')
 <div class='success'></div>
-<h1>{{ strtoupper(trans('strings.tarifas_material')) }} <a href="{{ route('tarifas_material.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Nueva Tarifa</a></h1>
+<h1>{{ strtoupper(trans('strings.tarifas_material')) }}
+    <a href="{{ route('tarifas_material.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> Nueva Tarifa</a>
+    <a href="{{ route('csv.tarifas-material') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+</h1>
 {!! Breadcrumbs::render('tarifas_material.index') !!}
 <hr>
 <div class="errores"></div>
-<div class="table-responsive col-md-12">
-    <table class="table table-hover table-bordered">
+<div class="table-responsive">
+    <table class="table table-hover table-bordered small">
         <thead>
             <tr>
                 <th>Material</th>
