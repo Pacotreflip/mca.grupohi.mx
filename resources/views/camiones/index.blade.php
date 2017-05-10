@@ -3,12 +3,13 @@
 @section('content')
 <h1>CAMIONES
   <a href="{{ route('camiones.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_camion') }}</a>
+    <a href="{{ route('csv.camiones') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
 </h1>
 {!! Breadcrumbs::render('camiones.index') !!}
 <hr>
 @include('partials.search-form')
-<div class="table-responsive col-md-10 col-md-offset-1">
-  <table class="table table-hover table-bordered">
+<div class="table-responsive">
+  <table class="table table-hover table-bordered small">
       <thead>
       <tr>
         <th style="text-align: center" colspan="3"></th>
@@ -37,11 +38,11 @@
           <td>{{ $camion->CubicacionParaPago}} m<sup>3</sup></td>
           <td>{{ $camion->present()->estatus }}</td>
           <td>
-              <a href="{{ route('camiones.edit', [$camion]) }}" class="btn btn-info btn-sm" title="Editar"><i class="fa fa-pencil"></i></a>
+              <a href="{{ route('camiones.edit', [$camion]) }}" class="btn btn-info btn-xs" title="Editar"><i class="fa fa-pencil"></i></a>
               @if($camion->Estatus == 1)
-              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-danger btn-sm element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
               @else
-              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-sm element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-xs element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
               @endif
           </td>
         </tr>
