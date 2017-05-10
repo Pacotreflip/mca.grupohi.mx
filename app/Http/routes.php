@@ -181,4 +181,5 @@ Route::group(['prefix' => 'csv'],function () {
     Route::get('camiones', 'CSVController@camiones')->name('csv.camiones');
     Route::get('materiales', 'CSVController@materiales')->name('csv.materiales');
     Route::get('empresas', 'CSVController@empresas')->name('csv.empresas');
+    Route::get('sindicatos', 'CSVController@sindicatos')->name('csv.sindicatos');
 });

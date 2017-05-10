@@ -8,6 +8,7 @@ use App\Models\Empresa;
 use App\Models\Material;
 use App\Models\Origen;
 use App\Models\Ruta;
+use App\Models\Sindicato;
 use App\Models\Tiro;
 use Illuminate\Support\Facades\DB;
 
@@ -113,4 +114,10 @@ class CSVController extends Controller
         $csv->generate('empresas');
     }
 
+    public function sindicatos() {
+        $headers = ["ID", "Descripción", "Nombre Corto", "Estatus"];
+        $items = Sindicato::select("IdSindicato", "Descripcion", "NombreCorto", "Estatus")->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('sindicatos');
+    }
 }
