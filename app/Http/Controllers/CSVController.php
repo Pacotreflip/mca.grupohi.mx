@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CSV\CSV;
 use App\Models\Origen;
 use App\Models\Ruta;
+use App\Models\Tiro;
 use Illuminate\Support\Facades\DB;
 
 class CSVController extends Controller
@@ -54,5 +55,17 @@ class CSVController extends Controller
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('origenes');
+    }
+
+    public function tiros() {
+        $headers = ["Clave", "Descripción", "Fecha y Hora Registro", "Estatus"];
+        $items = Tiro::select(
+                DB::raw("CONCAT(tiros.Clave,tiros.IdTiro)"),
+                "tiros.Descripcion",
+                DB::raw("CONCAT(tiros.FechaAlta, '', tiros.HoraAlta) as FechaHoraAlta"),
+                "tiros.Estatus")
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('tiros');
     }
 }
