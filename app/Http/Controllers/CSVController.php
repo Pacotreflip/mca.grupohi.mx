@@ -16,6 +16,7 @@ use App\Models\Origen;
 use App\Models\Ruta;
 use App\Models\Sindicato;
 use App\Models\Tarifas\TarifaMaterial;
+use App\Models\Tarifas\TarifaPeso;
 use App\Models\Tiro;
 use Illuminate\Support\Facades\DB;
 
@@ -218,5 +219,24 @@ class CSVController extends Controller
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('tarifas_material');
+    }
+
+    public function tarifas_peso() {
+        $headers = ["ID", "Material", "Primer KM", "KM Subsecuente", "KM Adicional", "Fecha y Hora Registro", "Estatus",  "Registro"];
+        $items = TarifaPeso::leftJoin('materiales', 'tarifas_peso.IdMaterial', '=', 'materiales.IdMaterial')
+            ->leftJoin('igh.usuario', 'tarifas_peso.Registra', '=', 'igh.usuario.idusuario')
+            ->select(
+                "tarifas_peso.IdTarifa",
+                "materiales.Descripcion as Material",
+                "tarifas_peso.PrimerKM",
+                "tarifas_peso.KMSubsecuente",
+                "tarifas_peso.KMAdicional",
+                "tarifas_peso.Fecha_Hora_Registra",
+                "tarifas_peso.Estatus",
+                DB::raw("CONCAT(igh.usuario.nombre, ' ', igh.usuario.apaterno, ' ', igh.usuario.amaterno)")
+            )
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('tarifas_peso');
     }
 }
