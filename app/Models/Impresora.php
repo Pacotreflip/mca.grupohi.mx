@@ -8,8 +8,7 @@ class Impresora extends Model
 {
     protected $connection = 'sca';
     protected $table = 'impresoras';
-    public $timestamps = false;
-    protected $fillable = ["mac"];
+    protected $fillable = ["marca","modelo","mac","estatus","registro","elimino","motivo"];
 
     public function telefono() {
         return $this->hasOne(Telefono::class, 'id_impresora');
@@ -22,6 +21,12 @@ class Impresora extends Model
 
     public function scopeNoAsignadas($query) {
         return $query->leftJoin('telefonos', 'impresoras.id', '=', 'telefonos.id_impresora')
-            ->whereNull('telefonos.id');
+            ->whereNull('telefonos.id')->where('impresoras.estatus','=',1);
+    }
+    public function user_registro(){
+        return $this->belongsTo(\App\User::class, 'registro','idusuario');
+    }
+    public function scopeActivas($query){
+        return $query->where("estatus","=",1);
     }
 }

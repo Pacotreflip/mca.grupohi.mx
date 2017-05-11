@@ -340,3 +340,24 @@ Breadcrumbs::register('telefonos.create', function ($breadcrumbs) {
     $breadcrumbs->parent('telefonos.index');
     $breadcrumbs->push('NUEVO TELÉFONO', route('telefonos.create'));
 });
+
+
+//Catalogos->Impresoras
+
+Breadcrumbs::register('impresoras.index', function($breadcrumbs){
+    $breadcrumbs->push('LISTA DE IMPRESORAS', route('impresoras.index'));
+});
+Breadcrumbs::register('impresoras.create', function($breadcrumbs){
+    $breadcrumbs->parent('impresoras.index');
+    $breadcrumbs->push('NUEVA IMPRESORA', route('impresoras.create'));
+});
+Breadcrumbs::register('impresoras.show', function($breadcrumbs, $impresora){
+    $breadcrumbs->parent('impresoras.index');
+    $breadcrumbs->push($impresora->id, route('impresoras.show', $impresora));
+});
+Breadcrumbs::register('impresoras.edit', function($breadcrumbs, $impresora){
+    $breadcrumbs->parent('impresoras.show',$impresora);
+    $breadcrumbs->push('EDITAR', route('impresoras.edit', $impresora));
+});
+
+
