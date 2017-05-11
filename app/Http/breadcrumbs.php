@@ -356,7 +356,6 @@ Breadcrumbs::register('telefonos.create', function ($breadcrumbs) {
 
 
 //Catalogos->Impresoras
-
 Breadcrumbs::register('impresoras.index', function($breadcrumbs){
     $breadcrumbs->push('LISTA DE IMPRESORAS', route('impresoras.index'));
 });
@@ -373,4 +372,20 @@ Breadcrumbs::register('impresoras.edit', function($breadcrumbs, $impresora){
     $breadcrumbs->push('EDITAR', route('impresoras.edit', $impresora));
 });
 
+//Configuración diaria->Teléfonos e Impresoras
 
+Breadcrumbs::register('telefonos-impresoras.index', function($breadcrumbs){
+    $breadcrumbs->push('LISTA DE CONFIGUARCIONES', route('telefonos-impresoras.index'));
+});
+Breadcrumbs::register('telefonos-impresoras.create', function($breadcrumbs){
+    $breadcrumbs->parent('telefonos-impresoras.index');
+    $breadcrumbs->push('NUEVA CONFIGURACIÓN', route('telefonos-impresoras.create'));
+});
+Breadcrumbs::register('telefonos-impresoras.show', function($breadcrumbs, $telefono){
+    $breadcrumbs->parent('telefonos-impresoras.index');
+    $breadcrumbs->push($telefono->id, route('telefonos-impresoras.show', $telefono));
+});
+Breadcrumbs::register('telefonos-impresoras.edit', function($breadcrumbs, $telefono){
+    $breadcrumbs->parent('telefonos-impresoras.show',$telefono);
+    $breadcrumbs->push('EDITAR', route('telefonos-impresoras.edit', $telefono));
+});
