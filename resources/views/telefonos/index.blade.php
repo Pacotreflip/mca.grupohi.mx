@@ -13,6 +13,8 @@
                  <th>ID</th>
                  <th>IMEI Teléfono</th>
                  <th>Linea Telefónica</th>
+                 <th>Marca</th>
+                 <th>Modelo</th>
                  <th>Fecha Y Hora Registro</th>
                  <th>Registró</th>
                  <th>Acciones</th>
@@ -24,6 +26,8 @@
                      <td>{{ $telefono->id }}</td>
                      <td>{{ $telefono->imei }}</td>
                      <td>{{ $telefono->linea }}</td>
+                     <td>{{ $telefono->marca }}</td>
+                     <td>{{ $telefono->modelo }}</td>
                      <td>{{ $telefono->created_at->format('d-M-Y h:i:s a') }}</td>
                      <td>{{ $telefono->user_registro->present()->nombreCompleto() }}</td>
                      <td>
