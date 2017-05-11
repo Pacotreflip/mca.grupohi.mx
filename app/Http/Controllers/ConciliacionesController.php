@@ -74,25 +74,13 @@ class ConciliacionesController extends Controller
      */
     public function store(Requests\CreateConciliacionRequest $request)
     {
-//        $result = Conciliacion::where('idsindicato', '=', $request->get('idsindicato'))->where('idempresa', '=', $request->get('idempresa'))->where('estado', '=', 0)->first();
-//
-//        if(! $result) {
-//            $conciliacion = Conciliacion::create([
-//                'fecha_conciliacion' => Carbon::now()->toDateString(),
-//                'idsindicato'        => $request->get('idsindicato'),
-//                'idempresa'          => $request->get('idempresa'),
-//                'fecha_inicial'      => Carbon::now()->toDateString(),
-//                'fecha_final'        => Carbon::now()->toDateString(),
-//                'estado'             => 0,
-//                'IdRegistro'         => auth()->user()->idusuario
-//            ]);
-//        } else {
-//            $conciliacion = $result;
-//        }
+
         $conciliacion = Conciliacion::create([
             'fecha_conciliacion' => $request->get('fecha'),
             'idsindicato'        => $request->get('idsindicato'),
             'idempresa'          => $request->get('idempresa'),
+            'ImportePagado'      => $request->get('importe_pagado'),
+            'VolumenPagado'      => $request->get('volumen_pagado'),
             'fecha_inicial'      => Carbon::now()->toDateString(),
             'fecha_final'        => Carbon::now()->toDateString(),
             'estado'             => 0,

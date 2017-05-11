@@ -33,7 +33,9 @@ class Conciliacion extends Model
         'timestamp',
         'estado',
         'IdRegistro',
-        'Folio'
+        'Folio',
+        'ImportePagado',
+        'VolumenPagado'
     ];
     protected $dates = ['timestamp','fecha_conciliacion', 'FechaHoraCierre', 'FechaHoraAprobacion'];
     protected $presenter = ModelPresenter::class;
@@ -220,6 +222,14 @@ class Conciliacion extends Model
             . "and conciliacion_detalle.estado = 1 "
             . "group by conciliacion.idconciliacion limit 1");
         return $results ? $results[0]->Importe : 0;
+    }
+    
+    public function getImportePagadoFAttribute(){
+        return number_format($this->ImportePagado, 2, ".",",");
+    }
+    
+    public function getVolumenPagadoFAttribute(){
+        return number_format($this->VolumenPagado, 2, ".",",");
     }
 
     public function usuario()

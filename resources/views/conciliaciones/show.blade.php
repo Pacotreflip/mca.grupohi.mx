@@ -23,13 +23,21 @@
                 <div class="panel-body">
                     <strong>Fecha: </strong>{{ $conciliacion->fecha_conciliacion }}<br>
                     <strong>Folio: </strong>{{ $conciliacion->Folio }}<br>
+                    @if($conciliacion->VolumenPagado>0)
+                    <strong>Volúmen Pagado: </strong>{{ $conciliacion->volumen_pagado_f }} m<sup>3</sup><br>
+                    @endif
+                    @if($conciliacion->ImportePagado>0)
+                    <strong>Importe Pagado: </strong>$ {{ $conciliacion->importe_pagado_f }}<br>
+                    @endif
+                    <hr>
                     <strong>Rango de Fechas: </strong>{{ $conciliacion->rango }}<br>
                     <strong>Empresa: </strong>{{ $conciliacion->empresa->razonSocial }}<br>
                     <strong>Sindicato: </strong>{{ $conciliacion->sindicato->NombreCorto }}<br>
                     <strong>Estado: </strong>{{  $conciliacion->present()->conciliacionEstado }}<br>
                     <strong>Número de Viajes: </strong>{{ count($conciliacion->conciliacionDetalles->where('estado', 1)) }}<br>
-                    <strong>Volúmen: </strong>{{ $conciliacion->volumen_f }} m<sup>3</sup><br>
-                    <strong>Importe: </strong>$ {{ $conciliacion->importe_f }}<br>
+                    <hr>
+                    <strong>Volúmen Conciliado: </strong>{{ $conciliacion->volumen_f }} m<sup>3</sup><br>
+                    <strong>Importe Conciliado: </strong>$ {{ $conciliacion->importe_f }}<br>
                 </div>
             </div>
         </div>

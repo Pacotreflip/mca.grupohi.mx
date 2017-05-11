@@ -151,14 +151,21 @@
                                 </div>
                                 <div class="panel-body">
                                     <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
-                                    <strong>Folio: </strong>@{{ conciliacion.folio }}
+                                    <strong>Folio: </strong>@{{ conciliacion.folio }}<br>
+                                    <span  v-if="conciliacion.es_historico==1">
+                                    <strong>Volúmen Pagado: </strong>@{{ conciliacion.volumen_pagado }} m<sup>3</sup><br>
+                                    </span>
+                                    <span  v-if="conciliacion.es_historico==1">
+                                    <strong >Importe Pagado: </strong>$ @{{ conciliacion.importe_pagado }}<br>
+                                    </span>
                                     <hr>
                                     <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
                                     <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
                                     <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
                                     <strong>Número de Viajes: </strong>@{{ conciliados ? conciliados.length : 0 }}<br>
-                                    <strong>Volúmen: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
-                                    <strong>Importe: </strong>$ @{{ conciliacion.importe }}<br>
+                                    <hr>
+                                    <strong>Volúmen Conciliado: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
+                                    <strong>Importe Conciliado: </strong>$ @{{ conciliacion.importe }}<br>
                                 </div>
                             </div>
                         </div>
@@ -423,14 +430,14 @@
                       <div class="row">
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label>Fecha:</label>
-                                  <input type="text" class="form-control input-sm" name="fecha" v-bind:value="conciliacion.fecha" v-datepickerconciliacion>
+                                  <label>Importe Pagado:</label>
+                                  <input type="text" class="form-control input-sm" name="fecha" v-bind:value="conciliacion.importe_pagado">
                               </div>
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label>Folio:</label>
-                                  <input type="number" step="0" class="form-control input-sm" name="folio" v-bind:value="conciliacion.folio">
+                                  <label>Volumen Pagado:</label>
+                                  <input type="number" step="0" class="form-control input-sm" name="folio" v-bind:value="conciliacion.volumen_pagado">
                               </div>
                           </div>
                       </div>
