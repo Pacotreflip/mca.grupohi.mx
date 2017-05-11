@@ -1,24 +1,34 @@
 <?php
 
 namespace App\Http\Controllers;
-
 use Illuminate\Http\Request;
-
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
-
+use App\Models\Impresora;
+use Laracasts\Flash\Flash;
 class ImpresorasController extends Controller
 {
-    function __construct() {
+     function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
 
         parent::__construct();
     }
-
+    
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    
+    
     public function index()
     {
-        //
+        $impresoras= Impresora::Activas()->get();
+        return view("impresoras.index")->withImpresoras($impresoras);
+        
+     
+        
     }
 
     /**
@@ -28,7 +38,7 @@ class ImpresorasController extends Controller
      */
     public function create()
     {
-        //
+       return view("impresoras.create");
     }
 
     /**
@@ -39,7 +49,20 @@ class ImpresorasController extends Controller
      */
     public function store(Request $request)
     {
-        //
+      $this->validate(
+             $request,[
+                    'mac'=>'required|unique:sca.impresoras,mac|min:12',
+                    'marca'=>'required',
+                    'modelo'=>'required',
+               
+                    ]
+                   );
+      
+      
+       Impresora::create($request->all());
+       Flash::success('¡IMPRESORA CREADA CORRECTAMENTE!');
+       return redirect()->route('impresoras.index');
+     
     }
 
     /**
@@ -50,7 +73,8 @@ class ImpresorasController extends Controller
      */
     public function show($id)
     {
-        //
+        $impresora=Impresora::find($id);
+        return view("impresoras.Show")->with("impresora",$impresora);
     }
 
     /**
@@ -61,7 +85,10 @@ class ImpresorasController extends Controller
      */
     public function edit($id)
     {
-        //
+        $impresora=Impresora::find($id);
+    
+        return view("impresoras.edit")->with("impresora",$impresora);
+       
     }
 
     /**
@@ -73,7 +100,16 @@ class ImpresorasController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $this->validate($request, [   
+            'mac' => 'required|unique:sca.impresoras,mac,'.$request->route('impresoras').',id|min:12',
+            'marca' => 'required', 
+            'modelo' => 'required', 
+        ]);
+        
+        $impresora = Impresora::find($id);
+        $impresora->update($request->all()); 
+        Flash::success('¡IMPRESORA ACTUALIZADA CORRECTAMENTE!');
+        return redirect()->route('impresoras.show', $impresora);
     }
 
     /**
@@ -82,8 +118,14 @@ class ImpresorasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+       $impresora=Impresora::find($id);
+       $impresora->estatus=0;
+       $impresora->elimino=auth()->user()->idusuario;
+       $impresora->motivo=$request->motivo;
+       $impresora->save();
+        Flash::success('¡IMPRESORA ELIMINADA CORRECTAMENTE!');
+       return redirect()->route('impresoras.index');
     }
 }

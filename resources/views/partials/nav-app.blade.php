@@ -24,6 +24,7 @@
                 <li><a tabindex="-1" href="{{ route('fda_banco_material.index') }}">Por Banco Y Material</a></li>
             </ul>
         </li>
+        <li><a href="{{ route('impresoras.index') }}">Impresoras</a></li>
         <li><a href="{{ route('marcas.index') }}">Marcas</a></li>
         <li><a href="{{ route('materiales.index') }}">Materiales</a></li>
         <li><a href="{{ route('operadores.index') }}">Operadores</a></li>
