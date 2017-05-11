@@ -74,25 +74,13 @@ class ConciliacionesController extends Controller
      */
     public function store(Requests\CreateConciliacionRequest $request)
     {
-//        $result = Conciliacion::where('idsindicato', '=', $request->get('idsindicato'))->where('idempresa', '=', $request->get('idempresa'))->where('estado', '=', 0)->first();
-//
-//        if(! $result) {
-//            $conciliacion = Conciliacion::create([
-//                'fecha_conciliacion' => Carbon::now()->toDateString(),
-//                'idsindicato'        => $request->get('idsindicato'),
-//                'idempresa'          => $request->get('idempresa'),
-//                'fecha_inicial'      => Carbon::now()->toDateString(),
-//                'fecha_final'        => Carbon::now()->toDateString(),
-//                'estado'             => 0,
-//                'IdRegistro'         => auth()->user()->idusuario
-//            ]);
-//        } else {
-//            $conciliacion = $result;
-//        }
+
         $conciliacion = Conciliacion::create([
             'fecha_conciliacion' => $request->get('fecha'),
             'idsindicato'        => $request->get('idsindicato'),
             'idempresa'          => $request->get('idempresa'),
+            'ImportePagado'      => $request->get('importe_pagado'),
+            'VolumenPagado'      => $request->get('volumen_pagado'),
             'fecha_inicial'      => Carbon::now()->toDateString(),
             'fecha_final'        => Carbon::now()->toDateString(),
             'estado'             => 0,
@@ -137,16 +125,18 @@ class ConciliacionesController extends Controller
             } else if($request->get('action') == 'detalles') {
 
                 $this->validate($request, [
-                    'fecha' => 'required|date_format:"Y-m-d"',
-                    'folio' => 'numeric'
+                    'importe_pagado' => 'required|numeric',
+                    'volumen_pagado' => 'required|numeric'
                 ]);
 
-                $conciliacion->cambiar_detalles($request->get('folio'), $request->get('fecha'));
+                $conciliacion->cambiar_detalles($request->get('importe_pagado'), $request->get('volumen_pagado'));
 
                 return response()->json([
                     'status_code' => 200,
-                    'fecha' => $conciliacion->fecha_conciliacion,
-                    'folio' => $conciliacion->Folio
+                    'importe_pagado_sf' => $conciliacion->ImportePagado,
+                    'volumen_pagado_sf' => $conciliacion->VolumenPagado,
+                    'volumen_pagado' => $conciliacion->volumen_pagado_f,
+                    'importe_pagado' => $conciliacion->importe_pagado_f,
                 ]);
             }
 
