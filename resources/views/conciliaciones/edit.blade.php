@@ -152,8 +152,10 @@
                                 <div class="panel-body">
                                     <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
                                     <strong>Folio: </strong>@{{ conciliacion.folio }}<br>
+                                    @if (Auth::user()->hasRole('conciliacion_historico')) 
                                     <button v-if="conciliacion.estado == 0 && conciliacion.es_historico" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
                                     <button v-if="conciliacion.estado != 0 && !(conciliacion.volumen_pagado_sf >0) && !(conciliacion.importe_pagado_sf > 0)" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+                                    @endif
                                     <span  v-if="conciliacion.es_historico==1">
                                     <span v-if="conciliacion.volumen_sf<conciliacion.volumen_pagado_sf" class="label label-danger pull-right">Volumen pagado mayor a volumen conciliado</span>    
                                     <strong>Volúmen Pagado: </strong>@{{ conciliacion.volumen_pagado }} m<sup>3</sup><br>
