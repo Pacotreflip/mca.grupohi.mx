@@ -230,6 +230,21 @@ class Conciliacion extends Model
         return number_format($this->ImportePagado, 2, ".",",");
     }
     
+    public function getImportePagadoAlertAttribute(){
+        if($this->es_historico && !($this->ImportePagado >0) ){
+            return "Pendiente";
+        }else{
+            return $this->importe_pagado_f;
+        }
+    }
+    public function getVolumenPagadoAlertAttribute(){
+        if($this->es_historico && !($this->VolumenPagado >0) ){
+            return "Pendiente";
+        }else{
+            return $this->volumen_pagado_f;
+        }
+    }
+    
     public function getVolumenPagadoFAttribute(){
         return number_format($this->VolumenPagado, 2, ".",",");
     }

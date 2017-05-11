@@ -34,7 +34,12 @@ class XLSController extends Controller
         Excel::create('Conciliacion_'.$conciliacion->idconciliacion.'_'.$now->format("Y-m-d")."__".$now->format("h:i:s"), function($excel) use($conciliacion) {
             $excel->sheet('Portada', function($sheet) use($conciliacion) {
                 $sheet->row(1, array(
-                    'Folio Global','Fecha','Folio', 'Rango de Fechas', 'Empresa', 'Sindicato', ('Número de Viajes'), ( 'Volúmen'), 'Importe'
+                    'Folio Global','Fecha Histórico','Folio Histórico', 'Rango de Fechas', 'Empresa', 'Sindicato', ('Número de Viajes')
+                    ,'Volumen Conciliado'
+                    ,'Volumen Pagado'
+                    ,'Importe Conciliado'
+                    ,'Importe Pagado'
+                    
                 ));
                 $sheet->row(2, array(
                     $conciliacion->idconciliacion,
@@ -42,7 +47,11 @@ class XLSController extends Controller
                     $conciliacion->Folio, 
                     $conciliacion->rango, 
                     ($conciliacion->empresa)?$conciliacion->empresa->razonSocial:'', 
-                    ($conciliacion->sindicato)?$conciliacion->sindicato->Descripcion:'', count($conciliacion->viajes()), $conciliacion->volumen_f, $conciliacion->importe_f
+                    ($conciliacion->sindicato)?$conciliacion->sindicato->Descripcion:'', count($conciliacion->viajes())
+                    , $conciliacion->volumen_f
+                    , $conciliacion->volumen_pagado_alert
+                    , $conciliacion->importe_f
+                    , $conciliacion->importe_pagado_alert
                 ));
                 
                 $sheet->row(4, array(
@@ -99,7 +108,7 @@ class XLSController extends Controller
         Excel::create('Conciliaciones'.'_'.$now->format("Y-m-d")."__".$now->format("h:i:s"), function($excel) use($conciliaciones) {
             $excel->sheet('Conciliaciones', function($sheet) use($conciliaciones) {
                 $sheet->row(1, array(
-                    'Folio Global','Folio','Fecha','Empresa','Sindicato','Cantidad Viajes','Volumen', 'Importe', 'Estatus'
+                    'Folio Global','Folio','Fecha','Empresa','Sindicato','Cantidad Viajes','Volumen Conciliado','Volumen Pagado', 'Importe Conciliado','Importe Pagado', 'Estatus'
                 ));
                 $i = 2;
                 foreach($conciliaciones as $conciliacion){
@@ -110,10 +119,12 @@ class XLSController extends Controller
                         
                         ($conciliacion->empresa)?$conciliacion->empresa->razonSocial:'', 
                         ($conciliacion->sindicato)?$conciliacion->sindicato->Descripcion:'', 
-                        count($conciliacion->viajes()), 
-                        $conciliacion->volumen_f, 
-                        $conciliacion->importe_f,
-                        $conciliacion->estado_str
+                        count($conciliacion->viajes())
+                        , $conciliacion->volumen_f
+                    , $conciliacion->volumen_pagado_alert
+                    , $conciliacion->importe_f
+                    , $conciliacion->importe_pagado_alert
+                    ,    $conciliacion->estado_str
                     ));
                     $i++;
                 }
