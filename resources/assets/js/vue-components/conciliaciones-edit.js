@@ -571,8 +571,10 @@ Vue.component('conciliaciones-edit', {
                 },
                 success: function (response) {
                     swal('¡Hecho!', 'Datos actualizados correctamente', 'success');
-                    _this.conciliacion.fecha = response.fecha;
-                    _this.conciliacion.folio = response.folio;
+                    _this.conciliacion.importe_pagado = response.importe_pagado;
+                    _this.conciliacion.importe_pagado_sf = response.importe_pagado_sf;
+                    _this.conciliacion.volumen_pagado = response.volumen_pagado;
+                    _this.conciliacion.volumen_pagado_sf = response.volumen_pagado_sf;
                 },
                 error:function(error) {
                     if(error.status == 422) {

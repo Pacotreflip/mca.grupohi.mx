@@ -23,10 +23,17 @@
                 <div class="panel-body">
                     <strong>Fecha: </strong>{{ $conciliacion->fecha_conciliacion }}<br>
                     <strong>Folio: </strong>{{ $conciliacion->Folio }}<br>
-                    @if($conciliacion->VolumenPagado>0)
+                    
+                    @if($conciliacion->fecha_conciliacion->format("Ymd")<=20170409)
+                    @if($conciliacion->VolumenPagado>$conciliacion->volumen)
+                    <span class="label label-danger pull-right">Volumen pagado mayor a volumen conciliado</span>
+                    @endif
                     <strong>Volúmen Pagado: </strong>{{ $conciliacion->volumen_pagado_f }} m<sup>3</sup><br>
                     @endif
-                    @if($conciliacion->ImportePagado>0)
+                    @if($conciliacion->fecha_conciliacion->format("Ymd")<=20170409)
+                    @if($conciliacion->ImportePagado>$conciliacion->importe)
+                    <span class="label label-danger pull-right">Importe pagado mayor a importe conciliado</span>
+                    @endif
                     <strong>Importe Pagado: </strong>$ {{ $conciliacion->importe_pagado_f }}<br>
                     @endif
                     <hr>

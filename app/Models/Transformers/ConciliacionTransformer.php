@@ -23,6 +23,8 @@ class ConciliacionTransformer extends AbstractTransformer
             'num_viajes'    => $conciliacion->conciliacionDetalles->where('estado', '=', 1)->count(),
             'importe'       => $conciliacion->importe_f,
             'volumen'       => $conciliacion->volumen_f,
+            'importe_sf'       => $conciliacion->importe,
+            'volumen_sf'       => $conciliacion->volumen,
             'importe_pagado'       => $conciliacion->importe_pagado_f,
             'volumen_pagado'       => $conciliacion->volumen_pagado_f,
             'es_historico'=>($conciliacion->fecha_conciliacion->format("Ymd")>'20170409')?0:1,
