@@ -13,6 +13,21 @@
             {!! Form::open(['class' => 'form_conciliacion_create']) !!}
                 <!-- Fecha, Folio, Empresa, Sindicato -->
                 <div class="row">
+                    
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Empresa">Empresa: </label>
+                            {!! Form::select('idempresa', $empresas, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="Empresa">Sindicato: </label>
+                            {!! Form::select('idsindicato', $sindicatos, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
                     <div class="col-md-3">
                         <div class="form-group">
                             <label for="fecha">Fecha de Conciliación: </label>
@@ -27,15 +42,20 @@
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="Empresa">Empresa: </label>
-                            {!! Form::select('idempresa', $empresas, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                            <label for="importe_pagado">Importe Pagado*: </label>
+                            <input type="text" name="importe_pagado" class="form-control">
                         </div>
                     </div>
                     <div class="col-md-3">
                         <div class="form-group">
-                            <label for="Empresa">Sindicato: </label>
-                            {!! Form::select('idsindicato', $sindicatos, null, ['class' => 'form-control','placeholder' => '--SELECCIONE--']) !!}
+                            <label for="volumen_pagado">Volumen Pagado*: </label>
+                            <input type="text" name="volumen_pagado" class="form-control">
                         </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        * Estos campos sólo aplican para las conciliaciones anteriores al 9 de abril de 2017
                     </div>
                 </div>
                 <div class="row">

@@ -332,8 +332,21 @@ Breadcrumbs::register('configuracion-diaria.index', function ($breadcrumbs) {
     $breadcrumbs->push("CONFIGURAR");
 });
 
+
+
+//Catálogos->Teléfonos
 Breadcrumbs::register('telefonos.index', function ($breadcrumbs) {
     $breadcrumbs->push('TELEFONOS', route('telefonos.index'));
+});
+
+Breadcrumbs::register('telefonos.show', function ($breadcrumbs, $telefono) {
+    $breadcrumbs->parent('telefonos.index');
+    $breadcrumbs->push($telefono->imei, route('telefonos.show', $telefono));
+});
+
+Breadcrumbs::register('telefonos.edit', function ($breadcrumbs, $telefono) {
+    $breadcrumbs->parent('telefonos.show', $telefono);
+    $breadcrumbs->push('EDITAR', route('telefonos.edit', $telefono));
 });
 
 Breadcrumbs::register('telefonos.create', function ($breadcrumbs) {

@@ -263,7 +263,7 @@ class PDFConciliacion extends Rotation
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('FECHA:'), '', 0, 'LB');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
-        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, $this->conciliacion->fecha_conciliacion, '', 1, 'L');
+        $this->CellFitScale(0.35 * $this->WidthTotal, 0.5, $this->conciliacion->fecha_conciliacion->format("d-m-Y"), '', 1, 'L');
 
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.15 * $this->WidthTotal, 0.45, utf8_decode('FOLIO:'), '', 0, 'LB');
@@ -337,6 +337,28 @@ class PDFConciliacion extends Rotation
         $this->Row(array(utf8_decode('TOTAL'), $total->NumViajes, '', number_format(($total->CubicacionCamionSum), 2, '.', ','), number_format(utf8_decode($total->Importe), 2, '.', ',')));
         $this->encola = '';
     }
+    
+    function pagado() {
+       
+        
+        $this->SetWidths(array(.25* $this->WidthTotal,.25 * $this->WidthTotal));
+        $this->SetFont('Arial', 'B', 6.5);
+        $this->SetStyles(array('DF',  'DF'));
+        $this->SetFills(array('0,0,0',  '0,0,0'));
+        $this->SetTextColors(array('255,255,255',  '255,255,255'));
+        $this->SetHeights(array(0.6));
+        $this->SetAligns(array('C', 'C', ));
+        $this->SetRounds(array('', ''));
+        $this->SetRadius(array(0, 0));
+        $this->encola = 'total';
+        $this->Row(array( utf8_decode('VOLUMEN PAGADO'), utf8_decode('IMPORTE PAGADO')));
+        $this->SetTextColors(array('0,0,0',  '0,0,0'));
+        $this->SetFills(array('255,255,255',  '255,255,255'));
+        $this->SetAligns(array('R', 'R', ));
+        $this->Row(array(number_format($this->conciliacion->VolumenPagado, 2, '.', ','),number_format($this->conciliacion->ImportePagado, 2, '.', ',')));
+        $this->encola = '';
+    }
+    
 
     function items_moviles()
     {
@@ -839,6 +861,11 @@ class PDFConciliacion extends Rotation
             $this->Ln(0.75);
             $this->total();
         }
+        $this->Ln(0.75);
+        if($this->conciliacion->fecha_conciliacion->format("Ymd")<=20170409){
+            $this->pagado();
+        }
+        
         if(count($this->conciliacion->conciliacionDetallesNoConciliados())>0){
             $this->items_no_conciliados();
         }

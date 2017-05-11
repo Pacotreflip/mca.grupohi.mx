@@ -33,7 +33,9 @@ class Conciliacion extends Model
         'timestamp',
         'estado',
         'IdRegistro',
-        'Folio'
+        'Folio',
+        'ImportePagado',
+        'VolumenPagado'
     ];
     protected $dates = ['timestamp','fecha_conciliacion', 'FechaHoraCierre', 'FechaHoraAprobacion'];
     protected $presenter = ModelPresenter::class;
@@ -221,6 +223,14 @@ class Conciliacion extends Model
             . "group by conciliacion.idconciliacion limit 1");
         return $results ? $results[0]->Importe : 0;
     }
+    
+    public function getImportePagadoFAttribute(){
+        return number_format($this->ImportePagado, 2, ".",",");
+    }
+    
+    public function getVolumenPagadoFAttribute(){
+        return number_format($this->VolumenPagado, 2, ".",",");
+    }
 
     public function usuario()
     {
@@ -285,6 +295,15 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
+            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
+                throw new \Exception("No se puede cerrar la conciliaciòn por que el importe y volumen pagados son mayores al importe y volumen conciliados");
+            }
+            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
+                throw new \Exception("No se puede cerrar la conciliaciòn por que el importe pagado es mayor al importe conciliado");
+            }
+            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
+                throw new \Exception("No se puede cerrar la conciliaciòn por que el volumen pagado es mayor al volumen conciliado");
+            }
             if ($this->estado != 0) {
                 throw new \Exception("No se puede cerrar la conciliación ya que su estado actual es " . $this->estado_str);
             }
@@ -333,7 +352,15 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
-
+            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
+                throw new \Exception("No se puede aprobar la conciliaciòn por que el importe y volumen pagados son mayores al importe y volumen conciliados");
+            }
+            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
+                throw new \Exception("No se puede aprobar la conciliaciòn por que el importe pagado es mayor al importe conciliado");
+            }
+            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
+                throw new \Exception("No se puede aprobar la conciliaciòn por que el volumen pagado es mayor al volumen conciliado");
+            }
             if ($this->estado != 1) {
                 throw new \Exception("No se puede aprobar la conciliación ya que su estado actual es " . $this->estado_str);
             }
@@ -497,16 +524,16 @@ class Conciliacion extends Model
         }
     }
 
-    public function cambiar_detalles($folio, $fecha) {
+    public function cambiar_detalles($importe_pagado, $volumen_pagado) {
         DB::connection('sca')->beginTransaction();
 
         try {
-            if ($this->estado != 0) {
-                throw new \Exception("No se puede cambiar el Los Detalles ya que el estado de la conciliación es " . $this->estado_str);
+            if ($this->estado != 0 && ($this->ImportePagado>0 || $this->VolumenPagado>0)) {
+                throw new \Exception("No se puede cambiar el detalle de la conciliación, su estatus es: " . $this->estado_str);
             }
 
-            $this->Folio = $folio;
-            $this->fecha_conciliacion = $fecha;
+            $this->ImportePagado = $importe_pagado;
+            $this->VolumenPagado = $volumen_pagado;
             $this->save();
 
             DB::connection('sca')->commit();

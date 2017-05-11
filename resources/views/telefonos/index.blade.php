@@ -12,7 +12,9 @@
              <tr>
                  <th>ID</th>
                  <th>IMEI Teléfono</th>
-                 <th>MAC Address Impresora</th>
+                 <th>Linea Telefónica</th>
+                 <th>Fecha Y Hora Registro</th>
+                 <th>Registró</th>
                  <th>Acciones</th>
              </tr>
              </thead>
@@ -21,13 +23,13 @@
                  <tr>
                      <td>{{ $telefono->id }}</td>
                      <td>{{ $telefono->imei }}</td>
-                     <td>{{ $telefono->impresora }}</td>
+                     <td>{{ $telefono->linea }}</td>
+                     <td>{{ $telefono->created_at->format('d-M-Y h:i:s a') }}</td>
+                     <td>{{ $telefono->user_registro->present()->nombreCompleto() }}</td>
                      <td>
-                         {!! Form::open(['route' => ['telefonos.destroy', $telefono], 'method' => 'delete']) !!}
                          <a href="{{ route('telefonos.show', $telefono) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                          <a href="{{ route('telefonos.edit', $telefono) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
-                         <button type="submit" title="Eliminar" class="btn btn-xs btn-danger"><i class="fa fa-remove"></i></button>
-                         {!! Form::close() !!}
+                         <button type="submit" title="Eliminar" class="btn btn-xs btn-danger" onclick="eliminar_telefono({{$telefono->id}})"><i class="fa fa-remove"></i></button>
                      </td>
                  </tr>
              @endforeach
@@ -35,4 +37,41 @@
          </table>
      </div>
 
+    <!-- Form eliminar Teléfono -->
+    <form id="eliminar_telefono" method="POST">
+        {{ csrf_field() }}
+        <input type="hidden" name="_method" value="delete">
+        <input type="hidden" name="motivo" value/>
+    </form>
+@endsection
+@section('scripts')
+    <script>
+        function eliminar_telefono(id) {
+            var url = App.host + '/telefonos/' + id;
+            var form = $('#eliminar_telefono');
+
+            swal({
+                title: "¡Eliminar Teléfono!",
+                text: "¿Esta seguro de que deseas eliminar el teléfono?",
+                type: "input",
+                showCancelButton: true,
+                closeOnConfirm: false,
+                inputPlaceholder: "Motivo de la eliminación.",
+                confirmButtonText: "Si, Eliminar",
+                cancelButtonText: "No, Cancelar",
+                showLoaderOnConfirm: true
+
+            },
+            function(inputValue){
+                if (inputValue === false) return false;
+                if (inputValue === "") {
+                    swal.showInputError("Escriba el motivo de la eliminación!");
+                    return false
+                }
+                form.attr("action", url);
+                $("input[name=motivo]").val(inputValue);
+                form.submit();
+            });
+        }
+    </script>
 @endsection

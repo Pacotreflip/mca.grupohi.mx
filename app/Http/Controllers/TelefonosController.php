@@ -2,12 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Impresora;
 use App\Models\Telefono;
 use Illuminate\Http\Request;
-
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 
 class TelefonosController extends Controller
@@ -26,8 +22,9 @@ class TelefonosController extends Controller
      */
     public function index()
     {
+        $telefonos = Telefono::Activos()->get();
         return view('telefonos.index')
-            ->withTelefonos(Telefono::all());
+            ->withTelefonos($telefonos);
     }
 
     /**
@@ -37,8 +34,7 @@ class TelefonosController extends Controller
      */
     public function create()
     {
-        return view('telefonos.create')
-            ->withImpresoras(Impresora::NoAsignadas()->get());
+        return view('telefonos.create');
     }
 
     /**
@@ -51,10 +47,14 @@ class TelefonosController extends Controller
     {
         $this->validate($request, [
             'imei' => 'required|unique:sca.telefonos,imei',
-            'id_impresora' => 'exists:sca.impresoras,mac'
+            'linea' => 'required|unique:sca.telefonos,linea'
         ]);
         
-        $telefono = Telefono::create($request->all());
+        Telefono::create([
+            'imei' => $request->imei,
+            'linea' => $request->linea,
+            'registro' => auth()->user()->idusuario,
+        ]);
         
         Flash::success('¡TELÉFONO CREADO CORRECTAMENTE!');
         return redirect()->route('telefonos.index');
@@ -94,9 +94,16 @@ class TelefonosController extends Controller
      */
     public function update(Request $request, $id)
     {
-        Telefono::find($id)->update($request->all());
+        $this->validate($request, [
+            'imei' => 'required|unique:sca.telefonos,imei,'.$request->route('telefonos').',id',
+            'linea' => 'required|unique:sca.telefonos,linea,'.$request->route('telefonos').',id',
+        ]);
+
+        $telefono = Telefono::find($id);
+        $telefono->update($request->all());
+
         Flash::success('¡TELÉFONO ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->back();
+        return redirect()->route('telefonos.show', $telefono);
     }
 
     /**
@@ -105,9 +112,15 @@ class TelefonosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        Telefono::find($id)->delete();
+        $telefono = Telefono::find($id);
+        $telefono->update([
+            'estatus'  => 0,
+            'elimino' => auth()->user()->idusuario,
+            'motivo'  => $request->motivo
+        ]);
+
         Flash::success('¡TELÉFONO ELIMINADO CORRECTAMENTE!');
         return redirect()->back();
     }

@@ -151,14 +151,25 @@
                                 </div>
                                 <div class="panel-body">
                                     <strong>Fecha: </strong>@{{ conciliacion.fecha }}<br>
-                                    <strong>Folio: </strong>@{{ conciliacion.folio }}
+                                    <strong>Folio: </strong>@{{ conciliacion.folio }}<br>
+                                    <button v-if="conciliacion.estado == 0 && conciliacion.es_historico" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+                                    <button v-if="conciliacion.estado != 0 && !(conciliacion.volumen_pagado_sf >0) && !(conciliacion.importe_pagado_sf > 0)" data-toggle="modal" data-target="#detalles_conciliacion" class="pull-right btn btn-xs btn-primary"><i class="fa fa-edit"></i></button>
+                                    <span  v-if="conciliacion.es_historico==1">
+                                    <span v-if="conciliacion.volumen_sf<conciliacion.volumen_pagado_sf" class="label label-danger pull-right">Volumen pagado mayor a volumen conciliado</span>    
+                                    <strong>Volúmen Pagado: </strong>@{{ conciliacion.volumen_pagado }} m<sup>3</sup><br>
+                                    </span>
+                                    <span  v-if="conciliacion.es_historico==1">
+                                    <span v-if="conciliacion.importe_sf<conciliacion.importe_pagado_sf" class="label label-danger pull-right">Importe pagado mayor a importe conciliado</span>    
+                                    <strong >Importe Pagado: </strong>$ @{{ conciliacion.importe_pagado }}<br>
+                                    </span>
                                     <hr>
                                     <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>
                                     <strong>Empresa: </strong>@{{ conciliacion.empresa }}<br>
                                     <strong>Sindicato: </strong>@{{ conciliacion.sindicato }}<br>
                                     <strong>Número de Viajes: </strong>@{{ conciliados ? conciliados.length : 0 }}<br>
-                                    <strong>Volúmen: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
-                                    <strong>Importe: </strong>$ @{{ conciliacion.importe }}<br>
+                                    <hr>
+                                    <strong>Volúmen Conciliado: </strong>@{{ conciliacion.volumen }} m<sup>3</sup><br>
+                                    <strong>Importe Conciliado: </strong>$ @{{ conciliacion.importe }}<br>
                                 </div>
                             </div>
                         </div>
@@ -423,14 +434,14 @@
                       <div class="row">
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label>Fecha:</label>
-                                  <input type="text" class="form-control input-sm" name="fecha" v-bind:value="conciliacion.fecha" v-datepickerconciliacion>
+                                  <label>Importe Pagado:</label>
+                                  <input type="text" class="form-control input-sm" name="importe_pagado" v-bind:value="conciliacion.importe_pagado_sf">
                               </div>
                           </div>
                           <div class="col-md-6">
                               <div class="form-group">
-                                  <label>Folio:</label>
-                                  <input type="number" step="0" class="form-control input-sm" name="folio" v-bind:value="conciliacion.folio">
+                                  <label>Volumen Pagado:</label>
+                                  <input type="text"  class="form-control input-sm" name="volumen_pagado" v-bind:value="conciliacion.volumen_pagado_sf">
                               </div>
                           </div>
                       </div>
