@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-    <h1>CONFIGURACIÓN DE IMPRESORAS
+    <h1>IMPRESORAS
         <a href="{{ route('impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nueva Impresora </a>
     </h1>
   {!! Breadcrumbs::render('impresoras.index')!!}

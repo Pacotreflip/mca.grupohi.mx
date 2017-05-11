@@ -50,10 +50,10 @@
                 var form = $('#impresora_update_form');
                 swal({
                     title: "Guardar Cambios",
-                    text: "¿Esta seguro de que desea actualizar la impresora?",
+                    text: "¿Esta seguro de que desea actualizar la información de la impresora?",
                     type: "warning",
                     showCancelButton: true,
-                    confirmButtonText: "Si, Guardar",
+                    confirmButtonText: "Si, Actualizar",
                     cancelButtonText: "No, Cancelar",
                     cancelButtonColor: "#ec6c62",
                     confirmButtonColor: "#467028"

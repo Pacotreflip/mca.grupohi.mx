@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-    <h1>TELÉFONOS
+    <h1>IMPRESORAS
         <a href="{{route('impresoras.edit', $impresora)}}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> Editar</a>
     </h1>
     {!! Breadcrumbs::render('impresoras.show', $impresora) !!}
