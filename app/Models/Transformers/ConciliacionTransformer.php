@@ -27,7 +27,7 @@ class ConciliacionTransformer extends AbstractTransformer
             'volumen_sf'       => $conciliacion->volumen,
             'importe_pagado'       => $conciliacion->importe_pagado_f,
             'volumen_pagado'       => $conciliacion->volumen_pagado_f,
-            'es_historico'=>($conciliacion->fecha_conciliacion->format("Ymd")>'20170409')?0:1,
+            'es_historico'=>($conciliacion->es_historico)?0:1,
             'importe_pagado_sf'       => $conciliacion->ImportePagado,
             'volumen_pagado_sf'       => $conciliacion->VolumenPagado,
             

@@ -862,7 +862,7 @@ class PDFConciliacion extends Rotation
             $this->total();
         }
         $this->Ln(0.75);
-        if($this->conciliacion->fecha_conciliacion->format("Ymd")<=20170409){
+        if($this->conciliacion->es_historico){
             $this->pagado();
         }
         
