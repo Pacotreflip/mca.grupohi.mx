@@ -53,10 +53,11 @@ class TelefonosController extends Controller
             'imei' => 'required|unique:sca.telefonos,imei',
             'id_impresora' => 'exists:sca.impresoras,mac'
         ]);
-
+        
         $telefono = Telefono::create($request->all());
+        
         Flash::success('¡TELÉFONO CREADO CORRECTAMENTE!');
-        return redirect()->route('telefonos.show', $telefono);
+        return redirect()->route('telefonos.index');
 
     }
 
