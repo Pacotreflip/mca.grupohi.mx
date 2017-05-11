@@ -336,7 +336,7 @@ Breadcrumbs::register('configuracion-diaria.index', function ($breadcrumbs) {
 
 //Catálogos->Teléfonos
 Breadcrumbs::register('telefonos.index', function ($breadcrumbs) {
-    $breadcrumbs->push('TELEFONOS', route('telefonos.index'));
+    $breadcrumbs->push('LISTA DE TELÉFONOS', route('telefonos.index'));
 });
 
 Breadcrumbs::register('telefonos.show', function ($breadcrumbs, $telefono) {
