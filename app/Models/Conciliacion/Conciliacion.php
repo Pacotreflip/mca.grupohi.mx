@@ -18,6 +18,8 @@ use App\Models\Conciliacion\ConciliacionDetalleNoConciliado;
 class Conciliacion extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
+    
+    const FECHA_HISTORICO = 20170409;
 
     protected $connection = 'sca';
     protected $table = 'conciliacion';
@@ -228,6 +230,21 @@ class Conciliacion extends Model
         return number_format($this->ImportePagado, 2, ".",",");
     }
     
+    public function getImportePagadoAlertAttribute(){
+        if($this->es_historico && !($this->ImportePagado >0) ){
+            return "Pendiente";
+        }else{
+            return $this->importe_pagado_f;
+        }
+    }
+    public function getVolumenPagadoAlertAttribute(){
+        if($this->es_historico && !($this->VolumenPagado >0) ){
+            return "Pendiente";
+        }else{
+            return $this->volumen_pagado_f;
+        }
+    }
+    
     public function getVolumenPagadoFAttribute(){
         return number_format($this->VolumenPagado, 2, ".",",");
     }
@@ -295,13 +312,13 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
-            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
+            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
                 throw new \Exception("No se puede cerrar la conciliaciòn por que el importe y volumen pagados son mayores al importe y volumen conciliados");
             }
-            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
+            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
                 throw new \Exception("No se puede cerrar la conciliaciòn por que el importe pagado es mayor al importe conciliado");
             }
-            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
+            if ( ($this->es_historico && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
                 throw new \Exception("No se puede cerrar la conciliaciòn por que el volumen pagado es mayor al volumen conciliado");
             }
             if ($this->estado != 0) {
@@ -352,13 +369,13 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
-            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
+            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
                 throw new \Exception("No se puede aprobar la conciliaciòn por que el importe y volumen pagados son mayores al importe y volumen conciliados");
             }
-            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
+            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
                 throw new \Exception("No se puede aprobar la conciliaciòn por que el importe pagado es mayor al importe conciliado");
             }
-            if ( ($this->fecha_conciliacion->format("Ymd")<=20170409 && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
+            if ( ($this->es_historico && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
                 throw new \Exception("No se puede aprobar la conciliaciòn por que el volumen pagado es mayor al volumen conciliado");
             }
             if ($this->estado != 1) {
@@ -376,7 +393,13 @@ class Conciliacion extends Model
             throw $e;
         }
     }
-
+    public function getEsHistoricoAttribute(){
+        if($this->fecha_conciliacion->format("Ymd") <= Conciliacion::FECHA_HISTORICO){
+            RETURN TRUE;
+        }else{
+            RETURN FALSE;
+        }
+    }
     public function cancelar(Request $request)
     {
 

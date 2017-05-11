@@ -5,22 +5,16 @@
         <group>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Conciliacion/Conciliaciones.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ConciliacionesController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Viaje.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/index.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/assets/js/vue-components/conciliaciones-edit.js</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/edit.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Transformers/ConciliacionDetalleTransformer.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Conciliacion/Conciliacion.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ConciliacionesDetallesController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/XLSController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Transformers/ViajeNetoTransformer.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/show.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Viajes/Viajes.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ViajesNetosController.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/viajes_netos/partials/validar.blade.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/assets/js/vue-components/conciliaciones-edit.js</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/tarifas/material/index.blade.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/edit.blade.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/PDF/PDFConciliacion.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Conciliacion/ConciliacionDetalle.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/routes.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/create.blade.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Transformers/ConciliacionTransformer.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/ViajeNeto.php</file>
         </group>
     </open-files>
 </project-private>

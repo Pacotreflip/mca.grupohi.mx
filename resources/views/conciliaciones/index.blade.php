@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout_width')
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.conciliaciones')) }}
@@ -42,11 +42,15 @@
       <tr>
         <th style="width: 20px">#</th>
         <th style="text-align: center">Folio</th>
+        <th style="text-align: center">Folio Histórico</th>
+        <th style="text-align: center">Fecha Histórico</th>
         <th style="text-align: center">Sindicato</th>
         <th style="text-align: center">Empresa</th>
         <th style="text-align: center">Número de Viajes</th>
-        <th style="text-align: center">Volumen</th>
-        <th style="text-align: center">Importe</th>
+        <th style="text-align: center">Volumen Conciliado</th>
+        <th style="text-align: center">Volumen Pagado</th>
+        <th style="text-align: center">Importe Cociliado</th>
+        <th style="text-align: center">Importe Pagado</th>
         <th style="text-align: center">Registró</th>
         <th style="text-align: center">Revisó</th>
         <th style="text-align: center">Aprobó</th>
@@ -66,11 +70,52 @@
              <td>
             {!! link_to_route('conciliaciones.show', $conciliacion->idconciliacion, $conciliacion->idconciliacion) !!}
             </td>
+            <td>{{$conciliacion->Folio}}</td>
+            <td>{{$conciliacion->fecha_conciliacion->format("d-m-Y")}}</td>
             <td>{{$conciliacion->sindicato->Descripcion}}</td>
             <td>{{$conciliacion->empresa}}</td>
             <td style="text-align: right">{{$conciliacion->conciliacionDetalles->where('estado', 1)->count()}}</td>
             <td style="text-align: right">{{$conciliacion->volumen_f}}</td>
+           
+            <td style="text-align: right">
+                 @if($conciliacion->volumen_pagado_alert == "Pendiente")
+                 <h5>
+                 <span class="label label-warning">
+                     {{$conciliacion->volumen_pagado_alert}}
+                 </span>
+                 </h5>
+                 @elseif(($conciliacion->VolumenPagado-$conciliacion->volumen)>0.1)
+                 <h5>
+                 <span class="label label-danger">
+                     {{$conciliacion->volumen_pagado_alert}}
+                 </span>
+                 </h5>
+                 @else
+                 {{$conciliacion->volumen_pagado_alert}}
+                 
+                @endif
+                </td>
             <td style="text-align: right">{{$conciliacion->importe_f}}</td>
+            <td style="text-align: right">
+                @if($conciliacion->importe_pagado_alert == "Pendiente")
+                <h5>
+                 <span class="label label-warning">
+                     {{$conciliacion->importe_pagado_alert}}
+                 </span>
+                </h5>
+                 @elseif(($conciliacion->ImportePagado-$conciliacion->importe)>0.1)
+                 <h5>
+                 <span class="label label-danger">
+                     {{$conciliacion->importe_pagado_alert}}
+                 </span>
+                 </h5>
+                 @else
+                 {{$conciliacion->importe_pagado_alert}}
+                 
+                @endif
+                
+            </td>
+            
             <td>{{$conciliacion->registro }}<br>
                 {{$conciliacion->fecha_hora_registro}}
             </td>
