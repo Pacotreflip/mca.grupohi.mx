@@ -176,6 +176,7 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador
 
 Route::resource('telefonos', 'TelefonosController');
 Route::resource('impresoras', 'ImpresorasController');
+Route::resource('telefonos-impresoras', 'TelefonosImpresorasController');
 
 
 Route::group(['prefix' => 'csv'],function () {
