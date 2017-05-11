@@ -7,7 +7,18 @@
         <li>{!! link_to_route('proyectos', 'Cambiar De Proyecto') !!}</li>
     </ul>
   </li>
-  @if (Auth::user()->can(['control-catalogos'])) 
+
+  <li class="dropdown">
+      <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
+          Administración <span class="caret"></span>
+      </a>
+      <ul class="dropdown-menu" role="menu">
+          @permission('administrar-telefonos')
+          <li><a href="{{ route('telefonos.index') }}">Telefonos</a></li>
+          @endpermission
+      </ul>
+  </li>
+  @if (Auth::user()->can(['control-catalogos']))
   <li class="dropdown">
     <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
         Catálogos <span class="caret"></span>

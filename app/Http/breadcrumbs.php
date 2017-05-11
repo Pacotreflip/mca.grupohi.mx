@@ -331,3 +331,12 @@ Breadcrumbs::register('corte.edit', function ($breadcrumbs, $corte) {
 Breadcrumbs::register('configuracion-diaria.index', function ($breadcrumbs) {
     $breadcrumbs->push("CONFIGURAR");
 });
+
+Breadcrumbs::register('telefonos.index', function ($breadcrumbs) {
+    $breadcrumbs->push('TELEFONOS', route('telefonos.index'));
+});
+
+Breadcrumbs::register('telefonos.create', function ($breadcrumbs) {
+    $breadcrumbs->parent('telefonos.index');
+    $breadcrumbs->push('NUEVO TELÉFONO', route('telefonos.create'));
+});
