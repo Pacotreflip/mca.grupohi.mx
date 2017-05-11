@@ -723,7 +723,8 @@ class ViajeNeto extends Model
             $detalles = $this->conflicto->detalles;
             foreach($detalles as $detalle){
                 //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
-                    $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(16-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
+                //dd(16,strlen($detalle->viaje_neto->Code));
+                    $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(20-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
                // }
             }
             $codigos .= "\n Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
@@ -747,7 +748,7 @@ class ViajeNeto extends Model
             $detalles = $this->conflicto->detalles;
             foreach($detalles as $detalle){
                 //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
-                    $codigos.= "<tr><td>".$detalle->viaje_neto->Code. "</td><td>".$detalle->viaje_neto->timestamp_salida."</td><td>".$detalle->viaje_neto->timestamp_llegada."</td></tr>";
+                    $codigos.= "<tr><td>".$detalle->viaje_neto->Code. "</td><td>".$detalle->viaje_neto->timestamp_salida->format("d-m-Y H:i:s")."</td><td>".$detalle->viaje_neto->timestamp_llegada->format("d-m-Y H:i:s")."</td></tr>";
                // }
             }
             $codigos.="</table>";
