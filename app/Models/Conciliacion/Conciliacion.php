@@ -379,7 +379,7 @@ class Conciliacion extends Model
         }
     }
     public function getEsHistoricoAttribute(){
-        if($this->fecha_conciliacion->format("Ymd")<=FECHA_HISTORICO){
+        if($this->fecha_conciliacion->format("Ymd") <= Conciliacion::FECHA_HISTORICO){
             RETURN TRUE;
         }else{
             RETURN FALSE;
