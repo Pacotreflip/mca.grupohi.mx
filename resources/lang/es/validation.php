@@ -173,8 +173,9 @@ return [
         'id_ubicacion'          => 'Ubicación',
         'id_perfil'             => 'Perfil',
         'tipo'                  => 'Tipo',
-        'imei'                 => 'IMEI',
-    'id_impresora'          => 'Impresora',
+        'imei'                  => 'IMEI',
+        'id_impresora'          => 'Impresora',
+        'linea'                 => 'Linea Telefónica'
     ],
 
 ];

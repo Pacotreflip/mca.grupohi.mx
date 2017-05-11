@@ -7,17 +7,6 @@
         <li>{!! link_to_route('proyectos', 'Cambiar De Proyecto') !!}</li>
     </ul>
   </li>
-
-  <li class="dropdown">
-      <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
-          Administración <span class="caret"></span>
-      </a>
-      <ul class="dropdown-menu" role="menu">
-          @permission('administrar-telefonos')
-          <li><a href="{{ route('telefonos.index') }}">Telefonos</a></li>
-          @endpermission
-      </ul>
-  </li>
   @if (Auth::user()->can(['control-catalogos']))
   <li class="dropdown">
     <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
@@ -42,6 +31,7 @@
         <li><a href="{{ route('origenes_usuarios.index') }}">Origenes Por Usuario</a></li>
         <li><a href="{{ route('rutas.index') }}">Rutas</a></li>
         <li><a href="{{ route('sindicatos.index') }}">Sindicatos</a></li>
+        <li><a href="{{ route('telefonos.index') }}">Teléfonos</a></li>
         <li><a href="{{ route('tiros.index') }}">Tiros</a></li>
         <li class="dropdown-submenu">
             <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Tarifas</a>

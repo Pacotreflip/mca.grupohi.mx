@@ -1,11 +1,12 @@
 @extends('layout')
 
 @section('content')
-    <h1>CONFIGURACIÓN DE TELÉFONOS</h1>
+    <h1>TELÉFONOS</h1>
     {!! Breadcrumbs::render('telefonos.create') !!}
     <hr>
     @include('partials.errors')
     {!! Form::open(['route' =>['telefonos.store'], 'method' => 'POST', 'id' => 'telefono_create_form']) !!}
+    <input type="hidden" name="registro" value="{{ auth()->user()->idusuario }}" />
     <div class="row">
         <!-- Teléfono -->
         <div class="col-md-6">
@@ -15,19 +16,16 @@
             </div>
         </div>
 
-        <!-- Impresora -->
+        <!-- Linea Tlefónica -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="id_impresora">IMPRESORA</label>
-                <select name="id_impresora" class="form-control">
-                    <option value>-- SELECCIONE --</option>
-                    @foreach($impresoras as $impresora)
-                        <option class="{{ $impresora->id }}">{{ $impresora->mac }}</option>
-                    @endforeach
-                </select>
+                <label for="linea">LINEA TELEFÓNICA <strong>10 DÍGITOS</strong> (*)</label>
+                <input name="linea" type="text" maxlength="10" class="form-control">
             </div>
         </div>
     </div>
+    <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
+
     <!-- Guardar -->
     <div class="form-group">
         <button class="btn btn-success" type="submit" id="telefono_store">
