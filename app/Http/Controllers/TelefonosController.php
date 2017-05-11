@@ -47,12 +47,17 @@ class TelefonosController extends Controller
     {
         $this->validate($request, [
             'imei' => 'required|unique:sca.telefonos,imei',
-            'linea' => 'required|unique:sca.telefonos,linea'
+            'linea' => 'required|unique:sca.telefonos,linea',
+            'marca' => 'required',
+            'modelo' => 'required',
+            
         ]);
         
         Telefono::create([
             'imei' => $request->imei,
             'linea' => $request->linea,
+            'marca' => $request->marca,
+            'modelo' => $request->modelo,
             'registro' => auth()->user()->idusuario,
         ]);
         
@@ -97,6 +102,8 @@ class TelefonosController extends Controller
         $this->validate($request, [
             'imei' => 'required|unique:sca.telefonos,imei,'.$request->route('telefonos').',id',
             'linea' => 'required|unique:sca.telefonos,linea,'.$request->route('telefonos').',id',
+            'marca' => 'required',
+            'modelo' => 'required',
         ]);
 
         $telefono = Telefono::find($id);

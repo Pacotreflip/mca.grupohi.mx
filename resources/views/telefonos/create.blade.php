@@ -24,6 +24,23 @@
             </div>
         </div>
     </div>
+     <div class="row">
+        <!-- Teléfono -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="marca">MARCA(*)</label>
+                <input type="text" name="marca" class="form-control">
+            </div>
+        </div>
+
+        <!-- Linea Tlefónica -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="modelo">MODELO(*)</label>
+                <input name="modelo" type="text" maxlength="10" class="form-control">
+            </div>
+        </div>
+    </div>
     <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
 
     <!-- Guardar -->

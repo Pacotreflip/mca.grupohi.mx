@@ -24,6 +24,24 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <!-- marca -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="imei">MARCA(*)</label>
+                {!! Form::text('marca', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+
+        <!-- modelo -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="linea">MODELO(*)</label>
+                {!! Form::text('modelo', null, ['class' => 'form-control']) !!}
+            </div>
+        </div>
+    </div>
+    
     <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
     <!-- Guardar -->
     <div class="form-group">
