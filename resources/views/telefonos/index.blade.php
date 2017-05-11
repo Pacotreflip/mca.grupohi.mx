@@ -20,7 +20,7 @@
              @foreach($telefonos as $telefono)
                  <tr>
                      <td>{{ $telefono->id }}</td>
-                     <td>{{ $telefono->IMEI }}</td>
+                     <td>{{ $telefono->imei }}</td>
                      <td>{{ $telefono->impresora }}</td>
                      <td>
                          {!! Form::open(['route' => ['telefonos.destroy', $telefono], 'method' => 'delete']) !!}

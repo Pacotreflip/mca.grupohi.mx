@@ -85,8 +85,7 @@ return [
     'unique'               => ':attribute ya ha sido registrado.',
     'uploaded'             => 'Subir :attribute ha fallado.',
     'url'                  => 'El formato :attribute es inválido.',
-    'IMEI'                 => 'IMEI',
-    'id_impresora'          => 'Impresora',
+
 
     /*
     |--------------------------------------------------------------------------
@@ -173,7 +172,9 @@ return [
         'Estado'                => 'Estado',
         'id_ubicacion'          => 'Ubicación',
         'id_perfil'             => 'Perfil',
-        'tipo'                  => 'Tipo'
+        'tipo'                  => 'Tipo',
+        'imei'                 => 'IMEI',
+    'id_impresora'          => 'Impresora',
     ],
 
 ];
