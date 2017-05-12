@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use App\Http\Requests;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Laracasts\Flash\Flash;
+use Carbon\Carbon;
 class TelefonosImpresorasController extends Controller {
 
     function __construct() {
@@ -21,9 +23,8 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function index() {
-       $configuraciones= Telefono::Configurados()->get();
+        $configuraciones = Telefono::Configurados()->get();
         return view("telefonos-impresoras.index")->withConfiguraciones($configuraciones);
-       
     }
 
     /**
@@ -32,7 +33,7 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-            return view("telefonos-impresoras.create");
+        return view("telefonos-impresoras.create");
     }
 
     /**
@@ -42,36 +43,36 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-       
-        
+
+
         $this->validate(
-             $request,[
-                    'id_impresora'=>'required',
-                    'id_telefono'=>'required',
-                    ]
-                   );
-    DB::connection('sca')->beginTransaction();
-      try{
-       
-          if (Telefono::create($request->all())){
-          
-            DB::connection('sca')
-                    ->table('telefonos_impresoras_historico')
-                    ->insert([
-                        "id_impresora"=>$request->id_impresora,
-                        "id_telefono"=>$request->id_telefono,
-                        "registro"=>auth()->user()->idusuario
-                            ]);
-          }
-           DB::connection('sca')->commit();
-      }catch(\Exception $e){
-          DB::connection('sca')->rollback();  
-          flash($e->getMessage());
-          return redirect()->back();
-      }
-       
-       Flash::success('¡IMPRESORA CREADA CORRECTAMENTE!');
-       return redirect()->route('telefonos-impresoras.index');
+                $request, [
+            'id_impresora' => 'required',
+            'id_telefono' => 'required',
+                ]
+        );
+        DB::connection('sca')->beginTransaction();
+        try {
+
+            if (Telefono::create($request->all())) {
+
+                DB::connection('sca')
+                        ->table('telefonos_impresoras_historico')
+                        ->insert([
+                            "id_impresora" => $request->id_impresora,
+                            "id_telefono" => $request->id_telefono,
+                            "registro" => auth()->user()->idusuario
+                ]);
+            }
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            flash($e->getMessage());
+            return redirect()->back();
+        }
+
+        Flash::success('¡IMPRESORA CREADA CORRECTAMENTE!');
+        return redirect()->route('telefonos-impresoras.index');
     }
 
     /**
@@ -81,8 +82,8 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function show($id) {
-         $configuraciones=Impresora::find($id);
-        return view("telefonos-impresoras.show")->with("configuraciones",$configuraciones);
+        $configuraciones = Impresora::find($id);
+        return view("telefonos-impresoras.show")->with("configuraciones", $configuraciones);
     }
 
     /**
@@ -112,8 +113,32 @@ class TelefonosImpresorasController extends Controller {
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id) {
-        //
+    public function destroy(Request $request, $id) {
+        $telefono = Telefono::find($id);
+        $idImpresora= $telefono->id_impresora;
+        $telefono->id_impresora=null;
+        DB::connection('sca')->beginTransaction();
+        try {
+            if ( $telefono->update()) {
+                DB::connection('sca')
+                        ->table('telefonos_impresoras_historico')
+                        ->insert([
+                            "id_impresora" =>   $idImpresora,
+                            "id_telefono" => $id,
+                            "motivo"=>$request->motivo,
+                            "elimino" => auth()->user()->idusuario,
+                            "updated_at" =>Carbon::now()->toDateTimeString(),
+                            "created_at" =>Carbon::now()->toDateTimeString()
+                ]);
+            }
+            DB::connection('sca')->commit();
+        } catch (\Exception $e) {
+            DB::connection('sca')->rollback();
+            flash($e->getMessage());
+            return redirect()->back();
+        }
+        Flash::success('¡CONFIGURACION ELIMINADA CORRECTAMENTE!');
+        return redirect()->route('telefonos-impresoras.index');
     }
 
 }
