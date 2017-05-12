@@ -375,7 +375,7 @@ Breadcrumbs::register('impresoras.edit', function($breadcrumbs, $impresora){
 //Configuración diaria->Teléfonos e Impresoras
 
 Breadcrumbs::register('telefonos-impresoras.index', function($breadcrumbs){
-    $breadcrumbs->push('LISTA DE CONFIGUARCIONES', route('telefonos-impresoras.index'));
+    $breadcrumbs->push('LISTA DE CONFIGURACIONES', route('telefonos-impresoras.index'));
 });
 Breadcrumbs::register('telefonos-impresoras.create', function($breadcrumbs){
     $breadcrumbs->parent('telefonos-impresoras.index');

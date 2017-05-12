@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-<h1>CINGIGURACIÓN DE TELÉFONOS E IMPRESORAS
+<h1>CONFIGURACIÓN DE TELÉFONOS E IMPRESORAS
     <a href="{{ route('telefonos-impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nueva Configuración </a>
 </h1>
 {!! Breadcrumbs::render('telefonos-impresoras.index') !!}
