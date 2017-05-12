@@ -196,4 +196,6 @@ Route::group(['prefix' => 'csv'],function () {
     Route::get('tarifas-material', 'CSVController@tarifas_material')->name('csv.tarifas-material');
     Route::get('tarifas-peso', 'CSVController@tarifas_peso')->name('csv.tarifas-peso');
     Route::get('configuracion-checadores', 'CSVController@configuracion_checadores')->name('csv.configuracion-checadores');
+    Route::get('impresoras', 'CSVController@impresoras')->name('csv.impresoras');
+    Route::get('telefonos', 'CSVController@telefonos')->name('csv.telefonos');
 });
