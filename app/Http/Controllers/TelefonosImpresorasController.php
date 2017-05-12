@@ -37,10 +37,10 @@ class TelefonosImpresorasController extends Controller {
         $impresoras = Impresora::NoAsignadas()->lists('mac', 'id');
 
         if(! $telefonos->count()) {
-            flash("¡NO HAY TELEFONOS PENDIENTES DE CONFIGURAR!")->error();
+            flash::error("¡NO HAY TELEFONOS PENDIENTES DE CONFIGURAR!");
             return redirect()->back();
         } else if(! $impresoras->count()) {
-            flash("¡NO HAY IMPRESORAS PENDIENTES DE CONFIGURAR!")->error();
+            flash::error("¡NO HAY IMPRESORAS PENDIENTES DE CONFIGURAR!");
             return redirect()->back();
         } else {
             return view("telefonos-impresoras.create")
