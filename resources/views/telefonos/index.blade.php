@@ -60,13 +60,13 @@
             var form = $('#eliminar_telefono');
 
             swal({
-                title: "¡Eliminar Teléfono!",
-                text: "¿Esta seguro de que deseas eliminar el teléfono?",
+                title: "¡Desactivar Teléfono!",
+                text: "¿Esta seguro de que deseas desactivar el teléfono?",
                 type: "input",
                 showCancelButton: true,
                 closeOnConfirm: false,
-                inputPlaceholder: "Motivo de la eliminación.",
-                confirmButtonText: "Si, Eliminar",
+                inputPlaceholder: "Motivo de la desactivación.",
+                confirmButtonText: "Si, Desactivar",
                 cancelButtonText: "No, Cancelar",
                 showLoaderOnConfirm: true
 
@@ -74,7 +74,7 @@
             function(inputValue){
                 if (inputValue === false) return false;
                 if (inputValue === "") {
-                    swal.showInputError("Escriba el motivo de la eliminación!");
+                    swal.showInputError("Escriba el motivo de la desactivación!");
                     return false
                 }
                 form.attr("action", url);

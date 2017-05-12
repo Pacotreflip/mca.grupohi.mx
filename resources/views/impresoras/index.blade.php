@@ -59,13 +59,13 @@
                 var url=App.host +"/impresoras/"+id;
 
             swal({
-                    title: "¡Eliminar impresora!",
-                    text: "¿Esta seguro de que deseas eliminar la impresora?",
+                    title: "¡Desactivar impresora!",
+                    text: "¿Esta seguro de que deseas desactivar la impresora?",
                     type: "input",
                     showCancelButton: true,
                     closeOnConfirm: false,
-                    inputPlaceholder: "Motivo de la eliminación.",
-                    confirmButtonText: "Si, Eliminar",
+                    inputPlaceholder: "Motivo de la desactivación.",
+                    confirmButtonText: "Si, Desactivar",
                     cancelButtonText: "No, Cancelar",
                     showLoaderOnConfirm: true
 
