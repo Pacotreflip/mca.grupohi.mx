@@ -18,6 +18,7 @@
                  <th>Modelo</th>
                  <th>Fecha Y Hora Registro</th>
                  <th>Registró</th>
+                 <th>Estatus</th>
                  <th>Acciones</th>
              </tr>
              </thead>
@@ -31,6 +32,7 @@
                      <td>{{ $telefono->modelo }}</td>
                      <td>{{ $telefono->created_at->format('d-M-Y h:i:s a') }}</td>
                      <td>{{ $telefono->user_registro->present()->nombreCompleto() }}</td>
+                     <td>{{ $telefono->estatus_string }}</td>
                      <td>
                          <a href="{{ route('telefonos.show', $telefono) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                          <a href="{{ route('telefonos.edit', $telefono) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>

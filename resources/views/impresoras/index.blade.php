@@ -16,6 +16,7 @@
                  <th>Modelo</th>
                  <th>Fecha y hora registro</th>
                  <th>Registró</th>
+                 <th>Estatus</th>
                  <th>Acciones</th>
              </tr>
              </thead>
@@ -28,8 +29,7 @@
                      <td>{{ $impresora->modelo}}</td>
                      <td>{{$impresora->created_at->format('d-M-Y h a') }}</td>
                      <td>{{ $impresora->user_registro->present()->nombreCompleto()}}</td>
-                                        
-                     
+                     <td>{{ $impresora->estatus_string }}</td>
                      <td>
                           <a href="{{ route('impresoras.show', $impresora) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                           <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
