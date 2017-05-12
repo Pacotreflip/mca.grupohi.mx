@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use App\Facades\Context;
 use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\ConfiguracionDiaria\Esquema;
 use App\Models\ConfiguracionDiaria\Perfiles;
@@ -15,9 +14,7 @@ use App\Models\Transformers\TiroTransformer;
 use App\Models\Transformers\UserConfiguracionTransformer;
 use App\User;
 use App\User_1;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
 class ConfiguracionDiariaController extends Controller
 {
@@ -53,17 +50,6 @@ class ConfiguracionDiariaController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -75,7 +61,8 @@ class ConfiguracionDiariaController extends Controller
             $this->validate($request, [
                 'tipo' => 'required',
                 'id_ubicacion' => 'required',
-                'id_perfil' => 'required'
+                'id_perfil' => 'required',
+                'turno'  => 'required'
             ]);
 
             $user = User::find($request->id_usuario);
@@ -87,6 +74,7 @@ class ConfiguracionDiariaController extends Controller
             $configuracion->tipo = $request->tipo;
             $configuracion->id_perfil = $request->id_perfil;
             $configuracion->registro = auth()->user()->idusuario;
+            $configuracion->turno = $request->turno;
 
             if($request->tipo == 0) {
                 $configuracion->id_origen = $request->id_ubicacion;
@@ -98,40 +86,6 @@ class ConfiguracionDiariaController extends Controller
                 'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario))
             ]);
         }
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
     }
 
     /**

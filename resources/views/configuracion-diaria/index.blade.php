@@ -26,6 +26,7 @@
                                     <th style="text-align: center">Origen / Tiro</th>
                                     <th style="text-align: center">Ubicación </th>
                                     <th style="text-align: center">Perfil</th>
+                                    <th style="text-align: center">Turno</th>
                                     <th style="text-align: center">Guardar</th>
                                     <th style="text-align: center">Limpiar Configuración</th>
                                     <th style="text-align: center">Eliminar Checador</th>
@@ -67,6 +68,13 @@
                                        <select class="form-control" disabled="disabled">
                                            <option value>-- SELECCIONE --</option>
                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="turno" class="form-control input-sm" v-model="user.configuracion.turno" :disabled="!user.configuracion.id_perfil">
+                                            <option value>-- SELECCIONE --</option>
+                                            <option value="M">Matutino</option>
+                                            <option value="V">Vespertino</option>
+                                        </select>
                                     </td>
                                     <td style="text-align: center">
                                         <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" :disabled="user.guardando">

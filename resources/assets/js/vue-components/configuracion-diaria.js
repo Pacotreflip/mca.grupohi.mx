@@ -74,7 +74,8 @@ Vue.component('configuracion-diaria', {
                                     id : '',
                                     descripcion : ''
                                 },
-                                id_perfil : ''
+                                id_perfil : '',
+                                turno : ''
                             });
                         }
                         Vue.set(checador, 'guardando', false);
@@ -248,6 +249,7 @@ Vue.component('configuracion-diaria', {
                 Vue.set(user.configuracion, 'ubicacion', this.origen_by_id(id));
             }
             Vue.set(user.configuracion, 'id_perfil', '');
+            Vue.set(user.configuracion, 'turno', '');
         },
 
         clear_ubicacion: function (user) {
@@ -262,7 +264,8 @@ Vue.component('configuracion-diaria', {
                 'id_usuario' : user.id,
                 'tipo' : user.configuracion.tipo,
                 'id_ubicacion' : user.configuracion.ubicacion.id,
-                'id_perfil' : user.configuracion.id_perfil
+                'id_perfil' : user.configuracion.id_perfil,
+                'turno' : user.configuracion.turno
             };
 
             var _this = this;
@@ -342,7 +345,9 @@ Vue.component('configuracion-diaria', {
                         ubicacion : {
                             id : '',
                             descripcion : ''
-                        }, id_perfil : ''
+                        },
+                        id_perfil : '',
+                        turno: ''
                     });
                 },
                 error: function (error) {
