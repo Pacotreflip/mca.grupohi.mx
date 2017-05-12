@@ -18,6 +18,8 @@ use App\Models\Sindicato;
 use App\Models\Tarifas\TarifaMaterial;
 use App\Models\Tarifas\TarifaPeso;
 use App\Models\Tiro;
+use App\Models\Impresora;
+use App\Models\Telefono;
 use Illuminate\Support\Facades\DB;
 
 class CSVController extends Controller
@@ -239,4 +241,43 @@ class CSVController extends Controller
         $csv = new CSV($headers, $items);
         $csv->generate('tarifas_peso');
     }
+       public function impresoras() {
+        $headers = ["ID","MAC Address", "Marca", "Modelo","Estatus", "Registró", "Fecha y hora registro","Eliminó", "Fecha y hora eliminación","Motivo"];
+        $items = Impresora::leftjoin('igh.usuario as user_registro', 'impresoras.registro', '=', 'user_registro.idusuario')
+                ->leftjoin('igh.usuario as user_elimino', 'impresoras.elimino', '=', 'user_elimino.idusuario')
+                ->select(
+                "impresoras.id",
+                "impresoras.mac",
+                "impresoras.marca",
+                "impresoras.modelo",
+                "impresoras.estatus",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "impresoras.created_at",
+                DB::raw("CONCAT(user_elimino.nombre, ' ', user_elimino.apaterno, ' ', user_elimino.amaterno)"),
+                "impresoras.updated_at",
+                "impresoras.motivo")->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('impresoras');
+    }
+   public function telefonos() {
+        $headers = ["ID","IMEI Teléfono", "Linea Telefónica", "Marca","Modelo","Estatus","Registró", "Fecha y hora registro","Eliminó", "Fecha y hora eliminación","Motivo"];
+        $items = Telefono::leftjoin('igh.usuario as user_registro', 'telefonos.registro', '=', 'user_registro.idusuario')
+                  ->leftjoin('igh.usuario as user_elimino', 'telefonos.elimino', '=', 'user_elimino.idusuario')
+            ->select(
+                "telefonos.id",
+                "telefonos.imei",
+                "telefonos.linea",
+                "telefonos.marca",
+                "telefonos.modelo",
+                "telefonos.estatus",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "telefonos.created_at",
+                DB::raw("CONCAT(user_elimino.nombre, ' ', user_elimino.apaterno, ' ', user_elimino.amaterno)"),
+                "telefonos.updated_at",
+                "telefonos.motivo")->get();
+          
+        $csv = new CSV($headers, $items);
+        $csv->generate('telefonos');
+    }
+
 }
