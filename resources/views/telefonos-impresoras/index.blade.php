@@ -15,7 +15,7 @@
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$configuracion->id}}">
                     <b> IMEI:</b> {{$configuracion->imei}}/<b> MAC ADRESS:</b> {{$configuracion->impresora->mac}}
                     <div class="pull-right">
-                        <a href="{{ route('telefonos-impresoras.edit',$configuracion->impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
+                        <a href="{{ route('telefonos-impresoras.edit',$configuracion->id) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
                         <button type="button" title="Eliminar" class="btn btn-xs btn-danger" onclick="eliminar_configuracion({{ $configuracion->id}});"><i class="fa fa-remove"></i></button>
                     </div>
                 </a>
