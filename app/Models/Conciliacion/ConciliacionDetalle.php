@@ -45,11 +45,13 @@ class ConciliacionDetalle extends Model
         if($this->conciliacion->estado != 0 && $this->estado != -1 ){
             throw new \Exception("No se pueden relacionar más viajes a la conciliación.");
         }else{
-            $v = ViajeNeto::find($this->idviaje_neto);
-            $preexistente = $v->conciliacionDetalles->where('estado', 1)->first();
-            if(!$preexistente){
+            
+            //$v = ViajeNeto::find($this->idviaje_neto);
+            //dd("llega aqui");
+//            $preexistente = $v->conciliacionDetalles->where('estado', 1)->first();
+//            if(!$preexistente){
                 $this->removerNoConciliados();
-            }
+            //}
             parent::save($options);
         }
     }

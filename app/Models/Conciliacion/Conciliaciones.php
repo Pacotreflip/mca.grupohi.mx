@@ -292,7 +292,7 @@ class Conciliaciones
         $material = Material::where('Descripcion', $descripcion)
             ->first();
         if(!$material){
-            $material = Tiro::create([
+            $material = Material::create([
                 "IdProyecto"=>1,
                 "Descripcion"=>$descripcion,
                 "IdTipoMaterial"=>1,
@@ -329,18 +329,20 @@ class Conciliaciones
         $modificado = $this->viajeModificado($viaje_neto, $datos_viaje);
         $validado = ($viaje_neto->viaje)?TRUE:FALSE;
         $rechazado = ($viaje_neto->viaje_rechazado)?TRUE:FALSE;
-        
+       
         IF($validado){
             if($viaje_neto->viaje->conciliacionDetalles){
-                $detalle_conciliacion =  $viaje_neto->viaje->conciliacionDetalles->where('estado', 1)->where('idconciliacion',$this->conciliacion->idconciliacion)->first();
+                $detalle_conciliacion =  $viaje_neto->viaje->conciliacionDetalles()->where('estado', 1)->where('idconciliacion',$this->conciliacion->idconciliacion)->first();
+                
                 if($detalle_conciliacion){
                     $c = $detalle_conciliacion->conciliacion;
                 }else{
                     $c = NULL;
                     //$oc = NULL;
                 }
-                //dd($c,$detalle_conciliacion,$this->conciliacion->idconciliacion );
-                $detalle_otra_conciliacion = $viaje_neto->viaje->conciliacionDetalles->where('estado', 1)->where('idconciliacion','!=',$this->conciliacion->idconciliacion)->first();
+                //sdd($c,$detalle_conciliacion,$this->conciliacion->idconciliacion );->where('estado', 1)
+                $detalle_otra_conciliacion = $viaje_neto->viaje->conciliacionDetalles()->where('estado', 1)->where('idconciliacion','<>',$this->conciliacion->idconciliacion)->first();
+                //dd($detalle_otra_conciliacion);
                 if($detalle_otra_conciliacion){
                     $oc = $detalle_otra_conciliacion->conciliacion;
                 }else{
@@ -368,6 +370,8 @@ class Conciliaciones
             $no_autorizado_manual = ($viaje_neto->Estatus == 22)?TRUE:FALSE;
         }
         //dd($conciliado_esta_conciliacion, $viaje_neto);
+        
+        // dd($modificado, $validado, $rechazado,$conciliado_otra_conciliacion, $conciliado_esta_conciliacion);
         if($rechazado){
             $ea = $viaje_neto->Estatus;
             $viaje_neto->estatus = $ea - 1 ;
@@ -570,15 +574,16 @@ class Conciliaciones
     }
     private function viajeModificado($viaje_neto, $data){
         $modificado = FALSE;
-        if($viaje_neto->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE;}
-        if($viaje_neto->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE;}
-        $material = $this->getMaterial($data->material);
-        if($viaje_neto->IdMaterial != $material->IdMaterial){ $modificado = TRUE;}
+        //if($viaje_neto->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE; }
+        //if($viaje_neto->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE; }
+        $cadena ="";
+        $material = $this->getMaterial($data->material );
+        if($viaje_neto->IdMaterial != $material->IdMaterial){ $modificado = TRUE; $cadena.="-MATERIAL-"; }
         $tiro = $this->getTiro($data->tiro);
-        if($viaje_neto->IdTiro != $tiro->IdTiro){ $modificado = TRUE;}
+        if($viaje_neto->IdTiro != $tiro->IdTiro){ $modificado = TRUE; $cadena.="-TIRO-";}
         $origen = $this->getOrigen($data->origen);
-        if($viaje_neto->IdOrigen != $origen->IdOrigen){ $modificado = TRUE;}
-        if($viaje_neto->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;}
+        if($viaje_neto->IdOrigen != $origen->IdOrigen){ $modificado = TRUE;$cadena.="-ORIGEN-";}
+        if($viaje_neto->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;$cadena.="-CUBICACION-";}
         if($viaje_neto->viaje){
             #Obtiene tarifas aplicadas al viaje
             $tasignada_primer_km = $viaje_neto->viaje->TPrimerKM;
@@ -605,17 +610,18 @@ class Conciliaciones
             
             //dd($data->ticket,$tpersonalizada_primer_km, $treal_primer_km, $tasignada_primer_km);
             if($tpersonalizada_primer_km){
-                if($tpersonalizada_primer_km != $tasignada_primer_km){$modificado = TRUE;}
+                if($tpersonalizada_primer_km != $tasignada_primer_km){$modificado = TRUE; $cadena.="-TARIFA 1-";}
             }else{
-                if($treal_primer_km != $tasignada_primer_km){$modificado = TRUE;}
+                if($treal_primer_km != $tasignada_primer_km){$modificado = TRUE; $cadena.="-TARIFA 2-";}
             }
-            if($viaje_neto->viaje->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE;}
-            if($viaje_neto->viaje->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE;}
-            if($viaje_neto->viaje->IdMaterial != $material->IdMaterial){ $modificado = TRUE;}
-            if($viaje_neto->viaje->IdTiro != $tiro->IdTiro){ $modificado = TRUE;}
-            if($viaje_neto->viaje->IdOrigen != $origen->IdOrigen){ $modificado = TRUE;}
-            if($viaje_neto->viaje->CubicacionCamion != $data->cubicacion){ $modificado = TRUE;}
+           // if($viaje_neto->viaje->IdEmpresa != $this->conciliacion->idempresa){ $modificado = TRUE; $cadena.="-EMPRESA 2-";}
+            //if($viaje_neto->viaje->IdSindicato != $this->conciliacion->idsindicato){ $modificado = TRUE; $cadena.="--";}
+            if($viaje_neto->viaje->IdMaterial != $material->IdMaterial){ $modificado = TRUE; $cadena.="-MATERIAL 2-";}
+            if($viaje_neto->viaje->IdTiro != $tiro->IdTiro){ $modificado = TRUE; $cadena.="-TIRO 2-";}
+            if($viaje_neto->viaje->IdOrigen != $origen->IdOrigen){ $modificado = TRUE; $cadena.="-ORIGEN 2-";}
+            if($viaje_neto->viaje->CubicacionCamion != $data->cubicacion){ $modificado = TRUE; $cadena.="-CUBICACION 2-";}
         }
+        //dd($cadena);
         return $modificado;
     }
     private function modificarViajeValidado(ViajeNeto $viaje_neto, $data){
