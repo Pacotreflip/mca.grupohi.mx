@@ -33,7 +33,12 @@
                      <td>
                           <a href="{{ route('impresoras.show', $impresora) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                           <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
-                          <button type="button" title="Eliminar" class="btn btn-xs btn-danger" onclick="eliminar_impresora({{ $impresora->id}});"><i class="fa fa-remove"></i></button>
+
+                         @if($impresora->estatus == 1)
+                             <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-remove"></i></button>
+                         @else
+                             <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_impresora({{$impresora->id}})"><i class="fa fa-plus"></i></button>
+                         @endif
                      <td>
                  </tr>
              @endforeach
@@ -49,30 +54,57 @@
 @endsection
 @section('scripts')
     <script>
-            function eliminar_impresora(id) {  
+            function desactivar_impresora(id) {
                 var form = $('#delete');
                 var url=App.host +"/impresoras/"+id;
 
-                swal({
-                    title: "¡Eliminar Impresora!",
-                    text: "¿Esta seguro de que deseas eliminar la imrpesora?",
+            swal({
+                    title: "¡Eliminar impresora!",
+                    text: "¿Esta seguro de que deseas eliminar la impresora?",
                     type: "input",
                     showCancelButton: true,
                     closeOnConfirm: false,
-                    inputPlaceholder: "Motivo de la eliminación.", 
+                    inputPlaceholder: "Motivo de la eliminación.",
                     confirmButtonText: "Si, Eliminar",
                     cancelButtonText: "No, Cancelar",
-                    showLoaderOnConfirm: true                
-                },function(inputValue){    
+                    showLoaderOnConfirm: true
+
+                },
+                function(inputValue){
                     if (inputValue === false) return false;
                     if (inputValue === "") {
-                        swal.showInputError("Escriba el motivo de la eliminación!"); 
-                        return false 
+                        swal.showInputError("Escriba el motivo de la eliminación!");
+                        return false
                     }
-                    form.attr("action",url);
+                    form.attr("action", url);
                     $("input[name=motivo]").val(inputValue);
-                    $('#delete').submit();
+                    form.submit();
                 });
-            }
+        }
+
+        function activar_impresora(id) {
+            var form = $('#delete');
+            var url=App.host +"/impresoras/"+id;
+
+            swal({
+                    title: "¡Activar Impresora!",
+                    text: "¿Esta seguro de que deseas activar la impresora?",
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    inputPlaceholder: "Motivo de la activación.",
+                    confirmButtonText: "Si, Activar",
+                    cancelButtonText: "No, Cancelar",
+                    showLoaderOnConfirm: true
+
+                },
+                function(){
+                    form.attr("action", url);
+                    $("input[name=motivo]").val("");
+                    form.submit();
+                });
+        }
+
+
     </script>
 @endsection
