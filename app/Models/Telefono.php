@@ -17,7 +17,8 @@ class Telefono extends Model
         "estatus",
         "registro",
         "elimino",
-        "motivo"
+        "motivo",
+        "id_impresora"
     ];
 
     

@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Impresora;
 use App\Models\Telefono;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
-use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
+use Laracasts\Flash\Flash;
+
 class TelefonosImpresorasController extends Controller {
 
     function __construct() {
@@ -32,7 +34,22 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-            return view("telefonos-impresoras.create");
+        $telefonos = Telefono::NoConfigurados()->lists('imei', 'id');
+        $impresoras = Impresora::NoAsignadas()->lists('mac', 'id');
+
+        if(! $telefonos->count()) {
+            flash("¡NO HAY TELEFONOS PENDIENTES DE CONFIGURAR!")->error();
+            return redirect()->back();
+        } else if(! $impresoras->count()) {
+            flash("¡NO HAY IMPRESORAS PENDIENTES DE CONFIGURAR!")->error();
+            return redirect()->back();
+        } else {
+            return view("telefonos-impresoras.create")
+                ->with([
+                    'telefonos'  => $telefonos,
+                    'impresoras' => $impresoras
+                ]);
+        }
     }
 
     /**
@@ -42,36 +59,32 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request) {
-       
-        
-        $this->validate(
-             $request,[
-                    'id_impresora'=>'required',
-                    'id_telefono'=>'required',
-                    ]
-                   );
-    DB::connection('sca')->beginTransaction();
-      try{
-       
-          if (Telefono::create($request->all())){
-          
-            DB::connection('sca')
+        $this->validate($request,[
+            'id_impresora' => 'required',
+            'id_telefono'  => 'required',
+        ]);
+        DB::connection('sca')->beginTransaction();
+        try{
+            if (Telefono::find($request->id_telefono)->update(['id_impresora' => $request->id_impresora])){
+                DB::connection('sca')
                     ->table('telefonos_impresoras_historico')
                     ->insert([
-                        "id_impresora"=>$request->id_impresora,
-                        "id_telefono"=>$request->id_telefono,
-                        "registro"=>auth()->user()->idusuario
-                            ]);
-          }
-           DB::connection('sca')->commit();
-      }catch(\Exception $e){
-          DB::connection('sca')->rollback();  
-          flash($e->getMessage());
-          return redirect()->back();
-      }
-       
-       Flash::success('¡IMPRESORA CREADA CORRECTAMENTE!');
-       return redirect()->route('telefonos-impresoras.index');
+                        "id_impresora" => $request->id_impresora,
+                        "id_telefono"  => $request->id_telefono,
+                        "registro"     => auth()->user()->idusuario,
+                        "created_at"    => Carbon::now()->toDateTimeString(),
+                        "updated_at"   => Carbon::now()->toDateTimeString()
+                    ]);
+            }
+            DB::connection('sca')->commit();
+            Flash::success('¡CONFIGURACIÓN CREADA CORRECTAMENTE!');
+            return redirect()->route('telefonos-impresoras.index');
+
+        } catch(\Exception $e){
+            DB::connection('sca')->rollback();
+            flash($e->getMessage());
+            return redirect()->back();
+        }
     }
 
     /**
@@ -92,7 +105,12 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function edit($id) {
-        //
+        $telefono = Telefono::find($id);
+        $impresoras = Impresora::NoAsignadas()->lists('mac', 'id');
+
+        return view('telefonos-impresoras.edit')
+            ->withTelefono($telefono)
+            ->withImpresoras($impresoras);
     }
 
     /**
@@ -103,7 +121,15 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id) {
-        //
+        $this->validate($request, [
+            'id_impresora' => 'required'
+        ]);
+
+        $telefono = Telefono::find($id);
+        $telefono->update(['id_impresora' => $request->id_impresora]);
+
+        Flash::success('¡CONFIGURACIÓN ACTUALIZADA CORRECTAMENTE!');
+        return redirect()->route('telefonos-impresoras.index');
     }
 
     /**

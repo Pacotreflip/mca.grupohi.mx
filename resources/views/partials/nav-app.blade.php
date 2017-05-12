@@ -90,9 +90,16 @@
         @if(Auth::user()->can(['consultar-cortes-checador']))
         <li><a href="{{ route('corte.index') }}">Corte de Checador</a> </li>
         @endif
-        @if(Auth::user()->can(['configuracion-diaria']))
-        <li><a href="{{ route('configuracion-diaria.index') }}">Configuración Diaria</a> </li>
-        @endif
+
+        <li class="dropdown-submenu">
+            <a tabindex="0" class="dropdown-toggle" data-toggle="dropdown">Configuración Diaria</a>
+            <ul class="dropdown-menu">
+                @if(Auth::user()->can(['configuracion-diaria']))
+                    <li><a href="{{ route('configuracion-diaria.index') }}">Checadores</a> </li>
+                    <li><a href="{{ route('telefonos-impresoras.index') }}">Teléfonos-Impresoras</a> </li>
+                @endif
+            </ul>
+        </li>
     </ul>
   </li>
 

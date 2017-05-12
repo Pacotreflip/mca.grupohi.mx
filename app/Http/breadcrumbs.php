@@ -385,6 +385,7 @@ Breadcrumbs::register('telefonos-impresoras.show', function($breadcrumbs, $telef
     $breadcrumbs->parent('telefonos-impresoras.index');
     $breadcrumbs->push($telefono->id, route('telefonos-impresoras.show', $telefono));
 });
+
 Breadcrumbs::register('telefonos-impresoras.edit', function($breadcrumbs, $telefono){
     $breadcrumbs->parent('telefonos-impresoras.show',$telefono);
     $breadcrumbs->push('EDITAR', route('telefonos-impresoras.edit', $telefono));

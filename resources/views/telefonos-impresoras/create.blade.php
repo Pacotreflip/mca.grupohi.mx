@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <h1>TELÉFONOS</h1>
+    <h1>CONFIGURACIÓN TELÉFONOS-IMPRESORAS</h1>
     {!! Breadcrumbs::render('telefonos-impresoras.create') !!}
     <hr>
     @include('partials.errors')
@@ -10,19 +10,28 @@
         <!-- Teléfono -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="imei">TELÉFONO (*)</label>
-                <input type="text" name="imei" class="form-control">
+                <label for="imei">IMEI TELÉFONO(*)</label>
+                <select name="id_telefono" class="form-control select_tel_imp">
+                    @foreach($telefonos as $key => $telefono)
+                        <option value="{{ $key }}">{{$telefono}}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
 
         <!-- Impresora -->
         <div class="col-md-6">
             <div class="form-group">
-                    <label for="linea">IMPRESORA (*)</label>
-                <input name="linea" type="text" maxlength="10" class="form-control">
+                <label for="id_imprsora">MAC ADDRESS IMPRESORA(*)</label>
+                <select name="id_impresora" class="form-control select_tel_imp">
+                    @foreach($impresoras as $key => $impresora)
+                        <option value="{{ $key }}">{{$impresora}}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </div>
+
     <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
 
     <!-- Guardar -->
@@ -36,13 +45,15 @@
 @endsection
 @section('scripts')
     <script>
+
         $(document).ready(function(){
+
             $('#telefono_store').off().on('click', function (e) {
                 e.preventDefault();
-                var form = $('#telefono_create_form');
+                var form = $('#telefonos_impresoras_create_form');
                 swal({
                     title: "Guardar Cambios",
-                    text: "¿Esta seguro de que desea guardar la configuración del teléfono?",
+                    text: "¿Esta seguro de que desea guardar la configuración?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Si, Guardar",
@@ -50,7 +61,10 @@
                     cancelButtonColor: "#ec6c62",
                     confirmButtonColor: "#467028"
                 }, () => form.submit());
-            })
+            });
+
+            $('.select_tel_imp').val('');
+            $('.select_tel_imp').select2({placeholder: 'Buscar...'});
         });
     </script>
 @endsection

@@ -1,33 +1,38 @@
 @extends('layout')
 @section('content')
-    <h1>TELÉFONOS</h1>
-    {!! Breadcrumbs::render('telefonos.edit', $telefono) !!}
+    <h1>CONFIGURACIÓN TELÉFONOS-IMPRESORAS</h1>
+    {!! Breadcrumbs::render('telefonos-impresoras.edit', $telefono) !!}
     <hr>
 
     @include('partials.errors')
-    {!! Form::model($telefono, ['route' => ['telefonos.update', $telefono], 'method' => 'PATCH', 'id' => 'telefono_update_form']) !!}
+    {!! Form::model($telefono, ['route' => ['telefonos-impresoras.update', $telefono], 'method' => 'PATCH', 'id' => 'telefono_impresora_update_form']) !!}
     <input type="hidden" name="registro" value="{{ auth()->user()->idusuario }}" />
     <div class="row">
         <!-- Teléfono -->
         <div class="col-md-6">
             <div class="form-group">
                 <label for="imei">IMEI(*)</label>
-                {!! Form::text('imei', null, ['class' => 'form-control']) !!}
+                {!! Form::text('imei', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
         </div>
 
-        <!-- Linea Tlefónica -->
+        <!-- Impresora -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="linea">LINEA TELEFÓNICA <strong>10 DÍGITOS</strong> (*)</label>
-                {!! Form::text('linea', null, ['class' => 'form-control']) !!}
+                <label for="id_imprsora">MAC ADDRESS IMPRESORA(*)</label>
+                <select name="id_impresora" class="form-control select_tel_imp">
+                    <option value="{{$telefono->impresora->id}}">{{$telefono->impresora->mac}}</option>
+                    @foreach($impresoras as $key => $impresora)
+                        <option value="{{ $key }}">{{$impresora}}</option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </div>
     <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
     <!-- Guardar -->
     <div class="form-group">
-        <button class="btn btn-success" type="submit" id="telefono_update">
+        <button class="btn btn-success" type="submit" id="telefono_impresora_update">
             <i class="fa fa-save"></i> Guardar
         </button>
     </div>
@@ -37,12 +42,12 @@
 @section('scripts')
     <script>
         $(document).ready(function(){
-            $('#telefono_update').off().on('click', function (e) {
+            $('#telefono_impresora_update').off().on('click', function (e) {
                 e.preventDefault();
-                var form = $('#telefono_update_form');
+                var form = $('#telefono_impresora_update_form');
                 swal({
                     title: "Guardar Cambios",
-                    text: "¿Esta seguro de que desea actualizar la información del teléfono?",
+                    text: "¿Esta seguro de que desea actualizar la configuración?",
                     type: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Si, Actualizar",

@@ -21,7 +21,9 @@ class Impresora extends Model
 
     public function scopeNoAsignadas($query) {
         return $query->leftJoin('telefonos', 'impresoras.id', '=', 'telefonos.id_impresora')
-            ->whereNull('telefonos.id')->where('impresoras.estatus','=',1);
+            ->whereNull('telefonos.id')
+            ->where('impresoras.estatus','=',1)
+            ->select('impresoras.*');
     }
     public function user_registro(){
         return $this->belongsTo(\App\User::class, 'registro','idusuario');
