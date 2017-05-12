@@ -12,7 +12,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="imei">IMEI(*)</label>
-                {!! Form::text('imei', null, ['class' => 'form-control']) !!}
+                {!! Form::number('imei', null, ['class' => 'form-control']) !!}
             </div>
         </div>
 
@@ -20,7 +20,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="linea">LINEA TELEFÓNICA <strong>10 DÍGITOS</strong> (*)</label>
-                {!! Form::text('linea', null, ['class' => 'form-control']) !!}
+                {!! Form::number('linea', null, ['class' => 'form-control']) !!}
             </div>
         </div>
     </div>
