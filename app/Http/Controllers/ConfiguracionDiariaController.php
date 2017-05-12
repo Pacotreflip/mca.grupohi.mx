@@ -14,6 +14,7 @@ use App\Models\Transformers\TiroTransformer;
 use App\Models\Transformers\UserConfiguracionTransformer;
 use App\User;
 use App\User_1;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class ConfiguracionDiariaController extends Controller
@@ -69,6 +70,7 @@ class ConfiguracionDiariaController extends Controller
             if($user->configuracion) {
                 $user->configuracion->delete();
             }
+
             $configuracion = new Configuracion();
             $configuracion->id_usuario = $request->id_usuario;
             $configuracion->tipo = $request->tipo;
@@ -81,6 +83,7 @@ class ConfiguracionDiariaController extends Controller
             } else if ($request->tipo == 1) {
                 $configuracion->id_tiro = $request->id_ubicacion;
             }
+            $configuracion->created_at = $configuracion->updated_at = Carbon::now()->toDateTimeString();
             $configuracion->save();
             return response()->json([
                 'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario))

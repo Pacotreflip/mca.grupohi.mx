@@ -1,7 +1,9 @@
 @extends('layout')
 
 @section('content')
-    <h1>CONFIGURACIÓN DIARIA</h1>
+    <h1>CONFIGURACIÓN DIARIA
+        <a href="{{ route('csv.configuracion-checadores') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar </a>
+    </h1>
     {!! Breadcrumbs::render('configuracion-diaria.index') !!}
     <hr>
 

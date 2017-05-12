@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\CSV\CSV;
 use App\Models\Camion;
 use App\Models\CentroCosto;
+use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\Empresa;
 use App\Models\Etapa;
 use App\Models\FDA\FDABancoMaterial;
@@ -238,5 +239,28 @@ class CSVController extends Controller
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('tarifas_peso');
+    }
+
+    public function configuracion_checadores() {
+        $headers = ['ID', 'Checador', 'Usuario Intranet', 'Origen / Tiro', 'Ubicación', 'Perfil', 'Turno', 'Fecha Y Hora de Configuración', 'Configuró'];
+        $items = Configuracion::leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario' , '=', 'checador.idusuario')
+            ->leftJoin('origenes', 'configuracion_diaria.id_origen', '=', 'origenes.IdOrigen')
+            ->leftJoin('tiros', 'configuracion_diaria.id_tiro', '=', 'tiros.IdTiro')
+            ->leftJoin('configuracion_perfiles_cat as perfiles', 'configuracion_diaria.id_perfil', '=', 'perfiles.id')
+            ->leftJoin('igh.usuario as user_registro', 'configuracion_diaria.registro' , '=', 'user_registro.idusuario')
+            ->select(
+                "configuracion_diaria.id",
+                DB::raw("CONCAT(checador.nombre, ' ', checador.apaterno, ' ', checador.amaterno)"),
+                "checador.usuario",
+                DB::raw("IF(configuracion_diaria.tipo = 0, 'Origen', 'Tiro')"),
+                DB::raw("IF(configuracion_diaria.id_origen is null, tiros.Descripcion, origenes.Descripcion)"),
+                "perfiles.name",
+                DB::raw("IF(configuracion_diaria.turno = 'M', 'Matutino', IF(configuracion_diaria.turno = 'v', 'Vespertino', 'NO ASIGNADO'))"),
+                "configuracion_diaria.created_at",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)")
+            )
+            ->get();
+        $csv = new CSV($headers, $items);
+        $csv->generate('configuracion-checadores');
     }
 }
