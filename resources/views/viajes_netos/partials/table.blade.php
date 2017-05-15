@@ -27,6 +27,12 @@
                 </font>
             </td>
         </tr>
+        <tr>
+            <td colspan="2">
+                <font color="#000000" face="Trebuchet MS" style="font-size:12px; ">ESTADO DE LOS VIAJES:</font>
+                <font color="#666666" face="Trebuchet MS" style="font-size:12px; ">{{ $data['estado'] }}</font>
+            </td>
+        </tr>
     </table>
 </div>
 <hr>

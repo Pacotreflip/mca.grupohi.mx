@@ -225,12 +225,17 @@ class PDFViajesNetos extends Rotation
             }
 
         }
+        $this->SetFont('Arial', 'B', $this->txtContenidoTam);
+        $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode('ESTADO DE LOS VIAJES:'), '', 0, 'L');
+        $this->SetFont('Arial', '', $this->txtContenidoTam);
+        $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, $this->data['estado'], '', 1, 'L');
 
         $this->SetFont('Arial', 'B', $this->txtContenidoTam);
         $this->Cell(0.2 * $this->WidthTotal, 0.45, utf8_decode('RANGO DE FECHAS:'), '', 0, 'L');
         $this->SetFont('Arial', '', $this->txtContenidoTam);
         $this->CellFitScale(0.3 * $this->WidthTotal, 0.5, $this->data['rango'], '', 1, 'L');
-    }
+
+         }
 
     function items()
     {

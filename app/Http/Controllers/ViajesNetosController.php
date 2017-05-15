@@ -265,6 +265,7 @@ class ViajesNetosController extends Controller
                     'FechaInicial' => 'required|date_format:"Y-m-d"',
                     'FechaFinal' => 'required|date_format:"Y-m-d"',
                     'Tipo' => 'required|array',
+                    'Estado' => 'required'
                 ]);
 
                 $fechas = $request->only(['FechaInicial', 'FechaFinal']);
@@ -274,35 +275,35 @@ class ViajesNetosController extends Controller
                 foreach($request->get('Tipo', []) as $tipo) {
                     if($tipo == 'CM_C') {
                         array_push($tipos, 'Manuales - Cargados');
-                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas));
+                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_A') {
                         array_push($tipos, 'Manuales - Autorizados (Pend. Validar)');
-                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_V') {
                         array_push($tipos, 'Manuales - Validados');
-                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_R') {
                         array_push($tipos, 'Manuales - Rechazados');
-                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_D') {
                         array_push($tipos, 'Manuales - Denegados');
-                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_V') {
                         array_push($tipos, 'Móviles - Validados');
-                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas));
+                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_A') {
                         array_push($tipos, 'Móviles - Pendientes de Validar');
-                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas));
+                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_D') {
                         array_push($tipos, 'Móviles - Denegados');
-                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas));
+                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                 }
 
@@ -310,6 +311,7 @@ class ViajesNetosController extends Controller
                 $data = [
                         'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
                         'tipos' => $tipos,
+                        'estado' => $request->Estado == 'C' ? 'Conciliados' : ($request->Estado == 'NC' ? 'No Conciliados' : 'Todos'),
                         'rango' => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"
                 ];
                 return (new Viajes($data))->excel();
