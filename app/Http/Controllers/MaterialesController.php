@@ -109,13 +109,25 @@ class MaterialesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        Material::findOrFail($id);
-        Material::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('materiales.index')
+        $material = Material::find($id);
+        if($material->Estatus == 0) {
+            $material->update([
+                'Estatus' => 1,
+                'usuario_registro' => auth()->user()->idusuario,
+                'usuario_desactivo' => null,
+                'motivo'    => null
             ]);
+            Flash::success("¡MATERIAL ACTIVADO CORRECTAMENTE");
+        } else if($material->Estatus == 1) {
+            $material->update([
+                'Estatus' => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo' => $request->motivo
+            ]);
+            Flash::success("¡MATERIAL DESACTIVADO CORRECTAMENTE");
+        }
+        return redirect()->back();
     }
 }
