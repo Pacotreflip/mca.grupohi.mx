@@ -61,7 +61,7 @@ class RutasController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\CreateRutaRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateRutaRequest $request)
@@ -178,8 +178,27 @@ class RutasController extends Controller
      */
     public function destroy($id)
     {
-        $ruta = Ruta::findOrFail($id);
+        $ruta = Ruta::find($id);
+
         if($ruta->Estatus == 1) {
+            $ruta->update([
+                'Estatus' => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo' => $request->motivo
+            ]);
+
+            Flash::success('¡RUTA DESACTIVADA CORRECTAMENTE!');
+        } else if($ruta->Estatus == 0) {
+
+            $ruta->update([
+                'Estatus' => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo' => $request->motivo
+            ]);
+
+            Flash::success('¡RUTA DESACTIVADA CORRECTAMENTE!');
+
+
             $ruta->Estatus = 0;
             $ruta->Elimina = auth()->user()->idusuario;
             $ruta->FechaHoraElimina = Carbon::now()->toDateTimeString();

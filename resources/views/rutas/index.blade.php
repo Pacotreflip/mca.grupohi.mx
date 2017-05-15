@@ -8,7 +8,7 @@
 {!! Breadcrumbs::render('rutas.index') !!}
 <hr>
 <div class="table-responsive">
-  <table class="table table-hover table-bordered small">
+  <table id="index_rutas" class="table table-hover table-bordered small">
       <thead>
       <tr>
           <th style="text-align: center" colspan="8">Ruta</th>
@@ -33,9 +33,7 @@
     <tbody>
       @foreach($rutas as $ruta)
         <tr>
-          <td>
-            <a href="{{ route('rutas.show', $ruta) }}">{{ $ruta->present()->claveRuta }}</a>
-          </td>
+          <td>{{ $ruta->present()->claveRuta }}</td>
           <td>{{ $ruta->origen->Descripcion }}</td>
           <td>{{ $ruta->tiro->Descripcion }}</td>
           <td>{{ $ruta->tipoRuta->Descripcion }}</td>
@@ -46,17 +44,111 @@
           <td>{{ $ruta->cronometria->TiempoMinimo }}</td>
           <td>{{ $ruta->cronometria->Tolerancia }}</td>
           <td>{{ $ruta->fechaHoraAlta->format('d-M-Y h:i:s a') }}</td>
-          <td>
-              <a href="{{ route('rutas.edit', [$ruta]) }}" class="btn btn-info btn-xs" title="Editar"><i class="fa fa-pencil"></i></a>
-              @if($ruta->Estatus == 1)
-              <a href="{{ route('rutas.destroy', [$ruta]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
-              @else
-              <a href="{{ route('rutas.destroy', [$ruta]) }}" class="btn btn-success btn-xs element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
-              @endif
-          </td>
+            <td>
+                <a href="{{ route('rutas.show', $ruta) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+                <a href="{{ route('rutas.edit', $ruta) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
+                @if($ruta->Estatus == 1)
+                    <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-ban"></i></button>
+                @else
+                    <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-plus"></i></button>
+            @endif
+            </td>
         </tr>
       @endforeach
     </tbody>
   </table>
 </div>
+
+<!-- Form desactivar Ruta -->
+<form id="desactivar_ruta" method="POST">
+    {{ csrf_field() }}
+    <input type="hidden" name="_method" value="delete">
+    <input type="hidden" name="motivo" value/>
+</form>
+
 @stop
+@section('scripts')
+    <script>
+        //Filtro de la tabla de Rutas
+        var auth_config = {
+            auto_filter: true,
+            col_0: 'input',
+            col_1: 'select',
+            col_2: 'select',
+            col_3: 'select',
+            col_4: 'none',
+            col_5: 'none',
+            col_6: 'none',
+            col_7: 'none',
+            col_8: 'none',
+            col_9: 'none',
+            col_10: 'input',
+            col_11: 'none',
+            base_path: App.tablefilterBasePath,
+            auto_filter: true,
+            paging: false,
+            rows_counter: true,
+            rows_counter_text: 'Rutas: ',
+            btn_reset: true,
+            btn_reset_text: 'Limpiar',
+            clear_filter_text: 'Limpiar',
+            loader: true,
+            page_text: 'Pagina',
+            of_text: 'de',
+            help_instructions: false,
+            extensions: [{ name: 'sort' }]
+        };
+        var tf = new TableFilter('index_rutas', auth_config);
+        tf.init();
+
+        //Desactivar Ruta
+        function desactivar_ruta(id, ruta) {
+            var url = App.host + '/rutas/' + id;
+            var form = $('#desactivar_ruta');
+            swal({
+                    title: "¡Desactivar Ruta!",
+                    text: "¿Esta seguro de que deseas desactivar la ruta <br><strong>" + ruta + "</strong>?",
+                    type: "input",
+                    html: true,
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    inputPlaceholder: "Motivo de la desactivación.",
+                    confirmButtonText: "Si, Desactivar",
+                    cancelButtonText: "No, Cancelar",
+                    showLoaderOnConfirm: true
+                },
+                function(inputValue){
+                    if (inputValue === false) return false;
+                    if (inputValue === "") {
+                        swal.showInputError("Escriba el motivo de la desactivación!");
+                        return false
+                    }
+                    form.attr("action", url);
+                    $("input[name=motivo]").val(inputValue);
+                    form.submit();
+                });
+        }
+
+        //Reactivar Material
+        function activar_ruta(id, ruta) {
+            var url = App.host + '/rutas/' + id;
+            var form = $('#desactivar_ruta');
+            swal({
+                    title: "¡Activar Ruta!",
+                    text: "¿Esta seguro de que deseas activar la ruta <br><strong>" + ruta + "</strong>?",
+                    html:true,
+                    type: "warning",
+                    showCancelButton: true,
+                    closeOnConfirm: false,
+                    confirmButtonText: "Si, Activar",
+                    cancelButtonText: "No, Cancelar",
+                    showLoaderOnConfirm: true
+                },
+                function(){
+                    form.attr("action", url);
+                    $("input[name=motivo]").val("");
+                    form.submit();
+                });
+        }
+    </script>
+@endsection
