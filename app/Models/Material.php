@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 
@@ -13,11 +14,17 @@ class Material extends Model
     protected $connection = 'sca';
     protected $table = 'materiales';
     protected $primaryKey = 'IdMaterial';
-    protected $fillable = ['IdTipoMaterial', 'IdProyecto', 'Descripcion'];
+    protected $fillable = [
+        'IdTipoMaterial',
+        'IdProyecto',
+        'Descripcion',
+        'Estatus',
+        'usuario_registro',
+        'usuario_desactivo',
+        'motivo'];
+
     protected $presenter = ModelPresenter::class;
 
-    public $timestamps = false;
-    
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
@@ -46,6 +53,10 @@ class Material extends Model
     
     public function __toString() {
         return $this->Descripcion;
+    }
+
+    public function user_registro() {
+        return $this->belongsTo(User::class, 'usuario_registro');
     }
 }
 

@@ -110,6 +110,11 @@ Route::group(['prefix' => 'pdf'], function () {
         'as' => 'pdf.viajes_netos_conflicto',
         'uses' => 'PDFController@viajes_netos_conflicto'
     ]);
+
+    Route::get('telefonos-impresoras', [
+        'as' => 'pdf.telefonos-impresoras',
+        'uses' => 'PDFController@telefonos_impresoras'
+    ]);
 });
 
 //XLS Routes

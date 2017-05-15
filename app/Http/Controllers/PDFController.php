@@ -4,10 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Conciliacion\Conciliacion;
 use App\Models\Cortes\Corte;
+use App\Models\Telefono;
+use App\Models\Transformers\TelefonoConfiguracionTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\ViajeNeto;
 use App\PDF\PDFConciliacion;
 use App\PDF\PDFCorte;
+use App\PDF\PDFTelefonosImpresoras;
 use App\PDF\PDFViajesNetos;
 use Illuminate\Http\Request;
 
@@ -158,6 +161,17 @@ class PDFController extends Controller
         ];
 
         $pdf = new PDFViajesNetos('L', 'cm', 'Letter', $data);
+        $pdf->create();
+    }
+
+    public function telefonos_impresoras() {
+        $telefonos = Telefono::configurados()->get();
+
+        $data = [
+            'telefonos' => TelefonoConfiguracionTransformer::transform($telefonos)
+        ];
+
+        $pdf = new PDFTelefonosImpresoras('P', 'cm', 'Letter', $data);
         $pdf->create();
     }
 }
