@@ -32272,21 +32272,20 @@ if ($('#app').length) {
     });
 }
 
-},{"./scripts":28,"./vue-components":39,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"datepair.js":8,"jquery":12,"jquery-timepicker/jquery.timepicker.js":9,"jquery-treegrid/js/jquery.treegrid.js":10,"jquery-ui":11,"numeral":13,"select2":14,"sweetalert":23,"underscore":24,"vue-resource":25,"vue/dist/vue.min.js":26}],28:[function(require,module,exports){
+},{"./scripts":28,"./vue-components":38,"bootstrap-datepicker":1,"bootstrap-datepicker/js/locales/bootstrap-datepicker.es.js":2,"bootstrap-fileinput":3,"bootstrap-fileinput/js/locales/es.js":4,"bootstrap-sass":5,"bootstrap-submenu":6,"datepair.js":8,"jquery":12,"jquery-timepicker/jquery.timepicker.js":9,"jquery-treegrid/js/jquery.treegrid.js":10,"jquery-ui":11,"numeral":13,"select2":14,"sweetalert":23,"underscore":24,"vue-resource":25,"vue/dist/vue.min.js":26}],28:[function(require,module,exports){
 'use strict';
 
 require('./scripts/camiones');
 require('./scripts/centroscostos');
 require('./scripts/globales');
 require('./scripts/marcas');
-require('./scripts/materiales');
 require('./scripts/rutas');
 require('./scripts/tarifas');
 require('./scripts/etapas');
 require('./scripts/viajes');
 require('./scripts/conciliaciones');
 
-},{"./scripts/camiones":29,"./scripts/centroscostos":30,"./scripts/conciliaciones":31,"./scripts/etapas":32,"./scripts/globales":33,"./scripts/marcas":34,"./scripts/materiales":35,"./scripts/rutas":36,"./scripts/tarifas":37,"./scripts/viajes":38}],29:[function(require,module,exports){
+},{"./scripts/camiones":29,"./scripts/centroscostos":30,"./scripts/conciliaciones":31,"./scripts/etapas":32,"./scripts/globales":33,"./scripts/marcas":34,"./scripts/rutas":35,"./scripts/tarifas":36,"./scripts/viajes":37}],29:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32824,45 +32823,6 @@ $(".marcas_destroy").off().on("click", function (event) {
 });
 
 },{}],35:[function(require,module,exports){
-"use strict";
-
-$(".materiales_destroy").off().on("click", function (event) {
-    var btn = $(this);
-    event.preventDefault();
-    swal({
-        title: "¿Estás seguro?",
-        text: "¡Se eliminará el material y no podra recuperarlo!",
-        type: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "#DD6B55",
-        confirmButtonText: "Si, ¡Eliminar!",
-        closeOnConfirm: false
-    }, function () {
-        $.ajax({
-            url: btn.attr('href'),
-            type: 'POST',
-            data: { _method: 'delete', _token: App.csrfToken },
-            success: function success(response) {
-                if (response.success) {
-                    swal({
-                        title: "¡Material Eliminado!",
-                        type: "success",
-                        confirmButtonText: "OK",
-                        closeOnConfirm: false }, function () {
-                        window.location.href = response.url;
-                    });
-                } else {
-                    sweetAlert("Oops...", "¡Hubo un error al procesar la solicitud!", "error");
-                }
-            },
-            error: function error() {
-                sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
-            }
-        });
-    });
-});
-
-},{}],36:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -32994,7 +32954,7 @@ $(document).ready(function () {
     }
 });
 
-},{}],37:[function(require,module,exports){
+},{}],36:[function(require,module,exports){
 'use strict';
 
 $(document).ready(function () {
@@ -33048,7 +33008,7 @@ $(document).ready(function () {
     }
 });
 
-},{}],38:[function(require,module,exports){
+},{}],37:[function(require,module,exports){
 'use strict';
 
 if ($('#viajes_netos_autorizar').length) {
@@ -33125,7 +33085,7 @@ if ($('#viaje_neto_validar').length) {
     });
 }
 
-},{}],39:[function(require,module,exports){
+},{}],38:[function(require,module,exports){
 'use strict';
 
 require('./vue-components/global-errors');
@@ -33145,7 +33105,7 @@ require('./vue-components/corte-create');
 require('./vue-components/corte-edit');
 require('./vue-components/configuracion-diaria');
 
-},{"./vue-components/conciliaciones-create":40,"./vue-components/conciliaciones-edit":41,"./vue-components/configuracion-diaria":42,"./vue-components/corte-create":43,"./vue-components/corte-edit":44,"./vue-components/errors":45,"./vue-components/fda-bancomaterial":46,"./vue-components/fda-material":47,"./vue-components/global-errors":48,"./vue-components/origenes-usuarios":49,"./vue-components/viajes-completa":53,"./vue-components/viajes-index":54,"./vue-components/viajes-manual":55,"./vue-components/viajes-modificar":56,"./vue-components/viajes-revertir":57,"./vue-components/viajes-validar":58}],40:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":39,"./vue-components/conciliaciones-edit":40,"./vue-components/configuracion-diaria":41,"./vue-components/corte-create":42,"./vue-components/corte-edit":43,"./vue-components/errors":44,"./vue-components/fda-bancomaterial":45,"./vue-components/fda-material":46,"./vue-components/global-errors":47,"./vue-components/origenes-usuarios":48,"./vue-components/viajes-completa":52,"./vue-components/viajes-index":53,"./vue-components/viajes-manual":54,"./vue-components/viajes-modificar":55,"./vue-components/viajes-revertir":56,"./vue-components/viajes-validar":57}],39:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
@@ -33212,7 +33172,7 @@ Vue.component('conciliaciones-create', {
     }
 });
 
-},{}],41:[function(require,module,exports){
+},{}],40:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-edit', {
@@ -33812,7 +33772,7 @@ Vue.component('conciliaciones-edit', {
     }
 });
 
-},{}],42:[function(require,module,exports){
+},{}],41:[function(require,module,exports){
 'use strict';
 
 /**
@@ -34242,7 +34202,7 @@ Vue.component('configuracion-diaria', {
     }
 });
 
-},{}],43:[function(require,module,exports){
+},{}],42:[function(require,module,exports){
 'use strict';
 
 Vue.component('corte-create', {
@@ -34406,7 +34366,7 @@ Vue.component('corte-create', {
     }
 });
 
-},{}],44:[function(require,module,exports){
+},{}],43:[function(require,module,exports){
 'use strict';
 
 Vue.component('corte-edit', {
@@ -34761,7 +34721,7 @@ Vue.component('corte-edit', {
     }
 });
 
-},{}],45:[function(require,module,exports){
+},{}],44:[function(require,module,exports){
 'use strict';
 
 Vue.component('app-errors', {
@@ -34770,7 +34730,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":50}],46:[function(require,module,exports){
+},{"./templates/errors.html":49}],45:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -34876,7 +34836,7 @@ Vue.component('fda-bancomaterial', {
     }
 });
 
-},{}],47:[function(require,module,exports){
+},{}],46:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-material', {
@@ -34965,7 +34925,7 @@ Vue.component('fda-material', {
     }
 });
 
-},{}],48:[function(require,module,exports){
+},{}],47:[function(require,module,exports){
 'use strict';
 
 var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
@@ -34991,7 +34951,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":51}],49:[function(require,module,exports){
+},{"./templates/global-errors.html":50}],48:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -35066,13 +35026,13 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":52}],50:[function(require,module,exports){
+},{"./templates/origenes-usuarios.html":51}],49:[function(require,module,exports){
 module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
-},{}],51:[function(require,module,exports){
+},{}],50:[function(require,module,exports){
 module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
-},{}],52:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
-},{}],53:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -35292,7 +35252,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],54:[function(require,module,exports){
+},{}],53:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-index', {
@@ -35541,7 +35501,7 @@ Vue.component('viajes-index', {
     }
 });
 
-},{}],55:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 Array.prototype.removeValue = function (name, value) {
@@ -35706,7 +35666,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],56:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 // register modal component
@@ -35868,7 +35828,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],57:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-revertir', {
@@ -36005,7 +35965,7 @@ Vue.component('viajes-revertir', {
     }
 });
 
-},{}],58:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 
 // register modal component
