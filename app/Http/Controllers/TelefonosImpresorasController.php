@@ -33,8 +33,8 @@ class TelefonosImpresorasController extends Controller {
      * @return \Illuminate\Http\Response
      */
     public function create() {
-        $telefonos = Telefono::NoConfigurados()->lists('imei', 'id');
-        $impresoras = Impresora::NoAsignadas()->lists('mac', 'id');
+        $telefonos = Telefono::NoConfigurados()->orderBy('id','asc')->get();
+        $impresoras = Impresora::NoAsignadas()->orderBy('id','asc')->get();
 
         if(! $telefonos->count()) {
             flash::error("¡NO HAY TELEFONOS PENDIENTES DE CONFIGURAR!");

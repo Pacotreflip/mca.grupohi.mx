@@ -3,7 +3,7 @@
 @section('content')
 <h1>CONFIGURACIÓN DIARIA
     <a href="{{ route('telefonos-impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nueva Configuración </a>
-    <a href="{{ route('pdf.telefonos-impresoras')}}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
+    <a href="{{ route('pdf.telefonos-impresoras')}}"   target="_blank" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
 
 
 </h1>
@@ -13,13 +13,21 @@
     @foreach($configuraciones as $configuracion)
 
     <div class="panel panel-default">
-        <div class="panel-heading">
-            <h4 class="panel-title">
+        <div class="panel-heading" >
+            <h4 class="panel-title" style="height: 15px">
                 <a data-toggle="collapse" data-parent="#accordion" href="#collapse{{$configuracion->id}}">
-                    <b> IMEI:</b> {{$configuracion->imei}}/<b> MAC ADRESS:</b> {{$configuracion->impresora->mac}}
+                    <div class="col-sm-4">
+                        <b> TELÉFONO:</b> {{$configuracion}}
+                    </div>
+
+                    <div class="col-sm-4">
+                        <b> IMPRESORA:</b> {{$configuracion->impresora}}
+                    </div>
+                    <div class="col-sm-4">
                     <div class="pull-right">
                         <a href="{{ route('telefonos-impresoras.edit',$configuracion->id) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
                         <button type="button" title="Eliminar" class="btn btn-xs btn-danger" onclick="eliminar_configuracion({{ $configuracion->id}});"><i class="fa fa-remove"></i></button>
+                    </div>
                     </div>
                 </a>
             </h4>

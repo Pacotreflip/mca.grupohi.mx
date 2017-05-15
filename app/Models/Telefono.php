@@ -46,4 +46,9 @@ class Telefono extends Model
     public function getEstatusStringAttribute() {
         return $this->estatus == 1 ? 'ACTIVADO' : 'DESACTIVADO';
     }
+
+    public function __toString()
+    {
+        return $this->id.' ['.$this->imei.']';
+    }
 }
