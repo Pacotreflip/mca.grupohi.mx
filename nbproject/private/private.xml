@@ -3,18 +3,10 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Conciliacion/Conciliaciones.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/ConciliacionesController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Conciliacion/Conciliacion.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/show.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/viajes_netos/partials/validar.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/assets/js/vue-components/conciliaciones-edit.js</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/tarifas/material/index.blade.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/PDFController.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/impresoras/index.blade.php</file>
             <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/edit.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/PDF/PDFConciliacion.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/create.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/Transformers/ConciliacionTransformer.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Models/ViajeNeto.php</file>
+            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/routes.php</file>
         </group>
     </open-files>
 </project-private>

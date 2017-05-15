@@ -50,7 +50,7 @@ class MaterialesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\CreateMaterialRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateMaterialRequest $request)
@@ -58,7 +58,7 @@ class MaterialesController extends Controller
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
         $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
         $material = Material::create($request->all());
-        
+
         Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
         return redirect()->route('materiales.show', $material);
     }
@@ -76,46 +76,30 @@ class MaterialesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('materiales.edit')
-                ->withMaterial(Material::findOrFail($id));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Requests\EditMaterialRequest $request, $id)
-    {
-        $material = Material::findOrFail($id);
-        $material->update($request->all());
-        
-        Flash::success('¡MATERIAL ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        Material::findOrFail($id);
-        Material::destroy($id);
-        return response()->json([
-            'success' => true,
-            'url' => route('materiales.index')
+        $material = Material::find($id);
+        if($material->Estatus == 0) {
+            $material->update([
+                'Estatus' => 1,
+                'usuario_registro' => auth()->user()->idusuario,
+                'usuario_desactivo' => null,
+                'motivo'    => null
             ]);
+            Flash::success("¡MATERIAL ACTIVADO CORRECTAMENTE");
+        } else if($material->Estatus == 1) {
+            $material->update([
+                'Estatus' => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo' => $request->motivo
+            ]);
+            Flash::success("¡MATERIAL DESACTIVADO CORRECTAMENTE");
+        }
+        return redirect()->back();
     }
 }

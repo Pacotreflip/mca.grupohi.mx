@@ -36,8 +36,8 @@ class ConfiguracionDiariaController extends Controller
             if($request->type == 'init') {
                // $users = DB::connection('sca')->select("select * from igh.usuario where (select count(*) from sca_configuracion.roles inner join sca_configuracion.role_user on sca_configuracion.roles.id = sca_configuracion.role_user.role_id where sca_configuracion.role_user.user_id = igh.usuario.idusuario and roles.name = 'checador' and id_proyecto = ".Context::getId().") >= 1"));
                 return response()->json([
-                    'origenes' => OrigenTransformer::transform(Origen::orderBy('Descripcion', 'ASC')->get()),
-                    'tiros'    => TiroTransformer::transform(Tiro::orderBy('Descripcion', 'ASC')->get()),
+                    'origenes' => OrigenTransformer::transform(Origen::where('origenes.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
+                    'tiros'    => TiroTransformer::transform(Tiro::where('tiros.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
                     'esquemas' => EsquemaConfiguracionTransformer::transform(Esquema::orderBy('name', 'ASC')->get()),
                     'perfiles' => Perfiles::orderBy('name', 'ASC')->get(),
                     'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get())

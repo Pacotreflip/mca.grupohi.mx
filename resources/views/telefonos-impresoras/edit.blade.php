@@ -1,6 +1,6 @@
 @extends('layout')
 @section('content')
-    <h1>CONFIGURACIÓN TELÉFONOS-IMPRESORAS</h1>
+    <h1>CONFIGURACIÓN DIARIA</h1>
     {!! Breadcrumbs::render('telefonos-impresoras.edit', $telefono) !!}
     <hr>
 
