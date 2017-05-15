@@ -24,7 +24,7 @@ class ImpresorasController extends Controller
     
     public function index()
     {
-        $impresoras= Impresora::Activas()->get();
+        $impresoras= Impresora::all();
         return view("impresoras.index")->withImpresoras($impresoras);
         
      
@@ -121,11 +121,22 @@ class ImpresorasController extends Controller
     public function destroy(Request $request, $id)
     {
        $impresora=Impresora::find($id);
-       $impresora->estatus=0;
-       $impresora->elimino=auth()->user()->idusuario;
-       $impresora->motivo=$request->motivo;
-       $impresora->save();
-        Flash::success('¡IMPRESORA ELIMINADA CORRECTAMENTE!');
-       return redirect()->route('impresoras.index');
+       if($impresora->estatus==1){
+           $impresora->estatus=0;
+           $impresora->elimino=auth()->user()->idusuario;
+           $impresora->motivo=$request->motivo;
+           $impresora->save();
+           Flash::success('¡IMPRESORA ELIMINADA CORRECTAMENTE!');
+
+       }else{
+           $impresora->estatus=1;
+           $impresora->elimino=auth()->user()->idusuario;
+           $impresora->motivo=null;
+           $impresora->save();
+           Flash::success('¡IMPRESORA ACTIVADA CORRECTAMENTE!');
+       }
+
+
+         return redirect()->route('impresoras.index');
     }
 }

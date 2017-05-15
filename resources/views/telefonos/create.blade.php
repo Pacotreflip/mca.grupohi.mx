@@ -33,11 +33,24 @@
             </div>
         </div>
 
-        <!-- Linea Tlefónica -->
         <div class="col-md-6">
             <div class="form-group">
                 <label for="modelo">MODELO(*)</label>
                 <input name="modelo" type="text" maxlength="10" class="form-control">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <!-- Checador -->
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="checador">CHECADOR(*)</label>
+                <select name="id_checador" class="form-control select_tel_imp">
+                    <option value="">--SELECCIONE--</option>
+                    @foreach($checadores as $checador)
+                        <option value="{{ $checador->idusuario }}">{{$checador->apaterno}} {{$checador->amaterno}} {{$checador->nombre}} </option>
+                    @endforeach
+                </select>
             </div>
         </div>
     </div>

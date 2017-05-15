@@ -18,7 +18,8 @@ class Telefono extends Model
         "registro",
         "elimino",
         "motivo",
-        "id_impresora"
+        "id_impresora",
+        "id_checador"
     ];
 
     
@@ -28,15 +29,21 @@ class Telefono extends Model
     public function user_registro() {
         return $this->belongsTo(User::class, 'registro', 'idusuario');
     }
-
+    public function checador() {
+        return $this->belongsTo(User::class, 'id_checador', 'idusuario');
+    }
     public function scopeActivos($query) {
         return $query->where('estatus', '=', 1);
     }
     public function scopeConfigurados($query) {
         return $query->whereNotNull('telefonos.id_impresora');
     }
-  public function scopeNoConfigurados($query) {
+
+    public function scopeNoConfigurados($query) {
         return $query->whereNull('telefonos.id_impresora');
     }
-    
+
+    public function getEstatusStringAttribute() {
+        return $this->estatus == 1 ? 'ACTIVADO' : 'DESACTIVADO';
     }
+}

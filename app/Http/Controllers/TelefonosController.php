@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Telefono;
+use App\User;
+use App\User_1;
 use Illuminate\Http\Request;
 use Laracasts\Flash\Flash;
 
@@ -22,7 +24,7 @@ class TelefonosController extends Controller
      */
     public function index()
     {
-        $telefonos = Telefono::Activos()->get();
+        $telefonos = Telefono::all();
         return view('telefonos.index')
             ->withTelefonos($telefonos);
     }
@@ -34,7 +36,8 @@ class TelefonosController extends Controller
      */
     public function create()
     {
-        return view('telefonos.create');
+        $checadores=User_1::ChecadoresSinTelefono()->get();
+        return view('telefonos.create')->withChecadores($checadores);
     }
 
     /**
@@ -50,6 +53,7 @@ class TelefonosController extends Controller
             'linea' => 'required|unique:sca.telefonos,linea|digits:10',
             'marca' => 'required|alpha_num',
             'modelo' => 'required|alpha_num',
+            'id_checador' => 'required',
         ]);
         
         Telefono::create([
@@ -58,6 +62,7 @@ class TelefonosController extends Controller
             'marca' => $request->marca,
             'modelo' => $request->modelo,
             'registro' => auth()->user()->idusuario,
+            'id_checador'=>$request->id_checador
         ]);
         
         Flash::success('¡TELÉFONO CREADO CORRECTAMENTE!');
@@ -74,6 +79,7 @@ class TelefonosController extends Controller
     public function show($id)
     {
         $telefono = Telefono::find($id);
+
         return view('telefonos.show')->withTelefono($telefono);
     }
 
@@ -86,7 +92,12 @@ class TelefonosController extends Controller
     public function edit($id)
     {
         $telefono = Telefono::find($id);
-        return view('telefonos.edit')->withTelefono($telefono);
+        $usuario="";
+        if($telefono->id_checador!=null) {
+            $usuario = User::find($telefono->id_checador);
+        }
+        $checadores=User_1::ChecadoresSinTelefono()->get();
+        return view('telefonos.edit')->withTelefono($telefono)->withChecadores($checadores)->withChecador($usuario);
     }
 
     /**
@@ -103,6 +114,7 @@ class TelefonosController extends Controller
             'linea' => 'required|unique:sca.telefonos,linea,'.$request->route('telefonos').',id|digits:10',
             'marca' => 'required|alpha_num',
             'modelo' => 'required|alpha_num',
+            'id_checador' => 'required',
         ]);
 
         $telefono = Telefono::find($id);
@@ -121,13 +133,22 @@ class TelefonosController extends Controller
     public function destroy(Request $request, $id)
     {
         $telefono = Telefono::find($id);
-        $telefono->update([
-            'estatus'  => 0,
-            'elimino' => auth()->user()->idusuario,
-            'motivo'  => $request->motivo
-        ]);
+        if($telefono->estatus == 1) {
+            $telefono->update([
+                'estatus'  => 0,
+                'elimino' => auth()->user()->idusuario,
+                'motivo'  => $request->motivo
+            ]);
+            Flash::success('¡TELÉFONO ELIMINADO CORRECTAMENTE!');
+        } else {
+            $telefono->update([
+                'estatus'  => 1,
+                'elimino' => auth()->user()->idusuario,
+                'motivo'  => null
+            ]);
+            Flash::success('¡TELÉFONO ACTIVADO CORRECTAMENTE!');
+        }
 
-        Flash::success('¡TELÉFONO ELIMINADO CORRECTAMENTE!');
         return redirect()->back();
     }
 }

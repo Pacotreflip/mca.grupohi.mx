@@ -31,4 +31,8 @@ class Impresora extends Model
     public function scopeActivas($query){
         return $query->where("estatus","=",1);
     }
+
+    public function getEstatusStringAttribute() {
+        return $this->estatus == 1 ? 'ACTIVADA' : 'DESACTIVADA';
+    }
 }

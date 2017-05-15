@@ -267,7 +267,7 @@ class CSVController extends Controller
     }
 
     public function impresoras() {
-        $headers = ["ID","MAC Address", "Marca", "Modelo","Estatus", "Registró", "Fecha y hora registro","Eliminó", "Fecha y hora eliminación","Motivo"];
+        $headers = ["ID","MAC Address", "Marca", "Modelo","Estatus", "Registró", "Fecha y hora registro","Desactivó", "Fecha y hora desactivación","Motivo"];
         $items = Impresora::leftjoin('igh.usuario as user_registro', 'impresoras.registro', '=', 'user_registro.idusuario')
                 ->leftjoin('igh.usuario as user_elimino', 'impresoras.elimino', '=', 'user_elimino.idusuario')
                 ->select(
@@ -285,7 +285,7 @@ class CSVController extends Controller
         $csv->generate('impresoras');
     }
    public function telefonos() {
-        $headers = ["ID","IMEI Teléfono", "Linea Telefónica", "Marca","Modelo","Estatus","Registró", "Fecha y hora registro","Eliminó", "Fecha y hora eliminación","Motivo"];
+        $headers = ["ID","IMEI Teléfono", "Linea Telefónica", "Marca","Modelo","Estatus","Registró", "Fecha y hora registro","Desactivo", "Fecha y hora desactivación","Motivo"];
         $items = Telefono::leftjoin('igh.usuario as user_registro', 'telefonos.registro', '=', 'user_registro.idusuario')
                   ->leftjoin('igh.usuario as user_elimino', 'telefonos.elimino', '=', 'user_elimino.idusuario')
             ->select(
