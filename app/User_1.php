@@ -13,4 +13,12 @@ class User_1 extends User
             $q->where('roles.name', 'checador');
         });
     }
+
+    public function scopeChecadoresSinTelefono($query) {
+        return  $query->leftJoin('telefonos', 'igh.usuario.idusuario', '=', 'telefonos.id_checador')
+            ->whereNull('telefonos.id_checador')
+            ->select('igh.usuario.*')
+            ->orderby('igh.usuario.apaterno','asc');
+    }
+
 }
