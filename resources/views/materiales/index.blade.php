@@ -25,7 +25,6 @@
           <td>{{ $material->present()->estatus }}</td>
           <td>
             <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-            <a href="{{ route('materiales.edit', $material) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
             @if($material->Estatus == 1)
               <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
             @else

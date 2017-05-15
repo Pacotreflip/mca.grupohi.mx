@@ -8,17 +8,24 @@
 
 {!! Form::open(['route' => 'materiales.store']) !!}
 
-<div class="form-horizontal col-md-6 col-md-offset-3 rcorners">
-    <div class="form-group">
-        {!! Form::label('Descripcion', 'Descripción', ['class' => 'control-label col-sm-3']) !!}
-        <div class="col-sm-9">
-            {!! Form::text('Descripcion', null, ['class' => 'form-control', 'placeholder' => 'Descripción...']) !!}
+<div class="row">
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Descripción</label>
+            <input type="text" name="Descripcion" class="form-control">
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="form-group">
+            <label>Persona que Registra</label>
+            <input type="text" class="form-control" value="{{auth()->user()}}" disabled>
         </div>
     </div>
 </div>
-<div class="form-group col-md-12" style="text-align: center; margin-top: 20px">
-    <a class="btn btn-info" href="{{ URL::previous() }}">Regresar</a>        
-    {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
+<div class="form-group">
+    {!! Form::submit('Guardar', ['class'    => 'btn btn-success']) !!}
 </div>
 {!! Form::close() !!}
 @stop

@@ -50,7 +50,7 @@ class MaterialesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\CreateMaterialRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateMaterialRequest $request)
@@ -58,7 +58,7 @@ class MaterialesController extends Controller
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
         $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
         $material = Material::create($request->all());
-        
+
         Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
         return redirect()->route('materiales.show', $material);
     }
@@ -73,34 +73,6 @@ class MaterialesController extends Controller
     {
         return view('materiales.show')
                 ->withMaterial(Material::findOrFail($id));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('materiales.edit')
-                ->withMaterial(Material::findOrFail($id));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Requests\EditMaterialRequest $request, $id)
-    {
-        $material = Material::findOrFail($id);
-        $material->update($request->all());
-        
-        Flash::success('¡MATERIAL ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
     }
 
     /**

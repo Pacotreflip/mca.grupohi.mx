@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\User;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 
@@ -52,6 +53,10 @@ class Material extends Model
     
     public function __toString() {
         return $this->Descripcion;
+    }
+
+    public function user_registro() {
+        return $this->belongsTo(User::class, 'usuario_registro');
     }
 }
 
