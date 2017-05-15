@@ -8,7 +8,7 @@
 {!! Breadcrumbs::render('materiales.index') !!}
 <hr>
 <div class="table-responsive">
-  <table class="table table-striped small">
+  <table id="index_materiales" class="table table-striped small">
     <thead>
       <tr>
         <th>ID Material</th>
@@ -27,9 +27,9 @@
             <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
             <a href="{{ route('materiales.edit', $material) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
             @if($material->Estatus == 1)
-              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material({{$material->IdMaterial}})"><i class="fa fa-ban"></i></button>
+              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
             @else
-              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material({{$material->IdMaterial}})"><i class="fa fa-plus"></i></button>
+              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-plus"></i></button>
             @endif
           </td>
         </tr>
@@ -48,13 +48,42 @@
 @section('scripts')
   <script>
     //Desactivar Material
-    function desactivar_material(id) {
+    var auth_config = {
+        auto_filter: true,
+        col_0: 'input',
+        col_1: 'input',
+        col_2: 'select',
+        col_3: 'none',
+        base_path: App.tablefilterBasePath,
+        col_types: [
+            'number',
+            'string',
+            'boolean'
+        ],
+        auto_filter: true,
+        paging: false,
+        rows_counter: true,
+        rows_counter_text: 'Materiales: ',
+        btn_reset: true,
+        btn_reset_text: 'Limpiar',
+        clear_filter_text: 'Limpiar',
+        loader: true,
+        page_text: 'Pagina',
+        of_text: 'de',
+        help_instructions: false,
+        extensions: [{ name: 'sort' }]
+    };
+    var tf = new TableFilter('index_materiales', auth_config);
+    tf.init();
+
+    function desactivar_material(id, material) {
       var url = App.host + '/materiales/' + id;
       var form = $('#desactivar_material');
       swal({
         title: "¡Desactivar Material!",
-        text: "¿Esta seguro de que deseas desactivar el material?",
+        text: "¿Esta seguro de que deseas desactivar el material <br><strong>" + material + "</strong>?",
         type: "input",
+        html: true,
         showCancelButton: true,
         closeOnConfirm: false,
         inputPlaceholder: "Motivo de la desactivación.",
@@ -75,12 +104,13 @@
     }
 
     //Reactivar Material
-    function activar_material(id) {
+    function activar_material(id, material) {
       var url = App.host + '/materiales/' + id;
       var form = $('#desactivar_material');
       swal({
         title: "¡Activar Material!",
-        text: "¿Esta seguro de que deseas activar el material?",
+        text: "¿Esta seguro de que deseas activar el material <br><strong>" + material + "</strong>?",
+          html:true,
         type: "warning",
         showCancelButton: true,
         closeOnConfirm: false,
