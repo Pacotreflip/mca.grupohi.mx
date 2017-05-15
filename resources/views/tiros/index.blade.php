@@ -26,7 +26,6 @@
           <td>{{ $tiro->Descripcion }}</td>
           <td>{{ $tiro->present()->estatus }}</td>
           <td>
-              <a href="{{ route('tiros.edit', [$tiro]) }}" class="btn btn-info btn-xs" title="Editar"><i class="fa fa-pencil"></i></a>
               @if($tiro->Estatus == 1)
               <a href="{{ route('tiros.destroy', [$tiro]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
               @else
