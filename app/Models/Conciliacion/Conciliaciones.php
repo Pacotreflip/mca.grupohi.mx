@@ -306,8 +306,10 @@ class Conciliaciones
         return $camion;
     }
     
-    private function getViajeNeto($code,$datos = null){
-        if($code){
+        private function getViajeNeto($code,$datos = null){
+        $codigo_repetido = $this->getCodigoRepetido($code);
+        if($code && !$codigo_repetido){
+            
             $viaje_neto = ViajeNeto::where('Code', '=', $code)->first();
             if(!$viaje_neto && $datos){
                 $camion = Camion::where('economico', $datos->camion)->first();
@@ -324,6 +326,14 @@ class Conciliaciones
             $viaje_neto = $this->procesoCompletoViajeNetoEncontrado($viaje_neto, $datos);
         }
         return $viaje_neto;
+    }
+    private function getCodigoRepetido($code){
+        $coincidencias = ViajeNeto::where('Code', '=', $code)->get();
+        if(count($coincidencias)>1){
+            return TRUE;
+        }ELSE{
+            return FALSE;
+        }
     }
     private function procesoCompletoViajeNetoEncontrado($viaje_neto, $datos_viaje){
         $modificado = $this->viajeModificado($viaje_neto, $datos_viaje);
