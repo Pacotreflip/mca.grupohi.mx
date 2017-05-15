@@ -10,10 +10,10 @@
         <!-- Teléfono -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="imei">IMEI TELÉFONO(*)</label>
+                <label for="imei">TELÉFONO(*)</label>
                 <select name="id_telefono" class="form-control select_tel_imp">
                     @foreach($telefonos as $key => $telefono)
-                        <option value="{{ $key }}">{{$telefono}}</option>
+                        <option value="{{ $telefono->id }}">{{$telefono}}</option>
                     @endforeach
                 </select>
             </div>
@@ -22,10 +22,10 @@
         <!-- Impresora -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="id_imprsora">MAC ADDRESS IMPRESORA(*)</label>
+                <label for="id_imprsora">IMPRESORA(*)</label>
                 <select name="id_impresora" class="form-control select_tel_imp">
                     @foreach($impresoras as $key => $impresora)
-                        <option value="{{ $key }}">{{$impresora}}</option>
+                        <option value="{{ $impresora->id }}">{{$impresora}}</option>
                     @endforeach
                 </select>
             </div>

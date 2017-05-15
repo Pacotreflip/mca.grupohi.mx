@@ -16,7 +16,7 @@ class Impresora extends Model
 
     public function __toString()
     {
-        return $this->mac;
+        return $this->id . ' [' . $this->mac.']';
     }
 
     public function scopeNoAsignadas($query) {
