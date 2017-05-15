@@ -182,30 +182,32 @@ class ViajesNetosController extends Controller
                 $fechas = $request->only(['FechaInicial', 'FechaFinal']);
                 $query = ViajeNeto::whereNull('IdViajeNeto');
 
+                $conciliados = $request->Estado == 'C' ? true : false;
+
                 foreach($request->get('Tipo', []) as $tipo) {
                     if($tipo == 'CM_C') {
-                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas));
+                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'CM_A') {
-                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'CM_V') {
-                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'CM_R') {
-                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'CM_D') {
-                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas));
+                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'M_V') {
-                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas));
+                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'M_A') {
-                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas));
+                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                     if($tipo == 'M_D') {
-                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas));
+                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas)->Conciliados($conciliados));
                     }
                 }
                 

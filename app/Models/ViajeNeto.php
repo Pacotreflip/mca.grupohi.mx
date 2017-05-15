@@ -83,6 +83,25 @@ class ViajeNeto extends Model
         return $this->hasOne(Deductiva::class, 'id_viaje_neto', 'IdViajeNeto');
     }
 
+    public function scopeConciliados($query, $conciliados) {
+        if($conciliados) {
+            return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+                ->leftJoin('conciliacion_detalle', 'viajes.IdViaje', '=', 'conciliacion_detalle.idviaje')
+                ->where(function($query){
+                    $query->whereNotNull('conciliacion_detalle.idviaje')
+                        ->orWhere('conciliacion_detalle.estado', '!=', '-1');
+                });
+        } else {
+            return $query->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
+                ->leftJoin('conciliacion_detalle', 'viajes.IdViaje', '=', 'conciliacion_detalle.idviaje')
+                ->where(function($query){
+                    $query->whereNull('conciliacion_detalle.idviaje')
+                        ->orWhere('conciliacion_detalle.estado', '=', '-1');
+                });
+        }
+    }
+
+
     /**
      * @param $query
      * @return mixed

@@ -73,7 +73,7 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>TIPO DE VIAJES (*)</label>
                             <select name="Tipo[]" class="form-control" multiple="multiple" v-select2>
@@ -89,6 +89,16 @@
                                     <option value="M_A">Móviles - Pendientes de Validar</option>
                                     <option value="M_D">Móviles - Denegados</option>
                                 </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>ESTADO DE LOS VIAJES (*)</label>
+                            <select name="Estado" class="form-control">
+                                <option value>-- SELECCIONE --</option>
+                                <option value="C">Conciliados</option>
+                                <option value="NC">No Conciliados</option>
                             </select>
                         </div>
                     </div>
