@@ -112,8 +112,19 @@ class CSVController extends Controller
     }
 
     public function materiales() {
-        $headers = ["ID", "Descripción", "Estatus"];
-        $items = Material::select("IdMaterial", "Descripcion", "Estatus")->get();
+        $headers = ["ID", "Descripción", "Estatus", "Registro", "Fecha y Hora de Registro", "Desactivó", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
+        $items = Material::leftJoin('igh.usuario as user_registro', 'materiales.usuario_registro', '=', 'user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_desactivo', 'materiales.usuario_desactivo', '=', 'user_desactivo.idusuario')
+            ->select(
+                "IdMaterial",
+                "Descripcion",
+                "Estatus",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "materiales.created_at",
+                DB::raw("CONCAT(user_desactivo.nombre, ' ', user_desactivo.apaterno, ' ', user_desactivo.amaterno)"),
+                DB::raw("IF(materiales.Estatus = 1, '', materiales.updated_at)"),
+                "materiales.motivo"
+            )->get();
         $csv = new CSV($headers, $items);
         $csv->generate('materiales');
     }
@@ -267,7 +278,7 @@ class CSVController extends Controller
     }
 
     public function impresoras() {
-        $headers = ["ID","MAC Address", "Marca", "Modelo","Estatus", "Registró", "Fecha y hora registro","Eliminó", "Fecha y hora eliminación","Motivo"];
+        $headers = ["ID","MAC Address", "Marca", "Modelo","Estatus", "Registró", "Fecha y Hora Registro","Desactivo", "Fecha y Hora de Desactivación","Motivo de Desactivación"];
         $items = Impresora::leftjoin('igh.usuario as user_registro', 'impresoras.registro', '=', 'user_registro.idusuario')
                 ->leftjoin('igh.usuario as user_elimino', 'impresoras.elimino', '=', 'user_elimino.idusuario')
                 ->select(
@@ -285,7 +296,7 @@ class CSVController extends Controller
         $csv->generate('impresoras');
     }
    public function telefonos() {
-        $headers = ["ID","IMEI Teléfono", "Linea Telefónica", "Marca","Modelo","Estatus","Registró", "Fecha y hora registro","Eliminó", "Fecha y hora eliminación","Motivo"];
+        $headers = ["ID","IMEI Teléfono", "Linea Telefónica", "Marca","Modelo","Estatus","Registró", "Fecha y Hora de Registro","Desactivó", "Fecha y Hora de Desactivación","Motivo de Desactivación"];
         $items = Telefono::leftjoin('igh.usuario as user_registro', 'telefonos.registro', '=', 'user_registro.idusuario')
                   ->leftjoin('igh.usuario as user_elimino', 'telefonos.elimino', '=', 'user_elimino.idusuario')
             ->select(

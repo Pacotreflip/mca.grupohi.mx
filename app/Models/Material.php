@@ -13,11 +13,17 @@ class Material extends Model
     protected $connection = 'sca';
     protected $table = 'materiales';
     protected $primaryKey = 'IdMaterial';
-    protected $fillable = ['IdTipoMaterial', 'IdProyecto', 'Descripcion'];
+    protected $fillable = [
+        'IdTipoMaterial',
+        'IdProyecto',
+        'Descripcion',
+        'Estatus',
+        'usuario_registro',
+        'usuario_desactivo',
+        'motivo'];
+
     protected $presenter = ModelPresenter::class;
 
-    public $timestamps = false;
-    
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }

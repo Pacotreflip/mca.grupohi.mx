@@ -20,22 +20,79 @@
     <tbody>
       @foreach($materiales as $material)
         <tr>
-          <td>
-            <a href="{{ route('materiales.show', $material) }}">#{{ $material->IdMaterial }}</a>
-          </td>
+          <td>{{ $material->IdMaterial }}</td>
           <td>{{ $material->Descripcion }}</td>
           <td>{{ $material->present()->estatus }}</td>
           <td>
-              <a href="{{ route('materiales.edit', [$material]) }}" class="btn btn-info btn-xs" title="Editar"><i class="fa fa-pencil"></i></a>
-              @if($material->Estatus == 1)
-              <a href="{{ route('materiales.destroy', [$material]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
-              @else
-              <a href="{{ route('materiales.destroy', [$material]) }}" class="btn btn-success btn-xs element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
-              @endif
+            <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+            <a href="{{ route('materiales.edit', $material) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
+            @if($material->Estatus == 1)
+              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material({{$material->IdMaterial}})"><i class="fa fa-ban"></i></button>
+            @else
+              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material({{$material->IdMaterial}})"><i class="fa fa-plus"></i></button>
+            @endif
           </td>
         </tr>
       @endforeach
     </tbody>
   </table>
 </div>
+
+<!-- Form desactivar Material -->
+<form id="desactivar_material" method="POST">
+  {{ csrf_field() }}
+  <input type="hidden" name="_method" value="delete">
+  <input type="hidden" name="motivo" value/>
+</form>
 @stop
+@section('scripts')
+  <script>
+    //Desactivar Material
+    function desactivar_material(id) {
+      var url = App.host + '/materiales/' + id;
+      var form = $('#desactivar_material');
+      swal({
+        title: "¡Desactivar Material!",
+        text: "¿Esta seguro de que deseas desactivar el material?",
+        type: "input",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        inputPlaceholder: "Motivo de la desactivación.",
+        confirmButtonText: "Si, Desactivar",
+        cancelButtonText: "No, Cancelar",
+        showLoaderOnConfirm: true
+      },
+      function(inputValue){
+        if (inputValue === false) return false;
+        if (inputValue === "") {
+          swal.showInputError("Escriba el motivo de la desactivación!");
+          return false
+        }
+        form.attr("action", url);
+        $("input[name=motivo]").val(inputValue);
+        form.submit();
+      });
+    }
+
+    //Reactivar Material
+    function activar_material(id) {
+      var url = App.host + '/materiales/' + id;
+      var form = $('#desactivar_material');
+      swal({
+        title: "¡Activar Material!",
+        text: "¿Esta seguro de que deseas activar el material?",
+        type: "warning",
+        showCancelButton: true,
+        closeOnConfirm: false,
+        confirmButtonText: "Si, Activar",
+        cancelButtonText: "No, Cancelar",
+        showLoaderOnConfirm: true
+      },
+      function(){
+        form.attr("action", url);
+        $("input[name=motivo]").val("");
+        form.submit();
+      });
+    }
+  </script>
+@endsection
