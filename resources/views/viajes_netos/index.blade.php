@@ -72,11 +72,34 @@
                     </div>
                 </div>
 
+
                 <div class="row">
-                    <div class="col-md-12">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>ESTADO DE LOS VIAJES (*)</label>
+                            <select name="Estado" class="form-control" v-model="form.estado">
+                                <option value>-- SELECCIONE -- </option>
+                                <option value="T">Todos</option>
+                                <option value="C">Conciliados</option>
+                                <option value="NC">No Conciliados</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
                         <div class="form-group">
                             <label>TIPO DE VIAJES (*)</label>
-                            <select name="Tipo[]" class="form-control" multiple="multiple" v-select2>
+                            <span v-if="form.estado == 'C'">
+                            <select id="tipo" name="Tipo[]" class="form-control" multiple="multiple" v-select2 :disabled="!form.estado">
+                                <optgroup label="CARGADOS MANUALMENTE">
+                                    <option value="CM_V">Manuales - Validados</option>
+                                </optgroup>
+                                <optgroup label="CARGADOS DESDE APLICACIÓN MÓVIL">
+                                    <option value="M_V">Móviles - Validados</option>
+                                </optgroup>
+                            </select>
+                            </span>
+                            <span v-else>
+                            <select id="tipo" name="Tipo[]" class="form-control" multiple="multiple" v-select2 :disabled="!form.estado">
                                 <optgroup label="CARGADOS MANUALMENTE">
                                     <option value="CM_C">Manuales - Cargados</option>
                                     <option value="CM_A">Manuales - Autorizados (Pend. Validar)</option>
@@ -90,8 +113,10 @@
                                     <option value="M_D">Móviles - Denegados</option>
                                 </optgroup>
                             </select>
+                            </span>
                         </div>
                     </div>
+
                 </div>
                 
                 <div class="form-group">
