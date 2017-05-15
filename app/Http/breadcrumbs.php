@@ -329,7 +329,7 @@ Breadcrumbs::register('corte.edit', function ($breadcrumbs, $corte) {
 
 //Configuración diaria
 Breadcrumbs::register('configuracion-diaria.index', function ($breadcrumbs) {
-    $breadcrumbs->push("CONFIGURAR");
+    $breadcrumbs->push("CONFIGURACIÓN DE CHECADORES");
 });
 
 
@@ -375,7 +375,7 @@ Breadcrumbs::register('impresoras.edit', function($breadcrumbs, $impresora){
 //Configuración diaria->Teléfonos e Impresoras
 
 Breadcrumbs::register('telefonos-impresoras.index', function($breadcrumbs){
-    $breadcrumbs->push('LISTA DE CONFIGURACIONES', route('telefonos-impresoras.index'));
+    $breadcrumbs->push('CONFIGURACIÓN TELEFONOS - IMPRESORAS', route('telefonos-impresoras.index'));
 });
 Breadcrumbs::register('telefonos-impresoras.create', function($breadcrumbs){
     $breadcrumbs->parent('telefonos-impresoras.index');

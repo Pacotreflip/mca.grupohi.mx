@@ -17,7 +17,6 @@
                 <div v-else class="row">
                     <!-- Configuración de Checadores-->
                     <div v-if="checadores.length" class="col-md-12" >
-                        <h3>CONFIGURACIÓN DE CHECADORES</h3>
                         <div class="table-responsive">
                             <table class="table small">
                                 <thead>
