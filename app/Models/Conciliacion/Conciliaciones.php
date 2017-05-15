@@ -218,13 +218,13 @@ class Conciliaciones
         $origen = Origen::where('Descripcion', $descripcion)
             ->first();
         if(!$origen){
-            $origen = Origen::create([
-                "IdTipoOrigen"=>1,
-                "IdProyecto"=>1,
-                "Descripcion"=>$descripcion,
-                "FechaAlta"=>Carbon::now()->toDateString(),
-                "HoraAlta"=>Carbon::now()->toTimeString(),
-            ]);
+//            $origen = Origen::create([
+//                "IdTipoOrigen"=>1,
+//                "IdProyecto"=>1,
+//                "Descripcion"=>$descripcion,
+//                "FechaAlta"=>Carbon::now()->toDateString(),
+//                "HoraAlta"=>Carbon::now()->toTimeString(),
+//            ]);
         }
         return $origen;
     }
@@ -233,12 +233,12 @@ class Conciliaciones
         $tiro = Tiro::where('Descripcion', $descripcion)
             ->first();
         if(!$tiro){
-            $tiro = Tiro::create([
-                "IdProyecto"=>1,
-                "Descripcion"=>$descripcion,
-                "FechaAlta"=>Carbon::now()->toDateString(),
-                "HoraAlta"=>Carbon::now()->toTimeString(),
-            ]);
+//            $tiro = Tiro::create([
+//                "IdProyecto"=>1,
+//                "Descripcion"=>$descripcion,
+//                "FechaAlta"=>Carbon::now()->toDateString(),
+//                "HoraAlta"=>Carbon::now()->toTimeString(),
+//            ]);
         }
         return $tiro;
     }
@@ -291,13 +291,13 @@ class Conciliaciones
     private function getMaterial($descripcion){
         $material = Material::where('Descripcion', $descripcion)
             ->first();
-        if(!$material){
-            $material = Material::create([
-                "IdProyecto"=>1,
-                "Descripcion"=>$descripcion,
-                "IdTipoMaterial"=>1,
-            ]);
-        }
+//        if(!$material){
+//            $material = Material::create([
+//                "IdProyecto"=>1,
+//                "Descripcion"=>$descripcion,
+//                "IdTipoMaterial"=>1,
+//            ]);
+//        }
         return $material;
     }
     private function getCamion($economico){
@@ -779,6 +779,42 @@ class Conciliaciones
                 'idmotivo'=>6,
                 'detalle'=>"Económico de camión no existe en el padrón del sistema: ".$viaje->camion,
                 'detalle_alert'=>"Económico de camión no existe en el padrón del sistema: ".$viaje->camion,
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje->ticket,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $this->registraDetalleNoConciliado($detalle_no_conciliado);
+        }elseif(!$origen){
+            $detalle_no_conciliado = [
+                'idconciliacion' => $this->conciliacion->idconciliacion,
+//                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>6,
+                'detalle'=>"Origen no encontrado: ".$viaje->origen,
+                'detalle_alert'=>"Origen no encontrado: ".$viaje->origen,
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje->ticket,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $this->registraDetalleNoConciliado($detalle_no_conciliado);
+        }elseif(!$tiro){
+            $detalle_no_conciliado = [
+                'idconciliacion' => $this->conciliacion->idconciliacion,
+//                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>6,
+                'detalle'=>"Tiro no encontrado: ".$viaje->tiro,
+                'detalle_alert'=>"Tiro no encontrado: ".$viaje->tiro,
+                'timestamp'=>Carbon::now()->toDateTimeString(),
+                'Code' => $viaje->ticket,
+                'registro'=>auth()->user()->idusuario,
+            ];
+            $this->registraDetalleNoConciliado($detalle_no_conciliado);
+        }elseif(!$material){
+            $detalle_no_conciliado = [
+                'idconciliacion' => $this->conciliacion->idconciliacion,
+//                'idviaje_neto'=>$viaje_neto->IdViajeNeto,
+                'idmotivo'=>6,
+                'detalle'=>"Material no encontrado: ".$viaje->material,
+                'detalle_alert'=>"Material no encontrado: ".$viaje->material,
                 'timestamp'=>Carbon::now()->toDateTimeString(),
                 'Code' => $viaje->ticket,
                 'registro'=>auth()->user()->idusuario,
