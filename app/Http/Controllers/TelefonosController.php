@@ -22,7 +22,7 @@ class TelefonosController extends Controller
      */
     public function index()
     {
-        $telefonos = Telefono::Activos()->get();
+        $telefonos = Telefono::all();
         return view('telefonos.index')
             ->withTelefonos($telefonos);
     }
@@ -121,13 +121,22 @@ class TelefonosController extends Controller
     public function destroy(Request $request, $id)
     {
         $telefono = Telefono::find($id);
-        $telefono->update([
-            'estatus'  => 0,
-            'elimino' => auth()->user()->idusuario,
-            'motivo'  => $request->motivo
-        ]);
+        if($telefono->estatus == 1) {
+            $telefono->update([
+                'estatus'  => 0,
+                'elimino' => auth()->user()->idusuario,
+                'motivo'  => $request->motivo
+            ]);
+            Flash::success('¡TELÉFONO ELIMINADO CORRECTAMENTE!');
+        } else {
+            $telefono->update([
+                'estatus'  => 1,
+                'elimino' => auth()->user()->idusuario,
+                'motivo'  => null
+            ]);
+            Flash::success('¡TELÉFONO ACTIVADO CORRECTAMENTE!');
+        }
 
-        Flash::success('¡TELÉFONO ELIMINADO CORRECTAMENTE!');
         return redirect()->back();
     }
 }
