@@ -169,7 +169,7 @@ class PDFController extends Controller
             'telefonos' => TelefonoConfiguracionTransformer::transform($telefonos)
         ];
 
-        $pdf = new PDFTelefonosImpresoras('L', 'cm', 'Letter', $data);
+        $pdf = new PDFTelefonosImpresoras('P', 'cm', 'Letter', $data);
         $pdf->create();
     }
 }
