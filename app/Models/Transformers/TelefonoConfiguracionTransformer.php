@@ -8,24 +8,26 @@
 
 namespace App\Models\Transformers;
 
-
-use App\Models\Conciliacion\ConciliacionDetalle;
-use App\User;
 use Illuminate\Database\Eloquent\Model;
 use Themsaid\Transformers\AbstractTransformer;
-use App\Models\Conciliacion\ConciliacionDetalleNoConciliado;
+
 class TelefonoConfiguracionTransformer extends AbstractTransformer
 {
-    public function transformModel(Model $corte)
+    public function transformModel(Model $telefono)
     {
         $output = [
-            'id'            => $corte->id,
-            'fecha'         => $corte->fecha,
-            'estatus'       => $corte->estatus,
-            'estado'        => $corte->estado,
-            'viajes_netos'  => ViajeNetoCorteTransformer::transform($corte->viajes_netos())
+            'id'            => $telefono->id,
+            'imei'          => $telefono->imei,
+            'linea'         => $telefono->linea,
+            'marca'         => $telefono->marca,
+            'modelo'        => $telefono->modelo,
+            'impresora'     => [
+                'id'     => $telefono->impresora->id,
+                'mac'    => $telefono->impresora->mac,
+                'marca'  => $telefono->impresora->marca,
+                'modelo' => $telefono->impresora->modelo
+            ]
         ];
-
         return $output;
     }
 }
