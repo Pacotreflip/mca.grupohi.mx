@@ -3,7 +3,7 @@
 @section('content')
 <h1>CONFIGURACIÓN DIARIA
     <a href="{{ route('telefonos-impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nueva Configuración </a>
-    <a href="{{ route('pdf.telefonos-impresoras')}}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
+    <a href="{{ route('pdf.telefonos-impresoras')}}" style="margin-right: 5px" target="_blank" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
 
 
 </h1>
