@@ -15,10 +15,18 @@ class User_1 extends User
     }
 
     public function scopeChecadoresSinTelefono($query) {
-        return  $query->leftJoin('telefonos', 'igh.usuario.idusuario', '=', 'telefonos.id_checador')
-            ->whereNull('telefonos.id_checador')
-            ->select('igh.usuario.*')
+
+         return $query->whereHas('roles', function($q) {
+             $q->where('roles.name', 'checador');
+         })->leftJoin('telefonos', 'igh.usuario.idusuario', '=', 'telefonos.id_checador')->whereNull('telefonos.id_checador');
+
+            /*$query->leftJoin('telefonos', 'igh.umsuario.idusuario', '=', 'telefonos.id_checador')
+                //->leftJoin('role_user as rol','igh.usuario.idusuario','=','rol.user_id')
+                //->where('rol.name','=',7)
+                ->whereNull('telefonos.id_checador')
+                ->select('igh.usuario.*')
             ->orderby('igh.usuario.apaterno','asc');
-    }
+    */
+            }
 
 }

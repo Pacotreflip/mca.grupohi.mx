@@ -48,8 +48,9 @@
             <div class="form-group">
                 <label for="checador">CHECADOR(*)</label>
                 <select name="id_checador" class="form-control select_tel_imp">
+                    <option value="">--SELECCIONE--</option>
                     @if($checador)
-                    <option   value="{{$checador->id_usuario}}">{{$checador->apaterno}} {{$checador->amaterno}} {{$checador->nombre}}  </option>
+                    <option   value="{{$checador->idusuario}}" selected>{{$checador->apaterno}} {{$checador->amaterno}} {{$checador->nombre}}  </option>
                     @endif
                 @foreach($checadores as $checador)
                         <option   value="{{ $checador->idusuario }}">{{$checador->apaterno}} {{$checador->amaterno}} {{$checador->nombre}} </option>
