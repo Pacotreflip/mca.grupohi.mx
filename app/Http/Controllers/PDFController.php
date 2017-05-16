@@ -3,12 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Models\Conciliacion\Conciliacion;
+use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\Cortes\Corte;
 use App\Models\Telefono;
+use App\Models\Transformers\ConfiguracionDiariaTransformer;
 use App\Models\Transformers\TelefonoConfiguracionTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
 use App\Models\ViajeNeto;
 use App\PDF\PDFConciliacion;
+use App\PDF\PDFConfiguracionDiaria;
 use App\PDF\PDFCorte;
 use App\PDF\PDFTelefonosImpresoras;
 use App\PDF\PDFViajesNetos;
@@ -173,5 +176,16 @@ class PDFController extends Controller
 
         $pdf = new PDFTelefonosImpresoras('P', 'cm', 'Letter', $data);
         $pdf->create();
+    }
+
+    public function configuracion_diaria() {
+        $configuracionDiaria = Configuracion::all();
+
+        $data = [
+            'configuracion_diaria' => ConfiguracionDiariaTransformer::transform($configuracionDiaria)
+        ];
+
+       $pdf = new PDFConfiguracionDiaria('P', 'cm', 'Letter', $data);
+       $pdf->create();
     }
 }
