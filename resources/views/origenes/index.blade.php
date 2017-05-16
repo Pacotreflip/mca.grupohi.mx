@@ -8,7 +8,7 @@
 {!! Breadcrumbs::render('origenes.index') !!}
 <hr>
 <div class="table-responsive">
-  <table class="table table-striped small">
+  <table class="table table-striped small"  id="index_origenes" >
     <thead>
       <tr>
         <th>Clave</th>
@@ -56,6 +56,33 @@
 
 @section('scripts')
   <script>
+
+      var auth_config = {
+          auto_filter: true,
+          col_0: 'input',
+          col_1: 'select',
+          col_2: 'input',
+          col_3: 'input',
+          col_4: 'select',
+          col_5: 'select',
+          col_6: 'none',
+          base_path: App.tablefilterBasePath,
+          auto_filter: true,
+          paging: false,
+          rows_counter: true,
+          rows_counter_text: 'Origenes: ',
+          btn_reset: true,
+          btn_reset_text: 'Limpiar',
+          clear_filter_text: 'Limpiar',
+          loader: true,
+          page_text: 'Pagina',
+          of_text: 'de',
+          help_instructions: false,
+          extensions: [{ name: 'sort' }]
+      };
+      var tf = new TableFilter('index_origenes', auth_config);
+      tf.init();
+
       function desactivar_origen(id) {
           var form = $('#delete');
           var url=App.host +"/origenes/"+id;

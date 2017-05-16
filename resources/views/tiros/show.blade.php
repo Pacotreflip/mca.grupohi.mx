@@ -2,8 +2,7 @@
 
 @section('content')
 <h1>{{ $tiro->Descripcion }}
-    <a href="{{ route('tiros.destroy', $tiro) }}" class="btn pull-right element_destroy {{ $tiro->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $tiro->Estatus == 1 ? 'fa-ban' : 'fa-check' }}"></i> {{ $tiro->Estatus == 1 ? 'INHABILITAR' : 'HABILITAR' }}</a>
-</h1>
+ </h1>
 {!! Breadcrumbs::render('tiros.show', $tiro) !!}
 <hr>
 {!! Form::model($tiro) !!}

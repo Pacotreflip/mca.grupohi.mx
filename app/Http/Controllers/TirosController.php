@@ -147,18 +147,25 @@ class TirosController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        $tiro = Tiro::findOrFail($id);
+        $tiro = Tiro::find($id);
         if($tiro->Estatus == 1) {
-            $tiro->Estatus = 0;
-            $text = '¡Tiro Inhabilitado!';
+            $tiro->update([
+                'Estatus'  => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo'  => $request->motivo
+            ]);
+            Flash::success('¡TIRO ELIMINADO CORRECTAMENTE!');
         } else {
-            $tiro->Estatus = 1;
-            $text = '¡Tiro Habilitado!';
+            $tiro->update([
+                'Estatus'  => 1,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo'  => null
+            ]);
+            Flash::success('¡TIRO ACTIVADO CORRECTAMENTE!');
         }
-        $tiro->save();
-                
-        return response()->json(['text' => $text]);
+
+        return redirect()->back();
     }
 }
