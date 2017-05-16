@@ -17,6 +17,7 @@ use App\PDF\PDFTelefonosImpresoras;
 use App\PDF\PDFViajesNetos;
 use Illuminate\Http\Request;
 
+use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 
 class PDFController extends Controller
@@ -179,11 +180,23 @@ class PDFController extends Controller
     }
 
     public function configuracion_diaria() {
-        $configuracionDiaria = Configuracion::all();
-
-        $data = [
-            'configuracion_diaria' => ConfiguracionDiariaTransformer::transform($configuracionDiaria)
-        ];
+        $data= Configuracion::leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario' , '=', 'checador.idusuario')
+            ->leftJoin('origenes', 'configuracion_diaria.id_origen', '=', 'origenes.IdOrigen')
+            ->leftJoin('tiros', 'configuracion_diaria.id_tiro', '=', 'tiros.IdTiro')
+            ->leftJoin('configuracion_perfiles_cat as perfiles', 'configuracion_diaria.id_perfil', '=', 'perfiles.id')
+            ->leftJoin('igh.usuario as user_registro', 'configuracion_diaria.registro' , '=', 'user_registro.idusuario')
+            ->select(
+                "configuracion_diaria.id as id",
+                DB::raw("CONCAT(checador.nombre, ' ', checador.apaterno, ' ', checador.amaterno) as nombre"),
+                "checador.usuario as usuario",
+                DB::raw("IF(configuracion_diaria.tipo = 0, 'Origen', 'Tiro') as tipo"),
+                DB::raw("IF(configuracion_diaria.id_origen is null, tiros.Descripcion, origenes.Descripcion) as ubicacion"),
+                "perfiles.name as perfil",
+                DB::raw("IF(configuracion_diaria.turno = 'M', 'Matutino', IF(configuracion_diaria.turno = 'v', 'Vespertino', 'NO ASIGNADO')) as turno"),
+                "configuracion_diaria.created_at",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno) as modifico")
+            )
+            ->get();
 
        $pdf = new PDFConfiguracionDiaria('P', 'cm', 'Letter', $data);
        $pdf->create();
