@@ -29,7 +29,7 @@
           <td>{{ $origen->tipoOrigen->Descripcion }}</td>
           <td>{{ $origen->Descripcion }}</td>
           <td>{{$origen->created_at->format('d-M-Y h:i:s a')}}</td>
-          <td>{{$origen->user_registro->present()->nombreCompleto()}}</td>
+          <td>{{$origen->user_registro}}</td>
           <td>{{ $origen->present()->estatus }}</td>
           <td>
 

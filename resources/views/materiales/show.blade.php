@@ -4,7 +4,7 @@
     <h1>MATERIALES</h1>
     {!! Breadcrumbs::render('materiales.show', $material) !!}
     <hr>
-    <div class=""
+    <div class="row"></div>
     <div class="row">
         <div class="col-md-6">
             <div class="form-group">
@@ -15,7 +15,7 @@
 
         <div class="col-md-6">
             <div class="form-group">
-                <label>Descripción</label>
+                <label>Registró</label>
                 <input type="text" class="form-control" value="{{$material->user_registro->present()->nombreCompleto}}" disabled>
             </div>
         </div>

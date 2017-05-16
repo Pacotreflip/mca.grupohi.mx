@@ -57,10 +57,11 @@ class MaterialesController extends Controller
     {
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
         $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
-        $material = Material::create($request->all());
+        $request->request->add(['usuario_registro' => auth()->user()->idusuario]);
+        Material::create($request->all());
 
         Flash::success('¡MATERIAL REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('materiales.show', $material);
+        return redirect()->route('materiales.index');
     }
 
     /**

@@ -51,7 +51,7 @@ class OrigenesController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\CreateOrigenRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateOrigenRequest $request)
@@ -59,13 +59,12 @@ class OrigenesController extends Controller
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
         
         $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
-        $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
-        $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
-      
-        $origen = Origen::create($request->all());
+        $request->request->add(['usuario_registro' => auth()->user()->idusuario]);
+
+        Origen::create($request->all());
 
         Flash::success('¡ORIGEN REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('origenes.show', $origen);
+        return redirect()->route('origenes.index');
     }
 
     /**
@@ -81,35 +80,6 @@ class OrigenesController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('origenes.edit')
-                ->withOrigen(Origen::findOrFail($id))
-                ->withTipos(TipoOrigen::all()->lists('Descripcion', 'IdTipoOrigen'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Requests\EditOrigenRequest $request, $id)
-    {
-        $origen = Origen::findOrFail($id);
-        $origen->update($request->all());
-        
-        Flash::success('¡ORIGEN ACTUALIZADO CORRECTAMENTE!');
-        return redirect()->route('origenes.show', $origen);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -117,7 +87,6 @@ class OrigenesController extends Controller
      */
     public function destroy(Request $request,$id)
     {
-
         $origen = Origen::find($id);
         if($origen->Estatus == 1) {
             $origen->update([
@@ -125,17 +94,16 @@ class OrigenesController extends Controller
                 'usuario_desactivo' => auth()->user()->idusuario,
                 'motivo'  => $request->motivo
             ]);
-            Flash::success('¡ORIGEN ELIMINADO CORRECTAMENTE!');
+            Flash::success('¡ORIGEN DESACTIVADO CORRECTAMENTE!');
         } else {
             $origen->update([
                 'Estatus'  => 1,
-                'usuario_desactivo' => auth()->user()->idusuario,
+                'usuario_registro' => auth()->user()->idusuario,
+                'usuario_desactivo' => null,
                 'motivo'  => null
             ]);
             Flash::success('¡ORIGEN ACTIVADO CORRECTAMENTE!');
         }
-
         return redirect()->back();
-
     }
 }
