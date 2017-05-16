@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Models\Conciliacion\Conciliacion;
+use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
@@ -25,14 +26,14 @@ class Ruta extends Model
         'TotalKM', 
         'FechaAlta', 
         'Registra', 
-        'HoraAlta'
+        'HoraAlta',
+        'Estatus',
+        'usuario_registro',
+        'usuario_desactivo',
+        'motivo'
         ];
     protected $presenter = ModelPresenter::class;
-    protected $dates = ['FechaHoraAlta'];
 
-    public function getFechaHoraAltaAttribute() {
-        return Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaAlta . ' ' . $this->HoraAlta);
-    }
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
@@ -63,5 +64,8 @@ class Ruta extends Model
 
     public function conciliaciones() {
         return $this->belongsToMany(Conciliacion::class, 'conciliacion_rutas', 'IdRuta', 'IdConciliacion');
+    }
+    public function user_registro() {
+        return $this->belongsTo(User::class, 'usuario_registro', 'idusuario');
     }
 }

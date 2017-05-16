@@ -5,17 +5,14 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
-use App\Http\Controllers\Controller;
 use Laracasts\Flash\Flash;
 use Carbon\Carbon;
 use App\Models\Ruta;
-use App\Models\ProyectoLocal;
 use App\Models\Origen;
 use App\Models\Tiro;
 use App\Models\TipoRuta;
 use App\Models\Cronometria;
 use App\Models\ArchivoRuta;
-use Illuminate\Support\Facades\Storage;
 
 class RutasController extends Controller
 {
@@ -67,9 +64,7 @@ class RutasController extends Controller
     public function store(Requests\CreateRutaRequest $request)
     {
         $request->request->add(['IdProyecto' => $request->session()->get('id')]);
-        $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
-        $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
-        $request->request->add(['Registra' => auth()->user()->idusuario]);
+        $request->request->add(['usuario_registro' => auth()->user()->idusuario]);
 
         $ruta = Ruta::create($request->all());
         
@@ -94,7 +89,7 @@ class RutasController extends Controller
         }
 
         Flash::success('¡RUTA REGISTRADA CORRECTAMENTE!');
-        return redirect()->route('rutas.show', $ruta);
+        return redirect()->route('rutas.index');
     }
 
     /**
@@ -115,7 +110,7 @@ class RutasController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
         $ruta = Ruta::find($id);
 
@@ -130,24 +125,13 @@ class RutasController extends Controller
         } else if($ruta->Estatus == 0) {
 
             $ruta->update([
-                'Estatus' => 0,
-                'usuario_desactivo' => auth()->user()->idusuario,
-                'motivo' => $request->motivo
+                'Estatus' => 1,
+                'usuario_desactivo' => null,
+                'motivo' => null
             ]);
 
-            Flash::success('¡RUTA DESACTIVADA CORRECTAMENTE!');
-
-
-            $ruta->Estatus = 0;
-            $ruta->Elimina = auth()->user()->idusuario;
-            $ruta->FechaHoraElimina = Carbon::now()->toDateTimeString();
-            $text = '¡Ruta Inhabilitada!';
-        } else {
-            $ruta->Estatus = 1;
-            $text = '¡Ruta Habilitada!';
+            Flash::success('¡RUTA ACTIVADA CORRECTAMENTE!');
         }
-        $ruta->save();
-                
-        return response()->json(['text' => $text]);
+        return redirect()->back();
     }
 }

@@ -12,7 +12,9 @@
         <thead>
         <tr>
             <th style="text-align: center" colspan="8">Ruta</th>
-            <th style="text-align: center" colspan="3">Cronometría Activa</th>
+            <th style="text-align: center" colspan="2">Cronometría Activa</th>
+            <th></th>
+            <th></th>
             <th></th>
         </tr>
         <tr>
@@ -25,7 +27,8 @@
             <th>KM Adicionales</th>
             <th>KM Total</th>
             <th>Tiempo Minimo</th>
-            <th>Tiempo Tolerancia</th>
+            <th>Tolerancia</th>
+            <th>Registró</th>
             <th>Fecha/Hora Registro</th>
             <th width="100px">Acciones</th>
       </tr>
@@ -43,10 +46,10 @@
           <td>{{ $ruta->TotalKM . ' km' }}</td>
           <td>{{ $ruta->cronometria->TiempoMinimo }}</td>
           <td>{{ $ruta->cronometria->Tolerancia }}</td>
-          <td>{{ $ruta->fechaHoraAlta->format('d-M-Y h:i:s a') }}</td>
+          <td>{{ $ruta->user_registro }}</td>
+          <td>{{ $ruta->created_at->format('d-M-Y h:i:s a') }}</td>
             <td>
                 <a href="{{ route('rutas.show', $ruta) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-                <a href="{{ route('rutas.edit', $ruta) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
                 @if($ruta->Estatus == 1)
                     <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-ban"></i></button>
                 @else
@@ -82,8 +85,9 @@
             col_7: 'none',
             col_8: 'none',
             col_9: 'none',
-            col_10: 'input',
-            col_11: 'none',
+            col_10: 'select',
+            col_11: 'input',
+            col_12: 'none',
             base_path: App.tablefilterBasePath,
             auto_filter: true,
             paging: false,

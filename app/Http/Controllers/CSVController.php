@@ -34,13 +34,15 @@ class CSVController extends Controller
     }
 
     public function rutas() {
-        $headers = ['Clave', 'Origen', 'Tiro', 'Tipo de Ruta', '1er. KM', 'KM Subsecuentes', 'KM Adicionales', 'KM Total', 'Tiempo Minimo', 'Tiempo Tolerancia', 'Fecha y Hora Registro', 'Estatus', 'Registró'];
+        $headers = ['Clave', 'Origen', 'Tiro', 'Tipo de Ruta', '1er. KM', 'KM Subsecuentes', 'KM Adicionales', 'KM Total', 'Tiempo Minimo', 'Tiempo Tolerancia', "Estatus", "Registró", "Fecha y Hora Registro","Desactivo", "Fecha y Hora de Desactivación","Motivo de Desactivación"];
         $items = Ruta::leftJoin('origenes', 'rutas.IdOrigen', '=', 'origenes.IdOrigen')
             ->leftJoin('tiros', 'rutas.IdTiro', '=', 'tiros.IdTiro')
             ->leftJoin('tipo_ruta', 'rutas.IdTipoRuta', '=', 'tipo_ruta.IdTipoRuta')
             ->leftJoin('cronometrias', 'rutas.IdRuta', '=', 'cronometrias.IdRuta')
-            ->leftJoin('igh.usuario', 'rutas.Registra', '=', 'igh.usuario.idusuario')
-            ->select(DB::raw("CONCAT(rutas.Clave,rutas.IdRuta)"),
+            ->leftJoin('igh.usuario as user_registro', 'rutas.usuario_registro', '=', 'user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_desactivo', 'rutas.usuario_desactivo', '=', 'user_desactivo.idusuario')
+            ->select(
+                DB::raw("CONCAT(rutas.Clave,rutas.IdRuta)"),
                 "origenes.Descripcion as Origen",
                 "tiros.Descripcion as Tiro",
                 "tipo_ruta.Descripcion as Tipo",
@@ -50,9 +52,12 @@ class CSVController extends Controller
                 "rutas.TotalKM",
                 "cronometrias.TiempoMinimo",
                 "cronometrias.Tolerancia",
-                DB::raw("CONCAT(rutas.FechaAlta, '', rutas.HoraAlta) as FechaHoraAlta"),
-                "rutas.Estatus",
-                DB::raw("CONCAT(igh.usuario.nombre, ' ', igh.usuario.apaterno, ' ', igh.usuario.amaterno)"))
+                DB::raw("IF(rutas.Estatus = 1, 'ACTIVA', 'INACTIVA')"),
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "rutas.created_at",
+                DB::raw("CONCAT(user_desactivo.nombre, ' ', user_desactivo.apaterno, ' ', user_desactivo.amaterno)"),
+                DB::raw("IF(rutas.Estatus = 1, '', rutas.updated_at)"),
+                "rutas.motivo")
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('rutas');
