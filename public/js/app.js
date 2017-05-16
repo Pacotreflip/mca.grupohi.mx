@@ -35265,7 +35265,8 @@ Vue.component('viajes-index', {
             'cargando': false,
             'guardando': false,
             'form': {
-                'errors': []
+                'errors': [],
+                'estado': ''
             }
         };
     },

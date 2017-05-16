@@ -16,10 +16,11 @@
                  <th>Linea Telefónica</th>
                  <th>Marca</th>
                  <th>Modelo</th>
+                 <th>Asignado a Checador</th>
                  <th>Fecha Y Hora Registro</th>
                  <th>Registró</th>
                  <th>Estatus</th>
-                 <th>Acciones</th>
+                 <th style="width: 100px;">Acciones</th>
              </tr>
              </thead>
              <tbody>
@@ -30,6 +31,7 @@
                      <td>{{ $telefono->linea }}</td>
                      <td>{{ $telefono->marca }}</td>
                      <td>{{ $telefono->modelo }}</td>
+                     <td>{{ $telefono->checador}}</td>
                      <td>{{ $telefono->created_at->format('d-M-Y h:i:s a') }}</td>
                      <td>{{ $telefono->user_registro->present()->nombreCompleto() }}</td>
                      <td>{{ $telefono->estatus_string }}</td>

@@ -28,7 +28,6 @@
           <td>{{ $origen->Descripcion }}</td>
           <td>{{ $origen->present()->estatus }}</td>
           <td>
-              <a href="{{ route('origenes.edit', [$origen]) }}" class="btn btn-info btn-xs" title="Editar"><i class="fa fa-pencil"></i></a>
               @if($origen->Estatus == 1)
               <a href="{{ route('origenes.destroy', [$origen]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
               @else
