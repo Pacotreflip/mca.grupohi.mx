@@ -58,5 +58,9 @@ class Material extends Model
     public function user_registro() {
         return $this->belongsTo(User::class, 'usuario_registro');
     }
+
+    public function getEstatusStringAttribute() {
+        return $this->Estatus == 1 ? 'ACTIVO' : 'INACTIVO';
+    }
 }
 
