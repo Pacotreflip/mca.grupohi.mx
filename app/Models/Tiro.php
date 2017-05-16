@@ -14,11 +14,9 @@ class Tiro extends Model
     protected $connection = 'sca';
     protected $table = 'tiros';
     protected $primaryKey = 'IdTiro';
-    protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta'];
+    protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta','usuario_registro','motivo','usuario_desactivo','Estatus'];
     protected $presenter = ModelPresenter::class;
-    
-    public $timestamps = false;
-    
+
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
@@ -45,5 +43,8 @@ class Tiro extends Model
 
     public function configuraciones_diarias() {
         return $this->hasMany(Configuracion::class, 'id_tiro');
+    }
+    public function user_registro(){
+        return $this->belongsTo(\App\User::class, 'usuario_registro','idusuario');
     }
 }

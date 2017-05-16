@@ -115,18 +115,27 @@ class OrigenesController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request,$id)
     {
-        $origen = Origen::findOrFail($id);
+
+        $origen = Origen::find($id);
         if($origen->Estatus == 1) {
-            $origen->Estatus = 0;
-            $text = '¡Origen Inhabilitado!';
+            $origen->update([
+                'Estatus'  => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo'  => $request->motivo
+            ]);
+            Flash::success('¡ORIGEN ELIMINADO CORRECTAMENTE!');
         } else {
-            $origen->Estatus = 1;
-            $text = '¡Origen Habilitado!';
+            $origen->update([
+                'Estatus'  => 1,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo'  => null
+            ]);
+            Flash::success('¡ORIGEN ACTIVADO CORRECTAMENTE!');
         }
-        $origen->save();
-                
-        return response()->json(['text' => $text]);
+
+        return redirect()->back();
+
     }
 }

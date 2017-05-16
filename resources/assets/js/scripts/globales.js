@@ -3,7 +3,7 @@ $(function () {
       headers: {
         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
       }
-    });    
+    });
 });
 $('[data-submenu]').submenupicker();
 $('.fecha').datepicker({
@@ -47,4 +47,23 @@ $(".element_destroy").off().on("click", function(event) {
             sweetAlert("Oops...", "¡Error Interno del Servidor!", "error");
         }
     });
+});
+
+$('.mac').keyup(function (e) {
+    var r = /([a-f0-9]{2})/i;
+    var str = e.target.value.replace(/[^a-f0-9:]/ig, "");
+    if (e.keyCode != 8 && r.test(str.slice(-2))) {
+        str = str.concat(':')
+    }
+    e.target.value = str.slice(0, 17);
+});
+
+$('.alfanum').on("keypress",function (e) {
+var tecla = (document.all) ? e.keyCode : e.which;
+    if (tecla==8) return true;
+    var patron =/^[0-9a-zA-Z]+$/;
+    var te = String.fromCharCode(tecla);
+    if(!patron.test(te))
+        event.returnValue = false;
+
 });

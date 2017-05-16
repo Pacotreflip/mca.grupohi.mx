@@ -12,14 +12,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="mac">MAC Address Impresora(*)</label>
-                {!! Form::text('mac',null,['class'=>'form-control','maxlength'=>12]) !!}
+                {!! Form::text('mac',null,['class'=>'form-control mac','maxlength'=>12]) !!}
             </div>
         </div>
         <!-- Marca Impresora  -->
         <div class="col-md-6">
             <div class="form-group">
                 <label for="marca">Marca(*)</label>
-               {!! Form::text('marca',null,['class'=>'form-control','maxlength'=>200]) !!}
+               {!! Form::text('marca',null,['class'=>'form-control alfanum','maxlength'=>200]) !!}
             </div>
         </div>
     </div>
@@ -28,7 +28,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="modelo">Modelo(*)</label>
-                  {!! Form::text('modelo',null,['class'=>'form-control','maxlength'=>200]) !!}
+                  {!! Form::text('modelo',null,['class'=>'form-control alfanum','maxlength'=>200]) !!}
             </div>
         </div>
        

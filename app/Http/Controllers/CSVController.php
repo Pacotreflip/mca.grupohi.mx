@@ -63,33 +63,51 @@ class CSVController extends Controller
         $csv->generate('rutas');
     }
 
-    public function origenes() {
-        $headers = ["Clave", "Tipo", "Descripción", "Fecha y Hora Registro", "Estatus"];
-        $items = Origen::leftJoin('tiposorigenes', 'origenes.IdTipoOrigen', '=', 'tiposorigenes.IdTipoOrigen')
+    public function origenes()
+    {
+        $headers = ["Clave", "Tipo", "Descripción", "Estatus", "Registró", "Fecha y Hora Registro", "Desactivo", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
+
+        $items = Origen::
+        leftJoin('igh.usuario as user_registro', 'origenes.usuario_registro', '=', 'user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_desactivo', 'origenes.usuario_desactivo', '=', 'user_desactivo.idusuario')
+            ->leftJoin('tiposorigenes', 'origenes.IdTipoOrigen', '=', 'tiposorigenes.IdTipoOrigen')
             ->select(
                 DB::raw("CONCAT(origenes.Clave,origenes.IdOrigen)"),
                 "tiposorigenes.Descripcion as Tipo",
                 "origenes.Descripcion",
-                DB::raw("CONCAT(origenes.FechaAlta, '', origenes.HoraAlta) as FechaHoraAlta"),
-                "origenes.Estatus")
+                "origenes.Estatus",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "origenes.created_at",
+                DB::raw("CONCAT(user_desactivo.nombre, ' ', user_desactivo.apaterno, ' ', user_desactivo.amaterno)"),
+                "origenes.updated_at",
+                "origenes.motivo")
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('origenes');
     }
 
-    public function tiros() {
-        $headers = ["Clave", "Descripción", "Fecha y Hora Registro", "Estatus"];
-        $items = Tiro::select(
+    public function tiros()
+    {
+        $headers = ["Clave", "Descripción", "Estatus", "Registró", "Fecha y Hora Registro", "Desactivo", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
+        $items = Tiro::
+             leftJoin('igh.usuario as user_registro', 'tiros.usuario_registro', '=', 'user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_desactivo', 'tiros.usuario_desactivo', '=', 'user_desactivo.idusuario')
+            ->select(
                 DB::raw("CONCAT(tiros.Clave,tiros.IdTiro)"),
                 "tiros.Descripcion",
-                DB::raw("CONCAT(tiros.FechaAlta, '', tiros.HoraAlta) as FechaHoraAlta"),
-                "tiros.Estatus")
+                "tiros.Estatus",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "tiros.created_at",
+                DB::raw("CONCAT(user_desactivo.nombre, ' ', user_desactivo.apaterno, ' ', user_desactivo.amaterno)"),
+                "tiros.updated_at",
+                "tiros.motivo")
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('tiros');
     }
 
-    public function camiones() {
+    public function camiones()
+    {
         $headers = ["Economico", "Sindicato", "Empresa", "Placas del Camión", "Placas de la Caja", "Marca", "Modelo", "Propietario", "Operador", "Aseguradora", "Poliza de Seguro", "Vigencia Seguro", "Cubicación Real", "Cubicación Para Pago", "Estatus"];
         $items = Camion::leftJoin('operadores', 'camiones.IdOperador', '=', 'operadores.IdOperador')
             ->leftJoin('sindicatos', 'camiones.IdSindicato', '=', 'sindicatos.IdSindicato')
@@ -116,7 +134,8 @@ class CSVController extends Controller
         $csv->generate('camiones');
     }
 
-    public function materiales() {
+    public function materiales()
+    {
         $headers = ["ID", "Descripción", "Estatus", "Registro", "Fecha y Hora de Registro", "Desactivó", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
         $items = Material::leftJoin('igh.usuario as user_registro', 'materiales.usuario_registro', '=', 'user_registro.idusuario')
             ->leftJoin('igh.usuario as user_desactivo', 'materiales.usuario_desactivo', '=', 'user_desactivo.idusuario')
@@ -134,21 +153,24 @@ class CSVController extends Controller
         $csv->generate('materiales');
     }
 
-    public function empresas() {
+    public function empresas()
+    {
         $headers = ["ID", "Razón Social", "RFC", "Estatus"];
         $items = Empresa::select("IdEmpresa", "razonSocial", "RFC", "Estatus")->get();
         $csv = new CSV($headers, $items);
         $csv->generate('empresas');
     }
 
-    public function sindicatos() {
+    public function sindicatos()
+    {
         $headers = ["ID", "Descripción", "Nombre Corto", "Estatus"];
         $items = Sindicato::select("IdSindicato", "Descripcion", "NombreCorto", "Estatus")->get();
         $csv = new CSV($headers, $items);
         $csv->generate('sindicatos');
     }
 
-    public function centros_costos() {
+    public function centros_costos()
+    {
         $headers = ["ID", "Descripción", "Cuenta", "Centro de Costo Padre", "Estatus"];
         $items = CentroCosto::leftJoin("centroscosto as padres", "centroscosto.IdPadre", "=", "padres.IdCentroCosto")
             ->select(
@@ -163,7 +185,8 @@ class CSVController extends Controller
         $csv->generate('centros_costo');
     }
 
-    public function etapas_proyecto() {
+    public function etapas_proyecto()
+    {
         $headers = ["ID", "Descripción", "Estatus"];
         $items = Etapa::select("IdEtapaProyecto", "Descripcion", "Estatus")
             ->get();
@@ -171,7 +194,8 @@ class CSVController extends Controller
         $csv->generate('etapas_proyecto');
     }
 
-    public function fda_material() {
+    public function fda_material()
+    {
         $headers = ["ID", "Material", "Factor de Abundamiento", "Fecha y Hora Registro", "Estatus", "Registró"];
         $items = FDAMaterial::leftJoin("materiales", "factorabundamiento.IdMaterial", "=", "materiales.IdMaterial")
             ->leftJoin("igh.usuario", "factorabundamiento.Registra", "=", "igh.usuario.usuario")
@@ -187,7 +211,8 @@ class CSVController extends Controller
         $csv->generate('fda_material');
     }
 
-    public function fda_banco_material() {
+    public function fda_banco_material()
+    {
         $headers = ["Banco", "Material", "Factor de Abundamiento", "Fecha y Hora Registro", "Estatus", "Registró"];
         $items = FDABancoMaterial::leftJoin("materiales", "factorabundamiento_material.IdMaterial", "=", "materiales.IdMaterial")
             ->leftJoin("origenes", "factorabundamiento_material.IdBanco", "=", "origenes.IdOrigen")
@@ -204,23 +229,26 @@ class CSVController extends Controller
         $csv->generate('fda_banco_material');
     }
 
-    public function marcas() {
-        $headers = ["ID","Descripción", "Estatus"];
+    public function marcas()
+    {
+        $headers = ["ID", "Descripción", "Estatus"];
         $items = Marca::select("IdMarca", "Descripcion", "Estatus")
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('marcas');
     }
 
-    public function operadores() {
-        $headers = ["ID","Nombre", "Dirección", "Número de Licencia", "Vigencia de Licencia", "Fecha Registro", "Fecha de Baja", "Estatus"];
+    public function operadores()
+    {
+        $headers = ["ID", "Nombre", "Dirección", "Número de Licencia", "Vigencia de Licencia", "Fecha Registro", "Fecha de Baja", "Estatus"];
         $items = Operador::select("IdOperador", "Nombre", "Direccion", "NoLicencia", "VigenciaLicencia", "FechaAlta", "FechaBaja", "Estatus")
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('operadores');
     }
 
-    public function tarifas_material() {
+    public function tarifas_material()
+    {
         $headers = ["ID", "Material", "Primer KM", "KM Subsecuente", "KM Adicional", "Fecha y Hora Registro", "Estatus", "Registra", "Inicio Vigencia", "Fin Vigencia"];
         $items = TarifaMaterial::leftJoin('materiales', 'tarifas.IdMaterial', '=', 'materiales.IdMaterial')
             ->leftJoin('igh.usuario', 'tarifas.Registra', '=', 'igh.usuario.idusuario')
@@ -240,8 +268,9 @@ class CSVController extends Controller
         $csv->generate('tarifas_material');
     }
 
-    public function tarifas_peso() {
-        $headers = ["ID", "Material", "Primer KM", "KM Subsecuente", "KM Adicional", "Fecha y Hora Registro", "Estatus",  "Registro"];
+    public function tarifas_peso()
+    {
+        $headers = ["ID", "Material", "Primer KM", "KM Subsecuente", "KM Adicional", "Fecha y Hora Registro", "Estatus", "Registro"];
         $items = TarifaPeso::leftJoin('materiales', 'tarifas_peso.IdMaterial', '=', 'materiales.IdMaterial')
             ->leftJoin('igh.usuario', 'tarifas_peso.Registra', '=', 'igh.usuario.idusuario')
             ->select(
@@ -259,13 +288,14 @@ class CSVController extends Controller
         $csv->generate('tarifas_peso');
     }
 
-    public function configuracion_checadores() {
+    public function configuracion_checadores()
+    {
         $headers = ['ID', 'Checador', 'Usuario Intranet', 'Origen / Tiro', 'Ubicación', 'Perfil', 'Turno', 'Fecha Y Hora de Configuración', 'Configuró'];
-        $items = Configuracion::leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario' , '=', 'checador.idusuario')
+        $items = Configuracion::leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario', '=', 'checador.idusuario')
             ->leftJoin('origenes', 'configuracion_diaria.id_origen', '=', 'origenes.IdOrigen')
             ->leftJoin('tiros', 'configuracion_diaria.id_tiro', '=', 'tiros.IdTiro')
             ->leftJoin('configuracion_perfiles_cat as perfiles', 'configuracion_diaria.id_perfil', '=', 'perfiles.id')
-            ->leftJoin('igh.usuario as user_registro', 'configuracion_diaria.registro' , '=', 'user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_registro', 'configuracion_diaria.registro', '=', 'user_registro.idusuario')
             ->select(
                 "configuracion_diaria.id",
                 DB::raw("CONCAT(checador.nombre, ' ', checador.apaterno, ' ', checador.amaterno)"),
@@ -282,11 +312,12 @@ class CSVController extends Controller
         $csv->generate('configuracion-checadores');
     }
 
-    public function impresoras() {
-        $headers = ["ID","MAC Address", "Marca", "Modelo","Estatus", "Registró", "Fecha y Hora Registro","Desactivo", "Fecha y Hora de Desactivación","Motivo de Desactivación"];
+    public function impresoras()
+    {
+        $headers = ["ID", "MAC Address", "Marca", "Modelo", "Estatus", "Registró", "Fecha y Hora Registro", "Desactivo", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
         $items = Impresora::leftjoin('igh.usuario as user_registro', 'impresoras.registro', '=', 'user_registro.idusuario')
-                ->leftjoin('igh.usuario as user_elimino', 'impresoras.elimino', '=', 'user_elimino.idusuario')
-                ->select(
+            ->leftjoin('igh.usuario as user_elimino', 'impresoras.elimino', '=', 'user_elimino.idusuario')
+            ->select(
                 "impresoras.id",
                 "impresoras.mac",
                 "impresoras.marca",
@@ -300,10 +331,12 @@ class CSVController extends Controller
         $csv = new CSV($headers, $items);
         $csv->generate('impresoras');
     }
-   public function telefonos() {
-        $headers = ["ID","IMEI Teléfono", "Linea Telefónica", "Marca","Modelo","Estatus","Registró", "Fecha y Hora de Registro","Desactivó", "Fecha y Hora de Desactivación","Motivo de Desactivación"];
+
+    public function telefonos()
+    {
+        $headers = ["ID", "IMEI Teléfono", "Linea Telefónica", "Marca", "Modelo", "Estatus", "Registró", "Fecha y Hora de Registro", "Desactivó", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
         $items = Telefono::leftjoin('igh.usuario as user_registro', 'telefonos.registro', '=', 'user_registro.idusuario')
-                  ->leftjoin('igh.usuario as user_elimino', 'telefonos.elimino', '=', 'user_elimino.idusuario')
+            ->leftjoin('igh.usuario as user_elimino', 'telefonos.elimino', '=', 'user_elimino.idusuario')
             ->select(
                 "telefonos.id",
                 "telefonos.imei",

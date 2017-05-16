@@ -12,11 +12,9 @@ class Origen extends Model
     protected $connection = 'sca';
     protected $table = 'origenes';
     protected $primaryKey = 'IdOrigen';
-    protected $fillable = ['IdTipoOrigen', 'IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta'];
+    protected $fillable = ['IdTipoOrigen', 'IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta','usuario_registro','motivo','usuario_desactivo','Estatus'];
     protected $presenter = ModelPresenter::class;
-    
-    public $timestamps = false;
-    
+
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
@@ -32,11 +30,14 @@ class Origen extends Model
     public function __toString() {
         return $this->Descripcion;
     }
-    
+    public function user_registro(){
+        return $this->belongsTo(\App\User::class, 'usuario_registro','idusuario');
+    }
+
     public function usuario() {
         return $this->belongsToMany(\App\User::class, \App\Facades\Context::getDatabaseName().'.origen_x_usuario', 'idorigen', 'idusuario_intranet');
     }
-    
+
     public function fdaBancoMaterial() {
         return $this->hasMany(FDA\FDABancoMaterial::class, 'IdBanco', 'IdOrigen');
     }
