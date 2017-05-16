@@ -99,7 +99,7 @@ class CSVController extends Controller
                 DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
                 "tiros.created_at",
                 DB::raw("CONCAT(user_desactivo.nombre, ' ', user_desactivo.apaterno, ' ', user_desactivo.amaterno)"),
-                "tiros.updated_at",
+                DB::raw("IF(tiros.Estatus = 1, '', tiros.updated_at)"),
                 "tiros.motivo")
             ->get();
         $csv = new CSV($headers, $items);

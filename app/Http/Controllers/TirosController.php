@@ -55,15 +55,15 @@ class TirosController extends Controller
     public function store(Requests\CreateTiroRequest $request)
     {
         $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
-        
+
         $request->request->add(['IdProyecto' => $proyecto_local->IdProyecto]);
-        $request->request->add(['FechaAlta' => Carbon::now()->toDateString()]);
-        $request->request->add(['HoraAlta' => Carbon::now()->toTimeString()]);
-        
-        $tiro = Tiro::create($request->all());
+        $request->request->add(['usuario_registro' => auth()->user()->idusuario]);
+
+
+        Tiro::create($request->all());
         
         Flash::success('¡TIRO REGISTRADO CORRECTAMENTE!');
-        return redirect()->route('tiros.show', $tiro);
+        return redirect()->route('tiros.index');
     }
 
     /**
@@ -133,11 +133,6 @@ class TirosController extends Controller
                     'status_code' => 200
                 ]);
             }
-        } else {
-            $tiro->update($request->all());
-
-            Flash::success('¡TIRO ACTUALIZADO CORRECTAMENTE!');
-            return redirect()->route('tiros.show', $tiro);
         }
     }
 
@@ -156,16 +151,16 @@ class TirosController extends Controller
                 'usuario_desactivo' => auth()->user()->idusuario,
                 'motivo'  => $request->motivo
             ]);
-            Flash::success('¡TIRO ELIMINADO CORRECTAMENTE!');
+            Flash::success('¡TIRO DESACTIVADO CORRECTAMENTE!');
         } else {
             $tiro->update([
                 'Estatus'  => 1,
-                'usuario_desactivo' => auth()->user()->idusuario,
+                'usuario_registro' => auth()->user()->idusuario,
+                'usuario_desactivo' => null,
                 'motivo'  => null
             ]);
             Flash::success('¡TIRO ACTIVADO CORRECTAMENTE!');
         }
-
         return redirect()->back();
     }
 }

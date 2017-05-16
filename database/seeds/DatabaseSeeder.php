@@ -16,6 +16,7 @@ class DatabaseSeeder extends Seeder
 
         $this->call(OrigenesChangesSeeder::class);
         $this->call(RutasTimestampsSeeder::class);
+        $this->call(TirosChangesSeeder::class);
 
         Model::reguard();
     }
