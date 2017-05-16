@@ -11,14 +11,14 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="mac">MAC Address Impresora(*)</label>
-                <input type="text" name="mac" class="form-control" maxlength="12" >
+                <input type="text" name="mac" class="form-control mac" maxlength="17">
             </div>
         </div>
         <!-- Marca Impresora  -->
         <div class="col-md-6">
             <div class="form-group">
                 <label for="marca">Marca(*)</label>
-                <input type="text" name="marca" class="form-control" maxlength="200">
+                <input type="text" name="marca" class="form-control alfanum" maxlength="200">
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="modelo">Modelo(*)</label>
-                <input type="text" name="modelo" class="form-control" maxlength="200">
+                <input type="text" name="modelo" class="form-control alfanum" maxlength="200">
             </div>
         </div>
        
@@ -59,5 +59,9 @@
                 }, () => form.submit());
             })
         });
+
+
+
+
     </script>
 @endsection
