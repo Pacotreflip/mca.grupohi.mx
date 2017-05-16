@@ -1,8 +1,8 @@
 @extends('layout')
 @section('content')
     <h1>IMPRESORAS
-        <a href="{{ route('impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nueva Impresora </a>
-        <a href="{{ route('csv.impresoras') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
+        <a href="{{ route('impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> NUEVA IMPRESORA </a>
+        <a href="{{ route('csv.impresoras') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
     </h1>
   {!! Breadcrumbs::render('impresoras.index')!!}
     <hr>

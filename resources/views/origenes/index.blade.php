@@ -2,8 +2,8 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.origins')) }}
-  <a href="{{ route('origenes.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_origin') }}</a>
-  <a href="{{ route('csv.origenes') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
+  <a href="{{ route('origenes.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> NUEVO ORIGEN</a>
+  <a href="{{ route('csv.origenes') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 </h1>
 {!! Breadcrumbs::render('origenes.index') !!}
 <hr>

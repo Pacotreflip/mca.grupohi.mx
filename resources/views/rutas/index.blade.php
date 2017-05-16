@@ -2,8 +2,8 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.rutas')) }}
-    <a href="{{ route('rutas.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_ruta') }}</a>
-    <a style="margin-right: 5px" href="{{ route('csv.rutas') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
+    <a href="{{ route('rutas.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> NUEVA RUTA</a>
+    <a style="margin-right: 5px" href="{{ route('csv.rutas') }}" class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 </h1>
 {!! Breadcrumbs::render('rutas.index') !!}
 <hr>

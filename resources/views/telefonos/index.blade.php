@@ -2,8 +2,8 @@
 
 @section('content')
     <h1>TELÉFONOS
-        <a href="{{ route('telefonos.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nuevo Teléfono </a>
-    <a href="{{ route('csv.telefonos')}}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
+        <a href="{{ route('telefonos.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> NUEVO TELÉFONO </a>
+    <a href="{{ route('csv.telefonos')}}" style="margin-right: 5px" class="btn btn-excel pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
     </h1>
     {!! Breadcrumbs::render('telefonos.index') !!}
     <hr>
