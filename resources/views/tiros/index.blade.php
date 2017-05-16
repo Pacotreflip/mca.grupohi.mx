@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ strtoupper(trans('strings.tiros')) }}
   <a href="{{ route('tiros.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_tiro') }}</a>
-    <a href="{{ route('csv.tiros') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+    <a href="{{ route('csv.tiros') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
 </h1>
 {!! Breadcrumbs::render('tiros.index') !!}
 <hr>

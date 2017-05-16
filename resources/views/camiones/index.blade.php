@@ -3,7 +3,7 @@
 @section('content')
 <h1>CAMIONES
   <a href="{{ route('camiones.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_camion') }}</a>
-    <a href="{{ route('csv.camiones') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+    <a href="{{ route('csv.camiones') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
 </h1>
 {!! Breadcrumbs::render('camiones.index') !!}
 <hr>
@@ -34,6 +34,7 @@
           </td>
           <td>{{ $camion->Propietario }}</td>
           <td>{{ isset($camion->operador->Nombre) ? $camion->operador->Nombre : 'SIN OPERADOR' }}</td>
+          <td>{{ $camion->CubicacionReal}} m<sup>3</sup></td>
           <td>{{ $camion->CubicacionReal}} m<sup>3</sup></td>
           <td>{{ $camion->CubicacionParaPago}} m<sup>3</sup></td>
           <td>{{ $camion->present()->estatus }}</td>
