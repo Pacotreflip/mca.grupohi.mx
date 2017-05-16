@@ -115,6 +115,10 @@ Route::group(['prefix' => 'pdf'], function () {
         'as' => 'pdf.telefonos-impresoras',
         'uses' => 'PDFController@telefonos_impresoras'
     ]);
+    Route::get('configuracion-diaria', [
+        'as' => 'pdf.configuracion-diaria',
+        'uses' => 'PDFController@configuracion_diaria'
+    ]);
 });
 
 //XLS Routes

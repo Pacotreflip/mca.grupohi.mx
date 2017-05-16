@@ -3,6 +3,8 @@
 @section('content')
     <h1>CONFIGURACIÓN DIARIA
         <a href="{{ route('csv.configuracion-checadores') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar </a>
+        <a href="{{ route('pdf.configuracion-diaria')}}"   target="_blank" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
+
     </h1>
     {!! Breadcrumbs::render('configuracion-diaria.index') !!}
     <hr>
