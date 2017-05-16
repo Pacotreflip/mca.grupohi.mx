@@ -11,10 +11,10 @@
   <table id="index_materiales" class="table table-striped small">
     <thead>
       <tr>
-        <th>ID Material</th>
+        <th style="width: 30px">#</th>
         <th>Descripción</th>
-        <th>Estatus</th>
-        <th>Acciones</th>
+        <th style="width: 90px">Estatus</th>
+        <th style="width: 80px">Acciones</th>
       </tr>
     </thead>
     <tbody>
@@ -28,7 +28,7 @@
             @if($material->Estatus == 1)
               <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
             @else
-              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-plus"></i></button>
+              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-check"></i></button>
             @endif
           </td>
         </tr>
