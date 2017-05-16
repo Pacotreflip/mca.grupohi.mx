@@ -110,67 +110,6 @@ class RutasController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('rutas.edit')
-                ->withRuta(Ruta::findOrFail($id))
-                ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
-                ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
-                ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));    
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Requests\EditRutaRequest $request, $id)
-    {
-        $ruta = Ruta::findOrFail($id);
-        $ruta->update($request->all());
-        
-        $cronometria = $ruta->cronometria;
-        $cronometria->TiempoMinimo = $request->get('TiempoMinimo');
-        $cronometria->Tolerancia = $request->get('Tolerancia');
-        $cronometria->save();
-        
-        if($request->hasFile('Croquis')) {
-            $croquis = $request->file('Croquis');
-            $tipo = $croquis->getClientMimeType();
-            $nombre = ArchivoRuta::creaNombre($croquis, $ruta);
-            $ruta_ = ArchivoRuta::baseDir().'/'.$nombre;
-
-            $archivo = ArchivoRuta::where(['IdRuta' => $ruta->IdRuta])->first();
-            if($archivo) {
-                $archivo->Tipo = $tipo;
-                $archivo->Ruta = $ruta_;
-                $archivo->save();
-            } else {
-                $archivo = ArchivoRuta::create([
-                    'IdRuta' => $ruta->IdRuta,
-                    'Tipo' => $tipo,
-                    'Ruta' => $ruta_
-                ]);
-            }
-            
-            if(Storage::disk('uploads')->has($archivo->Ruta)) {
-                Storage::disk('uploads')->delete($archivo->Ruta);
-            }
-            $croquis->move(ArchivoRuta::baseDir(), $nombre);
-        }
-        
-        Flash::success('¡RUTA ACTUALIZADA CORRECTAMENTE!');
-        return redirect()->route('rutas.show', $ruta);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id

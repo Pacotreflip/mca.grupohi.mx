@@ -2,32 +2,32 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.rutas')) }}
-  <a href="{{ route('rutas.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_ruta') }}</a>
-  <a style="margin-right: 5px" href="{{ route('csv.rutas') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+    <a href="{{ route('rutas.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_ruta') }}</a>
+    <a style="margin-right: 5px" href="{{ route('csv.rutas') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
 </h1>
 {!! Breadcrumbs::render('rutas.index') !!}
 <hr>
 <div class="table-responsive">
-  <table id="index_rutas" class="table table-hover table-bordered small">
-      <thead>
-      <tr>
-          <th style="text-align: center" colspan="8">Ruta</th>
-        <th style="text-align: center" colspan="3">Cronometría Activa</th>
-        <th></th>
-      </tr>
-      <tr>
-        <th>Ruta</th>
-        <th>Origen</th>
-        <th>Tiro</th>
-        <th>Tipo</th>
-        <th>1er. KM</th>
-        <th>KM Subsecuentes</th>
-        <th>KM Adicionales</th>
-        <th>KM Total</th>
-        <th>Tiempo Minimo</th>
-        <th>Tiempo Tolerancia</th>
-        <th>Fecha/Hora Registro</th>
-        <th width="100px">Acciones</th>
+    <table id="index_rutas" class="table table-hover table-bordered small">
+        <thead>
+        <tr>
+            <th style="text-align: center" colspan="8">Ruta</th>
+            <th style="text-align: center" colspan="3">Cronometría Activa</th>
+            <th></th>
+        </tr>
+        <tr>
+            <th>Ruta</th>
+            <th>Origen</th>
+            <th>Tiro</th>
+            <th>Tipo</th>
+            <th>1er. KM</th>
+            <th>KM Subsecuentes</th>
+            <th>KM Adicionales</th>
+            <th>KM Total</th>
+            <th>Tiempo Minimo</th>
+            <th>Tiempo Tolerancia</th>
+            <th>Fecha/Hora Registro</th>
+            <th width="100px">Acciones</th>
       </tr>
     </thead>
     <tbody>
