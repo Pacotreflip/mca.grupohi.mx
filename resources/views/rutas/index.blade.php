@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ strtoupper(trans('strings.rutas')) }}
     <a href="{{ route('rutas.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_ruta') }}</a>
-    <a style="margin-right: 5px" href="{{ route('csv.rutas') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+    <a style="margin-right: 5px" href="{{ route('csv.rutas') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
 </h1>
 {!! Breadcrumbs::render('rutas.index') !!}
 <hr>
@@ -51,9 +51,9 @@
             <td>
                 <a href="{{ route('rutas.show', $ruta) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                 @if($ruta->Estatus == 1)
-                    <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-ban"></i></button>
+                    <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-remove"></i></button>
                 @else
-                    <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-plus"></i></button>
+                    <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-check"></i></button>
             @endif
             </td>
         </tr>

@@ -3,7 +3,7 @@
 @section('content')
     <h1>TELÉFONOS
         <a href="{{ route('telefonos.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nuevo Teléfono </a>
-    <a href="{{ route('csv.telefonos')}}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+    <a href="{{ route('csv.telefonos')}}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
     </h1>
     {!! Breadcrumbs::render('telefonos.index') !!}
     <hr>
@@ -39,9 +39,9 @@
                          <a href="{{ route('telefonos.show', $telefono) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                          <a href="{{ route('telefonos.edit', $telefono) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
                          @if($telefono->estatus == 1)
-                         <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_telefono({{$telefono->id}})"><i class="fa fa-ban"></i></button>
+                         <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_telefono({{$telefono->id}})"><i class="fa fa-remove"></i></button>
                          @else
-                         <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_telefono({{$telefono->id}})"><i class="fa fa-plus"></i></button>
+                         <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_telefono({{$telefono->id}})"><i class="fa fa-check"></i></button>
                          @endif
                      </td>
                  </tr>

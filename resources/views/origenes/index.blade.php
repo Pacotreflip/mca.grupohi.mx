@@ -3,7 +3,7 @@
 @section('content')
 <h1>{{ strtoupper(trans('strings.origins')) }}
   <a href="{{ route('origenes.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_origin') }}</a>
-  <a href="{{ route('csv.origenes') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+  <a href="{{ route('csv.origenes') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
 </h1>
 {!! Breadcrumbs::render('origenes.index') !!}
 <hr>
@@ -38,7 +38,7 @@
             @if($origen->Estatus == 1)
               <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_origen({{$origen->IdOrigen}})"><i class="fa fa-remove"></i></button>
             @else
-              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_origen({{$origen->IdOrigen}})"><i class="fa fa-plus"></i></button>
+              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_origen({{$origen->IdOrigen}})"><i class="fa fa-check"></i></button>
             @endif
 
           </td>

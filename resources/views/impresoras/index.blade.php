@@ -2,7 +2,7 @@
 @section('content')
     <h1>IMPRESORAS
         <a href="{{ route('impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> Nueva Impresora </a>
-        <a href="{{ route('csv.impresoras') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+        <a href="{{ route('csv.impresoras') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Excel</a>
     </h1>
   {!! Breadcrumbs::render('impresoras.index')!!}
     <hr>
@@ -35,9 +35,9 @@
                           <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
 
                          @if($impresora->estatus == 1)
-                             <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-ban"></i></button>
+                             <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-remove"></i></button>
                          @else
-                             <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_impresora({{$impresora->id}})"><i class="fa fa-plus"></i></button>
+                             <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_impresora({{$impresora->id}})"><i class="fa fa-check"></i></button>
                          @endif
                      <td>
                  </tr>
