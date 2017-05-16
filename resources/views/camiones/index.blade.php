@@ -42,7 +42,7 @@
               @if($camion->Estatus == 1)
               <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
               @else
-              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-xs element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
+              <a href="{{ route('camiones.destroy', [$camion]) }}" class="btn btn-success btn-xs element_destroy inactivo" title="Habilitar"><i class="fa fa-plus"></i></a>
               @endif
           </td>
         </tr>

@@ -32,7 +32,7 @@
                     @if($material->Estatus == 1)
                         <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
                     @else
-                        <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-check"></i></button>
+                        <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-plus"></i></button>
                     @endif
                 </td>
             </tr>
