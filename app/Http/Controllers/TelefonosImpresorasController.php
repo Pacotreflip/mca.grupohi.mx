@@ -105,7 +105,7 @@ class TelefonosImpresorasController extends Controller {
      */
     public function edit($id) {
         $telefono = Telefono::find($id);
-        $impresoras = Impresora::NoAsignadas()->lists('mac', 'id');
+        $impresoras = Impresora::NoAsignadas()->get();
 
         return view('telefonos-impresoras.edit')
             ->withTelefono($telefono)

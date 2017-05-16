@@ -11,19 +11,20 @@
         <!-- Teléfono -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="imei">IMEI(*)</label>
-                {!! Form::text('imei', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
+                <label for="imei">TELÉFONO(*)</label>
+
+                {!! Form::text('telefono', $telefono, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
             </div>
         </div>
 
         <!-- Impresora -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="id_imprsora">MAC ADDRESS IMPRESORA(*)</label>
+                <label for="id_imprsora">IMPRESORA(*)</label>
                 <select name="id_impresora" class="form-control select_tel_imp">
-                    <option value="{{$telefono->impresora->id}}">{{$telefono->impresora->mac}}</option>
-                    @foreach($impresoras as $key => $impresora)
-                        <option value="{{ $key }}">{{$impresora}}</option>
+                    <option value="{{$telefono->impresora->id}}">{{$telefono->impresora}}</option>
+                    @foreach($impresoras as $impresora)
+                        <option value="{{ $impresora->id }}">{{$impresora}}</option>
                     @endforeach
                 </select>
             </div>
