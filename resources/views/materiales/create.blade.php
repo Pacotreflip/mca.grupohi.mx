@@ -13,7 +13,7 @@
     <div class="col-md-6">
         <div class="form-group">
             <label>Descripción</label>
-            <input type="text" name="Descripcion" class="form-control">
+            <input type="text" name="Descripcion" placeholder="Escriba una descripción" class="form-control">
         </div>
     </div>
 
@@ -25,7 +25,7 @@
     </div>
 </div>
 <div class="form-group">
-    {!! Form::submit('Guardar', ['class'    => 'btn btn-success']) !!}
+    {!! Form::submit('Guardar', ['class' => 'btn btn-success']) !!}
 </div>
 {!! Form::close() !!}
 @stop

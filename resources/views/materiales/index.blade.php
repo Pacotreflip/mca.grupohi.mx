@@ -2,39 +2,43 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.materials')) }}
-  <a href="{{ route('materiales.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> {{ trans('strings.new_material') }}</a>
-    <a href="{{ route('csv.materiales') }}" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar</a>
+    <a href="{{ route('materiales.create') }}" class="btn btn-success btn-sm pull-right"><i class="fa fa-plus"></i> NUEVO MATERIAL</a>
+    <a href="{{ route('csv.materiales') }}" style="margin-right: 5px" class="btn btn-default btn-sm pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 </h1>
 {!! Breadcrumbs::render('materiales.index') !!}
 <hr>
 <div class="table-responsive">
-  <table id="index_materiales" class="table table-striped small">
-    <thead>
-      <tr>
-        <th style="width: 30px">#</th>
-        <th>Descripción</th>
-        <th style="width: 90px">Estatus</th>
-        <th style="width: 80px">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($materiales as $material)
+    <table id="index_materiales" class="table table-striped small">
+        <thead>
         <tr>
-          <td>{{ $material->IdMaterial }}</td>
-          <td>{{ $material->Descripcion }}</td>
-          <td>{{ $material->present()->estatus }}</td>
-          <td>
-            <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-            @if($material->Estatus == 1)
-              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
-            @else
-              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-check"></i></button>
-            @endif
-          </td>
+            <th>#</th>
+            <th>Descripción</th>
+            <th>Registró</th>
+            <th>Fecha y Hora de Registro</th>
+            <th>Estatus</th>
+            <th>Acciones</th>
         </tr>
-      @endforeach
-    </tbody>
-  </table>
+        </thead>
+        <tbody>
+        @foreach($materiales as $material)
+            <tr>
+                <td>{{ $material->IdMaterial }}</td>
+                <td>{{ $material->Descripcion }}</td>
+                <td>{{ $material->user_registro }}</td>
+                <td>{{ $material->created_at->format('d-M-Y h:i:s a') }}</td>
+                <td>{{ $material->estatus_string }}</td>
+                <td>
+                    <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+                    @if($material->Estatus == 1)
+                        <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
+                    @else
+                        <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-check"></i></button>
+                    @endif
+                </td>
+            </tr>
+        @endforeach
+        </tbody>
+    </table>
 </div>
 
 <!-- Form desactivar Material -->
@@ -49,16 +53,13 @@
     //Desactivar Material
     var auth_config = {
         auto_filter: true,
-        col_0: 'input',
+        col_0: 'none',
         col_1: 'input',
         col_2: 'select',
-        col_3: 'none',
+        col_3: 'input',
+        col_4: 'select',
+        col_5: 'none',
         base_path: App.tablefilterBasePath,
-        col_types: [
-            'number',
-            'string',
-            'boolean'
-        ],
         auto_filter: true,
         paging: false,
         rows_counter: true,

@@ -61,7 +61,7 @@ class RutasController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param Requests\CreateRutaRequest|Request $request
      * @return \Illuminate\Http\Response
      */
     public function store(Requests\CreateRutaRequest $request)
@@ -110,67 +110,6 @@ class RutasController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        return view('rutas.edit')
-                ->withRuta(Ruta::findOrFail($id))
-                ->withOrigenes(Origen::all()->lists('Descripcion', 'IdOrigen'))
-                ->withTiros(Tiro::all()->lists('Descripcion', 'IdTiro'))
-                ->withTipos(TipoRuta::all()->lists('Descripcion', 'IdTipoRuta'));    
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Requests\EditRutaRequest $request, $id)
-    {
-        $ruta = Ruta::findOrFail($id);
-        $ruta->update($request->all());
-        
-        $cronometria = $ruta->cronometria;
-        $cronometria->TiempoMinimo = $request->get('TiempoMinimo');
-        $cronometria->Tolerancia = $request->get('Tolerancia');
-        $cronometria->save();
-        
-        if($request->hasFile('Croquis')) {
-            $croquis = $request->file('Croquis');
-            $tipo = $croquis->getClientMimeType();
-            $nombre = ArchivoRuta::creaNombre($croquis, $ruta);
-            $ruta_ = ArchivoRuta::baseDir().'/'.$nombre;
-
-            $archivo = ArchivoRuta::where(['IdRuta' => $ruta->IdRuta])->first();
-            if($archivo) {
-                $archivo->Tipo = $tipo;
-                $archivo->Ruta = $ruta_;
-                $archivo->save();
-            } else {
-                $archivo = ArchivoRuta::create([
-                    'IdRuta' => $ruta->IdRuta,
-                    'Tipo' => $tipo,
-                    'Ruta' => $ruta_
-                ]);
-            }
-            
-            if(Storage::disk('uploads')->has($archivo->Ruta)) {
-                Storage::disk('uploads')->delete($archivo->Ruta);
-            }
-            $croquis->move(ArchivoRuta::baseDir(), $nombre);
-        }
-        
-        Flash::success('¡RUTA ACTUALIZADA CORRECTAMENTE!');
-        return redirect()->route('rutas.show', $ruta);
-    }
-
-    /**
      * Remove the specified resource from storage.
      *
      * @param  int  $id
@@ -178,8 +117,27 @@ class RutasController extends Controller
      */
     public function destroy($id)
     {
-        $ruta = Ruta::findOrFail($id);
+        $ruta = Ruta::find($id);
+
         if($ruta->Estatus == 1) {
+            $ruta->update([
+                'Estatus' => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo' => $request->motivo
+            ]);
+
+            Flash::success('¡RUTA DESACTIVADA CORRECTAMENTE!');
+        } else if($ruta->Estatus == 0) {
+
+            $ruta->update([
+                'Estatus' => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo' => $request->motivo
+            ]);
+
+            Flash::success('¡RUTA DESACTIVADA CORRECTAMENTE!');
+
+
             $ruta->Estatus = 0;
             $ruta->Elimina = auth()->user()->idusuario;
             $ruta->FechaHoraElimina = Carbon::now()->toDateTimeString();

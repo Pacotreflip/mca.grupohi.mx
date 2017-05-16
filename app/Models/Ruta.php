@@ -28,7 +28,6 @@ class Ruta extends Model
         'HoraAlta'
         ];
     protected $presenter = ModelPresenter::class;
-    public $timestamps = false;
     protected $dates = ['FechaHoraAlta'];
 
     public function getFechaHoraAltaAttribute() {

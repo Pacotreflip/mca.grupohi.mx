@@ -3,7 +3,7 @@
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStatsToMateriales extends Migration
+class AddStatsToRutas extends Migration
 {
     /**
      * Run the migrations.
@@ -12,7 +12,7 @@ class AddStatsToMateriales extends Migration
      */
     public function up()
     {
-        Schema::table('materiales', function (Blueprint $table) {
+        Schema::table('rutas', function (Blueprint $table) {
             $table->integer('usuario_registro');
             $table->integer('usuario_desactivo')->nullable();
             $table->text('motivo')->nullable();
@@ -27,7 +27,7 @@ class AddStatsToMateriales extends Migration
      */
     public function down()
     {
-        Schema::table('materiales', function (Blueprint $table) {
+        Schema::table('rutas', function (Blueprint $table) {
             $table->dropColumn(['usuario_registro', 'usuario_desactivo', 'motivo']);
             $table->dropTimestamps();
         });

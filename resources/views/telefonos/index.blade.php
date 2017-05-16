@@ -39,7 +39,7 @@
                          <a href="{{ route('telefonos.show', $telefono) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                          <a href="{{ route('telefonos.edit', $telefono) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
                          @if($telefono->estatus == 1)
-                         <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_telefono({{$telefono->id}})"><i class="fa fa-remove"></i></button>
+                         <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_telefono({{$telefono->id}})"><i class="fa fa-ban"></i></button>
                          @else
                          <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_telefono({{$telefono->id}})"><i class="fa fa-plus"></i></button>
                          @endif

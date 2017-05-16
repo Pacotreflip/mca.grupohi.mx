@@ -35,7 +35,7 @@
                           <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
 
                          @if($impresora->estatus == 1)
-                             <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-remove"></i></button>
+                             <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-ban"></i></button>
                          @else
                              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_impresora({{$impresora->id}})"><i class="fa fa-plus"></i></button>
                          @endif
