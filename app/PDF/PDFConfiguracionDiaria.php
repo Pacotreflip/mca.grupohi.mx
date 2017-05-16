@@ -281,7 +281,7 @@ class PDFConfiguracionDiaria extends Rotation
         $this->SetAutoPageBreak(true, 1.5);
         $this->items();
         $this->Ln(0.75);
-        $this->Output('I', 'ConsultaViajesNetos.pdf', 1);
+        $this->Output('I', 'ConfiguracionDiaria.pdf', 1);
         exit;
     }
 
