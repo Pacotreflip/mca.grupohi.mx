@@ -30,9 +30,9 @@
                 <td>
                     <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
                     @if($material->Estatus == 1)
-                        <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-ban"></i></button>
+                        <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-remove"></i></button>
                     @else
-                        <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-plus"></i></button>
+                        <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-check"></i></button>
                     @endif
                 </td>
             </tr>
