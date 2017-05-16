@@ -2,11 +2,6 @@
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/Controllers/PDFController.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/impresoras/index.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/resources/views/conciliaciones/edit.blade.php</file>
-            <file>file:/C:/httpd/www/php56.loc/mca.grupohi.mx/app/Http/routes.php</file>
-        </group>
+        <group/>
     </open-files>
 </project-private>

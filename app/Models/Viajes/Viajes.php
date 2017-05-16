@@ -32,7 +32,7 @@ class Viajes
         } else {
             return response()->view('viajes_netos.partials.table', ['data' => $this->data])
                 ->header('Content-type','text/csv')
-                ->header('Content-Disposition' , 'filename=Viajes_Netos_'.date("d-m-Y").'_'.date("H.i.s",time()).'.csv');
+                ->header('Content-Disposition' , 'filename=Viajes_Netos_'.date("d-m-Y").'_'.date("H.i.s",time()).'.cvs');
         }
     }
 }
