@@ -59,14 +59,22 @@ class CSVController extends Controller
     }
 
     public function origenes() {
-        $headers = ["Clave", "Tipo", "Descripción", "Fecha y Hora Registro", "Estatus"];
-        $items = Origen::leftJoin('tiposorigenes', 'origenes.IdTipoOrigen', '=', 'tiposorigenes.IdTipoOrigen')
+        $headers = ["Clave", "Tipo", "Descripción", "Estatus","Registró","Fecha y Hora Registro","Desactivo","Fecha y Hora de Desactivación","Motivo de Desactivación"];
+
+        $items = Origen::
+        leftJoin('igh.usuario as user_registro', 'origenes.usuario_registro', '=', 'user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_desactivo', 'origenes.usuario_desactivo', '=', 'user_desactivo.idusuario')
+            ->leftJoin('tiposorigenes', 'origenes.IdTipoOrigen', '=', 'tiposorigenes.IdTipoOrigen')
             ->select(
                 DB::raw("CONCAT(origenes.Clave,origenes.IdOrigen)"),
                 "tiposorigenes.Descripcion as Tipo",
                 "origenes.Descripcion",
-                DB::raw("CONCAT(origenes.FechaAlta, '', origenes.HoraAlta) as FechaHoraAlta"),
-                "origenes.Estatus")
+                "origenes.Estatus",
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)"),
+                "origenes.created_at",
+                DB::raw("CONCAT(user_desactivo.nombre, ' ', user_desactivo.apaterno, ' ', user_desactivo.amaterno)"),
+                "origenes.updated_at",
+                "origenes.motivo")
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('origenes');

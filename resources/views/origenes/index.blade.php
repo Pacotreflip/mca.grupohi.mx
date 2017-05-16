@@ -14,6 +14,8 @@
         <th>Clave</th>
         <th>Tipo</th>
         <th>Descripción</th>
+        <th>Fecha y hora registro</th>
+        <th>Registró</th>
         <th>Estatus</th>
         <th width="160px">Acciones</th>
       </tr>
@@ -22,21 +24,91 @@
       @foreach($origenes as $origen)
         <tr>
           <td>
-            <a href="{{ route('origenes.show', $origen) }}">{{ $origen->present()->claveOrigen }}</a>
+            {{ $origen->present()->claveOrigen }}
           </td>
           <td>{{ $origen->tipoOrigen->Descripcion }}</td>
           <td>{{ $origen->Descripcion }}</td>
+          <td>{{$origen->created_at->format('d-M-Y h:i:s a')}}</td>
+          <td>{{$origen->user_registro->present()->nombreCompleto()}}</td>
           <td>{{ $origen->present()->estatus }}</td>
           <td>
-              @if($origen->Estatus == 1)
-              <a href="{{ route('origenes.destroy', [$origen]) }}" class="btn btn-danger btn-xs element_destroy activo" title="Inhabilitar"><i class="fa fa-ban"></i></a>
-              @else
-              <a href="{{ route('origenes.destroy', [$origen]) }}" class="btn btn-success btn-xs element_destroy inactivo" title="Habilitar"><i class="fa fa-check"></i></a>
-              @endif
+
+            <a href="{{ route('origenes.show', $origen) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+
+            @if($origen->Estatus == 1)
+              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_origen({{$origen->IdOrigen}})"><i class="fa fa-remove"></i></button>
+            @else
+              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_origen({{$origen->IdOrigen}})"><i class="fa fa-plus"></i></button>
+            @endif
+
           </td>
         </tr>
       @endforeach
     </tbody>
   </table>
-</div>
+  <form id='delete' method="post">
+    <input type='hidden' name='motivo' value/>
+    {{csrf_field()}}
+    <input type="hidden" name="_method" value="delete"/>
+  </form>
+ </div>
 @stop
+
+@section('scripts')
+  <script>
+      function desactivar_origen(id) {
+          var form = $('#delete');
+          var url=App.host +"/origenes/"+id;
+
+          swal({
+                  title: "¡Desactivar origen!",
+                  text: "¿Esta seguro de que deseas desactivar el origen?",
+                  type: "input",
+                  showCancelButton: true,
+                  closeOnConfirm: false,
+                  inputPlaceholder: "Motivo de la desactivación.",
+                  confirmButtonText: "Si, Desactivar",
+                  cancelButtonText: "No, Cancelar",
+                  showLoaderOnConfirm: true
+
+              },
+              function(inputValue){
+                  if (inputValue === false) return false;
+                  if (inputValue === "") {
+                      swal.showInputError("Escriba el motivo de la eliminación!");
+                      return false
+                  }
+                  form.attr("action", url);
+                  $("input[name=motivo]").val(inputValue);
+                  form.submit();
+              });
+      }
+
+      function activar_origen(id) {
+
+          var form = $('#delete');
+          var url=App.host +"/origenes/"+id;
+
+          swal({
+                  title: "¡Activar Origen!",
+                  text: "¿Esta seguro de que deseas activar el origen?",
+                  type: "warning",
+                  showCancelButton: true,
+                  closeOnConfirm: false,
+                  inputPlaceholder: "Motivo de la activación.",
+                  confirmButtonText: "Si, Activar",
+                  cancelButtonText: "No, Cancelar",
+                  showLoaderOnConfirm: true
+
+              },
+              function(){
+                  form.attr("action", url);
+                  $("input[name=motivo]").val("");
+                  form.submit();
+              });
+      }
+
+
+  </script>
+@endsection
+

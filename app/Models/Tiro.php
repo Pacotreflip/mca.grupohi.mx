@@ -16,9 +16,7 @@ class Tiro extends Model
     protected $primaryKey = 'IdTiro';
     protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta'];
     protected $presenter = ModelPresenter::class;
-    
-    public $timestamps = false;
-    
+
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }

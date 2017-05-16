@@ -2,7 +2,6 @@
 
 @section('content')
 <h1>{{ $origen->Descripcion }}
-    <a href="{{ route('origenes.destroy', $origen) }}" class="btn pull-right element_destroy {{ $origen->Estatus == 1 ? 'activo btn-danger' : 'inactivo btn-success' }}" style="margin-right: 5px"><i class="fa {{ $origen->Estatus == 1 ? 'fa-ban' : 'fa-check' }}"></i> {{ $origen->Estatus == 1 ? 'INHABILITAR' : 'HABILITAR' }}</a>
 </h1>
 {!! Breadcrumbs::render('origenes.show', $origen) !!}
 <hr>
