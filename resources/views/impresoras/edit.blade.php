@@ -12,7 +12,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="mac">MAC Address Impresora(*)</label>
-                {!! Form::text('mac',null,['class'=>'form-control mac','maxlength'=>12]) !!}
+                {!! Form::text('mac',null,['class'=>'form-control mac','maxlength'=>12,'disabled'=>'true']) !!}
             </div>
         </div>
         <!-- Marca Impresora  -->

@@ -6,7 +6,7 @@ use App\Models\ConfiguracionDiaria\Configuracion;
 use App\Models\ConfiguracionDiaria\Esquema;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
-
+use Jenssegers\Date\Date;
 class Tiro extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -17,6 +17,9 @@ class Tiro extends Model
     protected $fillable = ['IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta','usuario_registro','motivo','usuario_desactivo','Estatus'];
     protected $presenter = ModelPresenter::class;
 
+    public function getCreatedAtAttribute($timestamp) {
+        return new Date($timestamp);
+    }
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }

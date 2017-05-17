@@ -12,8 +12,8 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="imei">IMEI(*)</label>
-                {!! Form::number('imei', null, ['class' => 'form-control']) !!}
-            </div>
+                {!! Form::number('imei', null, ['class' => 'form-control','disabled'=>'true']) !!}
+        </div>
         </div>
 
         <!-- Linea Tlefónica -->
