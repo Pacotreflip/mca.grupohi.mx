@@ -27,7 +27,7 @@
           </td>
           <td>{{ $tiro->Descripcion }}</td>
           <td>{{$tiro->created_at->format('d-M-Y h:i:s a')}}</td>
-          <td>{{$tiro->user_registro->present()->nombreCompleto()}}</td>
+          <td>{{$tiro->user_registro}}</td>
           <td>{{ $tiro->present()->estatus }}</td>
           <td>
             <a href="{{ route('tiros.show', $tiro) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
