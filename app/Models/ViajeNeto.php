@@ -112,7 +112,7 @@ class ViajeNeto extends Model
      * @return mixed
      */
     public function scopeRegistradosManualmente($query) {
-        return $query->where('viajesnetos.Estatus', 29);
+        return $query->select('viajesnetos.*')->where('viajesnetos.Estatus', 29);
     }
 
     public function scopeFechas($query,Array $fechas) {
@@ -582,7 +582,7 @@ class ViajeNeto extends Model
         $creo = $this->Creo;
         if(is_numeric($creo)){
             if(!count($this->usuario_registro)) {
-                dd($this->Creo);
+                return '';
             }
             $registro = $this->usuario_registro->present()->NombreCompleto;
             return $registro;
@@ -609,10 +609,6 @@ class ViajeNeto extends Model
         return $this->Aprobo ? User::find($this->Aprobo)->present()->NombreCompleto : '';
     }
 
-    public function getValidoAttribute($valido){
-        return $valido ? (String) User::find($valido) : '';
-    }
-
     public function getRechazoAttribute(){
         $rechazo = $this->attribute['Rechazo'];
         return $rechazo ? User::find($rechazo)->present()->NombreCompleto : '';
@@ -632,11 +628,11 @@ class ViajeNeto extends Model
     }
 
     public function scopeManualesAutorizados($query) {
-        return $query->where('viajesnetos.Estatus', 20);
+        return $query->select('viajesnetos.*')->where('viajesnetos.Estatus', 20);
     }
 
     public function scopeManualesRechazados($query) {
-        return $query->where('viajesnetos.Estatus', 22);
+        return $query->select('viajesnetos.*')->where('viajesnetos.Estatus', 22);
     }
 
     /**
@@ -692,7 +688,7 @@ class ViajeNeto extends Model
     }
 
     public function scopeMovilesAutorizados($query) {
-        return $query->where('viajesnetos.Estatus', 0);
+        return $query->select('viajesnetos.*')->where('viajesnetos.Estatus', 0);
     }
 
     public function scopeManuales($query){
@@ -780,11 +776,7 @@ class ViajeNeto extends Model
             return "";
         }
     }
-    
-    public function getTimestampLlegadaAttribute(){
-        $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
-        return $timestampLlegada;
-    }
+
     public function getTimestampCargaAttribute(){
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaCarga.' '.$this->HoraCarga);
         return $timestampLlegada;

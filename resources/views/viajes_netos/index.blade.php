@@ -12,7 +12,48 @@
                 @include('partials.errors')
                 </div>
                 <app-errors v-bind:form="form"></app-errors>
-                @if(1)
+
+                @if($action == 'en_conflicto')
+                <div class="form-group">
+
+                {!! Form::open(['class' => 'form_buscar_en_conflicto']) !!}
+                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>FECHA INICIAL</label>
+                            <input type="text" name="FechaInicial" class="form-control" v-datepicker>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>FECHA FINAL </label>
+                            <input type="text" name="FechaFinal" class="form-control" v-datepicker>
+                        </div>
+                    </div>
+                </div>
+                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Ticket (Código)</label>
+                            <input type="text" name="Codigo" class="form-control">
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="form-group">
+                    <button class="btn btn-primary" type="submit" @click="buscar_en_conflicto">
+                        <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
+                        <span v-else><i class="fa fa-search"></i> Buscar</span>
+                    </button>
+                    <button class="btn  btn-info" @click="pdf_conflicto"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
+                </div>
+
+                {!! Form::close() !!}
+                </div>
+                @else
                 <h3>BUSCAR VIAJES</h3>
                 {!! Form::open(['class' => 'form_buscar']) !!}
                 <input type="hidden" name="type" value>
