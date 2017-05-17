@@ -145,15 +145,15 @@ class ViajesNetosController extends Controller
                         'Accion' => $viaje->valido() ? 1 : 0,
                         'IdViajeNeto' => $viaje->IdViajeNeto,
                         'FechaLlegada' => $viaje->FechaLlegada,
-                        'Tiro' => $viaje->tiro->Descripcion,
-                        'Camion' => $viaje->camion->Economico,
+                        'Tiro' => (String) $viaje->tiro,
+                        'Camion' => (String) $viaje->camion,
                         'HoraLlegada' => $viaje->HoraLlegada,
                         'Cubicacion' => $viaje->CubicacionCamion,
-                        'Origen' => $viaje->origen->Descripcion,
-                        'IdOrigen' => $viaje->origen->IdOrigen,
+                        'Origen' => (String )$viaje->origen,
+                        'IdOrigen' => $viaje->IdOrigen,
                         'IdSindicato' => isset($viaje->IdSindicato) ? $viaje->IdSindicato : '',
                         'IdEmpresa' => isset($viaje->IdEmpresa) ? $viaje->IdEmpresa : '',
-                        'Material' => $viaje->material->Descripcion,
+                        'Material' => (String) $viaje->material,
                         'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
                         'Ruta' => isset($viaje->ruta) ? $viaje->ruta->present()->claveRuta : "",
                         'Code' => isset($viaje->Code) ? $viaje->Code : "",
@@ -181,49 +181,39 @@ class ViajesNetosController extends Controller
                 ]);
 
                 $fechas = $request->only(['FechaInicial', 'FechaFinal']);
-                $query = ViajeNeto::whereNull('IdViajeNeto');
+                $query = ViajeNeto::select('viajesnetos.*')->Reporte()->whereNull('viajesnetos.IdViajeNeto');
 
                 foreach($request->get('Tipo', []) as $tipo) {
                     if($tipo == 'CM_C') {
-                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::RegistradosManualmente()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_A') {
-                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesAutorizados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_V') {
-                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesValidados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_R') {
-                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesRechazados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_D') {
-                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesDenegados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_V') {
-                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::MovilesValidados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_A') {
-                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::MovilesAutorizados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_D') {
-                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::MovilesDenegados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                 }
-                
+
                 $viajes_netos = $query->get();
-
-                $data = ViajeNetoTransformer::transform($viajes_netos);
-
-                if($request->has('excel')) {
-                    $data = [
-                        'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
-                        'tipos' => $tipos,
-                        'rango' => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"
-                    ];
-                    return (new Viajes($data))->excel();
-                }
+                $data = ($viajes_netos);
+                return response()->json(['viajes_netos' => $data]);
             } else if($request->get('action') == 'corte') {
-
                 $this->validate($request, [
                     'turnos' => 'required|array',
                     'fecha'  => 'required|date_format:"Y-m-d"'
