@@ -2,11 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transformers\ViajeNetoCorteTransformer;
 use App\Models\Transformers\ViajeNetoTransformer;
+use App\Models\Viaje;
 use Illuminate\Http\Request;
 
 use App\Http\Requests;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 use Laracasts\Flash\Flash;
 use App\Models\ViajeNeto;
 use App\Models\Empresa;
@@ -81,7 +84,7 @@ class ViajesNetosController extends Controller
                 $detalles = $conflicto->detalles;
                 if($pagable){
                     $data["motivo"] = $pagable->motivo;
-                    $data["aprobo_pago"] = $pagable->usuario_aprobo_pago->present()->NombreCompleto;
+                    $data["aprobo_pago"] = (String) $pagable->usuario_aprobo_pago;
                 }
                 else{
                     $data["motivo"] = null;
@@ -181,32 +184,73 @@ class ViajesNetosController extends Controller
                 ]);
 
                 $fechas = $request->only(['FechaInicial', 'FechaFinal']);
-                $query = ViajeNeto::select('viajesnetos.*')->Reporte()->whereNull('viajesnetos.IdViajeNeto');
+                $query = DB::connection('sca')->table('viajesnetos')->select('viajesnetos.*')->whereNull('viajesnetos.IdViajeNeto');
+                $query = ViajeNeto::scopeReporte($query);
 
                 foreach($request->get('Tipo', []) as $tipo) {
                     if($tipo == 'CM_C') {
-                        $query->union(ViajeNeto::RegistradosManualmente()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_cmc = DB::connection('sca')->table('viajesnetos');
+                        $q_cmc = ViajeNeto::scopeRegistradosManualmente($q_cmc);
+                        $q_cmc = ViajeNeto::scopeReporte($q_cmc);
+                        $q_cmc = ViajeNeto::scopeFechas($q_cmc, $fechas);
+                        $q_cmc = ViajeNeto::scopeConciliados($q_cmc, $request->Estado);
+                        $query->union($q_cmc);
                     }
                     if($tipo == 'CM_A') {
-                        $query->union(ViajeNeto::ManualesAutorizados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_cma = DB::connection('sca')->table('viajesnetos');
+                        $q_cma = ViajeNeto::scopeManualesAutorizados($q_cma);
+                        $q_cma = ViajeNeto::scopeReporte($q_cma);
+                        $q_cma = ViajeNeto::scopeFechas($q_cma, $fechas);
+                        $q_cma = ViajeNeto::scopeConciliados($q_cma, $request->Estado);
+                        $query->union($q_cma);
                     }
                     if($tipo == 'CM_V') {
-                        $query->union(ViajeNeto::ManualesValidados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_cmv = DB::connection('sca')->table('viajesnetos');
+                        $q_cmv = ViajeNeto::scopeManualesValidados($q_cmv);
+                        $q_cmv = ViajeNeto::scopeReporte($q_cmv);
+                        $q_cmv = ViajeNeto::scopeFechas($q_cmv, $fechas);
+                        $q_cmv = ViajeNeto::scopeConciliados($q_cmv, $request->Estado);
+                        $query->union($q_cmv);
                     }
                     if($tipo == 'CM_R') {
-                        $query->union(ViajeNeto::ManualesRechazados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_cmr = DB::connection('sca')->table('viajesnetos');
+                        $q_cmr = ViajeNeto::scopeManualesRechazados($q_cmr);
+                        $q_cmr = ViajeNeto::scopeReporte($q_cmr);
+                        $q_cmr = ViajeNeto::scopeFechas($q_cmr, $fechas);
+                        $q_cmr = ViajeNeto::scopeConciliados($q_cmr, $request->Estado);
+                        $query->union($q_cmr);
                     }
                     if($tipo == 'CM_D') {
-                        $query->union(ViajeNeto::ManualesDenegados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_cmd = DB::connection('sca')->table('viajesnetos');
+                        $q_cmd = ViajeNeto::scopeManualesDenegados($q_cmd);
+                        $q_cmd = ViajeNeto::scopeReporte($q_cmd);
+                        $q_cmd = ViajeNeto::scopeFechas($q_cmd, $fechas);
+                        $q_cmd = ViajeNeto::scopeConciliados($q_cmd, $request->Estado);
+                        $query->union($q_cmd);
                     }
                     if($tipo == 'M_V') {
-                        $query->union(ViajeNeto::MovilesValidados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_mv = DB::connection('sca')->table('viajesnetos');
+                        $q_mv = ViajeNeto::scopeMovilesValidados($q_mv);
+                        $q_mv = ViajeNeto::scopeReporte($q_mv);
+                        $q_mv = ViajeNeto::scopeFechas($q_mv, $fechas);
+                        $q_mv = ViajeNeto::scopeConciliados($q_mv, $request->Estado);
+                        $query->union($q_mv);
                     }
                     if($tipo == 'M_A') {
-                        $query->union(ViajeNeto::MovilesAutorizados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_ma = DB::connection('sca')->table('viajesnetos');
+                        $q_ma = ViajeNeto::scopeMovilesAutorizados($q_ma);
+                        $q_ma = ViajeNeto::scopeReporte($q_ma);
+                        $q_ma = ViajeNeto::scopeFechas($q_ma, $fechas);
+                        $q_ma = ViajeNeto::scopeConciliados($q_ma, $request->Estado);
+                        $query->union($q_ma);
                     }
                     if($tipo == 'M_D') {
-                        $query->union(ViajeNeto::MovilesDenegados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
+                        $q_md = DB::connection('sca')->table('viajesnetos');
+                        $q_md = ViajeNeto::scopeMovilesDenegados($q_md);
+                        $q_md = ViajeNeto::scopeReporte($q_md);
+                        $q_md = ViajeNeto::scopeFechas($q_md, $fechas);
+                        $q_md = ViajeNeto::scopeConciliados($q_md, $request->Estado);
+                        $query->union($q_md);
                     }
                 }
 
@@ -259,47 +303,47 @@ class ViajesNetosController extends Controller
                 ]);
 
                 $fechas = $request->only(['FechaInicial', 'FechaFinal']);
-                $query = ViajeNeto::whereNull('IdViajeNeto');
+                $query = ViajeNeto::select('viajesnetos.*')->Reporte()->whereNull('viajesnetos.IdViajeNeto');
                 $tipos = [];
 
                 foreach($request->get('Tipo', []) as $tipo) {
                     if($tipo == 'CM_C') {
                         array_push($tipos, 'Manuales - Cargados');
-                        $query->union(ViajeNeto::RegistradosManualmente()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::RegistradosManualmente()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_A') {
                         array_push($tipos, 'Manuales - Autorizados (Pend. Validar)');
-                        $query->union(ViajeNeto::ManualesAutorizados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesAutorizados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_V') {
                         array_push($tipos, 'Manuales - Validados');
-                        $query->union(ViajeNeto::ManualesValidados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesValidados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_R') {
                         array_push($tipos, 'Manuales - Rechazados');
-                        $query->union(ViajeNeto::ManualesRechazados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesRechazados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'CM_D') {
                         array_push($tipos, 'Manuales - Denegados');
-                        $query->union(ViajeNeto::ManualesDenegados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::ManualesDenegados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_V') {
                         array_push($tipos, 'Móviles - Validados');
-                        $query->union(ViajeNeto::MovilesValidados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::MovilesValidados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_A') {
                         array_push($tipos, 'Móviles - Pendientes de Validar');
-                        $query->union(ViajeNeto::MovilesAutorizados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::MovilesAutorizados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                     if($tipo == 'M_D') {
                         array_push($tipos, 'Móviles - Denegados');
-                        $query->union(ViajeNeto::MovilesDenegados()->Fechas($fechas)->Conciliados($request->Estado));
+                        $query->union(ViajeNeto::MovilesDenegados()->Reporte()->Fechas($fechas)->Conciliados($request->Estado));
                     }
                 }
 
                 $viajes_netos = $query->get();
                 $data = [
-                        'viajes_netos' => ViajeNetoTransformer::transform($viajes_netos),
+                        'viajes_netos' => $viajes_netos,
                         'tipos' => $tipos,
                         'estado' => $request->Estado == 'C' ? 'Conciliados' : ($request->Estado == 'NC' ? 'No Conciliados' : 'Todos'),
                         'rango' => "DEL ({$request->get('FechaInicial')}) AL ({$request->get('FechaFinal')})"

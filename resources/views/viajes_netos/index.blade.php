@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout_width')
 
 @section('content')
     <h1>VIAJES @if($action == 'en_conflicto')EN CONFLICTO @endif</h1>
