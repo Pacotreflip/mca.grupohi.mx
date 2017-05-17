@@ -3,7 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-
+use Jenssegers\Date\Date;
 class Impresora extends Model
 {
     protected $connection = 'sca';
@@ -18,7 +18,9 @@ class Impresora extends Model
     {
         return $this->id . ' [' . $this->mac.']';
     }
-
+    public function getCreatedAtAttribute($timestamp) {
+        return new Date($timestamp);
+    }
     public function scopeNoAsignadas($query) {
         return $query->leftJoin('telefonos', 'impresoras.id', '=', 'telefonos.id_impresora')
             ->whereNull('telefonos.id')

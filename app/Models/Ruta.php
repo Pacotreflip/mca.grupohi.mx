@@ -7,7 +7,7 @@ use App\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
-
+use Jenssegers\Date\Date;
 class Ruta extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -33,7 +33,9 @@ class Ruta extends Model
         'motivo'
         ];
     protected $presenter = ModelPresenter::class;
-
+    public function getCreatedAtAttribute($timestamp) {
+        return new Date($timestamp);
+    }
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }

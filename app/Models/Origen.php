@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
+use Jenssegers\Date\Date;
 
 class Origen extends Model
 {
@@ -14,6 +15,10 @@ class Origen extends Model
     protected $primaryKey = 'IdOrigen';
     protected $fillable = ['IdTipoOrigen', 'IdProyecto', 'Descripcion', 'FechaAlta', 'HoraAlta','usuario_registro','motivo','usuario_desactivo','Estatus'];
     protected $presenter = ModelPresenter::class;
+
+    public function getCreatedAtAttribute($timestamp) {
+        return new Date($timestamp);
+    }
 
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');

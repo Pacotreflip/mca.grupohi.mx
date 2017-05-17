@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
-
+use Jenssegers\Date\Date;
 class Telefono extends Model
 {
     protected $connection = 'sca';
@@ -22,7 +22,9 @@ class Telefono extends Model
         "id_checador"
     ];
 
-    
+    public function getCreatedAtAttribute($timestamp) {
+        return new Date($timestamp);
+    }
     public function impresora(){
         return $this->belongsTo(Impresora::class,'id_impresora');
     }
