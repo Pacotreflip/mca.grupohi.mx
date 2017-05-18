@@ -325,10 +325,7 @@ class ViajeNeto extends Model
         } else { 
             $min = $this->ruta->cronometria->TiempoMinimo;
             $tol = $this->ruta->cronometria->Tolerancia;
-//            if($this->IdTiro == 40){
-//                dd(!isset($this->material),count($this->tarifaMaterial) == 0, $this->Estatus == 10);
-//                dd($this->IdPerfil,$this->Estatus,$this->getTiempo(),($this->getTiempo() / 60),($min - $tol), ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))));
-//            }
+
             if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
                 return false;
             } else {
