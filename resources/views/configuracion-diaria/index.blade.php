@@ -26,6 +26,7 @@
                                     <th>#</th>
                                     <th style="text-align: center">Nombre</th>
                                     <th style="text-align: center">Usuario Intranet</th>
+                                    <th style="text-align: center">Teléfono</th>
                                     <th style="text-align: center">Origen / Tiro</th>
                                     <th style="text-align: center">Ubicación </th>
                                     <th style="text-align: center">Perfil</th>
@@ -37,17 +38,18 @@
                                 </thead>
                                 <tbody>
                                 <tr v-for="(user, index) in checadores">
-                                    <td>@{{ index + 1 }}</td>
-                                    <td>@{{ user.nombre  }}</td>
-                                    <td>@{{ user.usuario }}</td>
-                                    <td>
+                                    <td style="white-space: nowrap">@{{ index + 1 }}</td>
+                                    <td style="white-space: nowrap">@{{ user.nombre  }}</td>
+                                    <td style="white-space: nowrap">@{{ user.usuario }}</td>
+                                    <td style="white-space: nowrap">@{{ user.telefono }}</td>
+                                    <td style="white-space: nowrap">
                                         <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>
                                             <option value="0">Origen</option>
                                             <option value="1">Tiro</option>
                                         </select>
                                     </td>
-                                    <td>
+                                    <td style="white-space: nowrap">
                                         <select v-if="user.configuracion.tipo == 0" v-on:change="set_ubicacion(user, $event)" name="ubicacion" class="form-control input-sm" v-bind:disabled="user.configuracion.tipo == ''">
                                             <option v-bind:selected="user.configuracion.ubicacion.id == ''" value>-- SELECCIONE --</option>
                                             <option v-bind:selected="user.configuracion.ubicacion.id == origen.id"  v-for="origen in origenes" v-bind:value="origen.id">@{{ origen.descripcion }}</option>
@@ -57,7 +59,7 @@
                                             <option v-bind:selected="user.configuracion.ubicacion.id == tiro.id"  v-for="tiro in tiros" v-bind:value="tiro.id">@{{ tiro.descripcion }}</option>
                                         </select>
                                     </td>
-                                    <td v-if="user.configuracion.ubicacion.id != ''">
+                                    <td style="white-space: nowrap" v-if="user.configuracion.ubicacion.id != ''">
                                          <select v-if="user.configuracion.tipo == 0" name="perfil" class="form-control input-sm" v-model="user.configuracion.id_perfil" >
                                              <option value>-- SELECCIONE --</option>
                                             <option  v-for="perfil in para_origen" v-bind:value="perfil.id">@{{ perfil.name }}</option>
@@ -67,31 +69,31 @@
                                             <option  v-for="perfil in para_tiro" v-bind:value="perfil.id">@{{ perfil.name }}</option>
                                         </select>
                                     </td>
-                                    <td v-else>
+                                    <td style="white-space: nowrap" v-else>
                                        <select class="form-control" disabled="disabled">
                                            <option value>-- SELECCIONE --</option>
                                        </select>
                                     </td>
-                                    <td>
+                                    <td style="white-space: nowrap">
                                         <select name="turno" class="form-control input-sm" v-model="user.configuracion.turno" :disabled="!user.configuracion.id_perfil">
                                             <option value>-- SELECCIONE --</option>
                                             <option value="M">Matutino</option>
                                             <option value="V">Vespertino</option>
                                         </select>
                                     </td>
-                                    <td style="text-align: center">
+                                    <td style="text-align: center; white-space: nowrap">
                                         <button @click="guardar_configuracion(user)" type="submit" class="btn btn-xs btn-success" :disabled="user.guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-save fa-lg"></i>
                                         </button>
                                     </td>
-                                    <td style="text-align: center">
+                                    <td style="text-align: center; white-space: nowrap">
                                         <button @click="quitar_configuracion(user)" type="button" class="btn btn-xs btn-warning" :disabled=" ! user.configuracion.id || user.guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-undo fa-lg"></i>
                                         </button>
                                     </td>
-                                    <td style="text-align: center">
+                                    <td style="text-align: center; white-space: nowrap">
                                         <button @click="confirmar_quitar_checador(user)" type="button" class="btn btn-xs btn-danger" :disabled="user.guardando">
                                             <i v-if="user.guardando" class="fa fa-spinner fa-spin fa-lg"></i>
                                             <i v-else class="fa fa-remove fa-lg"></i>

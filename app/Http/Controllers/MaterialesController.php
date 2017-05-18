@@ -16,7 +16,7 @@ class MaterialesController extends Controller
     function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
-       
+        $this->middleware('permission:desactivar-materiales', ['only' => ['destroy']]);
         parent::__construct();
     }
 

@@ -50,11 +50,13 @@
           <td>{{ $ruta->created_at->format('d-M-Y h:i:s a') }}</td>
             <td>
                 <a href="{{ route('rutas.show', $ruta) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+                @permission('desactivar-rutas')
                 @if($ruta->Estatus == 1)
                     <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-remove"></i></button>
                 @else
                     <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_ruta('{{$ruta->IdRuta}}', '{{$ruta->present()->claveRuta}}')"><i class="fa fa-check"></i></button>
-            @endif
+                @endif
+                @endpermission
             </td>
         </tr>
       @endforeach

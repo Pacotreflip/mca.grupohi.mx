@@ -34,13 +34,13 @@
           <td>
 
             <a href="{{ route('origenes.show', $origen) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-
-            @if($origen->Estatus == 1)
+            @permission('desactivar-origenes')
+              @if($origen->Estatus == 1)
               <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_origen({{$origen->IdOrigen}})"><i class="fa fa-remove"></i></button>
             @else
               <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_origen({{$origen->IdOrigen}})"><i class="fa fa-check"></i></button>
             @endif
-
+              @endpermission
           </td>
         </tr>
       @endforeach

@@ -51,6 +51,6 @@ class Telefono extends Model
 
     public function __toString()
     {
-        return $this->id.' ['.$this->imei.']';
+        return 'ID:'.$this->id.' IMEI:'.$this->imei.'';
     }
 }

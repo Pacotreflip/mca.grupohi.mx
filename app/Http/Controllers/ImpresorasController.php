@@ -11,6 +11,8 @@ class ImpresorasController extends Controller
      function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
+         $this->middleware('permission:desactivar-impresoras', ['only' => ['destroy']]);
+         $this->middleware('permission:editar-impresoras', ['only' => ['edit', 'update']]);
 
         parent::__construct();
     }

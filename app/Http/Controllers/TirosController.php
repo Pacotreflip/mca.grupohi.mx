@@ -17,7 +17,8 @@ class TirosController extends Controller
     function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
-       
+        $this->middleware('permission:desactivar-tiros', ['only' => ['destroy']]);
+
         parent::__construct();
     }
     
