@@ -135,54 +135,85 @@
                 <hr>
                 
                 <section v-if="viajes_netos.length" id="results">
-                    <h3>
-                        RESULTADOS DE LA BÚSQUEDA
-                    </h3>
+                    <h3>RESULTADOS DE LA BÚSQUEDA</h3>
                     
-                    <div class="table-responsive">
+                    <div class="table-responsive pre-scrollable">
                         (P) Viaje en conflicto de tiempo pero con aprobación de pago registrada.
-                        <table class="table table-hover table-bordered small">
+                        <table class="table  table-striped table-bordered small">
                             <thead>
+                            <tr style="background-color: #f9f9f9">
+                                <th colspan="5" style="text-align: center">INFORMACIÓN GENERAL DEL VIAJE</th>
+                                <th colspan="4" style="text-align: center">DETALLES DEL VIAJE</th>
+                                <th colspan="2" style="text-align: center">CAMION</th>
+                                <th colspan="3" style="text-align: center">EMPRESA</th>
+                                <th colspan="3" style="text-align: center">SINDICATO</th>
+                                <th colspan="5" style="text-align: center">ESTADO DEL VIAJE</th>
+                            </tr>
                             <tr>
                                 <th style="text-align: center"> # </th>
-                                <th style="text-align: center"> Tipo </th>
-                                <th style="text-align: center"> Camión </th>
-                                <th style="text-align: center"> Ticket (Código) </th>
-                                <th style="text-align: center"> Fecha y Hora de Llegada </th>
-                                <th style="text-align: center"> Origen</th>
-                                <th style="text-align: center"> Tiro </th>
-                                <th style="text-align: center"> Material </th>
-                                <th style="text-align: center"> Cubicación	</th>
-                                <th style="text-align: center"> Importe </th>
-                                <th style="text-align: center"> Registró </th>
-                                <th style="text-align: center"> Autorizó </th>
-                                <th style="text-align: center"> Validó </th>
-                                <th style="text-align: center"> Estado </th>
-                                <th style="text-align: center"> Conflicto </th>
+                                <th style="text-align: center"> TIPO </th>
+                                <th style="text-align: center"> FECHA LLEGADA </th>
+                                <th style="text-align: center"> HORA LLEGADA</th>
+                                <th style="text-align: center"> TICKET - CÓDIGO </th>
+
+                                <th style="text-align: center"> ORIGEN</th>
+                                <th style="text-align: center"> TIRO </th>
+                                <th style="text-align: center"> MATERIAL </th>
+                                <th style="text-align: center"> IMPORTE </th>
+
+                                <th style="text-align: center"> ECONÓMICO </th>
+                                <th style="text-align: center"> CUBICACIÓN	</th>
+
+                                <th style="text-align: center"> CAMIÓN </th>
+                                <th style="text-align: center"> ANTES DE VALIDAR </th>
+                                <th style="text-align: center"> VALIDADO </th>
+                                <th style="text-align: center"> CAMIÓN </th>
+                                <th style="text-align: center"> ANTES DE VALIDAR </th>
+                                <th style="text-align: center"> VALIDADO </th>
+
+                                <th style="text-align: center"> REGISTRÓ </th>
+                                <th style="text-align: center"> AUTORIZÓ </th>
+                                <th style="text-align: center"> VALIDÓ </th>
+                                <th style="text-align: center"> ESTADO </th>
+                                <th style="text-align: center"> CONFLICTO </th>
                             </tr>
+
                             </thead>
                             <tbody>
                             <tr v-for="(viaje_neto, index) in viajes_netos">
-                                <td>@{{ index + 1 }}</td>
-                                <td>@{{ viaje_neto.tipo }}</td>
-                                <td>@{{ viaje_neto.camion }}</td>
-                                <td>@{{ viaje_neto.codigo }}</td>
-                                <td>@{{ viaje_neto.timestamp_llegada }}</td>
-                                <td>@{{ viaje_neto.origen }}</td>
-                                <td>@{{ viaje_neto.tiro }}</td>
-                                <td>@{{ viaje_neto.material }}</td>
-                                <td>@{{ viaje_neto.cubicacion }}</td>
-                                <td>@{{ viaje_neto.importe }}</td>
-                                <td>@{{ viaje_neto.registro }}</td>
-                                <td>@{{ viaje_neto.autorizo }}</td>
-                                <td>@{{ viaje_neto.valido }}</td>
-                                <td>@{{ viaje_neto.estado }}</td>
-                                <td v-if ="viaje_neto.conflicto>0&&!viaje_neto.conflicto_pagable>0">
+
+                                <td style="white-space: nowrap">@{{ index + 1 }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.tipo }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.FechaLlegada }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.HoraLlegada }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.Code }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.origen }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.tiro }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.material }}</td>
+                                <td style="white-space: nowrap; text-align: right">$@{{ formato(viaje_neto.importe) }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.camion }}</td>
+                                <td style="white-space: nowrap; text-align: right">@{{ viaje_neto.cubicacion }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.empresa_camion }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.empresa_viajeneto }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.empresa_viaje }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.sindicato_camion }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.sindicato_viajeneto }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.sindicato_viaje }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.registro }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.autorizo }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.valido }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.estado }}</td>
+                                <td style="white-space: nowrap" v-if ="viaje_neto.conflicto>0&&!viaje_neto.conflicto_pagable>0">
                                     <a style="cursor: pointer" @click="detalle_conflicto(viaje_neto.conflicto, viaje_neto.id)" >Ver</a></td>
-                                <td v-if ="viaje_neto.conflicto>0&&viaje_neto.conflicto_pagable>0">
+                                <td style="white-space: nowrap" v-if ="viaje_neto.conflicto>0&&viaje_neto.conflicto_pagable>0">
                                     
                                     <a style="cursor: pointer" @click="detalle_conflicto_pagable(viaje_neto.conflicto, viaje_neto.id)" >(P) Ver</a></td>
-                                <td v-if ="!viaje_neto.conflicto>0">N/A</td>
+                                <td style="white-space: nowrap" v-if ="!viaje_neto.conflicto>0">N/A</td>
                             </tr>
                             </tbody>
                         </table>
