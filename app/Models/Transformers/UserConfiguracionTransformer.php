@@ -20,7 +20,8 @@ class UserConfiguracionTransformer extends AbstractTransformer
             'id'            => $model->idusuario,
             'nombre'        => $model->present()->nombreCompleto,
             'usuario'       => $model->usuario,
-            'configuracion' => $model->configuracion ? [
+            'telefono'      => (String) $model->telefono,
+                'configuracion' => $model->configuracion ? [
                 'id'        => $model->configuracion->id,
                 'turno'     => $model->configuracion->turno,
                 'id_perfil' => $model->configuracion->id_perfil,
