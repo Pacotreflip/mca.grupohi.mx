@@ -345,20 +345,20 @@ class PDFViajesNetos extends Rotation
             $this->encola = "items";
 //                for($cont = 0; $cont < 50; $cont ++){
             $this->Row(array($key + 1,
-                utf8_decode($item['tipo']),
-                $item['camion'],
-                $item['codigo'],
-                $item['timestamp_llegada'],
-                utf8_decode($item['origen']),
-                utf8_decode($item['tiro']),
-                utf8_decode($item['material']),
-                $item['cubicacion'] . " m3",
-                "$ ".number_format($item['importe'], 2, '.', ','),
-                utf8_decode($item['registro']),
-                utf8_decode($item['autorizo']),
-                utf8_decode($item['valido']),
-                utf8_decode($item['estado']),
-                utf8_decode($item['conflicto_pdf'])
+                utf8_decode($item->tipo),
+                $item->camion,
+                $item->codigo,
+                $item->timestamp_llegada,
+                utf8_decode($item->origen),
+                utf8_decode($item->tiro),
+                utf8_decode($item->material),
+                $item->cubicacion . " m3",
+                "$ ".number_format($item->importe, 2, '.', ','),
+                utf8_decode($item->registro),
+                utf8_decode($item->autorizo),
+                utf8_decode($item->valido),
+                utf8_decode($item->estado),
+                utf8_decode($item->conflicto_pdf)
                 )
                     );
 //                }

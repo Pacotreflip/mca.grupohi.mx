@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout_width')
 
 @section('content')
     <h1>VIAJES @if($action == 'en_conflicto')EN CONFLICTO @endif</h1>
@@ -15,7 +15,7 @@
 
                 @if($action == 'en_conflicto')
                 <div class="form-group">
-                   
+
                 {!! Form::open(['class' => 'form_buscar_en_conflicto']) !!}
                 <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
                 <div class="row">
@@ -40,9 +40,9 @@
                             <input type="text" name="Codigo" class="form-control">
                         </div>
                     </div>
-                   
+
                 </div>
-                
+
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit" @click="buscar_en_conflicto">
                         <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
@@ -50,7 +50,7 @@
                     </button>
                     <button class="btn  btn-info" @click="pdf_conflicto"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
                 </div>
-                
+
                 {!! Form::close() !!}
                 </div>
                 @else
@@ -118,7 +118,7 @@
                     </div>
 
                 </div>
-                
+
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit" @click="buscar">
                         <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
@@ -130,7 +130,7 @@
                 <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
                 {!! Form::close() !!}
                 @endif
-                
+
                 
                 <hr>
                 
