@@ -44590,6 +44590,7 @@ Vue.component('viajes-index', {
             'id_conflicto': "",
             'cargando': false,
             'guardando': false,
+            show_all: false,
             'form': {
                 'errors': [],
                 'estado': ''
@@ -44823,6 +44824,18 @@ Vue.component('viajes-index', {
             $('.form_buscar').attr('action', url);
             $('.form_buscar').attr('method', 'GET');
             $('.form_buscar').submit();
+        },
+
+        toogle_show_all: function toogle_show_all() {
+            if (this.show_all) {
+                this.show_all = false;
+            } else {
+                this.show_all = true;
+            }
+        },
+
+        formato: function formato(val) {
+            return numeral(val).format('0,0.00');
         }
     }
 });
