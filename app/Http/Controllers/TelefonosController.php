@@ -110,7 +110,6 @@ class TelefonosController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'imei' => 'required|unique:sca.telefonos,imei,'.$request->route('telefonos').',id|digits_between:12,17',
             'linea' => 'required|unique:sca.telefonos,linea,'.$request->route('telefonos').',id|digits:10',
             'marca' => 'required|alpha_num',
             'modelo' => 'required|alpha_num',

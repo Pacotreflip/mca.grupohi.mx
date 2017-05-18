@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Telefono;
 use Illuminate\Database\Eloquent\Model;
 
 class User_1 extends User
