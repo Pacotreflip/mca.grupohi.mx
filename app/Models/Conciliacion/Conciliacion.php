@@ -64,7 +64,7 @@ class Conciliacion extends Model
     public function getConciliacionDetallesNoConciliadosPDFAttribute(){
         $detalle_pdf = [];
        foreach($this->conciliacionDetallesNoConciliados as $detalle){
-           if($detalle->idmotivo != 5){
+           if($detalle->idmotivo != 7){
                $detalle_pdf[] = $detalle;
            }
        }
