@@ -57,6 +57,7 @@
                 <h3>BUSCAR VIAJES</h3>
                 {!! Form::open(['class' => 'form_buscar']) !!}
                 <input type="hidden" name="type" value>
+                <h4><label style="cursor: pointer"><input type="radio" v-model="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -70,6 +71,16 @@
                             <input type="text" name="FechaFinal" class="form-control" v-datepicker>
                         </div>
                     </div>
+                </div>
+                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label>Ticket (Código)</label>
+                            <input type="text" name="Codigo" class="form-control">
+                        </div>
+                    </div>
+
                 </div>
 
 

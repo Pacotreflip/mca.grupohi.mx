@@ -45,9 +45,7 @@ Vue.component('viajes-index', {
 
     methods: {
         buscar_en_conflicto: function(e){
-            e.preventDefault(
-
-            );
+            e.preventDefault();
             var _this = this;
 
             var data = $('.form_buscar_en_conflicto').serialize();
@@ -236,6 +234,6 @@ Vue.component('viajes-index', {
             $('.form_buscar').attr('action', url);
             $('.form_buscar').attr('method', 'GET');
             $('.form_buscar').submit();
-        }
+        },
     }
 });
