@@ -72,18 +72,6 @@
                         </div>
                     </div>
                 </div>
-                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
-                <div class="row">
-                    <div class="col-md-6">
-                        <div class="form-group">
-                            <label>Ticket (Código)</label>
-                            <input type="text" name="Codigo" class="form-control">
-                        </div>
-                    </div>
-
-                </div>
-
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -129,6 +117,16 @@
                     </div>
 
                 </div>
+                    <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ticket (Código)</label>
+                                <input type="text" name="Codigo" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
 
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit" @click="buscar">
