@@ -325,10 +325,10 @@ class ViajeNeto extends Model
         } else { 
             $min = $this->ruta->cronometria->TiempoMinimo;
             $tol = $this->ruta->cronometria->Tolerancia;
-            if($this->IdTiro == 40){
-                dd(!isset($this->material),count($this->tarifaMaterial) == 0, $this->Estatus == 10);
-                dd($this->IdPerfil,$this->Estatus,$this->getTiempo(),($this->getTiempo() / 60),($min - $tol), ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))));
-            }
+//            if($this->IdTiro == 40){
+//                dd(!isset($this->material),count($this->tarifaMaterial) == 0, $this->Estatus == 10);
+//                dd($this->IdPerfil,$this->Estatus,$this->getTiempo(),($this->getTiempo() / 60),($min - $tol), ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))));
+//            }
             if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
                 return false;
             } else {
@@ -340,10 +340,9 @@ class ViajeNeto extends Model
     public function estado() {
         $min = $this->ruta ? $this->ruta->cronometria->TiempoMinimo : null;
         $tol = $this->ruta ? $this->ruta->cronometria->Tolerancia : null;
-        
         if($this->getTiempo() == 0 && $this->Estatus == 0 && $this->IdPerfil!=3) {
             return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
-        } else if($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))) {
+        } else if($this->Estatus == 0 && $this->IdPerfil!=3 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))) {
             return 'El viaje no puede ser registrado porque no cumple con los tiempos de cronometría de la ruta';
         } else if(!isset($this->ruta) && $this->Estatus == 0) { 
             return 'El viaje no puede ser registrado porque no existe una ruta entre su origen y destino'; 
