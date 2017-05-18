@@ -857,9 +857,10 @@ class ViajeNeto extends Model
             ->leftJoin('igh.usuario as user_valido','v.Creo','=','user_valido.idusuario')
             ->leftJoin('igh.usuario as user_aprobo_pago','conflictos_pagables.aprobo_pago','=','user_aprobo_pago.idusuario')
             ->leftJoin('tarifas', DB::raw("(tarifas.IdMaterial=materiales.IdMaterial AND tarifas.Estatus=1 and tarifas.InicioVigencia < viajesnetos.FechaLlegada and IFNULL(tarifas.FinVigencia,NOW())"), '>' , DB::raw("viajesnetos.FechaLlegada)"))
-            ->leftJoin('rutas', function ($join) {
+            /*->leftJoin('rutas', function ($join) {
                 $join->on(DB::raw("rutas.IdOrigen = viajesnetos.IdOrigen and rutas.IdTiro"),  '=', 'viajesnetos.IdTiro');
-            })
+            })*/
+            ->leftJoin(DB::raw("(SELECT * FROM rutas group by IdOrigen, IdTiro) as rutas"), DB::raw("(viajesnetos.IdOrigen=rutas.IdOrigen AND viajesnetos.IdTiro"), '=', DB::raw("rutas.IdTiro)"))
             ->leftJoin('empresas as empresas_viajes', 'v.IdEmpresa', '=', 'empresas_viajes.IdEmpresa')
             ->leftJoin('empresas as empresas_viajesnetos', 'viajesnetos.IdEmpresa', '=', 'empresas_viajesnetos.IdEmpresa')
             ->leftJoin('empresas as empresas_camiones', 'camiones.IdEmpresa', '=', 'empresas_camiones.IdEmpresa')
@@ -906,7 +907,6 @@ class ViajeNeto extends Model
                 "sindicatos_viajes.NombreCorto as sindicato_viaje",
                 "sindicatos_viajesnetos.NombreCorto as sindicato_viajeneto",
                 "sindicatos_camiones.NombreCorto as sindicato_camion"
-            )
-            ->groupBy('viajesnetos.IdViajeNeto');
+            );
     }
 }
