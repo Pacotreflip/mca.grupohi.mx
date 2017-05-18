@@ -340,7 +340,7 @@ class ViajeNeto extends Model
         if($this->getTiempo() == 0 && $this->Estatus == 0 && $this->IdPerfil!=3) {
             return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
         } else if($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) - ($min - $tol))>0.1  )) {
-            return 'El viaje no puede ser registrado porque no cumple con los tiempos de cronometría de la ruta'.($this->getTiempo() / 60).'_'.($min - $tol);
+            return 'El viaje no puede ser registrado porque no cumple con los tiempos de cronometría de la ruta'.($this->getTiempo() / 60).'_'.($min - $tol).''.($this->getTiempo() / 60) - ($min - $tol);
         } else if(!isset($this->ruta) && $this->Estatus == 0) { 
             return 'El viaje no puede ser registrado porque no existe una ruta entre su origen y destino'; 
         } else if(count($this->tarifaMaterial) == 0 && isset($this->material)) {
