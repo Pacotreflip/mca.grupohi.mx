@@ -134,16 +134,56 @@ class ViajesNetosController extends Controller
             else if ($request->get('action') == 'validar') {
                 $data = [];
 
-                $this->validate($request, [
-                    'FechaInicial' => 'required|date_format:"Y-m-d"',
-                    'FechaFinal' => 'required|date_format:"Y-m-d"',
-                ]);
+                if($request->tipo_busqueda == 'fecha') {
+                    $this->validate($request, [
+                        'FechaInicial' => 'required|date_format:"Y-m-d"',
+                        'FechaFinal' => 'required|date_format:"Y-m-d"',
+                    ]);
 
-                $viajes = ViajeNeto::porValidar()
-                    ->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
-                    ->get();
+                    $viajes = ViajeNeto::porValidar()
+                        ->whereBetween('viajesnetos.FechaLlegada', [$request->get('FechaInicial'), $request->get('FechaFinal')])
+                        ->get();
 
-                foreach ($viajes as $viaje) {
+                    foreach ($viajes as $viaje) {
+                        $data [] = [
+                            'Accion' => $viaje->valido() ? 1 : 0,
+                            'IdViajeNeto' => $viaje->IdViajeNeto,
+                            'FechaLlegada' => $viaje->FechaLlegada,
+                            'Tiro' => (String) $viaje->tiro,
+                            'Camion' => (String) $viaje->camion,
+                            'HoraLlegada' => $viaje->HoraLlegada,
+                            'Cubicacion' => $viaje->CubicacionCamion,
+                            'Origen' => (String )$viaje->origen,
+                            'IdOrigen' => $viaje->IdOrigen,
+                            'IdSindicato' => isset($viaje->IdSindicato) ? $viaje->IdSindicato : '',
+                            'IdEmpresa' => isset($viaje->IdEmpresa) ? $viaje->IdEmpresa : '',
+                            'Material' => (String) $viaje->material,
+                            'Tiempo' => Carbon::createFromTime(0, 0, 0)->addSeconds($viaje->getTiempo())->toTimeString(),
+                            'Ruta' => isset($viaje->ruta) ? $viaje->ruta->present()->claveRuta : "",
+                            'Code' => isset($viaje->Code) ? $viaje->Code : "",
+                            'Valido' => $viaje->valido(),
+                            'ShowModal' => false,
+                            'Distancia' => $viaje->ruta ? $viaje->ruta->TotalKM : null,
+                            'Estado' => $viaje->estado(),
+                            'Importe' => $viaje->ruta ? $viaje->getImporte() : null,
+                            'PrimerKM' => ($viaje->material->tarifaMaterial) ? $viaje->material->tarifaMaterial->PrimerKM : 0,
+                            'KMSubsecuente' => ($viaje->material->tarifaMaterial) ? $viaje->material->tarifaMaterial->KMSubsecuente : 0,
+                            'KMAdicional' => ($viaje->material->tarifaMaterial) ? $viaje->material->tarifaMaterial->KMAdicional : 0,
+                            'Tara' => 0,
+                            'Bruto' => 0,
+                            'TipoTarifa' => 'm',
+                            'TipoFDA' => 'm',
+                            'Imagenes' => $viaje->imagenes
+                        ];
+                    }
+                } else if($request->tipo_busqueda == 'codigo') {
+                    $this->validate($request, [
+                        'Codigo' => 'required'
+                    ]);
+                    $viajes = ViajeNeto::porValidar()
+                        ->where('viajesnetos.Code', '=', $request->Codigo)
+                        ->get();
+                    foreach($viajes as $viaje) {
                     $data [] = [
                         'Accion' => $viaje->valido() ? 1 : 0,
                         'IdViajeNeto' => $viaje->IdViajeNeto,
@@ -173,7 +213,7 @@ class ViajesNetosController extends Controller
                         'TipoTarifa' => 'm',
                         'TipoFDA' => 'm',
                         'Imagenes' => $viaje->imagenes
-                    ];
+                    ];}
                 }
             } else if ($request->get('action') == 'index') {
 

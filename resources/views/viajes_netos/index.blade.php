@@ -40,7 +40,6 @@
                             <input type="text" name="Codigo" class="form-control">
                         </div>
                     </div>
-
                 </div>
 
                 <div class="form-group">

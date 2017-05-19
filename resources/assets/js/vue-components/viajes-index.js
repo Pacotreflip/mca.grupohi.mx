@@ -7,7 +7,6 @@ Vue.component('viajes-index', {
             'id_conflicto':"",
             'cargando' : false,
             'guardando' :false,
-            show_all: false,
             'form' : {
                 'errors' : [],
                 'estado' : ''
