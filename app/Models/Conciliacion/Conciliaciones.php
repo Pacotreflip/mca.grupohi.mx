@@ -1143,7 +1143,7 @@ class Conciliaciones
                     $evaluacion["detalle"] = FALSE;
                     $evaluacion["detalle_nc"] = $detalle_no_conciliado;
                 } else {
-                    $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create([
+                    $detalle_no_conciliado = [
                         'idconciliacion' => $id_conciliacion,
                         'idviaje_neto'=>$viaje_neto->IdViajeNeto,
                         'idviaje' => $viaje_pendiente_conciliar->IdViaje,
@@ -1153,7 +1153,7 @@ class Conciliaciones
                     . "<ul><li> Folio: " . $cd->idconciliacion . "</li><li> Empresa: " . $c->empresa . "</li><li> Sindicato: " . $c->sindicato . ". </li> <br/>Dado  lo anterior <strong>no procede</strong> en esta conciliación.</span>",
                         'Code' => $code,
                         'registro'=>auth()->user()->idusuario,
-                    ]);
+                    ];
                     $evaluacion["detalle"] = FALSE;
                     $evaluacion["detalle_nc"] = $detalle_no_conciliado;
                 }
@@ -1193,7 +1193,7 @@ class Conciliaciones
         return $evaluacion;
     }
     private function registraDetalleNoConciliado($datos_detalle){
-        
+        //dd($datos_detalle);
         $detalle_no_conciliado = ConciliacionDetalleNoConciliado::create($datos_detalle);
         return $detalle_no_conciliado;
     }
