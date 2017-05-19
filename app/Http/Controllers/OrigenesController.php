@@ -20,6 +20,7 @@ class OrigenesController extends Controller
         $this->middleware('auth');
         $this->middleware('context');
         $this->middleware('permission:desactivar-origenes', ['only' => ['destroy']]);
+        $this->middleware('permission:crear-origenes', ['only' => ['create', 'store']]);
 
         parent::__construct();
     }

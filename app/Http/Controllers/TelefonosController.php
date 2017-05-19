@@ -15,6 +15,7 @@ class TelefonosController extends Controller
         $this->middleware('context');
         $this->middleware('permission:desactivar-telefonos', ['only' => ['destroy']]);
         $this->middleware('permission:editar-telefonos', ['only' => ['edit', 'update']]);
+        $this->middleware('permission:crear-telefonos', ['only' => ['create', 'store']]);
 
 
         parent::__construct();
