@@ -155,7 +155,7 @@
                                 <th colspan="2" style="text-align: center">CAMIÓN</th>
                                 <th colspan="3" style="text-align: center">EMPRESA</th>
                                 <th colspan="3" style="text-align: center">SINDICATO</th>
-                                <th colspan="2" style="text-align: center">CONCILIACIÓN</th>
+                                <th colspan="3" style="text-align: center">CONCILIACIÓN</th>
                                 <th colspan="5" style="text-align: center">ESTADO DEL VIAJE</th>
                             </tr>
                             <tr>
@@ -181,7 +181,8 @@
                                 <th style="text-align: center"> VIAJE </th>
 
                                 <th style="text-align: center"> CONCILIÓ </th>
-                                <th style="text-align: center"> ID CONCILIACIÓN </th>
+                                <th style="text-align: center"> FOLIO </th>
+                                <th style="text-align: center"> FECHA  </th>
 
                                 <th style="text-align: center"> REGISTRÓ </th>
                                 <th style="text-align: center"> AUTORIZÓ </th>
@@ -218,6 +219,7 @@
 
                                 <td style="white-space: nowrap">@{{ viaje_neto.concilio }}</td>
                                 <td style="white-space: nowrap">@{{ viaje_neto.id_conciliacion }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.fecha_conciliacion }}</td>
 
                                 <td style="white-space: nowrap">@{{ viaje_neto.registro }}</td>
                                 <td style="white-space: nowrap">@{{ viaje_neto.autorizo }}</td>

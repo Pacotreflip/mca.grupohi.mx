@@ -133,6 +133,7 @@ class PDFController extends Controller
 
         if (!count($viajes_netos)) {
             Flash::error('Ningún viaje coincide con los datos de consulta');
+
             return redirect()->back()->withInput();
         }
 

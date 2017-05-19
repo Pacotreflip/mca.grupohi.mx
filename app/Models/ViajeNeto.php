@@ -907,7 +907,8 @@ class ViajeNeto extends Model
                 "sindicatos_viajesnetos.NombreCorto as sindicato_viajeneto",
                 "sindicatos_camiones.NombreCorto as sindicato_camion",
                 DB::raw("group_concat(c.idconciliacion) as id_conciliacion"),
-                DB::raw("group_concat(CONCAT(user_concilio.nombre, ' ', user_concilio.apaterno, ' ', user_concilio.amaterno)) as concilio")
+                DB::raw("group_concat(CONCAT(user_concilio.nombre, ' ', user_concilio.apaterno, ' ', user_concilio.amaterno)) as concilio"),
+                DB::raw("group_concat(c.fecha_conciliacion) as fecha_conciliacion")
             )
             ->groupBy('viajesnetos.IdViajeNeto');
     }
