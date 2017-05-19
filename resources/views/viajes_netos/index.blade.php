@@ -144,7 +144,7 @@
                             <tr style="background-color: #f9f9f9">
                                 <th colspan="5" style="text-align: center">INFORMACIÓN GENERAL DEL VIAJE</th>
                                 <th colspan="4" style="text-align: center">DETALLES DEL VIAJE</th>
-                                <th colspan="2" style="text-align: center">CAMION</th>
+                                <th colspan="2" style="text-align: center">CAMIÓN</th>
                                 <th colspan="3" style="text-align: center">EMPRESA</th>
                                 <th colspan="3" style="text-align: center">SINDICATO</th>
                                 <th colspan="5" style="text-align: center">ESTADO DEL VIAJE</th>
@@ -165,11 +165,11 @@
                                 <th style="text-align: center"> CUBICACIÓN	</th>
 
                                 <th style="text-align: center"> CAMIÓN </th>
-                                <th style="text-align: center"> ANTES DE VALIDAR </th>
-                                <th style="text-align: center"> VALIDADO </th>
+                                <th style="text-align: center"> VIAJE NETO </th>
+                                <th style="text-align: center"> VIAJE </th>
                                 <th style="text-align: center"> CAMIÓN </th>
-                                <th style="text-align: center"> ANTES DE VALIDAR </th>
-                                <th style="text-align: center"> VALIDADO </th>
+                                <th style="text-align: center"> VIAJE NETO </th>
+                                <th style="text-align: center"> VIAJE </th>
 
                                 <th style="text-align: center"> REGISTRÓ </th>
                                 <th style="text-align: center"> AUTORIZÓ </th>
@@ -191,7 +191,7 @@
                                 <td style="white-space: nowrap">@{{ viaje_neto.origen }}</td>
                                 <td style="white-space: nowrap">@{{ viaje_neto.tiro }}</td>
                                 <td style="white-space: nowrap">@{{ viaje_neto.material }}</td>
-                                <td style="white-space: nowrap; text-align: right">$@{{ formato(viaje_neto.importe) }}</td>
+                                <td style="white-space: nowrap; text-align: right">$ @{{ formato(viaje_neto.importe) }}</td>
 
                                 <td style="white-space: nowrap">@{{ viaje_neto.camion }}</td>
                                 <td style="white-space: nowrap; text-align: right">@{{ viaje_neto.cubicacion }}</td>
