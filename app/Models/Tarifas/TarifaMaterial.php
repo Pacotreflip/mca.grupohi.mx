@@ -5,6 +5,8 @@ namespace App\Models\Tarifas;
 use Illuminate\Database\Eloquent\Model;
 use App\Presenters\ModelPresenter;
 use App\User;
+use Psy\Test\Exception\RuntimeExceptionTest;
+
 class TarifaMaterial extends Model
 {
     use \Laracasts\Presenter\PresentableTrait;
@@ -19,11 +21,14 @@ class TarifaMaterial extends Model
         'Fecha_Hora_Registra', 
         'Registra',
         'InicioVigencia',
-        'FinVigencia'
+        'FinVigencia',
+        'usuario_desactivo',
+        'motivo',
+        'Estatus'
     ];
     protected $dates = ["Fecha_Hora_Registra","InicioVigencia","FinVigencia"];
     protected $presenter = ModelPresenter::class;
-    public $timestamps = false;
+
     public function material() {
         return $this->belongsTo(\App\Models\Material::class, 'IdMaterial');
     }
@@ -38,5 +43,13 @@ class TarifaMaterial extends Model
         }else{
            return "VIGENTE";
         }
+    }
+
+    public function getEstatusStringAttribute() {
+        return $this->Estatus == 1 ? 'ACTIVA' : 'INACTIVA';
+    }
+
+    public function user_desactivo() {
+        return $this->belongsTo(User::class, 'usuario_desactivo');
     }
 }

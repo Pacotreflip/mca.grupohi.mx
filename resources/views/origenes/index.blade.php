@@ -104,7 +104,7 @@
               function(inputValue){
                   if (inputValue === false) return false;
                   if (inputValue === "") {
-                      swal.showInputError("Escriba el motivo de la eliminación!");
+                      swal.showInputError("Escriba el motivo de la desactivación!");
                       return false
                   }
                   form.attr("action", url);

@@ -17,6 +17,8 @@ class TarifasMaterialController extends Controller
     function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
+        $this->middleware('permission:desactivar-tarifas-material', ['only' => ['destroy']]);
+        $this->middleware('permission:crear-tarifas-material', ['only' => ['create', 'store']]);
        
         parent::__construct();
     }
@@ -159,10 +161,22 @@ class TarifasMaterialController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        //
+        $tarifa = TarifaMaterial::find($id);
+        if($tarifa->Estatus == 1) {
+            $tarifa->update([
+                'Estatus'  => 0,
+                'usuario_desactivo' => auth()->user()->idusuario,
+                'motivo'  => $request->motivo
+            ]);
+            Flash::success('¡TARIFA DESACTIVADA CORRECTAMENTE!');
+        } else {
+            Flash::warning('¡LA TARIFA YA HA SIDO DESACTIVADA!');
+        }
+        return redirect()->back();
     }
+
     public function create()
     {
         $materiales = Material::orderBy("descripcion")->lists("Descripcion","IdMaterial");
