@@ -23,6 +23,14 @@ use App\Models\Impresora;
 use App\Models\Telefono;
 use Illuminate\Support\Facades\DB;
 
+
+use App\User_1;
+use App\Models\Entrust\Permission;
+use App\Models\Entrust\Role;
+use App\Models\Transformers\UsuarioPerfilesTransformer;
+use League\Flysystem\Plugin\ForcedRename;
+use function MongoDB\BSON\toJSON;
+
 class CSVController extends Controller
 {
     function __construct()
@@ -90,7 +98,7 @@ class CSVController extends Controller
     {
         $headers = ["Clave", "Descripción", "Estatus", "Registró", "Fecha y Hora Registro", "Desactivo", "Fecha y Hora de Desactivación", "Motivo de Desactivación"];
         $items = Tiro::
-             leftJoin('igh.usuario as user_registro', 'tiros.usuario_registro', '=', 'user_registro.idusuario')
+        leftJoin('igh.usuario as user_registro', 'tiros.usuario_registro', '=', 'user_registro.idusuario')
             ->leftJoin('igh.usuario as user_desactivo', 'tiros.usuario_desactivo', '=', 'user_desactivo.idusuario')
             ->select(
                 DB::raw("CONCAT(tiros.Clave,tiros.IdTiro)"),
@@ -353,5 +361,107 @@ class CSVController extends Controller
         $csv = new CSV($headers, $items);
         $csv->generate('telefonos');
     }
+    public function usuario_rol()
+    {
+        $usuarios = UsuarioPerfilesTransformer::transform(User_1::with('roles')->habilitados()->get());
+        $permisos = Permission::all();
+        $roles = Role::with('perms')->get();
 
+        $rol_usuario = array();
+        $role_usuario_vista = array();
+        $permisos_rol_vista= array();
+        ///////////Rol permisos
+        foreach ($roles as $rol)
+        {
+            $rol_permisos= array();
+            array_push($rol_permisos, $rol->display_name);
+            $permisoActual=DB::connection('sca')->table('sca_configuracion.permission_role')->where('role_id', '=', $rol->id)->get();
+            if (count($permisoActual) > 0)
+            {
+                foreach ($permisos as $permiso){
+                    $aux = false;
+                    for($a=0;$a<count($permisoActual);$a++){
+                        if($permisoActual[$a]->permission_id==$permiso->id){
+                            $aux=true;
+                        }
+                    }
+                    array_push($rol_permisos, $aux);
+                }
+            }
+            else
+            {
+                $a = 0;
+                while (count($permisos) > $a) {
+                    array_push($rol_permisos, false);
+                    $a++;
+                }
+            }
+
+            $data = $rol_permisos;
+            array_push($permisos_rol_vista, $data);
+        }
+        $headers = [];
+        array_push($headers, 'Rol');
+        foreach ($permisos as $permiso) {
+            array_push($headers, $permiso->display_name);
+        }
+
+
+        $items = $permisos_rol_vista;
+        $csv = new CSV($headers,$items);
+        $csv->generate('Usuarios_rol');
+
+
+
+    }
+
+    public function rol_permiso()
+    {
+
+        $usuarios = UsuarioPerfilesTransformer::transform(User_1::with('roles')->habilitados()->get());
+        $permisos = Permission::all();
+        $roles = Role::with('perms')->get();
+
+        $rol_usuario = array();
+        $role_usuario_vista = array();
+        $permisos_rol_vista= array();
+
+        ////////////Rol usuario
+        foreach ($usuarios as $usuario )
+        {
+            $rol_usuario = array();
+
+            array_push($rol_usuario, $usuario['nombre']);
+            if (count($usuario['roles']) > 0)
+            {
+                foreach ($roles as $rol) {
+                    $aux = false;
+                    foreach ($usuario['roles'] as $rolAsignado) {
+                        if ($rol->id == $rolAsignado->id) {
+                            $aux = true;
+                        }
+                    }
+                    array_push($rol_usuario, $aux);
+                }
+            } else
+            {
+                $a = 0;
+                while (count($roles) > $a) {
+                    array_push($rol_usuario, '');
+                    $a++;
+                }
+            }
+            $data =  $rol_usuario;
+            array_push($role_usuario_vista, $data);
+        }
+        $headers = [];
+        array_push($headers, 'Usuario');
+        foreach ($roles as $rol) {
+            array_push($headers, $rol->display_name);
+        }
+        $items = $role_usuario_vista;
+        $csv = new CSV($headers,$items);
+        $csv->generate('Rol_permisos');
+
+    }
 }
