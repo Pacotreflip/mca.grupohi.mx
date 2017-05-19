@@ -1,6 +1,15 @@
 @extends('layout_width')
+@section('styles')
+    <style>
+        .ocultar{
+            display:none;
+        }
 
+
+    </style>
+@endsection
 @section('content')
+
     <h1>VIAJES @if($action == 'en_conflicto')EN CONFLICTO @endif</h1>
     {!! Breadcrumbs::render('viajes_netos.index') !!}
     <hr>
@@ -143,9 +152,13 @@
                 <hr>
                 
                 <section v-if="viajes_netos.length" id="results">
-                    <h3>RESULTADOS DE LA BÚSQUEDA</h3>
+                    <h3>
+                        RESULTADOS DE LA BÚSQUEDA
+                        <button v-if="!ver_mas" class="btn btn-info pull-right" v-on:click="ver_mas_function"><i class="fa fa-eye"></i> Ver Más </button>
+                        <button v-if="ver_mas" class="btn btn-info pull-right" v-on:click="ver_mas_function"><i class="fa fa-eye"></i> Ver Menos </button>
+                    </h3>
                     
-                    <div class="table-responsive pre-scrollable">
+                    <div class="table-responsive ">
                         (P) Viaje en conflicto de tiempo pero con aprobación de pago registrada.
                         <table class="table  table-striped table-bordered small">
                             <thead>
@@ -153,8 +166,13 @@
                                 <th colspan="5" style="text-align: center">INFORMACIÓN GENERAL DEL VIAJE</th>
                                 <th colspan="4" style="text-align: center">DETALLES DEL VIAJE</th>
                                 <th colspan="2" style="text-align: center">CAMIÓN</th>
-                                <th colspan="3" style="text-align: center">EMPRESA</th>
-                                <th colspan="3" style="text-align: center">SINDICATO</th>
+
+                                <!-- OCULTAR -->
+                                <th colspan="3" style="text-align: center" class="ocultar">EMPRESA</th>
+                                <th colspan="3" style="text-align: center" class="ocultar">SINDICATO</th>
+                                <!-- END -->
+
+
                                 <th colspan="3" style="text-align: center">CONCILIACIÓN</th>
                                 <th colspan="5" style="text-align: center">ESTADO DEL VIAJE</th>
                             </tr>
@@ -173,12 +191,14 @@
                                 <th style="text-align: center"> ECONÓMICO </th>
                                 <th style="text-align: center"> CUBICACIÓN	</th>
 
-                                <th style="text-align: center"> CAMIÓN </th>
-                                <th style="text-align: center"> VIAJE NETO </th>
-                                <th style="text-align: center"> VIAJE </th>
-                                <th style="text-align: center"> CAMIÓN </th>
-                                <th style="text-align: center"> VIAJE NETO </th>
-                                <th style="text-align: center"> VIAJE </th>
+                                <!-- OCULTAR -->
+                                <th style="text-align: center" class="ocultar"> CAMIÓN </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE NETO </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE </th>
+                                <th style="text-align: center" class="ocultar"> CAMIÓN </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE NETO </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE </th>
+                                <!-- END -->
 
                                 <th style="text-align: center"> CONCILIÓ </th>
                                 <th style="text-align: center"> FOLIO </th>
@@ -209,13 +229,13 @@
                                 <td style="white-space: nowrap">@{{ viaje_neto.camion }}</td>
                                 <td style="white-space: nowrap; text-align: right">@{{ viaje_neto.cubicacion }}</td>
 
-                                <td style="white-space: nowrap">@{{ viaje_neto.empresa_camion }}</td>
-                                <td style="white-space: nowrap">@{{ viaje_neto.empresa_viajeneto }}</td>
-                                <td style="white-space: nowrap">@{{ viaje_neto.empresa_viaje }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.empresa_camion }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.empresa_viajeneto }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.empresa_viaje }}</td>
 
-                                <td style="white-space: nowrap">@{{ viaje_neto.sindicato_camion }}</td>
-                                <td style="white-space: nowrap">@{{ viaje_neto.sindicato_viajeneto }}</td>
-                                <td style="white-space: nowrap">@{{ viaje_neto.sindicato_viaje }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.sindicato_camion }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.sindicato_viajeneto }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.sindicato_viaje }}</td>
 
                                 <td style="white-space: nowrap">@{{ viaje_neto.concilio }}</td>
                                 <td style="white-space: nowrap">@{{ viaje_neto.id_conciliacion }}</td>
