@@ -9,6 +9,8 @@
 
 namespace App\Models\Viajes;
 use Laracasts\Flash\Flash;
+use Maatwebsite\Excel\Facades\Excel;
+
 class Viajes
 {
     /**
@@ -17,7 +19,6 @@ class Viajes
     protected $data;
 
     /**
-     * Viajes constructor.
      * @param $data
      */
     public function __construct($data)
