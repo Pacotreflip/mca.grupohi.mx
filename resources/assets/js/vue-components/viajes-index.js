@@ -7,7 +7,6 @@ Vue.component('viajes-index', {
             'id_conflicto':"",
             'cargando' : false,
             'guardando' :false,
-            show_all: false,
             'form' : {
                 'errors' : [],
                 'estado' : ''
@@ -46,9 +45,7 @@ Vue.component('viajes-index', {
 
     methods: {
         buscar_en_conflicto: function(e){
-            e.preventDefault(
-
-            );
+            e.preventDefault();
             var _this = this;
 
             var data = $('.form_buscar_en_conflicto').serialize();
