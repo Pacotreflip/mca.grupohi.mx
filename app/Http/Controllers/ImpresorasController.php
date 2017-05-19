@@ -9,10 +9,11 @@ use Laracasts\Flash\Flash;
 class ImpresorasController extends Controller
 {
      function __construct() {
-        $this->middleware('auth');
-        $this->middleware('context');
+         $this->middleware('auth');
+         $this->middleware('context');
          $this->middleware('permission:desactivar-impresoras', ['only' => ['destroy']]);
          $this->middleware('permission:editar-impresoras', ['only' => ['edit', 'update']]);
+         $this->middleware('permission:crear-impresoras', ['only' => ['create', 'store']]);
 
         parent::__construct();
     }
