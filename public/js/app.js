@@ -43114,6 +43114,7 @@ Vue.component('configuracion-diaria', {
             origenes: [],
             esquemas: [],
             perfiles: [],
+            telefonos: [],
             form: {
                 errors: []
             },
@@ -43197,6 +43198,7 @@ Vue.component('configuracion-diaria', {
                     _this.origenes = response.origenes;
                     _this.perfiles = response.perfiles;
                     _this.esquemas = response.esquemas;
+                    _this.telefonos = response.telefonos;
                 },
                 error: function error(_error) {
                     if (_error.status == 422) {
@@ -43371,7 +43373,7 @@ Vue.component('configuracion-diaria', {
                 'id_ubicacion': user.configuracion.ubicacion.id,
                 'id_perfil': user.configuracion.id_perfil,
                 'turno': user.configuracion.turno,
-                'id_telefono': user.configuracion.id_telefono
+                'id_telefono': $('#id_telefono').val()
             };
 
             var _this = this;
@@ -43388,6 +43390,7 @@ Vue.component('configuracion-diaria', {
                     var checador = response.checador;
                     checador.guardando = false;
                     Vue.set(_this.checadores, _this.checadores.indexOf(user), checador);
+                    Vue.set(_this, 'telefonos', response.telefonos);
                     swal({
                         type: 'success',
                         title: '¡Configuración Correcta!',
@@ -43506,8 +43509,9 @@ Vue.component('configuracion-diaria', {
                 beforeSend: function beforeSend() {
                     user.guardando = true;
                 },
-                success: function success() {
+                success: function success(response) {
                     Vue.delete(_this.checadores, _this.checadores.indexOf(user));
+                    Vue.set(this, 'telefonos', response.telefonos);
                 },
                 error: function error(_error6) {
                     if (_error6.status == 422) {

@@ -20,7 +20,13 @@ class UserConfiguracionTransformer extends AbstractTransformer
             'id'            => $model->idusuario,
             'nombre'        => $model->present()->nombreCompleto,
             'usuario'       => $model->usuario,
-            'telefono'      => (String) $model->telefono,
+            'telefono'      => $model->telefono ? [
+                'id' => $model->telefono->id,
+                'imei' => $model->telefono->imei
+            ] : [
+                'id' => '',
+                'imei' => ''
+            ],
                 'configuracion' => $model->configuracion ? [
                 'id'        => $model->configuracion->id,
                 'turno'     => $model->configuracion->turno,

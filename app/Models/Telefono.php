@@ -53,4 +53,9 @@ class Telefono extends Model
     {
         return 'ID:'.$this->id.' IMEI:'.$this->imei.'';
     }
+
+    public function scopeNoAsignados($query) {
+        return $query->whereNull('telefonos.id_checador')
+            ->where('telefonos.estatus', '=', 1);
+    }
 }

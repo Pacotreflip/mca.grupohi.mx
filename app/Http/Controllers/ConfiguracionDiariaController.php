@@ -7,6 +7,7 @@ use App\Models\ConfiguracionDiaria\Esquema;
 use App\Models\ConfiguracionDiaria\Perfiles;
 use App\Models\Entrust\Role;
 use App\Models\Origen;
+use App\Models\Telefono;
 use App\Models\Tiro;
 use App\Models\Transformers\EsquemaConfiguracionTransformer;
 use App\Models\Transformers\OrigenTransformer;
@@ -40,7 +41,8 @@ class ConfiguracionDiariaController extends Controller
                     'tiros'    => TiroTransformer::transform(Tiro::where('tiros.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
                     'esquemas' => EsquemaConfiguracionTransformer::transform(Esquema::orderBy('name', 'ASC')->get()),
                     'perfiles' => Perfiles::orderBy('name', 'ASC')->get(),
-                    'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get())
+                    'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get()),
+                    'telefonos' => Telefono::NoAsignados()->get()
                 ]);
             }
         } else {
@@ -63,7 +65,7 @@ class ConfiguracionDiariaController extends Controller
                 'tipo' => 'required',
                 'id_ubicacion' => 'required',
                 'id_perfil' => 'required',
-                'turno'  => 'required'
+                'turno'  => 'required',
             ]);
 
             $user = User::find($request->id_usuario);
@@ -85,8 +87,23 @@ class ConfiguracionDiariaController extends Controller
             }
             $configuracion->created_at = $configuracion->updated_at = Carbon::now()->toDateTimeString();
             $configuracion->save();
+
+            $checador = User::find($request->id_usuario);
+            $telefono_checador = Telefono::where('id_checador', '=', $checador->idusuario)->first();
+            if($telefono_checador) {
+                $telefono_checador->id_checador = null;
+                $telefono_checador->save();
+            }
+
+            if($request->id_telefono) {
+                $telefono = Telefono::find($request->id_telefono);
+                $telefono->id_checador = $request->id_usuario;
+                $telefono->save();
+            }
+
             return response()->json([
-                'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario))
+                'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario)),
+                'telefonos' => Telefono::NoAsignados()->get()
             ]);
         }
     }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Entrust\Role;
+use App\Models\Telefono;
 use App\User;
 use App\User_1;
 use Illuminate\Http\Request;
@@ -98,8 +99,15 @@ class UserRolesController extends Controller
             $role = Role::find($id_role);
             $user->detachRole($role);
 
+            $telefono = Telefono::where('id_checador', '=', $user->idusuario)->first();
+            if($telefono) {
+                $telefono->id_checador = null;
+                $telefono->save();
+            }
+
             return response()->json([
-                'success' => true
+                'success' => true,
+                'telefonos' => Telefono::NoAsignados()->get()
             ]);
         }
     }

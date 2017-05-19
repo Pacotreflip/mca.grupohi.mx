@@ -2,9 +2,8 @@
 
 @section('content')
     <h1>CONFIGURACIÓN DIARIA
-        <a href="{{ route('csv.configuracion-checadores') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar </a>
+        <a href="{{ route('csv.configuracion-checadores') }}" class="btn btn-success pull-right"><i class="fa fa-file-excel-o"></i> Descargar Excel </a>
         <a href="{{ route('pdf.configuracion-diaria')}}"   target="_blank" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
-
     </h1>
     {!! Breadcrumbs::render('configuracion-diaria.index') !!}
     <hr>
@@ -33,7 +32,7 @@
                                     <th style="text-align: center">Turno</th>
                                     <th style="text-align: center">Guardar</th>
                                     <th style="text-align: center">Limpiar Configuración</th>
-                                    <th style="text-align: center">Eliminar Checador</th>
+                                    <th style="text-align: center">Quitar Permiso de Checador</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -41,7 +40,13 @@
                                     <td style="white-space: nowrap">@{{ index + 1 }}</td>
                                     <td style="white-space: nowrap">@{{ user.nombre  }}</td>
                                     <td style="white-space: nowrap">@{{ user.usuario }}</td>
-                                    <td style="white-space: nowrap">@{{ user.telefono }}</td>
+                                    <td style="white-space: nowrap">
+                                        <select id="id_telefono" name="id_telefono" class="form-control input-sm grande">
+                                            <option value>-- SELECCIONE --</option>
+                                            <option selected v-if="user.telefono.id" v-bind:value="user.telefono.id">@{{ 'ID: '+user.telefono.id+' IMEI: '+user.telefono.imei }}</option>
+                                            <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ 'ID: '+telefono.id+' IMEI: '+telefono.imei }}</option>
+                                        </select>
+                                    </td>
                                     <td style="white-space: nowrap">
                                         <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>
@@ -70,7 +75,7 @@
                                         </select>
                                     </td>
                                     <td style="white-space: nowrap" v-else>
-                                       <select class="form-control" disabled="disabled">
+                                       <select class="form-control input-sm" disabled="disabled">
                                            <option value>-- SELECCIONE --</option>
                                        </select>
                                     </td>
