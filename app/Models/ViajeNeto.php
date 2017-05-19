@@ -86,19 +86,15 @@ class ViajeNeto extends Model
     public static function scopeConciliados($query, $conciliados) {
         if($conciliados == 'C') {
             return $query
-                ->leftJoin('viajes as check_conciliacion', 'viajesnetos.IdViajeNeto', '=', 'check_conciliacion.IdViajeNeto')
-                ->leftJoin('conciliacion_detalle', 'check_conciliacion.IdViaje', '=', 'conciliacion_detalle.idviaje')
                 ->where(function($query){
-                    $query->whereNotNull('conciliacion_detalle.idviaje')
-                        ->orWhere('conciliacion_detalle.estado', '!=', '-1');
+                    $query->whereNotNull('cd.idviaje')
+                        ->orWhere('cd.estado', '!=', '-1');
                 });
         } else if($conciliados == 'NC') {
             return $query
-                ->leftJoin('viajes as check_conciliacion', 'viajesnetos.IdViajeNeto', '=', 'check_conciliacion.IdViajeNeto')
-                ->leftJoin('conciliacion_detalle', 'check_conciliacion.IdViaje', '=', 'conciliacion_detalle.idviaje')
                 ->where(function($query){
-                    $query->whereNull('conciliacion_detalle.idviaje')
-                        ->orWhere('conciliacion_detalle.estado', '=', '-1');
+                    $query->whereNull('cd.idviaje')
+                        ->orWhere('cd.estado', '=', '-1');
                 });
         } else if($conciliados == 'T') {
             return $query;
@@ -867,7 +863,10 @@ class ViajeNeto extends Model
             ->leftJoin('sindicatos as sindicatos_viajes', 'v.IdSindicato', '=', 'sindicatos_viajes.IdSindicato')
             ->leftJoin('sindicatos as sindicatos_viajesnetos', 'viajesnetos.IdSindicato', '=', 'sindicatos_viajesnetos.IdSindicato')
             ->leftJoin('sindicatos as sindicatos_camiones', 'camiones.IdSindicato', '=', 'sindicatos_camiones.IdSindicato')
-            ->addSelect(
+            ->leftJoin('conciliacion_detalle as cd', DB::raw("viajesnetos.IdViajeNeto = cd.idviaje_neto AND cd.estado"), '=', DB::raw("1"))
+            ->leftJoin('conciliacion as c', 'cd.idconciliacion', '=', 'c.idconciliacion')
+            ->leftJoin('igh.usuario as user_concilio', 'c.IdRegistro', '=', 'user_concilio.idusuario')
+                ->addSelect(
                 "viajesnetos.IdViajeNeto as id",
                 DB::raw("IF(viajesnetos.Aprobo is not null, CONCAT(user_autorizo.nombre, ' ', user_autorizo.apaterno, ' ', user_autorizo.amaterno), '') as autorizo"),
                 "camiones.Economico as camion",
@@ -906,7 +905,10 @@ class ViajeNeto extends Model
                 "empresas_camiones.razonSocial as empresa_camion",
                 "sindicatos_viajes.NombreCorto as sindicato_viaje",
                 "sindicatos_viajesnetos.NombreCorto as sindicato_viajeneto",
-                "sindicatos_camiones.NombreCorto as sindicato_camion"
-            );
+                "sindicatos_camiones.NombreCorto as sindicato_camion",
+                DB::raw("group_concat(c.idconciliacion) as id_conciliacion"),
+                DB::raw("group_concat(CONCAT(user_concilio.nombre, ' ', user_concilio.apaterno, ' ', user_concilio.amaterno)) as concilio")
+            )
+            ->groupBy('viajesnetos.IdViajeNeto');
     }
 }
