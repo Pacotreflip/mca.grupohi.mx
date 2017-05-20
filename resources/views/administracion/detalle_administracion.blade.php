@@ -83,7 +83,7 @@
                 <h3>Usuario Permisos</h3>
 
                 <div class="row">
-                    <a href="{{ route('csv.usuario_rol') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i
+                    <a href="{{ route('csv.usuario_permiso') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i
                                 class="fa fa-file-excel-o"></i> EXCEL</a>
                 </div>
 
@@ -102,9 +102,14 @@
                         <tbody>
 
 
-                        @foreach($permisos_usuario as $permisoUsuario)
+                        @foreach($permisosUsuario as $perm)
                             <tr>
 
+                                    <th >{{$perm[0]}}</th>
+                                @foreach($perm as $row)
+
+                                    <th  @if($rol==1)style="background-color: #dff0d8"@endif>@if($row==1)<center><span class="fa fa-check"></span></center>@endif</th>
+                                @endforeach
 
                             </tr>
                         @endforeach

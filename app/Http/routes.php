@@ -216,6 +216,9 @@ Route::group(['prefix' => 'csv'],function () {
     Route::get('telefonos', 'CSVController@telefonos')->name('csv.telefonos');
     Route::get('usuario-rol', 'CSVController@usuario_rol')->name('csv.usuario_rol');
     Route::get('rol-permiso', 'CSVController@rol_permiso')->name('csv.rol_permiso');
+    Route::get('usuario-permiso', 'CSVController@usuario_permiso')->name('csv.usuario_permiso');
+
+
 
 });
 
