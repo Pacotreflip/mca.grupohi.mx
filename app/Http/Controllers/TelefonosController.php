@@ -13,6 +13,9 @@ class TelefonosController extends Controller
     function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
+        $this->middleware('permission:desactivar-telefonos', ['only' => ['destroy']]);
+        $this->middleware('permission:editar-telefonos', ['only' => ['edit', 'update']]);
+
 
         parent::__construct();
     }
@@ -110,7 +113,6 @@ class TelefonosController extends Controller
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'imei' => 'required|unique:sca.telefonos,imei,'.$request->route('telefonos').',id|digits_between:12,17',
             'linea' => 'required|unique:sca.telefonos,linea,'.$request->route('telefonos').',id|digits:10',
             'marca' => 'required|alpha_num',
             'modelo' => 'required|alpha_num',

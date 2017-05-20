@@ -32,13 +32,16 @@
                      <td>{{ $impresora->estatus_string }}</td>
                      <td>
                           <a href="{{ route('impresoras.show', $impresora) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-                          <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
-
+                         @permission('editar-impresoras')
+                         <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
+                         @endpermission
+                         @permission('desactivar-impresoras')
                          @if($impresora->estatus == 1)
                              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-remove"></i></button>
                          @else
                              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_impresora({{$impresora->id}})"><i class="fa fa-check"></i></button>
                          @endif
+                        @endpermission
                      <td>
                  </tr>
              @endforeach

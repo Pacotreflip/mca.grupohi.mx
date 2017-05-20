@@ -37,12 +37,16 @@
                      <td>{{ $telefono->estatus_string }}</td>
                      <td>
                          <a href="{{ route('telefonos.show', $telefono) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+                         @permission('editar-telefonos')
                          <a href="{{ route('telefonos.edit', $telefono) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
+                         @endpermission
+                         @permission('desactivar-telefonos')
                          @if($telefono->estatus == 1)
                          <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_telefono({{$telefono->id}})"><i class="fa fa-remove"></i></button>
                          @else
                          <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_telefono({{$telefono->id}})"><i class="fa fa-check"></i></button>
                          @endif
+                         @endpermission
                      </td>
                  </tr>
              @endforeach

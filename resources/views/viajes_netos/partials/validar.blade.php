@@ -8,6 +8,7 @@
             <app-errors v-bind:form="form"></app-errors>
             <h3>BUSCAR VIAJES</h3>
             {!! Form::open(['class' => 'form_buscar']) !!}
+            <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
@@ -22,6 +23,15 @@
                     </div>
                 </div>
             </div>
+            <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label>Ticket (Código)</label>
+                        <input type="text" name="Codigo" class="form-control">
+                    </div>
+                </div>
+            </div>
             <div class="form-group">
                 <button class="btn btn-primary" type="submit" @click="buscar">
                 <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i></span>
@@ -29,7 +39,6 @@
                 </button>
             </div>
             {!! Form::close() !!}
-
             <hr>
             <div class="table-responsive">
                 <span v-if="cargando">

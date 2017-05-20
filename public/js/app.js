@@ -34061,7 +34061,8 @@ Vue.component('configuracion-diaria', {
                 'tipo': user.configuracion.tipo,
                 'id_ubicacion': user.configuracion.ubicacion.id,
                 'id_perfil': user.configuracion.id_perfil,
-                'turno': user.configuracion.turno
+                'turno': user.configuracion.turno,
+                'id_telefono': user.configuracion.id_telefono
             };
 
             var _this = this;
@@ -35514,6 +35515,18 @@ Vue.component('viajes-index', {
             $('.form_buscar').attr('action', url);
             $('.form_buscar').attr('method', 'GET');
             $('.form_buscar').submit();
+        },
+
+        toogle_show_all: function toogle_show_all() {
+            if (this.show_all) {
+                this.show_all = false;
+            } else {
+                this.show_all = true;
+            }
+        },
+
+        formato: function formato(val) {
+            return numeral(val).format('0,0.00');
         }
     }
 });
