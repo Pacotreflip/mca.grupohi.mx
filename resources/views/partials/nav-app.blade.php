@@ -113,6 +113,21 @@
       </ul>
   </li>
   @endif
+
+  @if(Auth::user()->can(['consulta-viajes-netos']))
+      <li class="dropdown">
+          <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
+              Administración<span class="caret"></span>
+          </a>
+          <ul class="dropdown-menu" role="menu">
+              <li><a href="{{ route('administracion.roles_permisos') }}">Configuración general</a></li>
+              <li><a href="{{ route('detalle.configuracion') }}">Detalle configuración</a></li>
+
+          </ul>
+      </li>
+  @endif
+
+
 @else
   <li><a href="{{ route('proyectos') }}">Proyectos</a></li>
 @endif

@@ -180,7 +180,14 @@ Route::resource('user.roles', 'UserRolesController');
 
 //Rutas de Administración
 Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador-sistema']], function () {
-    Route::get('/', 'PagesController@administracion')->name('administracion');
+    Route::get('roles_permisos', 'RolesPermisosController@roles_permisos')->name('administracion.roles_permisos');
+    Route::get('roles_permisos/init', 'RolesPermisosController@init');
+    Route::post('roles_permisos/roles', 'RolesPermisosController@roles_store')->name('roles.store');
+    Route::post('roles_permisos/permisos', 'RolesPermisosController@permisos_store')->name('permisos.store');
+    Route::post('roles_permisos/permisos_rol_store', 'RolesPermisosController@permisos_rol_store')->name('permisos_roles.store');
+    Route::post('roles_permisos/rol_usuario_store', 'RolesPermisosController@roles_usuario_store')->name('rol_usuario.store');
+    Route::post('roles_permisos/permisos_roles','RolesPermisosController@permisos_roles')->name('permisos.roles');
+
 });
 
 Route::resource('telefonos', 'TelefonosController');
@@ -207,4 +214,12 @@ Route::group(['prefix' => 'csv'],function () {
     Route::get('configuracion-checadores', 'CSVController@configuracion_checadores')->name('csv.configuracion-checadores');
     Route::get('impresoras', 'CSVController@impresoras')->name('csv.impresoras');
     Route::get('telefonos', 'CSVController@telefonos')->name('csv.telefonos');
+    Route::get('usuario-rol', 'CSVController@usuario_rol')->name('csv.usuario_rol');
+    Route::get('rol-permiso', 'CSVController@rol_permiso')->name('csv.rol_permiso');
+    Route::get('usuario-permiso', 'CSVController@usuario_permiso')->name('csv.usuario_permiso');
+
+
+
 });
+
+Route::get('detalle_configuracion', 'DetalleAdministracionController@index')->name('detalle.configuracion');
