@@ -173,11 +173,11 @@ Vue.component('roles-permisos', {
         select_rol: function () {
             $("#leftRolValues").empty();
             $("#rightRolValues").empty();
-
+            var indice=$("#rol").prop('selectedIndex');
 
 
             if(this.selected_rol_id) {
-                Vue.set(this, 'selected_rol', this.roles[this.selected_rol_id-1]);
+                Vue.set(this, 'selected_rol', this.roles[indice-1]);
 
 
                 this.permisosDisponibles.forEach(function (permiso) {
@@ -230,31 +230,226 @@ Vue.component('roles-permisos', {
                 t.trigger('click');
             }
         },
+//////////////////////////////////////////////////////////////Add roles a usuario
+          remove_permiso_click:function (e) {
+              e.preventDefault();
+              var selectedItem = $("#rightPermisoValues option:selected");
+              $("#leftPermisoValues").append(selectedItem);
 
-        add_permiso_click: function () {
-            $("#btnPermisoLeft").click(function () {
-                var selectedItem = $("#rightPermisoValues option:selected");
-                $("#leftPermisoValues").append(selectedItem);
+              var _this = this;
+              var idsSeleccionados = [];
+              $("#rightPermisoValues option").each(function (index) {
+                  idsSeleccionados.push(this.id);
+              });
+
+              var form = $('#rol_usuario_form');
+              var url = form.attr('action');
+              var type = form.attr('method');
+              $.ajax({
+                  type: type,
+                  url: url,
+                  data: {
+                      'rol': idsSeleccionados,
+                      'usuario':$('#selUser').val()
+                  },
+                  beforeSend: function () {
+                      _this.guardando = true;
+                      $( "#btnPermisoRight" ).prop( "disabled", true );
+                      $( "#btnPermisoLeft" ).prop( "disabled", true );
+
+
+                  },
+                  success: function (response) {
+                      _this.usuarios = response.usuarios;
+                      _this.roles = response.roles;
+                      _this.permisos = response.permisos;
+                      swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
+                  },
+                  error: function (error) {
+                      if (error.status == 422) {
+                          App.setErrorsOnForm(_this.form, error.responseJSON);
+                      } else if (error.status == 500) {
+                          swal({
+                              type: 'error',
+                              title: '¡Error!',
+                              text: App.errorsToString(error.responseText)
+                          });
+                      }
+                  },
+                  complete: function () {
+                      _this.guardando = false;
+                      $( "#btnPermisoRight" ).prop( "disabled", false );
+                      $( "#btnPermisoLeft" ).prop( "disabled", false );
+
+
+                  }
+              });
+          }
+
+
+        ,
+        add_permiso_click: function (e) {
+
+
+            var selectedItem = $("#leftPermisoValues option:selected");
+            $("#rightPermisoValues").append(selectedItem);
+
+            e.preventDefault();
+
+            var _this = this;
+            var idsSeleccionados = [];
+            $("#rightPermisoValues option").each(function (index) {
+                idsSeleccionados.push(this.id);
             });
 
-            $("#btnPermisoRight").click(function () {
-                var selectedItem = $("#leftPermisoValues option:selected");
-                $("#rightPermisoValues").append(selectedItem);
+            var form = $('#rol_usuario_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            $.ajax({
+                type: type,
+                url: url,
+                data: {
+                    'rol': idsSeleccionados,
+                    'usuario':$('#selUser').val()
+                },
+                beforeSend: function () {
+                    _this.guardando = true;
+                    $( "#btnPermisoRight" ).prop( "disabled", true );
+                    $( "#btnPermisoLeft" ).prop( "disabled", true );
+
+
+                },
+                success: function (response) {
+                    _this.usuarios = response.usuarios;
+                    _this.roles = response.roles;
+                    _this.permisos = response.permisos;
+                    swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
+                    $( "#btnPermisoRight" ).prop( "disabled", false );
+                    $( "#btnPermisoLeft" ).prop( "disabled", false );
+
+
+                }
             });
-            //this.guardar_rol_usuario();
         },
-        add_rol_click: function () {
-            $("#btnRolLeft").click(function () {
-                var selectedItem = $("#rightRolValues option:selected");
-                $("#leftRolValues").append(selectedItem);
+
+
+        //////////////////////////Add permisos roles
+        remove_rol_click: function (e) {
+            var selectedItem = $("#rightRolValues option:selected");
+            $("#leftRolValues").append(selectedItem);
+
+
+            e.preventDefault();
+
+            var _this = this;
+            var idsSeleccionados = [];
+            $("#rightRolValues option").each(function (index) {
+                idsSeleccionados.push(this.id);
             });
 
-            $("#btnRolRight").click(function () {
-                var selectedItem = $("#leftRolValues option:selected");
-                $("#rightRolValues").append(selectedItem);
+            var form = $('#permiso_rol_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            $.ajax({
+                type: type,
+                url: url,
+                data: {
+                    'permiso': idsSeleccionados,
+                    'rol':$('#rol').val()
+                },
+                beforeSend: function () {
+                    _this.guardando = true;
+                    $("#btnRolRight").prop("disabled", true);
+                    $("#btnRolLeft").prop("disabled", true);
+                },
+                success: function (response) {
+                    _this.usuarios = response.usuarios;
+                    _this.roles = response.roles;
+                    _this.permisos = response.permisos;
+                    swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
+                    $("#btnRolRight").prop("disabled", false);
+                    $("#btnRolLeft").prop("disabled", false);
+                }
+            });
+        },
+        add_rol_click: function (e) {
+            e.preventDefault();
+            var selectedItem = $("#leftRolValues option:selected");
+            $("#rightRolValues").append(selectedItem);
+
+
+            var _this = this;
+            var idsSeleccionados = [];
+            $("#rightRolValues option").each(function (index) {
+                idsSeleccionados.push(this.id);
             });
 
-            //this.guardar_permisos_rol();
+            var form = $('#permiso_rol_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            $.ajax({
+                type: type,
+                url: url,
+                data: {
+                    'permiso': idsSeleccionados,
+                    'rol':$('#rol').val()
+                },
+                beforeSend: function () {
+                    _this.guardando = true;
+                    $("#btnRolRight").prop("disabled", true);
+                    $("#btnRolLeft").prop("disabled", true);
+                },
+                success: function (response) {
+                    _this.usuarios = response.usuarios;
+                    _this.roles = response.roles;
+                    _this.permisos = response.permisos;
+                    swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
+                    $("#btnRolRight").prop("disabled", false);
+                    $("#btnRolLeft").prop("disabled", false);
+                }
+            });
         },
         remove_click: function () {
             $('.all').prop("checked",false);
@@ -314,107 +509,7 @@ Vue.component('roles-permisos', {
                 }
             })
         },
-        guardar_permisos_rol:function (e) {
-            e.preventDefault();
-
-            var _this = this;
-                var idsSeleccionados = [];
-                $("#rightRolValues option").each(function (index) {
-                    idsSeleccionados.push(this.id);
-                });
-
-            var form = $('#permiso_rol_form');
-            var url = form.attr('action');
-            var type = form.attr('method');
-            $.ajax({
-                type: type,
-                url: url,
-                data: {
-                    'permiso': idsSeleccionados,
-                    'rol':$('#rol').val()
-                },
-                beforeSend: function () {
-                    _this.guardando = true;
-                    $("#btnRolRight").prop("disabled", true);
-                    $("#btnRolLeft").prop("disabled", true);
-                },
-                success: function (response) {
-                    _this.usuarios = response.usuarios;
-                    _this.roles = response.roles;
-                    _this.permisos = response.permisos;
-                      swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
-                },
-                error: function (error) {
-                    if (error.status == 422) {
-                        App.setErrorsOnForm(_this.form, error.responseJSON);
-                    } else if (error.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(error.responseText)
-                        });
-                    }
-                },
-                complete: function () {
-                    _this.guardando = false;
-                    $("#btnRolRight").prop("disabled", false);
-                    $("#btnRolLeft").prop("disabled", false);
-                }
-            });
-
-        },
-        guardar_rol_usuario:function (e) {
-
-            e.preventDefault();
-
-            var _this = this;
-            var idsSeleccionados = [];
-            $("#rightPermisoValues option").each(function (index) {
-                idsSeleccionados.push(this.id);
-            });
-
-            var form = $('#rol_usuario_form');
-            var url = form.attr('action');
-            var type = form.attr('method');
-            $.ajax({
-                type: type,
-                url: url,
-                data: {
-                    'rol': idsSeleccionados,
-                    'usuario':$('#selUser').val()
-                },
-                beforeSend: function () {
-                    _this.guardando = true;
-                    $( "#btnPermisoRight" ).prop( "disabled", true );
-                    $( "#btnPermisoLeft" ).prop( "disabled", true );
 
 
-                },
-                success: function (response) {
-                    _this.usuarios = response.usuarios;
-                    _this.roles = response.roles;
-                    _this.permisos = response.permisos;
-                    swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
-                },
-                error: function (error) {
-                    if (error.status == 422) {
-                        App.setErrorsOnForm(_this.form, error.responseJSON);
-                    } else if (error.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(error.responseText)
-                        });
-                    }
-                },
-                complete: function () {
-                    _this.guardando = false;
-                    $( "#btnPermisoRight" ).prop( "disabled", false );
-                    $( "#btnPermisoLeft" ).prop( "disabled", false );
-
-
-                }
-            });
-        }
     }
 });

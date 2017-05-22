@@ -140,8 +140,24 @@
                                             </div>
 
                                             <div class="col-sm-2">
-                                                <input type="button" :disabled="guardando"  id="btnRolRight" value="&gt;&gt;"  class="btn btn-default center-block add"  v-on:click="add_rol_click" />
-                                                <input type="button" :disabled="guardando" id="btnRolLeft" value="&lt;&lt;"  class="btn btn-default center-block add" v-on:click="add_rol_click" />
+                                                <button type="button" :disabled="guardando"  id="btnRolRight" value="&gt;&gt;"
+                                                        class="btn btn-default center-block add"  v-on:click="add_rol_click" >
+                                                    <span v-if="guardando">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </span>
+                                                    <span v-else>
+                                                    <i class="fa"></i> &gt;&gt;
+                                                </span>
+                                                </button>
+                                                <button type="button" :disabled="guardando" id="btnRolLeft" value="&lt;&lt;"
+                                                        class="btn btn-default center-block add" v-on:click="remove_rol_click" >
+                                                    <span v-if="guardando">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </span>
+                                                    <span v-else>
+                                                    <i class="fa"></i> &lt;&lt;
+                                                </span>
+                                                </button>
                                             </div>
                                             <div class="col-sm-5">
                                                 <center><b>Actuales</b></center>
@@ -150,16 +166,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <center>
-                                            <button :disabled="guardando" v-on:click="guardar_permisos_rol" class="btn btn-success">
-                                                <span v-if="guardando">
-                                                    <i class="fa fa-spinner fa-spin"></i> Guardando
-                                                </span>
-                                                <span v-else>
-                                                    <i class="fa fa-save"></i> Guardar
-                                                </span>
-                                            </button>
-                                        </center>
+
                                     </div>
                                 </div>
 
@@ -196,9 +203,25 @@
                                                     </select>
                                             </div>
                                             <div class="col-sm-2">
-                                                <input type="button" :disabled="guardando"  id="btnPermisoRight" value="&gt;&gt;"  class="btn btn-default center-block add"  v-on:click="add_permiso_click" />
+                                                <button type="button" :disabled="guardando"  id="btnPermisoRight" value="&gt;&gt;"
+                                                        class="btn btn-default center-block add"  v-on:click="add_permiso_click" >
+                                                      <span v-if="guardando">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </span>
+                                                    <span v-else>
+                                                    <i class="fa"></i> &gt;&gt;
+                                                </span>
+                                                </button>
 
-                                                <input type="button" :disabled="guardando" id="btnPermisoLeft" value="&lt;&lt;"  class="btn btn-default center-block add" v-on:click="add_permiso_click" />
+                                                <button type="button" :disabled="guardando" id="btnPermisoLeft" value="&lt;&lt;"
+                                                        class="btn btn-default center-block add" v-on:click="remove_permiso_click">
+                                                      <span v-if="guardando">
+                                                    <i class="fa fa-spinner fa-spin"></i>
+                                                </span>
+                                                    <span v-else>
+                                                    <i class="fa "></i> &lt;&lt;
+                                                </span>
+                                                </button>
                                             </div>
                                             <div class="col-sm-5">
                                                 <center><b>Actuales</b></center>
@@ -206,16 +229,6 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <center>
-                                            <button :disabled="guardando" v-on:click="guardar_rol_usuario" class="btn btn-success">
-                                                <span v-if="guardando">
-                                                    <i class="fa fa-spinner fa-spin"></i> Guardando
-                                                </span>
-                                                <span v-else>
-                                                    <i class="fa fa-save"></i> Guardar
-                                                </span>
-                                            </button>
-                                        </center>
                                     </div>
                                 </div>
 
