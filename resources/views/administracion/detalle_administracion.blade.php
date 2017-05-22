@@ -1,4 +1,4 @@
-@extends('layout')
+@extends('layout_width')
 @section('content')
     <style>
         .table {
@@ -7,16 +7,16 @@
     </style>
 
     <h1>DETALLE DE ADMINISTRACIÓN</h1>
-    <div class="container">
+   
         <ul class="nav nav-tabs">
-            <li class="active"><a data-toggle="tab" href="#usuario_permiso">Usuario Rol</a></li>
-            <li><a data-toggle="tab" href="#permiso_rol">Rol Permiso</a></li>
-            <li><a data-toggle="tab" href="#rol_usuario">Rol Usuario</a></li>
+            <li class="active"><a data-toggle="tab" href="#usuario_permiso">Usuarios - Roles</a></li>
+            <li><a data-toggle="tab" href="#permiso_rol">Roles - Permisos</a></li>
+            <li><a data-toggle="tab" href="#rol_usuario"> Usuarios - Permisos</a></li>
         </ul>
 
         <div class="tab-content">
             <div id="usuario_permiso" class="tab-pane fade in active">
-                <div class="container"  style="overflow-x: scroll;">
+                <div   style="overflow-x: scroll;">
                     <a href="{{ route('csv.rol_permiso') }}" style="margin-right: 5px"
                        class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 
@@ -50,7 +50,7 @@
                             class="fa fa-file-excel-o"></i> EXCEL</a>
                 </div>
 
-                <div class="container" style="overflow-x: scroll;">
+                <div style="overflow-x: scroll;">
 
                     <table class="table table-striped table-bordered small">
                         <thead>
@@ -87,7 +87,7 @@
                                 class="fa fa-file-excel-o"></i> EXCEL</a>
                 </div>
 
-                <div class="container" style="overflow-x: scroll;">
+                <div style="overflow-x: scroll;">
 
                     <table class="table table-striped table-bordered small">
                         <thead>
@@ -101,16 +101,12 @@
                         </thead>
                         <tbody>
 
-
                         @foreach($permisosUsuario as $perm)
                             <tr>
-
-                                    <th >{{$perm[0]}}</th>
-                                @foreach($perm as $row)
-
-                                    <th  @if($rol==1)style="background-color: #dff0d8"@endif>@if($row==1)<center><span class="fa fa-check"></span></center>@endif</th>
+                                <th >{{$perm["usuario"]}}</th>
+                                @foreach($perm["permisos"] as $row)
+                                <th  @if($row==1)style="background-color: #dff0d8"@endif>@if($row==1)<center><span class="fa fa-check"></span></center>@endif</th>
                                 @endforeach
-
                             </tr>
                         @endforeach
                         </tbody>
@@ -119,6 +115,6 @@
             </div>
 
         </div>
-    </div>
+  
 
 @stop

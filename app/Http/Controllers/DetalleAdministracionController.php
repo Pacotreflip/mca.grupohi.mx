@@ -95,12 +95,13 @@ class DetalleAdministracionController extends Controller
 
 
         /////////////usuario -permisos
-        $usuario_Permisos=array();
+        //$usuario_Permisos=array();
         $usuario_Permisos_vista=array();
 
         foreach ($usuarios as $usuario) {
             $usuario_Permisos=array();
-            array_push($usuario_Permisos, $usuario['nombre']);
+            //$data = array();
+            array_push($data, $usuario['nombre']);
             $permisosActuales = DB::connection('sca')->select('
                            Select distinct p.id,p.display_name FROM 
                             sca_configuracion.role_user ru
@@ -131,7 +132,10 @@ class DetalleAdministracionController extends Controller
                         $a++;
                     }
             }
-            $data = $usuario_Permisos;
+            $data = [
+                'usuario' => $usuario['nombre'],
+                'permisos' => $usuario_Permisos
+            ];
             array_push($usuario_Permisos_vista, $data);
 
         }
