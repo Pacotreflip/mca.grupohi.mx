@@ -27,7 +27,8 @@ Vue.component('roles-permisos', {
             if(this.selected_rol_id) {
                 return this.permisos.filter(function (permiso) {
                     var i;
-                    for (i = 0; i < _this.selected_rol.perms.length; i++) {
+
+                    for (i = 0; i <_this.selected_rol.perms.length; i++) {
                         if (_this.selected_rol.perms[i].id === permiso.id) {
                             return false;
                         }
@@ -173,8 +174,12 @@ Vue.component('roles-permisos', {
             $("#leftRolValues").empty();
             $("#rightRolValues").empty();
 
+
+
             if(this.selected_rol_id) {
                 Vue.set(this, 'selected_rol', this.roles[this.selected_rol_id-1]);
+
+
                 this.permisosDisponibles.forEach(function (permiso) {
                     $("#leftRolValues").append("<option id='"+permiso.id+"' value='"+permiso.id+"'>"+permiso.display_name+"</option>");
                 });
