@@ -93,9 +93,6 @@
             @else
                 <li class="tab-conciliacion"><a href="#cancelados" data-toggle="tab">VIAJES CANCELADOS</a></li>
             @endif
-            @if(count($conciliacion->conciliacionDetallesNoConciliados))
-                <li class="tab-conciliacion"><a href="#no_conciliados_details" data-toggle="tab">VIAJES NO CONCILIADOS</a></li>
-            @endif
         @endif
     </ul>
     <div class="tab-content">
@@ -208,12 +205,12 @@
                 <tbody>
                 @foreach($conciliacion->conciliacionDetalles->where('estado', -1) as $detalle)
                 <tr>
-                    <td>{{ $detalle->viaje->camion->Economico }}</td>
-                    <td>{{ $detalle->viaje->code }}</td>
-                    <td>{{ $detalle->viaje->FechaLlegada.' ('.$detalle->viaje->HoraLlegada.')' }}</td>
-                    <td>{{ $detalle->viaje->material->Descripcion }}</td>
-                    <td style="text-align: right">{{ $detalle->viaje->CubicacionCamion }} m<sup>3</sup></td>
-                    <td style="text-align: right">$ {{ number_format($detalle->viaje->Importe, 2, '.', ',') }}</td>
+                    <td>{{ $detalle->viaje_neto->camion->Economico }}</td>
+                    <td>{{ $detalle->viaje_neto->Code }}</td>
+                    <td>{{ $detalle->viaje_neto->FechaLlegada.' ('.$detalle->viaje_neto->HoraLlegada.')' }}</td>
+                    <td>{{ $detalle->viaje_neto->material }}</td>
+                    <td style="text-align: right">{{ $detalle->viaje_neto->CubicacionCamion }} m<sup>3</sup></td>
+                    <td style="text-align: right">$ {{ number_format($detalle->viaje_neto->Importe, 2, '.', ',') }}</td>
                     <td>{{ $detalle->cancelacion->timestamp_cancelacion }}</td>
                     <td>{{ App\User::find($detalle->cancelacion->idcancelo)->present()->nombreCompleto }}</td>
                     <td>{{ $detalle->cancelacion->motivo }}</td>

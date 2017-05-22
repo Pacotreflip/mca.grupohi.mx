@@ -2,7 +2,9 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.materials')) }}
+    @permission('crear-materiales')
     <a href="{{ route('materiales.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> NUEVO MATERIAL</a>
+    @endpermission
     <a href="{{ route('csv.materiales') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 </h1>
 {!! Breadcrumbs::render('materiales.index') !!}
@@ -29,11 +31,13 @@
                 <td>{{ $material->estatus_string }}</td>
                 <td>
                     <a href="{{ route('materiales.show', $material) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
+                    @permission('desactivar-materiales')
                     @if($material->Estatus == 1)
                         <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-remove"></i></button>
                     @else
                         <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_material('{{$material->IdMaterial}}', '{{$material->Descripcion}}')"><i class="fa fa-check"></i></button>
                     @endif
+                    @endpermission
                 </td>
             </tr>
         @endforeach

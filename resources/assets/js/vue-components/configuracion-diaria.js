@@ -265,7 +265,8 @@ Vue.component('configuracion-diaria', {
                 'tipo' : user.configuracion.tipo,
                 'id_ubicacion' : user.configuracion.ubicacion.id,
                 'id_perfil' : user.configuracion.id_perfil,
-                'turno' : user.configuracion.turno
+                'turno' : user.configuracion.turno,
+                'id_telefono' : user.configuracion.id_telefono
             };
 
             var _this = this;

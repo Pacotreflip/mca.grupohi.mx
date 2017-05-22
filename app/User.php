@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\ConfiguracionDiaria\Configuracion;
+use App\Models\Telefono;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Auth\Passwords\CanResetPassword;
 use Illuminate\Foundation\Auth\Access\Authorizable;
@@ -84,5 +85,8 @@ class User extends Model implements AuthenticatableContract,
             'role_id' => $role,
             'id_proyecto' => Context::getId()
         ])->delete();
+    }
+    public function telefono() {
+        return $this->hasOne(Telefono::class, 'id_checador');
     }
 }

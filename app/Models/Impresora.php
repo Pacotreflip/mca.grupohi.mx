@@ -16,7 +16,7 @@ class Impresora extends Model
 
     public function __toString()
     {
-        return $this->id . ' [' . $this->mac.']';
+        return 'ID:'.$this->id . ' MAC:' . $this->mac.'';
     }
     public function getCreatedAtAttribute($timestamp) {
         return new Date($timestamp);

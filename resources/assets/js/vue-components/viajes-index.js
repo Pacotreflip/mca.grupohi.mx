@@ -11,9 +11,9 @@ Vue.component('viajes-index', {
                 'errors' : [],
                 'estado' : ''
             },
+            'ver_mas' : false
         }
     },
-
     directives: {
         datepicker: {
             inserted: function(el) {
@@ -42,12 +42,9 @@ Vue.component('viajes-index', {
             //data-toggle="modal" data-target="#detalles_conflicto"
         }
     },
-
     methods: {
         buscar_en_conflicto: function(e){
-            e.preventDefault(
-
-            );
+            e.preventDefault();
             var _this = this;
 
             var data = $('.form_buscar_en_conflicto').serialize();
@@ -127,7 +124,6 @@ Vue.component('viajes-index', {
                 }
             });
         },
-        
         fetchDetalleConflicto: function(id_conflicto, id_viaje) {
             //console.log('fetchDetalle',id_conflicto);
             this.fetching = true;
@@ -194,19 +190,16 @@ Vue.component('viajes-index', {
                 }
             });
         },
-        
         detalle_conflicto: function(id_conflicto,id_viaje){
 
             this.fetchDetalleConflicto(id_conflicto,id_viaje);
            $("#detalles_conflicto").modal("show");
         },
-        
         detalle_conflicto_pagable: function(id_conflicto,id_viaje){
 
             this.fetchDetalleConflicto(id_conflicto,id_viaje);
            $("#detalles_conflicto_pagable").modal("show");
         },
-
         pdf: function(e) {
             e.preventDefault();
 
@@ -227,7 +220,6 @@ Vue.component('viajes-index', {
             $('.form_buscar_en_conflicto').attr('method', 'GET');
             $('.form_buscar_en_conflicto').submit();
         },
-
         excel: function (e) {
             e.preventDefault();
             var url = App.host + '/viajes_netos';
@@ -236,6 +228,27 @@ Vue.component('viajes-index', {
             $('.form_buscar').attr('action', url);
             $('.form_buscar').attr('method', 'GET');
             $('.form_buscar').submit();
+        },
+        toogle_show_all: function () {
+            if(this.show_all) {
+                this.show_all = false;
+            } else {
+                this.show_all = true;
+            }
+        },
+        formato: function (val) {
+            return numeral(val).format('0,0.00');
+        },
+        ver_mas_function: function () {
+            if (this.ver_mas) {
+                //TODO: Ocultar Columnas con clase .ocultar y ver_mas = false;
+                $('.ocultar').fadeOut(1000);
+                this.ver_mas=false;
+            } else {
+                //TODO: Mostrar Columnas con clase .ocultar  y ver_mas = true
+                $('.ocultar').fadeIn(1000);
+               this.ver_mas=true;
+            }
         }
     }
 });

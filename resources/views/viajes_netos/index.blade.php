@@ -1,6 +1,15 @@
-@extends('layout')
+@extends('layout_width')
+@section('styles')
+    <style>
+        .ocultar{
+            display:none;
+        }
 
+
+    </style>
+@endsection
 @section('content')
+
     <h1>VIAJES @if($action == 'en_conflicto')EN CONFLICTO @endif</h1>
     {!! Breadcrumbs::render('viajes_netos.index') !!}
     <hr>
@@ -15,7 +24,7 @@
 
                 @if($action == 'en_conflicto')
                 <div class="form-group">
-                   
+
                 {!! Form::open(['class' => 'form_buscar_en_conflicto']) !!}
                 <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
                 <div class="row">
@@ -40,9 +49,8 @@
                             <input type="text" name="Codigo" class="form-control">
                         </div>
                     </div>
-                   
                 </div>
-                
+
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit" @click="buscar_en_conflicto">
                         <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
@@ -50,13 +58,14 @@
                     </button>
                     <button class="btn  btn-info" @click="pdf_conflicto"><i class="fa fa-file-pdf-o"></i> VER PDF</button>
                 </div>
-                
+
                 {!! Form::close() !!}
                 </div>
                 @else
                 <h3>BUSCAR VIAJES</h3>
                 {!! Form::open(['class' => 'form_buscar']) !!}
                 <input type="hidden" name="type" value>
+                <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="fecha" checked="checked">BUSCAR POR FECHA</label></h4>
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -71,8 +80,6 @@
                         </div>
                     </div>
                 </div>
-
-
                 <div class="row">
                     <div class="col-md-6">
                         <div class="form-group">
@@ -118,7 +125,17 @@
                     </div>
 
                 </div>
-                
+                    <h4><label style="cursor: pointer"><input type="radio" name="tipo_busqueda" value="codigo" > BUSCAR POR CÓDIGO</label></h4>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label>Ticket (Código)</label>
+                                <input type="text" name="Codigo" class="form-control">
+                            </div>
+                        </div>
+
+                    </div>
+
                 <div class="form-group">
                     <button class="btn btn-primary" type="submit" @click="buscar">
                         <span v-if="cargando"><i class="fa fa-spinner fa-spin"></i> Buscando</span>
@@ -130,59 +147,110 @@
                 <p class="small">Los campos <strong>(*)</strong> son obligatorios.</p>
                 {!! Form::close() !!}
                 @endif
-                
+
                 
                 <hr>
                 
                 <section v-if="viajes_netos.length" id="results">
                     <h3>
                         RESULTADOS DE LA BÚSQUEDA
+                        <button v-if="!ver_mas" class="btn btn-info pull-right" v-on:click="ver_mas_function"><i class="fa fa-eye"></i> Ver Más </button>
+                        <button v-if="ver_mas" class="btn btn-info pull-right" v-on:click="ver_mas_function"><i class="fa fa-eye"></i> Ver Menos </button>
                     </h3>
                     
-                    <div class="table-responsive">
+                    <div class="table-responsive ">
                         (P) Viaje en conflicto de tiempo pero con aprobación de pago registrada.
-                        <table class="table table-hover table-bordered small">
+                        <table class="table  table-striped table-bordered small">
                             <thead>
+                            <tr style="background-color: #f9f9f9">
+                                <th colspan="5" style="text-align: center">INFORMACIÓN GENERAL DEL VIAJE</th>
+                                <th colspan="4" style="text-align: center">DETALLES DEL VIAJE</th>
+                                <th colspan="2" style="text-align: center">CAMIÓN</th>
+
+                                <!-- OCULTAR -->
+                                <th colspan="3" style="text-align: center" class="ocultar">EMPRESA</th>
+                                <th colspan="3" style="text-align: center" class="ocultar">SINDICATO</th>
+                                <!-- END -->
+
+
+                                <th colspan="3" style="text-align: center">CONCILIACIÓN</th>
+                                <th colspan="5" style="text-align: center">ESTADO DEL VIAJE</th>
+                            </tr>
                             <tr>
                                 <th style="text-align: center"> # </th>
-                                <th style="text-align: center"> Tipo </th>
-                                <th style="text-align: center"> Camión </th>
-                                <th style="text-align: center"> Ticket (Código) </th>
-                                <th style="text-align: center"> Fecha y Hora de Llegada </th>
-                                <th style="text-align: center"> Origen</th>
-                                <th style="text-align: center"> Tiro </th>
-                                <th style="text-align: center"> Material </th>
-                                <th style="text-align: center"> Cubicación	</th>
-                                <th style="text-align: center"> Importe </th>
-                                <th style="text-align: center"> Registró </th>
-                                <th style="text-align: center"> Autorizó </th>
-                                <th style="text-align: center"> Validó </th>
-                                <th style="text-align: center"> Estado </th>
-                                <th style="text-align: center"> Conflicto </th>
+                                <th style="text-align: center"> TIPO </th>
+                                <th style="text-align: center"> FECHA LLEGADA </th>
+                                <th style="text-align: center"> HORA LLEGADA</th>
+                                <th style="text-align: center"> TICKET - CÓDIGO </th>
+
+                                <th style="text-align: center"> ORIGEN</th>
+                                <th style="text-align: center"> TIRO </th>
+                                <th style="text-align: center"> MATERIAL </th>
+                                <th style="text-align: center"> IMPORTE </th>
+
+                                <th style="text-align: center"> ECONÓMICO </th>
+                                <th style="text-align: center"> CUBICACIÓN	</th>
+
+                                <!-- OCULTAR -->
+                                <th style="text-align: center" class="ocultar"> CAMIÓN </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE NETO </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE </th>
+                                <th style="text-align: center" class="ocultar"> CAMIÓN </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE NETO </th>
+                                <th style="text-align: center" class="ocultar"> VIAJE </th>
+                                <!-- END -->
+
+                                <th style="text-align: center"> CONCILIÓ </th>
+                                <th style="text-align: center"> FOLIO </th>
+                                <th style="text-align: center"> FECHA  </th>
+
+                                <th style="text-align: center"> REGISTRÓ </th>
+                                <th style="text-align: center"> AUTORIZÓ </th>
+                                <th style="text-align: center"> VALIDÓ </th>
+                                <th style="text-align: center"> ESTADO </th>
+                                <th style="text-align: center"> CONFLICTO </th>
                             </tr>
+
                             </thead>
                             <tbody>
                             <tr v-for="(viaje_neto, index) in viajes_netos">
-                                <td>@{{ index + 1 }}</td>
-                                <td>@{{ viaje_neto.tipo }}</td>
-                                <td>@{{ viaje_neto.camion }}</td>
-                                <td>@{{ viaje_neto.codigo }}</td>
-                                <td>@{{ viaje_neto.timestamp_llegada }}</td>
-                                <td>@{{ viaje_neto.origen }}</td>
-                                <td>@{{ viaje_neto.tiro }}</td>
-                                <td>@{{ viaje_neto.material }}</td>
-                                <td>@{{ viaje_neto.cubicacion }}</td>
-                                <td>@{{ viaje_neto.importe }}</td>
-                                <td>@{{ viaje_neto.registro }}</td>
-                                <td>@{{ viaje_neto.autorizo }}</td>
-                                <td>@{{ viaje_neto.valido }}</td>
-                                <td>@{{ viaje_neto.estado }}</td>
-                                <td v-if ="viaje_neto.conflicto>0&&!viaje_neto.conflicto_pagable>0">
+
+                                <td style="white-space: nowrap">@{{ index + 1 }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.tipo }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.FechaLlegada }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.HoraLlegada }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.Code }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.origen }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.tiro }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.material }}</td>
+                                <td style="white-space: nowrap; text-align: right">$ @{{ formato(viaje_neto.importe) }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.camion }}</td>
+                                <td style="white-space: nowrap; text-align: right">@{{ viaje_neto.cubicacion }}</td>
+
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.empresa_camion }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.empresa_viajeneto }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.empresa_viaje }}</td>
+
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.sindicato_camion }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.sindicato_viajeneto }}</td>
+                                <td style="white-space: nowrap" class="ocultar">@{{ viaje_neto.sindicato_viaje }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.concilio }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.id_conciliacion }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.fecha_conciliacion }}</td>
+
+                                <td style="white-space: nowrap">@{{ viaje_neto.registro }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.autorizo }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.valido }}</td>
+                                <td style="white-space: nowrap">@{{ viaje_neto.estado }}</td>
+                                <td style="white-space: nowrap" v-if ="viaje_neto.conflicto>0&&!viaje_neto.conflicto_pagable>0">
                                     <a style="cursor: pointer" @click="detalle_conflicto(viaje_neto.conflicto, viaje_neto.id)" >Ver</a></td>
-                                <td v-if ="viaje_neto.conflicto>0&&viaje_neto.conflicto_pagable>0">
+                                <td style="white-space: nowrap" v-if ="viaje_neto.conflicto>0&&viaje_neto.conflicto_pagable>0">
                                     
                                     <a style="cursor: pointer" @click="detalle_conflicto_pagable(viaje_neto.conflicto, viaje_neto.id)" >(P) Ver</a></td>
-                                <td v-if ="!viaje_neto.conflicto>0">N/A</td>
+                                <td style="white-space: nowrap" v-if ="!viaje_neto.conflicto>0">N/A</td>
                             </tr>
                             </tbody>
                         </table>

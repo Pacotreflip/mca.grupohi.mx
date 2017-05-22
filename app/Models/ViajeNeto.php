@@ -20,18 +20,18 @@ class ViajeNeto extends Model
     protected $table = 'viajesnetos';
     protected $primaryKey = 'IdViajeNeto';
     protected $fillable = [
-        'FechaCarga', 
-        'HoraCarga', 
-        'IdProyecto', 
-        'IdCamion', 
-        'IdOrigen', 
+        'FechaCarga',
+        'HoraCarga',
+        'IdProyecto',
+        'IdCamion',
+        'IdOrigen',
         'FechaSalida',
-        'HoraSalida', 
-        'IdTiro', 
-        'FechaLlegada', 
+        'HoraSalida',
+        'IdTiro',
+        'FechaLlegada',
         'HoraLlegada',
-        'IdMaterial', 
-        'Observaciones', 
+        'IdMaterial',
+        'Observaciones',
         'Creo',
         'Estatus',
         'Code',
@@ -42,39 +42,39 @@ class ViajeNeto extends Model
     protected $presenter = ModelPresenter::class;
     public $timestamps = false;
     protected $dates = ['FechaHoraAprobacion', 'FechaHoraRechazo'];
-    
+
     public function conciliacionDetalles() {
         return $this->hasMany(ConciliacionDetalle::class, "idviaje_neto", "IdViajeNeto");
     }
-    
+
     public function proyectoLocal() {
         return $this->belongsTo(ProyectoLocal::class, 'IdProyecto');
     }
-    
+
     public function camion() {
         return $this->belongsTo(Camion::class, 'IdCamion');
     }
-    
+
     public function origen() {
         return $this->belongsTo(Origen::class, 'IdOrigen');
     }
-    
+
     public function tiro() {
         return $this->belongsTo(Tiro::class, 'IdTiro');
     }
-    
+
     public function material() {
         return $this->belongsTo(Material::class, 'IdMaterial');
     }
-    
+
     public function ruta() {
         return $this->hasOne(Ruta::class, 'IdTiro', 'IdTiro')->where('rutas.IdOrigen', $this->IdOrigen);
     }
-    
+
     public function tarifaMaterial() {
         return $this->hasManyThrough(Tarifas\TarifaMaterial::class, Material::class, 'IdMaterial', 'IdMaterial', 'IdMaterial');
     }
-    
+
     public function imagenes() {
         return $this->hasMany(ImagenViajeNeto::class, 'idviaje_neto')->where('estado', 1);
     }
@@ -83,25 +83,21 @@ class ViajeNeto extends Model
         return $this->hasOne(Deductiva::class, 'id_viaje_neto', 'IdViajeNeto');
     }
 
-    public function scopeConciliados($query, $conciliados) {
+    public static function scopeConciliados($query, $conciliados) {
         if($conciliados == 'C') {
-            return $query->select(DB::raw('viajesnetos.*'))
-                ->leftJoin('viajes as check_conciliacion', 'viajesnetos.IdViajeNeto', '=', 'check_conciliacion.IdViajeNeto')
-                ->leftJoin('conciliacion_detalle', 'check_conciliacion.IdViaje', '=', 'conciliacion_detalle.idviaje')
+            return $query
                 ->where(function($query){
-                    $query->whereNotNull('conciliacion_detalle.idviaje')
-                        ->orWhere('conciliacion_detalle.estado', '!=', '-1');
+                    $query->whereNotNull('cd.idviaje')
+                        ->orWhere('cd.estado', '!=', '-1');
                 });
         } else if($conciliados == 'NC') {
-            return $query->select(DB::raw('viajesnetos.*'))
-                ->leftJoin('viajes as check_conciliacion', 'viajesnetos.IdViajeNeto', '=', 'check_conciliacion.IdViajeNeto')
-                ->leftJoin('conciliacion_detalle', 'check_conciliacion.IdViaje', '=', 'conciliacion_detalle.idviaje')
+            return $query
                 ->where(function($query){
-                    $query->whereNull('conciliacion_detalle.idviaje')
-                        ->orWhere('conciliacion_detalle.estado', '=', '-1');
+                    $query->whereNull('cd.idviaje')
+                        ->orWhere('cd.estado', '=', '-1');
                 });
         } else if($conciliados == 'T') {
-            return $query->select(DB::raw('viajesnetos.*'));
+            return $query;
         }
     }
 
@@ -110,14 +106,15 @@ class ViajeNeto extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeRegistradosManualmente($query) {
-        return $query->where('viajesnetos.Estatus', 29);
+    public static function scopeRegistradosManualmente($query) {
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->where('viajesnetos.Estatus', 29);
     }
 
-    public function scopeFechas($query,Array $fechas) {
+    public static function scopeFechas($query,Array $fechas) {
         return $query->whereBetween('viajesnetos.FechaLlegada', [$fechas['FechaInicial'], $fechas['FechaFinal']]);
     }
-    public function scopeCodigo($query, $codigo) {
+    public static function scopeCodigo($query, $codigo) {
         return $query->where('viajesnetos.Code', $codigo);
     }
     public function scopePorValidar($query) {
@@ -161,41 +158,41 @@ class ViajeNeto extends Model
                     }
                     $viaje->save();
                     if($estatus == "20") {
-                        $autorizados += 1;    
+                        $autorizados += 1;
                     }
                 }
                 $msg = "VIAJES AUTORIZADOS (".$autorizados.")\n VIAJES RECHAZADOS (".(count($data) - $autorizados).")";
             }
-            
+
             DB::connection('sca')->commit();
             return $msg;
         } catch (Exception $ex) {
             DB::connection('sca')->rollback();
         }
     }
-    
+
     public function rechazar() {
         DB::connection($this->connection)->beginTransaction();
         try {
-            
+
             $this->Estatus = 22;
             $this->save();
-            
+
             DB::connection($this->connection)->commit();
         } catch (Exception $ex) {
             DB::connection($this->connection)->rollback();
         }
     }
-    
+
     public static function cargaManual($request) {
         DB::connection('sca')->beginTransaction();
         try {
             foreach($request->get('viajes', []) as $viaje) {
                 $ruta = Ruta::where('IdOrigen', $viaje['IdOrigen'])
-                        ->where('IdTiro', $viaje['IdTiro'])
-                        ->first();
+                    ->where('IdTiro', $viaje['IdTiro'])
+                    ->first();
                 $fecha_salida = Carbon::createFromFormat('Y-m-d H:i', $viaje['FechaLlegada'].' '.$viaje['HoraLlegada'])
-                        ->subMinutes($ruta->cronometria->TiempoMinimo); 
+                    ->subMinutes($ruta->cronometria->TiempoMinimo);
 
                 $proyecto_local = ProyectoLocal::where('IdProyectoGlobal', '=', $request->session()->get('id'))->first();
                 $extra = [
@@ -222,9 +219,9 @@ class ViajeNeto extends Model
             ];
         } catch (Exception $ex) {
             DB::connection('sca')->rollback();
-        }        
+        }
     }
-    
+
     public static function cargaManualCompleta($request) {
         DB::connection('sca')->beginTransaction();
         try {
@@ -234,22 +231,22 @@ class ViajeNeto extends Model
             foreach($request->get('viajes', []) as $viaje) {
                 for($i = 0; $i < $viaje['NumViajes']; $i++) {
                     DB::connection("sca")->statement("call registra_viajes_netos_viajes("
-                            .$request->session()->get("id").",'"
-                            .$viaje["FechaLlegada"]."',"
-                            .$viaje["IdCamion"].","
-                            .$viaje["Cubicacion"].","
-                            .$viaje["IdOrigen"].","
-                            .$viaje["IdTiro"].","
-                            .$viaje["IdRuta"].","
-                            .$viaje["IdMaterial"].","
-                            .$viaje["PrimerKm"].","
-                            .$viaje["KmSub"].","
-                            .$viaje["KmAd"].",'"
-                            .$viaje["Turno"]."','"
-                            .$viaje["Observaciones"]."',"
-                            .auth()->user()->idusuario
-                            .",@OK);"
-                    );  
+                        .$request->session()->get("id").",'"
+                        .$viaje["FechaLlegada"]."',"
+                        .$viaje["IdCamion"].","
+                        .$viaje["Cubicacion"].","
+                        .$viaje["IdOrigen"].","
+                        .$viaje["IdTiro"].","
+                        .$viaje["IdRuta"].","
+                        .$viaje["IdMaterial"].","
+                        .$viaje["PrimerKm"].","
+                        .$viaje["KmSub"].","
+                        .$viaje["KmAd"].",'"
+                        .$viaje["Turno"]."','"
+                        .$viaje["Observaciones"]."',"
+                        .auth()->user()->idusuario
+                        .",@OK);"
+                    );
                     $result = DB::connection('sca')->select('SELECT @OK');
                     if($result[0]->{'@OK'} == '1') {
                         $registrados += 1;
@@ -259,7 +256,7 @@ class ViajeNeto extends Model
                     }
                 }
             }
-            
+
             $i = 0;
             $str = '';
             foreach($rechazadosArray as $r) {
@@ -276,14 +273,14 @@ class ViajeNeto extends Model
             DB::connection('sca')->rollback();
         }
     }
-    
+
     public function getTiempo() {
         $timestampSalida = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
-        
+
         return $timestampSalida->diffInSeconds($timestampLlegada);
     }
-    
+
     public function getImporte() {
         if($this->ruta && $this->camion && $this->material) {
             if($this->material->tarifaMaterial){
@@ -321,9 +318,10 @@ class ViajeNeto extends Model
     public function valido() {
         if(!isset($this->ruta)) {
             return false;
-        } else { 
+        } else {
             $min = $this->ruta->cronometria->TiempoMinimo;
             $tol = $this->ruta->cronometria->Tolerancia;
+
             if(!isset($this->material) || count($this->tarifaMaterial) == 0 || $this->Estatus == 10 || ( $this->IdPerfil!=3 && $this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol))))) {
                 return false;
             } else {
@@ -331,17 +329,17 @@ class ViajeNeto extends Model
             }
         }
     }
-    
+
     public function estado() {
         $min = $this->ruta ? $this->ruta->cronometria->TiempoMinimo : null;
         $tol = $this->ruta ? $this->ruta->cronometria->Tolerancia : null;
-        
+
         if($this->getTiempo() == 0 && $this->Estatus == 0 && $this->IdPerfil!=3) {
             return 'El viaje no puede ser registrado porque el tiempo del viaje es  0.00 min.';
-        } else if($this->Estatus == 0 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))) {
+        } else if($this->Estatus == 0 && $this->IdPerfil!=3 && ($this->getTiempo() == 0 || (($this->getTiempo() / 60) < ($min - $tol)))) {
             return 'El viaje no puede ser registrado porque no cumple con los tiempos de cronometría de la ruta';
-        } else if(!isset($this->ruta) && $this->Estatus == 0) { 
-            return 'El viaje no puede ser registrado porque no existe una ruta entre su origen y destino'; 
+        } else if(!isset($this->ruta) && $this->Estatus == 0) {
+            return 'El viaje no puede ser registrado porque no existe una ruta entre su origen y destino';
         } else if(count($this->tarifaMaterial) == 0 && isset($this->material)) {
             return 'El viaje no puede ser registrado porque no hay una tarifa registrada para su material';
         } else if($this->Estatus == 10) {
@@ -350,7 +348,7 @@ class ViajeNeto extends Model
             return 'El viaje es valido para su registro';
         }
     }
-    
+
     public function validar($request) {
 
         $data = $request->get('data');
@@ -377,8 +375,8 @@ class ViajeNeto extends Model
                 .($this->deductiva ? $this->deductiva->id : 'NULL'). ","
                 .($this->deductiva ? $this->deductiva->estatus : 'NULL') .
                 ",@a, @v);";
-            DB::connection("sca")->statement($statement);  
-            
+            DB::connection("sca")->statement($statement);
+
             $result = DB::connection('sca')->select('SELECT @a,@v');
             if($result[0]->{'@a'} == 'ok') {
                 $msg = $data['Accion'] == 1 ? 'Viaje validado exitosamente' : 'Viaje Rechazado exitosamente';
@@ -386,8 +384,8 @@ class ViajeNeto extends Model
             } else {
                 $msg = 'Error: ' . $result[0]->{'@v'};
                 $tipo = 'error';
-            }            
-            
+            }
+
             DB::connection('sca')->commit();
             return ['message' => $msg,
                 'tipo' => $tipo];
@@ -400,7 +398,7 @@ class ViajeNeto extends Model
         if(str_replace(" ", "", $request->get("motivo"))==""){
             throw new \Exception("Indique el motivo para permitir el pago del viaje en conflicto");
         }
-        
+
         ViajeNetoConflictoPagable::create([
             "idviaje_neto"=>$this->IdViajeNeto,
             "idconflicto"=>$request->IdConflicto,
@@ -412,7 +410,7 @@ class ViajeNeto extends Model
         $data = $request->get('data');
         $viaje_aprobado = $this->viaje;
         if($viaje_aprobado)
-        throw new \Exception("El viaje no puede ser modificado porque ya se encuentra validado.");
+            throw new \Exception("El viaje no puede ser modificado porque ya se encuentra validado.");
 
         DB::connection('sca')->beginTransaction();
         try {
@@ -483,7 +481,7 @@ class ViajeNeto extends Model
             }
 
             $this->save();
-            
+
             DB::connection('sca')->commit();
 
             return ['message' => 'Viaje Modificado Correctamente',
@@ -581,12 +579,12 @@ class ViajeNeto extends Model
         $creo = $this->Creo;
         if(is_numeric($creo)){
             if(!count($this->usuario_registro)) {
-                dd($this->Creo);
+                return '';
             }
             $registro = $this->usuario_registro->present()->NombreCompleto;
             return $registro;
         }else{
-            
+
             return $creo;
         }
     }
@@ -609,7 +607,7 @@ class ViajeNeto extends Model
     }
 
     public function getValidoAttribute(){
-         $valido = $this->attribute['Valido'];
+        $valido = $this->attribute['Valido'];
         return $valido ? User::find($valido)->present()->NombreCompleto : '';
     }
 
@@ -631,19 +629,21 @@ class ViajeNeto extends Model
         return  $this->belongsTo(User::class, 'CreoPrimerToque');
     }
 
-    public function scopeManualesAutorizados($query) {
-        return $query->where('viajesnetos.Estatus', 20);
+    public static function scopeManualesAutorizados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->where('viajesnetos.Estatus', 20);
     }
 
-    public function scopeManualesRechazados($query) {
-        return $query->where('viajesnetos.Estatus', 22);
+    public static function scopeManualesRechazados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->where('viajesnetos.Estatus', 22);
     }
 
     /**
      * @param $query
      * @return mixed
      */
-    public function scopeManualesValidados($query) {
+    public static function scopeManualesValidados($query) {
         return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
             ->where(function($query){
                 $query->whereNotNull('viajes.IdViaje')
@@ -655,7 +655,7 @@ class ViajeNeto extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeManualesDenegados($query) {
+    public static function scopeManualesDenegados($query) {
         return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
                 $query->whereNotNull('viajesrechazados.IdViajeRechazado')
@@ -667,7 +667,7 @@ class ViajeNeto extends Model
      * @param $query
      * @return mixed
      */
-    public function scopeMovilesDenegados($query) {
+    public static function scopeMovilesDenegados($query) {
         return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajesrechazados', 'viajesnetos.IdViajeNeto', '=', 'viajesrechazados.IdViajeNeto')
             ->where(function ($query) {
                 $query->whereNotNull('viajesrechazados.IdViajeRechazado')
@@ -683,7 +683,7 @@ class ViajeNeto extends Model
             });
     }
 
-    public function scopeMovilesValidados($query) {
+    public static function scopeMovilesValidados($query) {
         return $query->select(DB::raw('viajesnetos.*'))->leftJoin('viajes', 'viajesnetos.IdViajeNeto', '=', 'viajes.IdViajeNeto')
             ->where(function($query){
                 $query->whereNotNull('viajes.IdViaje')
@@ -691,8 +691,9 @@ class ViajeNeto extends Model
             });
     }
 
-    public function scopeMovilesAutorizados($query) {
-        return $query->where('viajesnetos.Estatus', 0);
+    public static function scopeMovilesAutorizados($query) {
+        return $query->select(DB::raw('viajesnetos.*'))
+            ->where('viajesnetos.Estatus', 0);
     }
 
     public function scopeManuales($query){
@@ -706,13 +707,13 @@ class ViajeNeto extends Model
     public function scopeAutorizados($query) {
         return $query->whereIn('viajesnetos.Estatus', [0,20]);
     }
-    
-    public function scopeEnConflicto($query) {
+
+    public static function scopeEnConflicto($query) {
         return $query->join('conflictos_entre_viajes_detalle_ultimo', 'viajesnetos.IdViajeNeto', '=', 'conflictos_entre_viajes_detalle_ultimo.idviaje_neto');
     }
-    
+
     public function conflicto_entre_viajes(){
-        return $this->hasMany(ConflictoEntreViajesDetalle::class, "idvije_neto", "IdViajeNeto");
+        return $this->hasMany(ConflictoEntreViajesDetalle::class, "idviaje_neto", "IdViajeNeto");
     }
     public function getConflictoAttribute(){
         #Máximo Id de conflicto
@@ -723,7 +724,7 @@ class ViajeNeto extends Model
         return $conflicto;
     }
     public function getEnConflictoTiempoAttribute(){
-        
+
         if($this->conflicto){
             if($this->conflicto->estado == 1){
                 return TRUE;
@@ -742,13 +743,13 @@ class ViajeNeto extends Model
             }else{
                 $codigos =  "Este viaje entra en conflicto con ".(count($this->conflicto->detalles)-1)." viajes pues el tiempo entre ello es menor a 30 minutos.";
             }
-            
+
             $detalles = $this->conflicto->detalles;
             foreach($detalles as $detalle){
                 //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
                 //dd(16,strlen($detalle->viaje_neto->Code));
-                    $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(20-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
-               // }
+                $codigos.= "\n".$detalle->viaje_neto->Code.str_repeat("\t",(20-strlen($detalle->viaje_neto->Code))) . "\t[Salida: ".$detalle->viaje_neto->timestamp_salida."] [Llegada: ".$detalle->viaje_neto->timestamp_llegada."]";
+                // }
             }
             $codigos .= "\n Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
             return $codigos;
@@ -756,7 +757,7 @@ class ViajeNeto extends Model
             return "";
         }
     }
-    
+
     public function getDescripcionConflictoAlertAttribute(){
         //dd($this->conflicto);
         $codigos =  "";
@@ -767,12 +768,12 @@ class ViajeNeto extends Model
                 $codigos =  "Este viaje entra en conflicto con ".(count($this->conflicto->detalles)-1)." viajes pues el tiempo entre ello es menor a 30 minutos.";
             }
             $codigos.="<br/><br/><table class='table table-striped' style='font-size:0.8em'><thead>"
-                    . "<tr><th style='text-align:center'>Código</th><th style='text-align:center'>Salida</th><th style='text-align:center'>Llegada</th></tr></thead>";
+                . "<tr><th style='text-align:center'>Código</th><th style='text-align:center'>Salida</th><th style='text-align:center'>Llegada</th></tr></thead>";
             $detalles = $this->conflicto->detalles;
             foreach($detalles as $detalle){
                 //if($detalle->viaje_neto->IdViajeNeto != $this->IdViajeNeto){
-                    $codigos.= "<tr><td>".$detalle->viaje_neto->Code. "</td><td>".$detalle->viaje_neto->timestamp_salida->format("d-m-Y H:i:s")."</td><td>".$detalle->viaje_neto->timestamp_llegada->format("d-m-Y H:i:s")."</td></tr>";
-               // }
+                $codigos.= "<tr><td>".$detalle->viaje_neto->Code. "</td><td>".$detalle->viaje_neto->timestamp_salida->format("d-m-Y H:i:s")."</td><td>".$detalle->viaje_neto->timestamp_llegada->format("d-m-Y H:i:s")."</td></tr>";
+                // }
             }
             $codigos.="</table>";
             $codigos.= "<br>Los viajes en conflicto deben ser presentados a aclaración para su cobro.";
@@ -781,7 +782,7 @@ class ViajeNeto extends Model
             return "";
         }
     }
-    
+
     public function getTimestampLlegadaAttribute(){
         $timestampLlegada = Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaLlegada.' '.$this->HoraLlegada);
         return $timestampLlegada;
@@ -796,12 +797,12 @@ class ViajeNeto extends Model
     }
     public function getTimestampAproboAttribute(){
         $timestampLlegada = $this->FechaHoraAprobacion->format("d-m-Y h:i:s");
-                //Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
+        //Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
         return $timestampLlegada;
     }
     public function getTimestampRechazoAttribute(){
         $timestampLlegada = $this->FechaHoraRechazo->format("d-m-Y h:i:s");
-                //Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
+        //Carbon::createFromFormat('Y-m-d H:i:s', $this->FechaSalida.' '.$this->HoraSalida);
         return $timestampLlegada;
     }
     public function getUsuarioAproboAttribute(){
@@ -837,4 +838,78 @@ class ViajeNeto extends Model
 
     }
 
+    public static function scopeReporte($query) {
+        return $query
+            ->leftJoin('igh.usuario as user_autorizo','viajesnetos.Aprobo','=','user_autorizo.idusuario')
+            ->leftJoin('camiones', 'viajesnetos.IdCamion', '=', 'camiones.IdCamion')
+            ->leftJoin('materiales','viajesnetos.IdMAterial','=','materiales.IdMAterial')
+            ->leftJoin('origenes','viajesnetos.IdOrigen','=','origenes.IdOrigen')
+            ->leftJoin('igh.usuario as user_registro','viajesnetos.Creo','=','user_registro.idusuario')
+            ->leftJoin('igh.usuario as user_primer_toque','viajesnetos.CreoPrimerToque','=','user_primer_toque.idusuario')
+            ->leftJoin('tiros','viajesnetos.IdTiro','=','tiros.IdTiro')
+            ->leftJoin('conflictos_entre_viajes_detalle_ultimo as conflicto', 'viajesnetos.IdViajeNeto', '=', 'conflicto.idviaje_neto')
+            ->leftJoin('viajes_netos_conflictos_pagables as conflictos_pagables','viajesnetos.IdViajeNeto','=','conflictos_pagables.idviaje_neto')
+            ->leftJoin('viajes as v','viajesnetos.IdViajeNeto','=','v.IdViajeNeto')
+            ->leftJoin('igh.usuario as user_valido','v.Creo','=','user_valido.idusuario')
+            ->leftJoin('igh.usuario as user_aprobo_pago','conflictos_pagables.aprobo_pago','=','user_aprobo_pago.idusuario')
+            ->leftJoin('tarifas', DB::raw("(tarifas.IdMaterial=materiales.IdMaterial AND tarifas.Estatus=1 and tarifas.InicioVigencia < viajesnetos.FechaLlegada and IFNULL(tarifas.FinVigencia,NOW())"), '>' , DB::raw("viajesnetos.FechaLlegada)"))
+            /*->leftJoin('rutas', function ($join) {
+                $join->on(DB::raw("rutas.IdOrigen = viajesnetos.IdOrigen and rutas.IdTiro"),  '=', 'viajesnetos.IdTiro');
+            })*/
+            ->leftJoin(DB::raw("(SELECT * FROM rutas group by IdOrigen, IdTiro) as rutas"), DB::raw("(viajesnetos.IdOrigen=rutas.IdOrigen AND viajesnetos.IdTiro"), '=', DB::raw("rutas.IdTiro)"))
+            ->leftJoin('empresas as empresas_viajes', 'v.IdEmpresa', '=', 'empresas_viajes.IdEmpresa')
+            ->leftJoin('empresas as empresas_viajesnetos', 'viajesnetos.IdEmpresa', '=', 'empresas_viajesnetos.IdEmpresa')
+            ->leftJoin('empresas as empresas_camiones', 'camiones.IdEmpresa', '=', 'empresas_camiones.IdEmpresa')
+            ->leftJoin('sindicatos as sindicatos_viajes', 'v.IdSindicato', '=', 'sindicatos_viajes.IdSindicato')
+            ->leftJoin('sindicatos as sindicatos_viajesnetos', 'viajesnetos.IdSindicato', '=', 'sindicatos_viajesnetos.IdSindicato')
+            ->leftJoin('sindicatos as sindicatos_camiones', 'camiones.IdSindicato', '=', 'sindicatos_camiones.IdSindicato')
+            ->leftJoin('conciliacion_detalle as cd', DB::raw("viajesnetos.IdViajeNeto = cd.idviaje_neto AND cd.estado"), '=', DB::raw("1"))
+            ->leftJoin('conciliacion as c', 'cd.idconciliacion', '=', 'c.idconciliacion')
+            ->leftJoin('igh.usuario as user_concilio', 'c.IdRegistro', '=', 'user_concilio.idusuario')
+                ->addSelect(
+                "viajesnetos.IdViajeNeto as id",
+                DB::raw("IF(viajesnetos.Aprobo is not null, CONCAT(user_autorizo.nombre, ' ', user_autorizo.apaterno, ' ', user_autorizo.amaterno), '') as autorizo"),
+                "camiones.Economico as camion",
+                DB::raw("IF(viajesnetos.CubicacionCamion <= 8, camiones.CubicacionParaPago, viajesnetos.CubicacionCamion) as cubicacion"),
+                "viajesnetos.CubicacionCamion as cubicacion",
+                DB::raw("(CASE viajesnetos.Estatus when 0 then 'PENDIENTE DE VALIDAR'
+                    when 1 then (IF(v.IdViaje is null, 'NO VALIDADO (DENEGADO)', 'VALIDADO')) 
+                    when 20 then 'PENDIENTE DE VALIDAR'
+                    when 21 then (IF(v.IdViaje is null, 'NO VALIDADO (DENEGADO)', 'VALIDADO'))
+                    when 22 then 'NO AUTORIZADO (RECHAZADO)' 
+                    when 29 then 'CARGADO'
+                    END) as estado"),
+                "materiales.Descripcion as material",
+                "origenes.Descripcion as origen",
+                DB::raw("IF(user_registro.idusuario is not null, CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno), viajesnetos.Creo) as registro"),
+                DB::raw("CONCAT(user_primer_toque.nombre, ' ', user_primer_toque.apaterno, ' ', user_primer_toque.amaterno) as registro_primer_toque"),
+                DB::raw("IF(viajesnetos.Estatus = 0 OR viajesnetos.Estatus = 1, 'APLICACIÓN MOVIL', 'MANUAL') as tipo"),
+                "tiros.Descripcion as tiro",
+                DB::raw("IF(v.Importe is not null, v.Importe, 
+                IF(viajesnetos.CubicacionCamion <= 8,
+                ((tarifas.PrimerKM*1*camiones.CubicacionParaPago)+(tarifas.KMSubsecuente*rutas.KmSubsecuentes*camiones.CubicacionParaPago)+(tarifas.KMAdicional*rutas.KmAdicionales*camiones.CubicacionParaPago)) 
+                , 
+                ((tarifas.PrimerKM*1*viajesnetos.CubicacionCamion)+(tarifas.KMSubsecuente*rutas.KmSubsecuentes*viajesnetos.CubicacionCamion)+(tarifas.KMAdicional*rutas.KmAdicionales*viajesnetos.CubicacionCamion)) 
+                )) as importe"),
+                DB::raw("CONCAT(user_valido.nombre, ' ', user_valido.apaterno, ' ', user_valido.amaterno) as valido"),
+                "conflicto.idconflicto as conflicto",
+                DB::raw("
+                IF(conflicto.idconflicto is not null, 
+                IF(conflictos_pagables.id is not null, 
+                CONCAT('EN CONFLICTO PUESTO PAGABLE POR ', user_aprobo_pago.nombre, ' ' , user_aprobo_pago.apaterno, ' ', user_aprobo_pago.amaterno, ':', conflictos_pagables.motivo),
+                'EN CONFLICTO (NO PAGABLE)'),
+                 'SIN CONFLICTO') as conflicto_pdf"),
+                "conflictos_pagables.id as conflicto_pagable",
+                "empresas_viajes.razonSocial as empresa_viaje",
+                "empresas_viajesnetos.razonSocial as empresa_viajeneto",
+                "empresas_camiones.razonSocial as empresa_camion",
+                "sindicatos_viajes.NombreCorto as sindicato_viaje",
+                "sindicatos_viajesnetos.NombreCorto as sindicato_viajeneto",
+                "sindicatos_camiones.NombreCorto as sindicato_camion",
+                DB::raw("group_concat(c.idconciliacion) as id_conciliacion"),
+                DB::raw("group_concat(CONCAT(user_concilio.nombre, ' ', user_concilio.apaterno, ' ', user_concilio.amaterno)) as concilio"),
+                DB::raw("group_concat(c.fecha_conciliacion) as fecha_conciliacion")
+            )
+            ->groupBy('viajesnetos.IdViajeNeto');
+    }
 }

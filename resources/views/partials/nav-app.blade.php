@@ -114,7 +114,7 @@
   </li>
   @endif
 
-  @if(Auth::user()->can(['consulta-viajes-netos']))
+  @if(Auth::user()->hasRole(['administracion-permisos','auditoria']))
       <li class="dropdown">
           <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
               Administración<span class="caret"></span>

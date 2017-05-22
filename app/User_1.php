@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\Models\Telefono;
 use App\Facades\Context;
 use Illuminate\Database\Eloquent\Model;
 

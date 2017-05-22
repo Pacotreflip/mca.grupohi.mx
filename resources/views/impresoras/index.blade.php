@@ -1,7 +1,9 @@
 @extends('layout')
 @section('content')
     <h1>IMPRESORAS
+        @permission('crear-impresoras')
         <a href="{{ route('impresoras.create') }}" class="btn btn-success pull-right" ><i class="fa fa-plus"></i> NUEVA IMPRESORA </a>
+        @endpermission
         <a href="{{ route('csv.impresoras') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
     </h1>
   {!! Breadcrumbs::render('impresoras.index')!!}
@@ -32,13 +34,16 @@
                      <td>{{ $impresora->estatus_string }}</td>
                      <td>
                           <a href="{{ route('impresoras.show', $impresora) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-                          <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
-
+                         @permission('editar-impresoras')
+                         <a href="{{ route('impresoras.edit', $impresora) }}" title="Editar" class="btn btn-xs btn-info"><i class="fa fa-pencil"></i></a>
+                         @endpermission
+                         @permission('desactivar-impresoras')
                          @if($impresora->estatus == 1)
                              <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_impresora({{$impresora->id}})"><i class="fa fa-remove"></i></button>
                          @else
                              <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_impresora({{$impresora->id}})"><i class="fa fa-check"></i></button>
                          @endif
+                        @endpermission
                      <td>
                  </tr>
              @endforeach

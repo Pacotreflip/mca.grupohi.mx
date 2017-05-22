@@ -2,7 +2,9 @@
 
 @section('content')
 <h1>{{ strtoupper(trans('strings.tiros')) }}
-  <a href="{{ route('tiros.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> NUEVO TIRO</a>
+    @permission('crear-tiros')
+    <a href="{{ route('tiros.create') }}" class="btn btn-success pull-right"><i class="fa fa-plus"></i> NUEVO TIRO</a>
+    @endpermission
     <a href="{{ route('csv.tiros') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 </h1>
 {!! Breadcrumbs::render('tiros.index') !!}
@@ -27,15 +29,17 @@
           </td>
           <td>{{ $tiro->Descripcion }}</td>
           <td>{{$tiro->created_at->format('d-M-Y h:i:s a')}}</td>
-          <td>{{$tiro->user_registro->present()->nombreCompleto()}}</td>
+          <td>{{$tiro->user_registro}}</td>
           <td>{{ $tiro->present()->estatus }}</td>
           <td>
             <a href="{{ route('tiros.show', $tiro) }}" title="Ver" class="btn btn-xs btn-default"><i class="fa fa-eye"></i></a>
-          @if($tiro->Estatus == 1)
+          @permission('desactivar-tiros')
+              @if($tiro->Estatus == 1)
               <button type="submit" title="Desactivar" class="btn btn-xs btn-danger" onclick="desactivar_tiro({{$tiro->IdTiro}})"><i class="fa fa-remove"></i></button>
             @else
               <button type="submit" title="Activar" class="btn btn-xs btn-success" onclick="activar_tiro({{$tiro->IdTiro}})"><i class="fa fa-check"></i></button>
             @endif
+              @endpermission
           </td>
         </tr>
       @endforeach

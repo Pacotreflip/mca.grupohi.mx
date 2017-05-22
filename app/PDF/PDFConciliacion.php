@@ -757,7 +757,11 @@ class PDFConciliacion extends Rotation
             $this->SetFont('Arial', '', $this->txtTitleTam - 8);
             $this->SetTextColor(0,0,0);
             $this->Cell($this->WidthTotal, 1, utf8_decode('VIAJES NO CONCILIADOS'), 0, 1, 'L', 0);
-        
+            
+            $this->SetFont('Arial', '', $this->txtTitleTam - 10);
+            
+            $this->Multicell($this->WidthTotal, 0.4, utf8_decode('Los siguientes viajes solo se enlistan de manera informativa, NO FORMAN PARTE de la conciliación para su pago por los motivos indicados en la columna correspondiente; en caso de requerir una revisión adicional deberá solicitarse por escrito y ser tramitada en la mesa de aclaraciones; para mayor información favor de dirigirse a Administración de Acarreos.'), 0, 'J', false);
+            $this->Ln();
             $this->SetWidths(array(0.030 * $this->WidthTotal,0.12 * $this->WidthTotal,0.12 * $this->WidthTotal,0.22 * $this->WidthTotal,0.51 * $this->WidthTotal));
             $this->SetFont('Arial', '', 6);
             $this->SetStyles(array('DF','DF','DF','DF','DF'));

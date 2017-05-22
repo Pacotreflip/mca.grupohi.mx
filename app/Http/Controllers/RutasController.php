@@ -20,7 +20,9 @@ class RutasController extends Controller
     function __construct() {
         $this->middleware('auth');
         $this->middleware('context');
-       
+        $this->middleware('permission:desactivar-rutas', ['only' => ['destroy']]);
+        $this->middleware('permission:crear-rutas', ['only' => ['create', 'store']]);
+
         parent::__construct();
     }
     
