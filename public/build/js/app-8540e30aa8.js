@@ -30681,7 +30681,7 @@ module.exports = exports['default'];
 
 },{}],25:[function(require,module,exports){
 /*!
- * vue-resource v1.3.1
+ * vue-resource v1.2.1
  * https://github.com/pagekit/vue-resource
  * Released under the MIT License.
  */
@@ -31335,15 +31335,7 @@ function Url(url, params) {
     options$$1 = merge({}, Url.options, self.$options, options$$1);
 
     Url.transforms.forEach(function (handler) {
-
-        if (isString(handler)) {
-            handler = Url.transform[handler];
-        }
-
-        if (isFunction(handler)) {
-            transform = factory(handler, transform, self.$vm);
-        }
-
+        transform = factory(handler, transform, self.$vm);
     });
 
     return transform(options$$1);
@@ -31363,8 +31355,7 @@ Url.options = {
  * Url transforms.
  */
 
-Url.transform = {template: template, query: query, root: root};
-Url.transforms = ['template', 'query', 'root'];
+Url.transforms = [template, query, root];
 
 /**
  * Encodes a Url parameter string.
@@ -31699,6 +31690,8 @@ var header = function (request, next) {
  * XMLHttp client (Browser).
  */
 
+var SUPPORTS_BLOB = typeof Blob !== 'undefined' && typeof FileReader !== 'undefined';
+
 var xhrClient = function (request) {
     return new PromiseObj(function (resolve) {
 
@@ -31734,16 +31727,16 @@ var xhrClient = function (request) {
             xhr.timeout = request.timeout;
         }
 
-        if (request.responseType && 'responseType' in xhr) {
-            xhr.responseType = request.responseType;
-        }
-
-        if (request.withCredentials || request.credentials) {
+        if (request.credentials === true) {
             xhr.withCredentials = true;
         }
 
         if (!request.crossOrigin) {
             request.headers.set('X-Requested-With', 'XMLHttpRequest');
+        }
+
+        if ('responseType' in xhr && SUPPORTS_BLOB) {
+            xhr.responseType = 'blob';
         }
 
         request.headers.forEach(function (value, name) {
@@ -32042,15 +32035,7 @@ function Http(options$$1) {
     defaults(options$$1 || {}, self.$options, Http.options);
 
     Http.interceptors.forEach(function (handler) {
-
-        if (isString(handler)) {
-            handler = Http.interceptor[handler];
-        }
-
-        if (isFunction(handler)) {
-            client.use(handler);
-        }
-
+        client.use(handler);
     });
 
     return client(new Request(options$$1)).then(function (response) {
@@ -32078,8 +32063,7 @@ Http.headers = {
     custom: {}
 };
 
-Http.interceptor = {before: before, method: method, body: body, jsonp: jsonp, header: header, cors: cors};
-Http.interceptors = ['before', 'method', 'body', 'jsonp', 'header', 'cors'];
+Http.interceptors = [before, method, body, jsonp, header, cors];
 
 ['get', 'delete', 'head', 'jsonp'].forEach(function (method$$1) {
 
@@ -32228,7 +32212,7 @@ module.exports = plugin;
 },{"got":7}],26:[function(require,module,exports){
 (function (global){
 /*!
- * Vue.js v2.2.6
+ * Vue.js v2.2.4
  * (c) 2014-2017 Evan You
  * Released under the MIT License.
  */
@@ -32808,13 +32792,11 @@ var formatComponentName;
     if (vm.$root === vm) {
       return '<Root>'
     }
-    var name = typeof vm === 'string'
-      ? vm
-      : typeof vm === 'function' && vm.options
-        ? vm.options.name
-        : vm._isVue
-          ? vm.$options.name || vm.$options._componentTag
-          : vm.name;
+    var name = typeof vm === 'function' && vm.options
+      ? vm.options.name
+      : vm._isVue
+        ? vm.$options.name || vm.$options._componentTag
+        : vm.name;
 
     var file = vm._isVue && vm.$options.__file;
     if (!name && file) {
@@ -33109,7 +33091,7 @@ function defineReactive$$1 (
  * already exist.
  */
 function set (target, key, val) {
-  if (Array.isArray(target) && typeof key === 'number') {
+  if (Array.isArray(target)) {
     target.length = Math.max(target.length, key);
     target.splice(key, 1, val);
     return val
@@ -33118,7 +33100,7 @@ function set (target, key, val) {
     target[key] = val;
     return val
   }
-  var ob = (target ).__ob__;
+  var ob = target.__ob__;
   if (target._isVue || (ob && ob.vmCount)) {
     "development" !== 'production' && warn(
       'Avoid adding reactive properties to a Vue instance or its root $data ' +
@@ -33139,11 +33121,11 @@ function set (target, key, val) {
  * Delete a property and trigger change if necessary.
  */
 function del (target, key) {
-  if (Array.isArray(target) && typeof key === 'number') {
+  if (Array.isArray(target)) {
     target.splice(key, 1);
     return
   }
-  var ob = (target ).__ob__;
+  var ob = target.__ob__;
   if (target._isVue || (ob && ob.vmCount)) {
     "development" !== 'production' && warn(
       'Avoid deleting properties on a Vue instance or its root $data ' +
@@ -34144,18 +34126,6 @@ function eventsMixin (Vue) {
 
   Vue.prototype.$emit = function (event) {
     var vm = this;
-    {
-      var lowerCaseEvent = event.toLowerCase();
-      if (lowerCaseEvent !== event && vm._events[lowerCaseEvent]) {
-        tip(
-          "Event \"" + lowerCaseEvent + "\" is emitted in component " +
-          (formatComponentName(vm)) + " but the handler is registered for \"" + event + "\". " +
-          "Note that HTML attributes are case-insensitive and you cannot use " +
-          "v-on to listen to camelCase events when using in-DOM templates. " +
-          "You should probably use \"" + (hyphenate(event)) + "\" instead of \"" + event + "\"."
-        );
-      }
-    }
     var cbs = vm._events[event];
     if (cbs) {
       cbs = cbs.length > 1 ? toArray(cbs) : cbs;
@@ -34324,9 +34294,6 @@ function lifecycleMixin (Vue) {
     }
     // call the last hook...
     vm._isDestroyed = true;
-    // invoke destroy hooks on current rendered tree
-    vm.__patch__(vm._vnode, null);
-    // fire destroyed hook
     callHook(vm, 'destroyed');
     // turn off all instance listeners.
     vm.$off();
@@ -34334,8 +34301,8 @@ function lifecycleMixin (Vue) {
     if (vm.$el) {
       vm.$el.__vue__ = null;
     }
-    // remove reference to DOM nodes (prevents leak)
-    vm.$options._parentElm = vm.$options._refElm = null;
+    // invoke destroy hooks on current rendered tree
+    vm.__patch__(vm._vnode, null);
   };
 }
 
@@ -34579,14 +34546,10 @@ function flushSchedulerQueue () {
     }
   }
 
-  // reset scheduler before updated hook called
-  var oldQueue = queue.slice();
-  resetSchedulerState();
-
   // call updated hooks
-  index = oldQueue.length;
+  index = queue.length;
   while (index--) {
-    watcher = oldQueue[index];
+    watcher = queue[index];
     vm = watcher.vm;
     if (vm._watcher === watcher && vm._isMounted) {
       callHook(vm, 'updated');
@@ -34598,6 +34561,8 @@ function flushSchedulerQueue () {
   if (devtools && config.devtools) {
     devtools.emit('flush');
   }
+
+  resetSchedulerState();
 }
 
 /**
@@ -34950,7 +34915,7 @@ function initProps (vm, propsOptions) {
 function initData (vm) {
   var data = vm.$options.data;
   data = vm._data = typeof data === 'function'
-    ? getData(data, vm)
+    ? data.call(vm)
     : data || {};
   if (!isPlainObject(data)) {
     data = {};
@@ -34979,15 +34944,6 @@ function initData (vm) {
   observe(data, true /* asRootData */);
 }
 
-function getData (data, vm) {
-  try {
-    return data.call(vm)
-  } catch (e) {
-    handleError(e, vm, "data()");
-    return {}
-  }
-}
-
 var computedWatcherOptions = { lazy: true };
 
 function initComputed (vm, computed) {
@@ -34996,15 +34952,6 @@ function initComputed (vm, computed) {
   for (var key in computed) {
     var userDef = computed[key];
     var getter = typeof userDef === 'function' ? userDef : userDef.get;
-    {
-      if (getter === undefined) {
-        warn(
-          ("No getter function has been defined for computed property \"" + key + "\"."),
-          vm
-        );
-        getter = noop;
-      }
-    }
     // create internal watcher for the computed property.
     watchers[key] = new Watcher(vm, getter, noop, computedWatcherOptions);
 
@@ -35253,7 +35200,7 @@ function createComponent (
   }
 
   // extract props
-  var propsData = extractProps(data, Ctor, tag);
+  var propsData = extractProps(data, Ctor);
 
   // functional component
   if (Ctor.options.functional) {
@@ -35394,7 +35341,7 @@ function resolveAsyncComponent (
   }
 }
 
-function extractProps (data, Ctor, tag) {
+function extractProps (data, Ctor) {
   // we are only extracting raw values here.
   // validation and default values are handled in the child
   // component itself.
@@ -35415,13 +35362,12 @@ function extractProps (data, Ctor, tag) {
           key !== keyInLowerCase &&
           attrs && attrs.hasOwnProperty(keyInLowerCase)
         ) {
-          tip(
-            "Prop \"" + keyInLowerCase + "\" is passed to component " +
-            (formatComponentName(tag || Ctor)) + ", but the declared prop name is" +
-            " \"" + key + "\". " +
-            "Note that HTML attributes are case-insensitive and camelCased " +
-            "props need to use their kebab-case equivalents when using in-DOM " +
-            "templates. You should probably use \"" + altKey + "\" instead of \"" + key + "\"."
+          warn(
+            "Prop \"" + keyInLowerCase + "\" is not declared in component " +
+            (formatComponentName(Ctor)) + ". Note that HTML attributes are " +
+            "case-insensitive and camelCased props need to use their kebab-case " +
+            "equivalents when using in-DOM templates. You should probably use " +
+            "\"" + altKey + "\" instead of \"" + key + "\"."
           );
         }
       }
@@ -35905,30 +35851,18 @@ function initInjections (vm) {
         ? Reflect.ownKeys(inject)
         : Object.keys(inject);
 
-    var loop = function ( i ) {
+    for (var i = 0; i < keys.length; i++) {
       var key = keys[i];
       var provideKey = isArray ? key : inject[key];
       var source = vm;
       while (source) {
         if (source._provided && provideKey in source._provided) {
-          /* istanbul ignore else */
-          {
-            defineReactive$$1(vm, key, source._provided[provideKey], function () {
-              warn(
-                "Avoid mutating an injected value directly since the changes will be " +
-                "overwritten whenever the provided component re-renders. " +
-                "injection being mutated: \"" + key + "\"",
-                vm
-              );
-            });
-          }
+          vm[key] = source._provided[provideKey];
           break
         }
         source = source.$parent;
       }
-    };
-
-    for (var i = 0; i < keys.length; i++) loop( i );
+    }
   }
 }
 
@@ -35938,18 +35872,14 @@ var uid = 0;
 
 function initMixin (Vue) {
   Vue.prototype._init = function (options) {
+    /* istanbul ignore if */
+    if ("development" !== 'production' && config.performance && mark) {
+      mark('vue-perf-init');
+    }
+
     var vm = this;
     // a uid
     vm._uid = uid++;
-
-    var startTag, endTag;
-    /* istanbul ignore if */
-    if ("development" !== 'production' && config.performance && mark) {
-      startTag = "vue-perf-init:" + (vm._uid);
-      endTag = "vue-perf-end:" + (vm._uid);
-      mark(startTag);
-    }
-
     // a flag to avoid this being observed
     vm._isVue = true;
     // merge options
@@ -35983,8 +35913,8 @@ function initMixin (Vue) {
     /* istanbul ignore if */
     if ("development" !== 'production' && config.performance && mark) {
       vm._name = formatComponentName(vm, false);
-      mark(endTag);
-      measure(((vm._name) + " init"), startTag, endTag);
+      mark('vue-perf-init-end');
+      measure(((vm._name) + " init"), 'vue-perf-init', 'vue-perf-init-end');
     }
 
     if (vm.$options.el) {
@@ -36396,7 +36326,7 @@ Object.defineProperty(Vue$3.prototype, '$isServer', {
   get: isServerRendering
 });
 
-Vue$3.version = '2.2.6';
+Vue$3.version = '2.2.4';
 
 /*  */
 
@@ -36736,36 +36666,21 @@ var emptyNode = new VNode('', {}, []);
 
 var hooks = ['create', 'activate', 'update', 'remove', 'destroy'];
 
-function isUndef (v) {
-  return v === undefined || v === null
+function isUndef (s) {
+  return s == null
 }
 
-function isDef (v) {
-  return v !== undefined && v !== null
+function isDef (s) {
+  return s != null
 }
 
-function isTrue (v) {
-  return v === true
-}
-
-function sameVnode (a, b) {
+function sameVnode (vnode1, vnode2) {
   return (
-    a.key === b.key &&
-    a.tag === b.tag &&
-    a.isComment === b.isComment &&
-    isDef(a.data) === isDef(b.data) &&
-    sameInputType(a, b)
+    vnode1.key === vnode2.key &&
+    vnode1.tag === vnode2.tag &&
+    vnode1.isComment === vnode2.isComment &&
+    !vnode1.data === !vnode2.data
   )
-}
-
-// Some browsers do not support dynamically changing type for <input>
-// so they need to be treated as different nodes
-function sameInputType (a, b) {
-  if (a.tag !== 'input') { return true }
-  var i;
-  var typeA = isDef(i = a.data) && isDef(i = i.attrs) && i.type;
-  var typeB = isDef(i = b.data) && isDef(i = i.attrs) && i.type;
-  return typeA === typeB
 }
 
 function createKeyToOldIdx (children, beginIdx, endIdx) {
@@ -36788,9 +36703,7 @@ function createPatchFunction (backend) {
   for (i = 0; i < hooks.length; ++i) {
     cbs[hooks[i]] = [];
     for (j = 0; j < modules.length; ++j) {
-      if (isDef(modules[j][hooks[i]])) {
-        cbs[hooks[i]].push(modules[j][hooks[i]]);
-      }
+      if (modules[j][hooks[i]] !== undefined) { cbs[hooks[i]].push(modules[j][hooks[i]]); }
     }
   }
 
@@ -36811,7 +36724,7 @@ function createPatchFunction (backend) {
   function removeNode (el) {
     var parent = nodeOps.parentNode(el);
     // element may have already been removed due to v-html / v-text
-    if (isDef(parent)) {
+    if (parent) {
       nodeOps.removeChild(parent, el);
     }
   }
@@ -36862,7 +36775,7 @@ function createPatchFunction (backend) {
       if ("development" !== 'production' && data && data.pre) {
         inPre--;
       }
-    } else if (isTrue(vnode.isComment)) {
+    } else if (vnode.isComment) {
       vnode.elm = nodeOps.createComment(vnode.text);
       insert(parentElm, vnode.elm, refElm);
     } else {
@@ -36884,7 +36797,7 @@ function createPatchFunction (backend) {
       // in that case we can just return the element and be done.
       if (isDef(vnode.componentInstance)) {
         initComponent(vnode, insertedVnodeQueue);
-        if (isTrue(isReactivated)) {
+        if (isReactivated) {
           reactivateComponent(vnode, insertedVnodeQueue, parentElm, refElm);
         }
         return true
@@ -36893,7 +36806,7 @@ function createPatchFunction (backend) {
   }
 
   function initComponent (vnode, insertedVnodeQueue) {
-    if (isDef(vnode.data.pendingInsert)) {
+    if (vnode.data.pendingInsert) {
       insertedVnodeQueue.push.apply(insertedVnodeQueue, vnode.data.pendingInsert);
     }
     vnode.elm = vnode.componentInstance.$el;
@@ -36932,8 +36845,8 @@ function createPatchFunction (backend) {
   }
 
   function insert (parent, elm, ref) {
-    if (isDef(parent)) {
-      if (isDef(ref)) {
+    if (parent) {
+      if (ref) {
         nodeOps.insertBefore(parent, elm, ref);
       } else {
         nodeOps.appendChild(parent, elm);
@@ -36964,8 +36877,8 @@ function createPatchFunction (backend) {
     }
     i = vnode.data.hook; // Reuse variable
     if (isDef(i)) {
-      if (isDef(i.create)) { i.create(emptyNode, vnode); }
-      if (isDef(i.insert)) { insertedVnodeQueue.push(vnode); }
+      if (i.create) { i.create(emptyNode, vnode); }
+      if (i.insert) { insertedVnodeQueue.push(vnode); }
     }
   }
 
@@ -37024,15 +36937,15 @@ function createPatchFunction (backend) {
   }
 
   function removeAndInvokeRemoveHook (vnode, rm) {
-    if (isDef(rm) || isDef(vnode.data)) {
+    if (rm || isDef(vnode.data)) {
       var listeners = cbs.remove.length + 1;
-      if (isDef(rm)) {
+      if (!rm) {
+        // directly removing
+        rm = createRmCb(vnode.elm, listeners);
+      } else {
         // we have a recursively passed down rm callback
         // increase the listeners count
         rm.listeners += listeners;
-      } else {
-        // directly removing
-        rm = createRmCb(vnode.elm, listeners);
       }
       // recursively invoke hooks on child component root node
       if (isDef(i = vnode.componentInstance) && isDef(i = i._vnode) && isDef(i.data)) {
@@ -37134,23 +37047,24 @@ function createPatchFunction (backend) {
     // note we only do this if the vnode is cloned -
     // if the new node is not cloned it means the render functions have been
     // reset by the hot-reload-api and we need to do a proper re-render.
-    if (isTrue(vnode.isStatic) &&
-        isTrue(oldVnode.isStatic) &&
+    if (vnode.isStatic &&
+        oldVnode.isStatic &&
         vnode.key === oldVnode.key &&
-        (isTrue(vnode.isCloned) || isTrue(vnode.isOnce))) {
+        (vnode.isCloned || vnode.isOnce)) {
       vnode.elm = oldVnode.elm;
       vnode.componentInstance = oldVnode.componentInstance;
       return
     }
     var i;
     var data = vnode.data;
-    if (isDef(data) && isDef(i = data.hook) && isDef(i = i.prepatch)) {
+    var hasData = isDef(data);
+    if (hasData && isDef(i = data.hook) && isDef(i = i.prepatch)) {
       i(oldVnode, vnode);
     }
     var elm = vnode.elm = oldVnode.elm;
     var oldCh = oldVnode.children;
     var ch = vnode.children;
-    if (isDef(data) && isPatchable(vnode)) {
+    if (hasData && isPatchable(vnode)) {
       for (i = 0; i < cbs.update.length; ++i) { cbs.update[i](oldVnode, vnode); }
       if (isDef(i = data.hook) && isDef(i = i.update)) { i(oldVnode, vnode); }
     }
@@ -37168,7 +37082,7 @@ function createPatchFunction (backend) {
     } else if (oldVnode.text !== vnode.text) {
       nodeOps.setTextContent(elm, vnode.text);
     }
-    if (isDef(data)) {
+    if (hasData) {
       if (isDef(i = data.hook) && isDef(i = i.postpatch)) { i(oldVnode, vnode); }
     }
   }
@@ -37176,7 +37090,7 @@ function createPatchFunction (backend) {
   function invokeInsertHook (vnode, queue, initial) {
     // delay insert hooks for component root nodes, invoke them after the
     // element is really inserted
-    if (isTrue(initial) && isDef(vnode.parent)) {
+    if (initial && vnode.parent) {
       vnode.parent.data.pendingInsert = queue;
     } else {
       for (var i = 0; i < queue.length; ++i) {
@@ -37253,7 +37167,7 @@ function createPatchFunction (backend) {
   }
 
   function assertNodeMatch (node, vnode) {
-    if (isDef(vnode.tag)) {
+    if (vnode.tag) {
       return (
         vnode.tag.indexOf('vue-component') === 0 ||
         vnode.tag.toLowerCase() === (node.tagName && node.tagName.toLowerCase())
@@ -37264,15 +37178,15 @@ function createPatchFunction (backend) {
   }
 
   return function patch (oldVnode, vnode, hydrating, removeOnly, parentElm, refElm) {
-    if (isUndef(vnode)) {
-      if (isDef(oldVnode)) { invokeDestroyHook(oldVnode); }
+    if (!vnode) {
+      if (oldVnode) { invokeDestroyHook(oldVnode); }
       return
     }
 
     var isInitialPatch = false;
     var insertedVnodeQueue = [];
 
-    if (isUndef(oldVnode)) {
+    if (!oldVnode) {
       // empty mount (likely as component), create new root element
       isInitialPatch = true;
       createElm(vnode, insertedVnodeQueue, parentElm, refElm);
@@ -37290,7 +37204,7 @@ function createPatchFunction (backend) {
             oldVnode.removeAttribute('server-rendered');
             hydrating = true;
           }
-          if (isTrue(hydrating)) {
+          if (hydrating) {
             if (hydrate(oldVnode, vnode, insertedVnodeQueue)) {
               invokeInsertHook(vnode, insertedVnodeQueue, true);
               return oldVnode
@@ -37321,7 +37235,7 @@ function createPatchFunction (backend) {
           nodeOps.nextSibling(oldElm)
         );
 
-        if (isDef(vnode.parent)) {
+        if (vnode.parent) {
           // component root element replaced.
           // update parent placeholder node element, recursively
           var ancestor = vnode.parent;
@@ -37336,7 +37250,7 @@ function createPatchFunction (backend) {
           }
         }
 
-        if (isDef(parentElm$1)) {
+        if (parentElm$1 !== null) {
           removeVnodes(parentElm$1, [oldVnode], 0, 0);
         } else if (isDef(oldVnode.tag)) {
           invokeDestroyHook(oldVnode);
@@ -38942,7 +38856,7 @@ var model$1 = {
       if (isIE || isEdge) {
         setTimeout(cb, 0);
       }
-    } else if (vnode.tag === 'textarea' || el.type === 'text' || el.type === 'password') {
+    } else if (vnode.tag === 'textarea' || el.type === 'text') {
       el._vModifiers = binding.modifiers;
       if (!binding.modifiers.lazy) {
         if (!isAndroid) {
@@ -39612,7 +39526,6 @@ function parseHTML (html, options) {
   var stack = [];
   var expectHTML = options.expectHTML;
   var isUnaryTag$$1 = options.isUnaryTag || no;
-  var canBeLeftOpenTag$$1 = options.canBeLeftOpenTag || no;
   var index = 0;
   var last, lastTag;
   while (html) {
@@ -39761,7 +39674,7 @@ function parseHTML (html, options) {
       if (lastTag === 'p' && isNonPhrasingTag(tagName)) {
         parseEndTag(lastTag);
       }
-      if (canBeLeftOpenTag$$1(tagName) && lastTag === tagName) {
+      if (canBeLeftOpenTag(tagName) && lastTag === tagName) {
         parseEndTag(tagName);
       }
     }
@@ -39959,7 +39872,6 @@ function parse (
     warn: warn$2,
     expectHTML: options.expectHTML,
     isUnaryTag: options.isUnaryTag,
-    canBeLeftOpenTag: options.canBeLeftOpenTag,
     shouldDecodeNewlines: options.shouldDecodeNewlines,
     start: function start (tag, attrs, unary) {
       // check namespace.
@@ -41441,7 +41353,6 @@ var baseOptions = {
   isPreTag: isPreTag,
   isUnaryTag: isUnaryTag,
   mustUseProp: mustUseProp,
-  canBeLeftOpenTag: canBeLeftOpenTag,
   isReservedTag: isReservedTag,
   getTagNamespace: getTagNamespace,
   staticKeys: genStaticKeys(modules$1)
@@ -42109,6 +42020,65 @@ $('.alfanum').on("keypress", function (e) {
     if (!patron.test(te)) event.returnValue = false;
 });
 
+$('.add').click(function () {
+    $('.all').prop("checked", false);
+    var items = $("#list1 input:checked:not('.all')");
+
+    var n = items.length;
+    if (n > 0) {
+        items.each(function (idx, item) {
+            var choice = $(item);
+            choice.prop("checked", false);
+            choice.parent().appendTo("#list2");
+        });
+    } else {
+        alert("Choose an item from list 1");
+    }
+});
+
+$('.remove').click(function () {
+    $('.all').prop("checked", false);
+    var items = $("#list2 input:checked:not('.all')");
+    items.each(function (idx, item) {
+        var choice = $(item);
+        choice.prop("checked", false);
+        choice.parent().appendTo("#list1");
+    });
+});
+
+/* toggle all checkboxes in group */
+$('.all').click(function (e) {
+    e.stopPropagation();
+    var $this = $(this);
+    if ($this.is(":checked")) {
+        $this.parents('.list-group').find("[type=checkbox]").prop("checked", true);
+    } else {
+        $this.parents('.list-group').find("[type=checkbox]").prop("checked", false);
+        $this.prop("checked", false);
+    }
+});
+
+$('[type=checkbox]').click(function (e) {
+    e.stopPropagation();
+});
+
+/* toggle checkbox when list group item is clicked */
+$('.list-group a').click(function (e) {
+
+    e.stopPropagation();
+
+    var $this = $(this).find("[type=checkbox]");
+    if ($this.is(":checked")) {
+        $this.prop("checked", false);
+    } else {
+        $this.prop("checked", true);
+    }
+
+    if ($this.hasClass("all")) {
+        $this.trigger('click');
+    }
+});
+
 },{}],34:[function(require,module,exports){
 "use strict";
 
@@ -42430,8 +42400,9 @@ require('./vue-components/viajes-index');
 require('./vue-components/corte-create');
 require('./vue-components/corte-edit');
 require('./vue-components/configuracion-diaria');
+require('./vue-components/roles-permisos');
 
-},{"./vue-components/conciliaciones-create":39,"./vue-components/conciliaciones-edit":40,"./vue-components/configuracion-diaria":41,"./vue-components/corte-create":42,"./vue-components/corte-edit":43,"./vue-components/errors":44,"./vue-components/fda-bancomaterial":45,"./vue-components/fda-material":46,"./vue-components/global-errors":47,"./vue-components/origenes-usuarios":48,"./vue-components/viajes-completa":52,"./vue-components/viajes-index":53,"./vue-components/viajes-manual":54,"./vue-components/viajes-modificar":55,"./vue-components/viajes-revertir":56,"./vue-components/viajes-validar":57}],39:[function(require,module,exports){
+},{"./vue-components/conciliaciones-create":39,"./vue-components/conciliaciones-edit":40,"./vue-components/configuracion-diaria":41,"./vue-components/corte-create":42,"./vue-components/corte-edit":43,"./vue-components/errors":44,"./vue-components/fda-bancomaterial":45,"./vue-components/fda-material":46,"./vue-components/global-errors":47,"./vue-components/origenes-usuarios":48,"./vue-components/roles-permisos":49,"./vue-components/viajes-completa":53,"./vue-components/viajes-index":54,"./vue-components/viajes-manual":55,"./vue-components/viajes-modificar":56,"./vue-components/viajes-revertir":57,"./vue-components/viajes-validar":58}],39:[function(require,module,exports){
 'use strict';
 
 Vue.component('conciliaciones-create', {
@@ -44057,7 +44028,7 @@ Vue.component('app-errors', {
     template: require('./templates/errors.html')
 });
 
-},{"./templates/errors.html":49}],45:[function(require,module,exports){
+},{"./templates/errors.html":50}],45:[function(require,module,exports){
 'use strict';
 
 Vue.component('fda-bancomaterial', {
@@ -44278,7 +44249,7 @@ Vue.component('global-errors', {
   }
 });
 
-},{"./templates/global-errors.html":50}],48:[function(require,module,exports){
+},{"./templates/global-errors.html":51}],48:[function(require,module,exports){
 'use strict';
 
 Vue.component('origenes-usuarios', {
@@ -44353,13 +44324,419 @@ Vue.component('origenes-usuarios', {
     }
 });
 
-},{"./templates/origenes-usuarios.html":51}],49:[function(require,module,exports){
-module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
+},{"./templates/origenes-usuarios.html":52}],49:[function(require,module,exports){
+'use strict';
+
+Vue.component('roles-permisos', {
+    data: function data() {
+        return {
+            usuarios: [],
+            roles: [],
+            permisos: [],
+
+            selected_rol_id: '',
+            selected_rol: {},
+            selected_usuario_id: '',
+            selected_usuario: {},
+            cargando: false,
+            guardando: false,
+            form: {
+                errors: []
+            }
+        };
+    },
+
+    created: function created() {
+        this.init();
+    },
+
+    computed: {
+        permisosDisponibles: function permisosDisponibles() {
+            var _this = this;
+            if (this.selected_rol_id) {
+                return this.permisos.filter(function (permiso) {
+                    var i;
+                    for (i = 0; i < _this.selected_rol.perms.length; i++) {
+                        if (_this.selected_rol.perms[i].id === permiso.id) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            } else {
+                return [];
+            }
+        },
+        rolesDisponibles: function rolesDisponibles() {
+            var _this = this;
+            if (this.selected_usuario_id) {
+                return this.roles.filter(function (rol) {
+                    var i;
+                    for (i = 0; i < _this.selected_usuario.roles.length; i++) {
+                        if (_this.selected_usuario.roles[i].id === rol.id) {
+                            return false;
+                        }
+                    }
+                    return true;
+                });
+            } else {
+                return [];
+            }
+        }
+    },
+
+    directives: {},
+
+    methods: {
+        init: function init() {
+            var url = App.host + '/administracion/roles_permisos/init';
+            var _this = this;
+            $.ajax({
+                type: 'GET',
+                url: url,
+                beforeSend: function beforeSend() {
+                    _this.cargando = true;
+                },
+                success: function success(response) {
+                    _this.usuarios = response.usuarios;
+                    _this.roles = response.roles;
+                    _this.permisos = response.permisos;
+                },
+                error: function error(_error) {
+                    if (_error.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error.responseJSON);
+                    } else if (_error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.cargando = false;
+                }
+            });
+        },
+
+        roles_store: function roles_store(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var form = $('#roles_store_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            var data = form.serialize();
+
+            $.ajax({
+                type: type,
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    _this.roles.push(response.rol);
+                    $("#roles_store_form")[0].reset();
+                    swal("Correcto!", "Se ha creado correctamente tu rol.", "success");
+                },
+                error: function error(_error2) {
+                    if (_error2.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error2.responseJSON);
+                    } else if (_error2.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error2.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+            });
+        },
+        permisos_store: function permisos_store(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var form = $('#permisos_store_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            var data = form.serialize();
+
+            $.ajax({
+                type: type,
+                url: url,
+                data: data,
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    _this.permisos.push(response.permiso);
+                    $("#permisos_store_form")[0].reset();
+                    swal("Correcto!", "Se ha creado correctamente tu rol.", "success");
+                },
+                error: function error(_error3) {
+                    if (_error3.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error3.responseJSON);
+                    } else if (_error3.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error3.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+            });
+        },
+        select_rol: function select_rol() {
+            $("#leftRolValues").empty();
+            $("#rightRolValues").empty();
+
+            if (this.selected_rol_id) {
+                Vue.set(this, 'selected_rol', this.roles[this.selected_rol_id - 1]);
+                this.permisosDisponibles.forEach(function (permiso) {
+                    $("#leftRolValues").append("<option id='" + permiso.id + "' value='" + permiso.id + "'>" + permiso.display_name + "</option>");
+                });
+                this.selected_rol.perms.forEach(function (permiso) {
+                    $("#rightRolValues").append("<option id='" + permiso.id + "' value='" + permiso.id + "'>" + permiso.display_name + "</option>");
+                });
+            } else {
+                Vue.set(this, 'selected_rol', {});
+            }
+        },
+        select_usuario: function select_usuario() {
+
+            var indice = $("#selUser").prop('selectedIndex');
+
+            $("#leftPermisoValues").empty();
+            $("#rightPermisoValues").empty();
+
+            if (this.selected_usuario_id) {
+                Vue.set(this, 'selected_usuario', this.usuarios[indice - 1]);
+                this.rolesDisponibles.forEach(function (roles) {
+                    $("#leftPermisoValues").append("<option id='" + roles.id + "' value='" + roles.id + "'>" + roles.display_name + "</option>");
+                });
+                this.selected_usuario.roles.forEach(function (roles) {
+                    $("#rightPermisoValues").append("<option id='" + roles.id + "' value='" + roles.id + "'>" + roles.display_name + "</option>");
+                });
+            } else {
+                Vue.set(this, 'selected_usuario', {});
+            }
+        },
+
+        stop_propagation: function stop_propagation(e) {
+            e.stopPropagation();
+        },
+
+        list_group_action: function list_group_action(e) {
+            e.stopPropagation();
+
+            var t = $("[type=checkbox]");
+            if (t.is(":checked")) {
+                t.prop("checked", false);
+            } else {
+                t.prop("checked", true);
+            }
+
+            if (t.hasClass("all")) {
+                t.trigger('click');
+            }
+        },
+
+        add_permiso_click: function add_permiso_click() {
+            $("#btnPermisoLeft").click(function () {
+                var selectedItem = $("#rightPermisoValues option:selected");
+                $("#leftPermisoValues").append(selectedItem);
+            });
+
+            $("#btnPermisoRight").click(function () {
+                var selectedItem = $("#leftPermisoValues option:selected");
+                $("#rightPermisoValues").append(selectedItem);
+            });
+            //this.guardar_rol_usuario();
+        },
+        add_rol_click: function add_rol_click() {
+            $("#btnRolLeft").click(function () {
+                var selectedItem = $("#rightRolValues option:selected");
+                $("#leftRolValues").append(selectedItem);
+            });
+
+            $("#btnRolRight").click(function () {
+                var selectedItem = $("#leftRolValues option:selected");
+                $("#rightRolValues").append(selectedItem);
+            });
+
+            //this.guardar_permisos_rol();
+        },
+        remove_click: function remove_click() {
+            $('.all').prop("checked", false);
+            var items = $("#list2 input:checked:not('.all')");
+            items.each(function (idx, item) {
+                var choice = $(item);
+                choice.prop("checked", false);
+                choice.parent().appendTo("#list1");
+            });
+        },
+        all_click: function all_click(e) {
+            e.stopPropagation();
+            var t = $(e.currentTarget);
+            if (t.is(":checked")) {
+                t.parents('.list-group').find("[type=checkbox]").prop("checked", true);
+            } else {
+                t.parents('.list-group').find("[type=checkbox]").prop("checked", false);
+                t.prop("checked", false);
+            }
+        },
+
+        permisos_roles: function permisos_roles(e) {
+            e.preventDefault();
+
+            $('#idUsuarioSelect').val($('#idUsuario').val());
+            var form = $('#permisos_roles_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            var data = form.serialize();
+
+            $.ajax({
+                type: type,
+                url: url,
+                data: data,
+
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                },
+                success: function success(response) {
+                    _this.roles.push(response.rol);
+                    swal("Correcto!", "Se ha creado correctamente tu rol.", "success");
+                },
+                error: function error(_error4) {
+                    if (_error4.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error4.responseJSON);
+                    } else if (_error4.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error4.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                }
+            });
+        },
+        guardar_permisos_rol: function guardar_permisos_rol(e) {
+            e.preventDefault();
+
+            var _this = this;
+            var idsSeleccionados = [];
+            $("#rightRolValues option").each(function (index) {
+                idsSeleccionados.push(this.id);
+            });
+
+            var form = $('#permiso_rol_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            $.ajax({
+                type: type,
+                url: url,
+                data: {
+                    'permiso': idsSeleccionados,
+                    'rol': $('#rol').val()
+                },
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                    $("#btnRolRight").prop("disabled", true);
+                    $("#btnRolLeft").prop("disabled", true);
+                },
+                success: function success(response) {
+                    _this.usuarios = response.usuarios;
+                    _this.roles = response.roles;
+                    _this.permisos = response.permisos;
+                    swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
+                },
+                error: function error(_error5) {
+                    if (_error5.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error5.responseJSON);
+                    } else if (_error5.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error5.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                    $("#btnRolRight").prop("disabled", false);
+                    $("#btnRolLeft").prop("disabled", false);
+                }
+            });
+        },
+        guardar_rol_usuario: function guardar_rol_usuario(e) {
+
+            e.preventDefault();
+
+            var _this = this;
+            var idsSeleccionados = [];
+            $("#rightPermisoValues option").each(function (index) {
+                idsSeleccionados.push(this.id);
+            });
+
+            var form = $('#rol_usuario_form');
+            var url = form.attr('action');
+            var type = form.attr('method');
+            $.ajax({
+                type: type,
+                url: url,
+                data: {
+                    'rol': idsSeleccionados,
+                    'usuario': $('#selUser').val()
+                },
+                beforeSend: function beforeSend() {
+                    _this.guardando = true;
+                    $("#btnPermisoRight").prop("disabled", true);
+                    $("#btnPermisoLeft").prop("disabled", true);
+                },
+                success: function success(response) {
+                    _this.usuarios = response.usuarios;
+                    _this.roles = response.roles;
+                    _this.permisos = response.permisos;
+                    swal("Correcto!", "Se ha creado correctamente la configuracion.", "success");
+                },
+                error: function error(_error6) {
+                    if (_error6.status == 422) {
+                        App.setErrorsOnForm(_this.form, _error6.responseJSON);
+                    } else if (_error6.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(_error6.responseText)
+                        });
+                    }
+                },
+                complete: function complete() {
+                    _this.guardando = false;
+                    $("#btnPermisoRight").prop("disabled", false);
+                    $("#btnPermisoLeft").prop("disabled", false);
+                }
+            });
+        }
+    }
+});
+
 },{}],50:[function(require,module,exports){
-module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
+module.exports = '<div id="form-errors" v-cloak>\n  <div class="alert alert-danger" v-if="form.errors.length">\n    <ul>\n      <li v-for="error in form.errors">{{ error }}</li>\n    </ul>\n  </div>\n</div>';
 },{}],51:[function(require,module,exports){
-module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+module.exports = '<div class="alert alert-danger" v-show="errors.length">\n  <ul>\n    <li v-for="error in errors">{{ error }}</li>\n  </ul>\n</div>';
 },{}],52:[function(require,module,exports){
+module.exports = '<div class="table-responsive col-md-8 col-md-offset-2">\n    <select class="form-control"  v-model="usuario" v-on:change="fetchOrigenes">\n        <option value >--SELECCIONE UN USUARIO--</option>\n        <option v-for="usuario in usuarios" v-bind:value="usuario.id">\n            {{ usuario.nombre }}\n        </option>\n    </select>\n    <hr>\n    <table v-if="usuario" class="table table-hover" id="origenes_usuarios_table">\n        <thead>\n            <tr>\n                <th>Asignación</th>\n                <th>Origen</th>\n            </tr>\n        </thead>\n        <tbody>\n            <tr v-for="origen in origenes">\n                <td>\n                    <img v-bind:style="{cursor: origen.cursor}" v-on:click="asignar(origen)" v-bind:src="origen.img" v-bind:title="origen.title"/>\n                </td>\n                <td>{{ origen.descripcion }}</td>\n            </tr>\n        </tbody>\n    </table>\n</div>';
+},{}],53:[function(require,module,exports){
 'use strict';
 
 function timeStamp(type) {
@@ -44579,7 +44956,7 @@ Vue.component('viajes-manual-completa', {
     }
 });
 
-},{}],53:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-index', {
@@ -44843,7 +45220,7 @@ Vue.component('viajes-index', {
     }
 });
 
-},{}],54:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 
 Array.prototype.removeValue = function (name, value) {
@@ -45008,7 +45385,7 @@ Vue.component('viajes-manual', {
     }
 });
 
-},{}],55:[function(require,module,exports){
+},{}],56:[function(require,module,exports){
 'use strict';
 
 // register modal component
@@ -45170,7 +45547,7 @@ Vue.component('viajes-modificar', {
     }
 });
 
-},{}],56:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 
 Vue.component('viajes-revertir', {
@@ -45307,7 +45684,7 @@ Vue.component('viajes-revertir', {
     }
 });
 
-},{}],57:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 
 // register modal component

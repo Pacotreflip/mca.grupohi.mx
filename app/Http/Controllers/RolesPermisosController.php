@@ -31,9 +31,9 @@ class RolesPermisosController extends Controller
 
     public function init()
     {
-       $usuarios=User_1::with('roles')->habilitados()->get();
+       $usuarios=User_1::with('roles')->habilitados()->orderBy('nombre')->orderBy('apaterno')->orderBy('amaterno')->get();
        $permisos=Permission::all();
-       $roles=Role::with('perms')->get();
+       $roles=Role::with('perms')->orderBy('display_name')->get();
        $data = [
            'usuarios'=>UsuarioPerfilesTransformer::transform($usuarios),
            'permisos'=>$permisos,

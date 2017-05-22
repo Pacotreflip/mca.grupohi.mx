@@ -1,7 +1,7 @@
 @extends('layout')
 
 @section('content')
-    <h1>ADMINISTRACIÓN ROLES Y PERMISOS</h1>
+    <h1>ADMINISTRACIÓN DE ROLES Y PERMISOS</h1>
     <div id="app">
         <global-errors></global-errors>
         <roles-permisos inline-template>
@@ -21,13 +21,13 @@
                                         <form id="permisos_store_form" class="form-horizontal" action="{{ route('permisos.store') }}" method="POST">
                                             {{ csrf_field() }}
                                             <div class="form-group">
-                                                <label class="control-label col-sm-4" for="shortP">Short Name:</label>
+                                                <label class="control-label col-sm-4" for="shortP">Nombre Corto:</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="shortP" name="name">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-4" for="nombreP">Nombre del Permiso:</label>
+                                                <label class="control-label col-sm-4" for="nombreP">Nombre:</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="nombreP" name="display_name">
                                                 </div>
@@ -64,13 +64,13 @@
                                         <form  id="roles_store_form"  class="form-horizontal" action="{{route('roles.store')}}" method="POST" >
                                             {{csrf_field()}}
                                             <div class="form-group">
-                                                <label class="control-label col-sm-4" for="shortR">Short Name:</label>
+                                                <label class="control-label col-sm-4" for="shortR">Nombre Corto:</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="shortR" name="name">
                                                 </div>
                                             </div>
                                             <div class="form-group">
-                                                <label class="control-label col-sm-4" for="nombreR">Nombre del Rol:</label>
+                                                <label class="control-label col-sm-4" for="nombreR">Nombre:</label>
                                                 <div class="col-sm-8">
                                                     <input type="text" class="form-control" id="nombreR" name="display_name">
                                                 </div>
@@ -109,7 +109,7 @@
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        Asignación de permisos al rol.
+                                        Asignación de permisos al rol
                                     </div>
                                     <div class="row">
                                         <div class="panel-body">
@@ -168,7 +168,7 @@
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
-                                        Asignación de roles a usuario.
+                                        Asignación de roles a usuario
                                     </div>
                                     <div class="row">
                                         <div class="panel-body">

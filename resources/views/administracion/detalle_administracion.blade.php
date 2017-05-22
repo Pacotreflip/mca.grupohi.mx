@@ -6,7 +6,7 @@
         }
     </style>
 
-    <h1>DETALLE DE ADMINISTRACIÓN</h1>
+    <h1>DETALLE DE ROLES Y PERMISOS</h1>
    
         <ul class="nav nav-tabs">
             <li class="active"><a data-toggle="tab" href="#usuario_permiso">Usuarios - Roles</a></li>
