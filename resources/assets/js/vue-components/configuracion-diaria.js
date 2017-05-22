@@ -268,7 +268,7 @@ Vue.component('configuracion-diaria', {
                 'id_ubicacion' : user.configuracion.ubicacion.id,
                 'id_perfil' : user.configuracion.id_perfil,
                 'turno' : user.configuracion.turno,
-                'id_telefono' : $('#id_telefono').val()
+                'id_telefono' : $('#'+user.id).val()
             };
 
             var _this = this;
@@ -285,7 +285,7 @@ Vue.component('configuracion-diaria', {
                     var checador = response.checador;
                     checador.guardando = false;
                     Vue.set(_this.checadores, _this.checadores.indexOf(user), checador);
-                    Vue.set(_this, 'telefonos',response.telefonos);
+                    _this.telefonos = response.telefonos;
                     swal({
                         type : 'success',
                         title : '¡Configuración Correcta!',
@@ -402,7 +402,7 @@ Vue.component('configuracion-diaria', {
                 },
                 success: function (response) {
                     Vue.delete(_this.checadores, _this.checadores.indexOf(user));
-                    Vue.set(this, 'telefonos', response.telefonos);
+                    _this.telefonos = response.telefonos;
                 },
                 error: function (error) {
                     if (error.status == 422) {

@@ -87,6 +87,6 @@ class User extends Model implements AuthenticatableContract,
         ])->delete();
     }
     public function telefono() {
-        return $this->hasOne(Telefono::class, 'id_checador');
+        return $this->hasOne(Telefono::class, 'id_checador')->where('telefonos.estatus', '=', 1);
     }
 }

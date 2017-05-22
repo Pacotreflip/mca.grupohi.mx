@@ -17,6 +17,7 @@ use App\User;
 use App\User_1;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class ConfiguracionDiariaController extends Controller
 {
@@ -55,56 +56,57 @@ class ConfiguracionDiariaController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
+     * @throws \Exception
      */
     public function store(Request $request)
     {
-        if($request->ajax()) {
+        if ($request->ajax()) {
             $this->validate($request, [
                 'tipo' => 'required',
                 'id_ubicacion' => 'required',
                 'id_perfil' => 'required',
-                'turno'  => 'required',
+                'turno' => 'required',
             ]);
 
-            $user = User::find($request->id_usuario);
-            if($user->configuracion) {
-                $user->configuracion->delete();
+            DB::connection('sca')->beginTransaction();
+            try {
+                $user = User::find($request->id_usuario);
+                if ($user->configuracion) {
+                    $user->configuracion->delete();
+                }
+                Configuracion::create([
+                    'id_usuario' => $request->id_usuario,
+                    'tipo' => $request->tipo,
+                    'id_perfil' => $request->id_perfil,
+                    'registro' => auth()->user()->idusuario,
+                    'turno' => $request->turno,
+                    'id_origen' => $request->tipo == 0 ? $request->id_ubicacion : null,
+                    'id_tiro' => $request->tipo == 1 ? $request->id_ubicacion : null
+                ]);
+                if ($user->telefono) {
+                    $user->telefono->id_checador = null;
+                    $user->telefono->save();
+                }
+
+                if($request->id_telefono) {
+                    $telefono = Telefono::find($request->id_telefono);
+                    $telefono->id_checador = $request->id_usuario;
+                    $telefono->save();
+                }
+                DB::connection('sca')->commit();
+
+
+                return response()->json([
+                    'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario)),
+                    'telefonos' => Telefono::NoAsignados()->get()
+                ]);
+
+            } catch (\Exception $e) {
+                DB::connection('sca')->rollback();
+                throw $e;
             }
-
-            $configuracion = new Configuracion();
-            $configuracion->id_usuario = $request->id_usuario;
-            $configuracion->tipo = $request->tipo;
-            $configuracion->id_perfil = $request->id_perfil;
-            $configuracion->registro = auth()->user()->idusuario;
-            $configuracion->turno = $request->turno;
-
-            if($request->tipo == 0) {
-                $configuracion->id_origen = $request->id_ubicacion;
-            } else if ($request->tipo == 1) {
-                $configuracion->id_tiro = $request->id_ubicacion;
-            }
-            $configuracion->created_at = $configuracion->updated_at = Carbon::now()->toDateTimeString();
-            $configuracion->save();
-
-            $checador = User::find($request->id_usuario);
-            $telefono_checador = Telefono::where('id_checador', '=', $checador->idusuario)->first();
-            if($telefono_checador) {
-                $telefono_checador->id_checador = null;
-                $telefono_checador->save();
-            }
-
-            if($request->id_telefono) {
-                $telefono = Telefono::find($request->id_telefono);
-                $telefono->id_checador = $request->id_usuario;
-                $telefono->save();
-            }
-
-            return response()->json([
-                'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario)),
-                'telefonos' => Telefono::NoAsignados()->get()
-            ]);
         }
     }
 

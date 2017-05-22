@@ -41,7 +41,7 @@
                                     <td style="white-space: nowrap">@{{ user.nombre  }}</td>
                                     <td style="white-space: nowrap">@{{ user.usuario }}</td>
                                     <td style="white-space: nowrap">
-                                        <select id="id_telefono" name="id_telefono" class="form-control input-sm grande">
+                                        <select :id="user.id" name="id_telefono" v-model="user.telefono.id" class="form-control input-sm grande">
                                             <option value>-- SELECCIONE --</option>
                                             <option selected v-if="user.telefono.id" v-bind:value="user.telefono.id">@{{ 'ID: '+user.telefono.id+' IMEI: '+user.telefono.imei }}</option>
                                             <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ 'ID: '+telefono.id+' IMEI: '+telefono.imei }}</option>
