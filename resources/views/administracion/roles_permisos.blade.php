@@ -7,7 +7,10 @@
         <roles-permisos inline-template>
             <section>
                 <app-errors v-bind:form="form"></app-errors>
+
+
                 <div class="row">
+                    @role('administrador-sistema')
                     <div class="panel panel-default">
                         <div class="panel-heading">Módulo de Creación de Permisos y Roles
                         </div>
@@ -101,11 +104,12 @@
                             </div>
                         </div>
                     </div>
-
+                    @endrole
                     <div class="panel panel-default">
                         <div class="panel-heading">Configuración de Roles y Perfiles
                         </div>
                         <div class="panel-body">
+                            @role('administrador-sistema')
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -150,7 +154,7 @@
                                                 </span>
                                                 </button>
                                                 <button type="button" :disabled="guardando" id="btnRolLeft" value="&lt;&lt;"
-                                                        class="btn btn-default center-block add" v-on:click="remove_rol_click" >
+                                                        class="btn btn-default center-block add" v-on:click="add_rol_click" >
                                                     <span v-if="guardando">
                                                     <i class="fa fa-spinner fa-spin"></i>
                                                 </span>
@@ -166,12 +170,22 @@
                                                 </select>
                                             </div>
                                         </div>
-
+                                        <center>
+                                            <button :disabled="guardando" v-on:click="guardar_permisos_rol" class="btn btn-success">
+                                                <span v-if="guardando">
+                                                    <i class="fa fa-spinner fa-spin"></i> Guardando
+                                                </span>
+                                                <span v-else>
+                                                    <i class="fa fa-save"></i> Guardar
+                                                </span>
+                                            </button>
+                                        </center>
                                     </div>
                                 </div>
 
 
                             </div>
+                            @endrole
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">

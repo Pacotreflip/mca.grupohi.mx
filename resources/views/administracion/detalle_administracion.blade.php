@@ -80,7 +80,7 @@
 
             </div>
             <div id="rol_usuario" class="tab-pane fade">
-                <h3>Usuario Permisos</h3>
+
 
                 <div class="row">
                     <a href="{{ route('csv.usuario_permiso') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i

@@ -42,10 +42,7 @@ class UsuarioSistemaController extends Controller
      */
     public function create()
     {
-
-
         $proyectoActual = Proyecto::where('id_proyecto', '=', Context::getId())->get(['id_proyecto', 'descripcion']);
-
         $generos = DB::connection('intranet')->table('igh.genero')->where('genero_estado', '=', 1)->select('idgenero', 'genero')->get();
         $titulos = DB::connection('intranet')->table('igh.titulo')->where('titulo_estado', '=', 1)->select('idtitulo', 'titulo')->get();
         $departamento = DB::connection('intranet')->table('igh.departamento')->where('departamento_estado', '=', 1)->select('iddepartamento', 'departamento')->get();
@@ -124,7 +121,7 @@ class UsuarioSistemaController extends Controller
             );
 
             $user = DB::connection('intranet')->table('igh.usuario')->where('usuario', '=', $request->usuario)->select('idusuario')->get();
-            $save = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->insert([
+               $save = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->insert([
                     'id_proyecto' => $request->proyecto,
                     'id_usuario_intranet' =>$user[0]->idusuario
                 ]

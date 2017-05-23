@@ -179,7 +179,7 @@ Route::delete('configuracion-diaria/{id}', 'ConfiguracionDiariaController@destro
 Route::resource('user.roles', 'UserRolesController');
 
 //Rutas de Administración
-Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador-sistema']], function () {
+Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador-sistema|administracion-permisos']], function () {
     Route::get('roles_permisos', 'RolesPermisosController@roles_permisos')->name('administracion.roles_permisos');
     Route::get('roles_permisos/init', 'RolesPermisosController@init');
     Route::post('roles_permisos/roles', 'RolesPermisosController@roles_store')->name('roles.store');
@@ -189,6 +189,7 @@ Route::group(['prefix' => 'administracion', 'middleware' => ['role:administrador
     Route::post('roles_permisos/permisos_roles','RolesPermisosController@permisos_roles')->name('permisos.roles');
 
 });
+Route::resource('usuarios_sistema', 'UsuarioSistemaController');
 
 Route::resource('telefonos', 'TelefonosController');
 Route::resource('impresoras', 'ImpresorasController');
@@ -223,3 +224,4 @@ Route::group(['prefix' => 'csv'],function () {
 });
 
 Route::get('detalle_configuracion', 'DetalleAdministracionController@index')->name('detalle.configuracion');
+Route::resource('usuario_proyecto', 'UsuarioProyectoController');
