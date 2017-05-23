@@ -172,6 +172,7 @@ Route::patch('corte/{corte}/viajes_netos/{viaje_neto}', 'CorteViajesController@u
 
 //Rutas de Configuración Diaria
 Route::get('configuracion-diaria', 'ConfiguracionDiariaController@index')->name('configuracion-diaria.index');
+Route::get('init/configuracion-diaria', 'ConfiguracionDiariaController@init')->name('configuracion-diaria.init');
 Route::post('configuracion-diaria', 'ConfiguracionDiariaController@store');
 Route::delete('configuracion-diaria/{id}', 'ConfiguracionDiariaController@destroy');
 

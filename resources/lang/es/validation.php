@@ -175,7 +175,8 @@ return [
         'tipo'                  => 'Tipo',
         'imei'                  => 'IMEI',
         'id_impresora'          => 'Impresora',
-        'linea'                 => 'Linea Telefónica'
+        'linea'                 => 'Linea Telefónica',
+        'id_telefono'           => 'Teléfono'
     ],
 
 ];

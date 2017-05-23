@@ -40,12 +40,13 @@
                                     <td style="white-space: nowrap">@{{ index + 1 }}</td>
                                     <td style="white-space: nowrap">@{{ user.nombre  }}</td>
                                     <td style="white-space: nowrap">@{{ user.usuario }}</td>
-                                    <td style="white-space: nowrap">
-                                        <select :id="user.id" name="id_telefono" v-model="user.telefono.id" class="form-control input-sm grande">
-                                            <option value>-- SELECCIONE --</option>
-                                            <option selected v-if="user.telefono.id" v-bind:value="user.telefono.id">@{{ 'ID: '+user.telefono.id+' IMEI: '+user.telefono.imei }}</option>
-                                            <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ 'ID: '+telefono.id+' IMEI: '+telefono.imei }}</option>
-                                        </select>
+                                    <td>
+                                        <span v-if="user.telefono">
+                                            <a title="Cambiar" style="text-decoration: underline" v-on:click="asignar_telefono(user)">@{{ user.telefono.info  }}</a>
+                                        </span>
+                                        <span v-else>
+                                            <a title="Asignar" style="text-decoration: underline" v-on:click="asignar_telefono(user)">ASIGNAR</a>
+                                        </span>
                                     </td>
                                     <td style="white-space: nowrap">
                                         <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
@@ -107,6 +108,62 @@
                                 </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Configuración del Teléfono -->
+                <div class="modal fade" id="telefonos_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <span v-if="current_checador && current_checador.telefono">
+                                        CAMBIAR TELÉFONO
+                                    </span>
+                                    <span v-else>
+                                        ASIGNAR TELÉFONO
+                                    </span>
+                                </h4>
+                            </div>
+                            {!! Form::open(['id' => 'asignar_telefono_form']) !!}
+                            <div class="modal-body">
+                                <app-errors v-bind:form="form"></app-errors>
+                                <span v-if="current_checador">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>CHECADOR</label>
+                                                <p>@{{ current_checador.nombre }}</p>
+                                                <input type="hidden" name="id_checador" v-bind:value="current_checador.id">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>TELÉFONO</label>
+                                                <span v-if="current_checador.telefono">
+                                                    <select name="id_telefono" class="form-control">
+                                                        <option value>-- SELECCIONE --</option>
+                                                        <option selected v-bind:value="current_checador.telefono.id">@{{ current_checador.telefono.info }}</option>
+                                                        <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ telefono.info  }}</option>
+                                                    </select>
+                                                </span>
+                                                <span v-else>
+                                                    <select name="id_telefono" class="form-control">
+                                                        <option selected value>-- SELECCIONE --</option>
+                                                        <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ telefono.info }}</option>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" v-on:click="cancelar_asignacion">Cerrar</button>
+                                <button type="submit" class="btn btn-success" v-on:click="confirmar_asignacion">Asignar</button>
+                            </div>
+                            {!! Form::close() !!}
                         </div>
                     </div>
                 </div>

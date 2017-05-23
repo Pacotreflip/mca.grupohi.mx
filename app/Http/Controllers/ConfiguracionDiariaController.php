@@ -32,25 +32,25 @@ class ConfiguracionDiariaController extends Controller
      *
      * @return \Illuminate\Contracts\View\Factory|\Illuminate\View\View
      */
-    public function index(Request $request)
+    public function index()
     {
-        if($request->ajax()) {
-            if($request->type == 'init') {
-               // $users = DB::connection('sca')->select("select * from igh.usuario where (select count(*) from sca_configuracion.roles inner join sca_configuracion.role_user on sca_configuracion.roles.id = sca_configuracion.role_user.role_id where sca_configuracion.role_user.user_id = igh.usuario.idusuario and roles.name = 'checador' and id_proyecto = ".Context::getId().") >= 1"));
-                return response()->json([
-                    'origenes' => OrigenTransformer::transform(Origen::where('origenes.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
-                    'tiros'    => TiroTransformer::transform(Tiro::where('tiros.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
-                    'esquemas' => EsquemaConfiguracionTransformer::transform(Esquema::orderBy('name', 'ASC')->get()),
-                    'perfiles' => Perfiles::orderBy('name', 'ASC')->get(),
-                    'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get()),
-                    'telefonos' => Telefono::NoAsignados()->get()
-                ]);
-            }
-        } else {
-            $rol = Role::where('name', 'checador')->first();
-            return view('configuracion-diaria.index')
-                ->with(['rol' => $rol]);
-        }
+        $rol = Role::where('name', 'checador')->first();
+        return view('configuracion-diaria.index')
+            ->with(['rol' => $rol]);
+    }
+
+    /**
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function init() {
+        return response()->json([
+            'origenes' => OrigenTransformer::transform(Origen::where('origenes.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
+            'tiros'    => TiroTransformer::transform(Tiro::where('tiros.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
+            'esquemas' => EsquemaConfiguracionTransformer::transform(Esquema::orderBy('name', 'ASC')->get()),
+            'perfiles' => Perfiles::orderBy('name', 'ASC')->get(),
+            'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get()),
+            'telefonos' => Telefono::NoAsignados()->get()
+        ]);
     }
 
     /**
@@ -63,49 +63,70 @@ class ConfiguracionDiariaController extends Controller
     public function store(Request $request)
     {
         if ($request->ajax()) {
-            $this->validate($request, [
-                'tipo' => 'required',
-                'id_ubicacion' => 'required',
-                'id_perfil' => 'required',
-                'turno' => 'required',
-            ]);
-
-            DB::connection('sca')->beginTransaction();
-            try {
-                $user = User::find($request->id_usuario);
-                if ($user->configuracion) {
-                    $user->configuracion->delete();
-                }
-                Configuracion::create([
-                    'id_usuario' => $request->id_usuario,
-                    'tipo' => $request->tipo,
-                    'id_perfil' => $request->id_perfil,
-                    'registro' => auth()->user()->idusuario,
-                    'turno' => $request->turno,
-                    'id_origen' => $request->tipo == 0 ? $request->id_ubicacion : null,
-                    'id_tiro' => $request->tipo == 1 ? $request->id_ubicacion : null
+            if($request->type == 'ubicacion') {
+                $this->validate($request, [
+                    'tipo' => 'required',
+                    'id_ubicacion' => 'required',
+                    'id_perfil' => 'required',
+                    'turno' => 'required',
                 ]);
-                if ($user->telefono) {
-                    $user->telefono->id_checador = null;
-                    $user->telefono->save();
+                DB::connection('sca')->beginTransaction();
+                try {
+                    $user = User::find($request->id_usuario);
+                    if ($user->configuracion) {
+                        $user->configuracion->delete();
+                    }
+
+                    Configuracion::create([
+                        'id_usuario' => $request->id_usuario,
+                        'tipo' => $request->tipo,
+                        'id_perfil' => $request->id_perfil,
+                        'registro' => auth()->user()->idusuario,
+                        'turno' => $request->turno,
+                        'id_origen' => $request->tipo == 0 ? $request->id_ubicacion : null,
+                        'id_tiro' => $request->tipo == 1 ? $request->id_ubicacion : null
+                    ]);
+
+                    DB::connection('sca')->commit();
+
+                } catch (\Exception $e) {
+                    DB::connection('sca')->rollback();
+                    throw $e;
                 }
-
-                if($request->id_telefono) {
-                    $telefono = Telefono::find($request->id_telefono);
-                    $telefono->id_checador = $request->id_usuario;
-                    $telefono->save();
-                }
-                DB::connection('sca')->commit();
-
-
                 return response()->json([
                     'checador' => UserConfiguracionTransformer::transform(User::find($request->id_usuario)),
-                    'telefonos' => Telefono::NoAsignados()->get()
+                ]);
+            }
+            else if($request->type == 'telefono') {
+                $this->validate($request, [
+                    'id_telefono' => 'required:exists:sca.telefonos,id'
                 ]);
 
-            } catch (\Exception $e) {
-                DB::connection('sca')->rollback();
-                throw $e;
+                DB::connection('sca')->beginTransaction();
+                try {
+                    $checador = User::find($request->id_checador);
+
+                    if($checador->telefono) {
+                        $telefono_checador = Telefono::find($checador->telefono->id);
+                        $telefono_checador->update(['id_checador' => null]);
+                    }
+
+                    $telefono = Telefono::find($request->id_telefono);
+                    $telefono->update([
+                        'id_checador' => $request->id_checador
+                    ]);
+
+                    DB::connection('sca')->commit();
+
+                } catch (\Exception $e) {
+                    DB::connection('sca')->rollback();
+                    throw $e;
+                }
+
+                return response()->json([
+                    'checador' => UserConfiguracionTransformer::transform(User::find($request->id_checador)),
+                    'telefonos' => Telefono::NoAsignados()->get()
+                ]);
             }
         }
     }

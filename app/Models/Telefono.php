@@ -4,6 +4,7 @@ namespace App\Models;
 
 use App\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Jenssegers\Date\Date;
 class Telefono extends Model
 {
@@ -56,6 +57,7 @@ class Telefono extends Model
 
     public function scopeNoAsignados($query) {
         return $query->whereNull('telefonos.id_checador')
-            ->where('telefonos.estatus', '=', 1);
+            ->where('telefonos.estatus', '=', 1)
+            ->select("id", "imei", DB::raw("CONCAT('ID:', id, ' ', 'IMEI:', imei) as info"));
     }
 }

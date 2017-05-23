@@ -4,6 +4,7 @@
 
 Vue.component('configuracion-diaria', {
     props: ['rol_checador'],
+
     data: function () {
         return {
             checadores : [],
@@ -12,6 +13,7 @@ Vue.component('configuracion-diaria', {
             esquemas   : [],
             perfiles   : [],
             telefonos  : [],
+            current_checador : null,
             form: {
                 errors : []
             },
@@ -25,14 +27,6 @@ Vue.component('configuracion-diaria', {
     },
 
     computed: {
-        con_esquema: function () {
-            return this.tiros.filter(function(tiro) {
-                if(tiro.esquema.id != '') {
-                    return true;
-                }
-                return false;
-            });
-        },
         para_origen: function () {
             return this.perfiles.filter(function(perfil) {
                 if(perfil.id_esquema == '1') {
@@ -41,6 +35,7 @@ Vue.component('configuracion-diaria', {
                 return false;
             });
         },
+
         para_tiro: function () {
             return this.perfiles.filter(function(perfil) {
                 if(perfil.id_esquema == '2') {
@@ -54,41 +49,21 @@ Vue.component('configuracion-diaria', {
     methods: {
         initialize: function () {
             var _this = this;
-            var url = App.host + '/configuracion-diaria';
+            var url = App.host + '/init/configuracion-diaria';
 
             $.ajax({
                 type       : 'GET',
                 url        : url,
-                data       : {
-                    type : 'init'
-                },
                 beforeSend : function () {
                     _this.cargando = true;
                 },
                 success    : function (response) {
                     _this.checadores = response.checadores;
                     _this.checadores.forEach(function (checador) {
-                        if(! checador.configuracion) {
-                            Vue.set(checador, 'configuracion', {
-                                tipo : '',
-                                ubicacion : {
-                                    id : '',
-                                    descripcion : ''
-                                },
-                                id_perfil : '',
-                                turno : ''
-                            });
-                        }
                         Vue.set(checador, 'guardando', false);
                     });
                     _this.tiros = response.tiros;
                     _this.tiros.forEach(function (tiro) {
-                        if(! tiro.esquema) {
-                            Vue.set(tiro, 'esquema' , {
-                                'id' : '',
-                                'name' : ''
-                            });
-                        }
                         Vue.set(tiro, 'guardando' , false);
                     });
 
@@ -110,115 +85,6 @@ Vue.component('configuracion-diaria', {
                 },
                 complete   : function () {
                     _this.cargando = false;
-                }
-            });
-        },
-
-        cambiar_esquema: function (tiro, e) {
-            e.preventDefault();
-            var _this = this;
-            var url = App.host + '/tiros/' + tiro.id;
-            var data = {
-                'id_tiro' : tiro.id,
-                'id_esquema' : tiro.esquema.id,
-                '_method' : 'PATCH',
-                'action' : 'cambiar_esquema'
-            };
-
-            $.ajax({
-                type : 'POST',
-                url  : url,
-                data : data,
-                beforeSend: function () {
-                    tiro.guardando = true;
-                },
-                success: function (response) {
-                    if(response.status_code == 200) {
-                        var nuevo_tiro = response.tiro;
-                        nuevo_tiro.guardando = false;
-                        Vue.set(_this.tiros, _this.tiros.indexOf(tiro) , nuevo_tiro);
-                        swal({
-                            type : 'success',
-                            title : '¡Configuración Correcta!',
-                            text : 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + nuevo_tiro.esquema.name + '</strong>',
-                            html : true
-                        });
-                    } else if(response.status_code == 304){
-                        swal({
-                            type : 'warning',
-                            title : '¡Alerta!',
-                            text : 'El tiro <strong>' + tiro.descripcion + '</strong><br> se esta utilizando en ' + response.num + ' configuarciones<br><strong>¿Realmente desea cambiar el esquema del tiro? </strong><br><small>¡Se borrarán dichas configuraciones!</small>',
-                            html : true,
-                            showCancelButton: true,
-                            confirmButtonText: "Si, cambiar",
-                            cancelButtonText: "No, cancelar",
-                        }, () => _this.force_cambiar_esquema(tiro));
-                    }
-                },
-                error: function (error) {
-                    if (error.status == 422) {
-                        swal({
-                            type : 'error',
-                            title : '¡Error!',
-                            text : App.errorsToString(error.responseJSON)
-                        });
-                    } else if (error.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(error.responseText)
-                        });
-                    }
-                },
-                complete: function () {
-                    tiro.guardando = false;
-                }
-            });
-        },
-
-        force_cambiar_esquema: function (tiro) {
-            var _this = this;
-            var url = App.host + '/tiros/' + tiro.id;
-            var data = {
-                'id_tiro' : tiro.id,
-                'id_esquema' : tiro.esquema.id,
-                '_method' : 'PATCH',
-                'action' : 'force_cambiar_esquema'
-            };
-
-            $.ajax({
-                type : 'POST',
-                url  : url,
-                data : data,
-                beforeSend: function () {
-                    tiro.guardando = true;
-                },
-                success: function (response) {
-                    _this.initialize();
-                    swal({
-                        type : 'success',
-                        title : '¡Configuración Correcta!',
-                        text : 'El esquema del tiro <strong>' + tiro.descripcion + '</strong><br> ha sido cambiado a <strong>' + response.tiro.esquema.name + '</strong>',
-                        html : true
-                    });
-                },
-                error: function (error) {
-                    if (error.status == 422) {
-                        swal({
-                            type : 'error',
-                            title : '¡Error!',
-                            text : App.errorsToString(error.responseJSON)
-                        });
-                    } else if (error.status == 500) {
-                        swal({
-                            type: 'error',
-                            title: '¡Error!',
-                            text: App.errorsToString(error.responseText)
-                        });
-                    }
-                },
-                complete: function () {
-                    tiro.guardando = false;
                 }
             });
         },
@@ -267,12 +133,11 @@ Vue.component('configuracion-diaria', {
                 'tipo' : user.configuracion.tipo,
                 'id_ubicacion' : user.configuracion.ubicacion.id,
                 'id_perfil' : user.configuracion.id_perfil,
-                'turno' : user.configuracion.turno,
-                'id_telefono' : $('#'+user.id).val()
+                'turno' : user.configuracion.turno
             };
 
             var _this = this;
-            var url = App.host + '/configuracion-diaria';
+            var url = App.host + '/configuracion-diaria?type=ubicacion';
 
             $.ajax({
                 type: 'POST',
@@ -285,7 +150,6 @@ Vue.component('configuracion-diaria', {
                     var checador = response.checador;
                     checador.guardando = false;
                     Vue.set(_this.checadores, _this.checadores.indexOf(user), checador);
-                    _this.telefonos = response.telefonos;
                     swal({
                         type : 'success',
                         title : '¡Configuración Correcta!',
@@ -418,6 +282,65 @@ Vue.component('configuracion-diaria', {
                             text: App.errorsToString(error.responseText)
                         });
                     }
+                }
+            });
+        },
+
+        /** Mostrar datos de ususario al que se le asignará un teléfono **/
+        asignar_telefono: function (user) {
+            Vue.set(this, 'current_checador', user);
+            this.form.errors = [];
+            $('#telefonos_modal').modal('show');
+        },
+
+        /** Ocultar datos de ususario al que se le asignará un teléfono **/
+        cancelar_asignacion: function () {
+            Vue.set(this, 'current_checador', null);
+            $('#telefonos_modal').modal('hide');
+        },
+        confirmar_asignacion: function (e) {
+            e.preventDefault();
+            var _this = this;
+            var data = $('#asignar_telefono_form').serialize();
+            var url = App.host + '/configuracion-diaria?type=telefono';
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: data,
+                beforeSend: function() {
+                    _this.guardando = true;
+                },
+                success: function (response) {
+                    $('#telefonos_modal').modal('hide');
+                    Vue.set(this, 'current_user', null);
+                    swal({
+                        type : 'success',
+                        title : '¡Configuración Correcta!',
+                        text : 'Teléfono <strong>' + response.checador.telefono.info +  '</strong> configurado correctamente para el checador <br><strong>' + response.checador.nombre + '</strong>',
+                        html: true
+                    });
+                    Vue.set(_this.checadores, _this.checadores.indexOf(_this.current_checador), response.checador);
+                    _this.telefonos = response.telefonos;
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        /*swal({
+                            type : 'error',
+                            title : '¡Error!',
+                            text : App.errorsToString(error.responseJSON)
+                        })*/
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
                 }
             });
         }
