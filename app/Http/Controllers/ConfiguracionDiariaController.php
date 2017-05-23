@@ -131,17 +131,15 @@ class ConfiguracionDiariaController extends Controller
         }
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
+    public function destroy(Request $request, $id)
     {
-        $configuracion = Configuracion::find($id);
-        $configuracion->delete();
+        if($request->type == 'ubicacion') {
+            $configuracion = Configuracion::find($id);
+            $configuracion->delete();
+            return response()->json(['success' => true]);
+        } else if($request->type == 'telefono') {
 
-        return response()->json(['success' => true]);
+
+        }
     }
 }

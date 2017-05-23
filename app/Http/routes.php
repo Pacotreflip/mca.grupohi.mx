@@ -70,6 +70,7 @@ Route::delete('centroscostos/{centroscostos}', 'CentrosCostosController@destroy'
 Route::get('usuarios/{usuarios}/origenes', 'OrigenesUsuariosController@index');
 Route::post('usuarios/{usuarios}/origenes/{origenes}', 'OrigenesUsuariosController@store');
 Route::get('usuarios', 'UserController@index');
+Route::patch('usuarios/{usuarios}', 'UserController@update');
 
 //Rutas de Viajes Netos
 Route::get('viajes_netos', 'ViajesNetosController@index')->name('viajes_netos.index');
@@ -224,3 +225,4 @@ Route::group(['prefix' => 'csv'],function () {
 });
 
 Route::get('detalle_configuracion', 'DetalleAdministracionController@index')->name('detalle.configuracion');
+Route::get('checkpermission/{permission}', 'UserController@checkpermission');

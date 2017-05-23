@@ -192,7 +192,7 @@ Vue.component('configuracion-diaria', {
         },
 
         eliminar:function (user) {
-            var url = App.host + '/configuracion-diaria/' + user.configuracion.id;
+            var url = App.host + '/configuracion-diaria/' + user.configuracion.id + '?type=ubicacion';
             $.ajax({
                 type: 'POST',
                 url: url,
@@ -288,9 +288,51 @@ Vue.component('configuracion-diaria', {
 
         /** Mostrar datos de ususario al que se le asignará un teléfono **/
         asignar_telefono: function (user) {
-            Vue.set(this, 'current_checador', user);
-            this.form.errors = [];
-            $('#telefonos_modal').modal('show');
+            var _this = this;
+            var url = App.host + '/checkpermission/editar-telefonos';
+            $.ajax({
+                type: 'GET',
+                url: url,
+                beforeSend: function () {
+
+                },
+                success: function(response) {
+                    if(response.has_permission) {
+                        $('#telefonos_modal').modal('show');
+                        Vue.set(_this, 'current_checador', user);
+                        if(_this.current_checador.telefono) {
+                            $('select[name=id_telefono]').val(_this.current_checador.telefono.id);
+                        } else {
+                            $('select[name=id_telefono]').val('');
+                        }
+                        _this.form.errors = [];
+                    } else {
+                        swal({
+                            type: 'info',
+                            title: '¡No es posible realizar la acción!',
+                            text: 'No cuenta con los permisos necesarios para <strong>Editar Teléfonos</strong><br> Por favor solicitelo con el asministrador de permisos',
+                            html: true
+                        });
+                    }
+                },
+                error: function (error) {
+                    if (error.status == 422) {
+                        swal({
+                         type : 'error',
+                         title : '¡Error!',
+                         text : App.errorsToString(error.responseJSON)
+                         });
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                }
+
+            });
+
         },
 
         /** Ocultar datos de ususario al que se le asignará un teléfono **/
@@ -313,7 +355,7 @@ Vue.component('configuracion-diaria', {
                 },
                 success: function (response) {
                     $('#telefonos_modal').modal('hide');
-                    Vue.set(this, 'current_user', null);
+
                     swal({
                         type : 'success',
                         title : '¡Configuración Correcta!',
@@ -321,7 +363,9 @@ Vue.component('configuracion-diaria', {
                         html: true
                     });
                     Vue.set(_this.checadores, _this.checadores.indexOf(_this.current_checador), response.checador);
+
                     _this.telefonos = response.telefonos;
+                    Vue.set(_this, 'current_user', null);
                 },
                 error: function (error) {
                     if (error.status == 422) {
@@ -330,6 +374,66 @@ Vue.component('configuracion-diaria', {
                             title : '¡Error!',
                             text : App.errorsToString(error.responseJSON)
                         })*/
+                        App.setErrorsOnForm(_this.form, error.responseJSON);
+                    } else if (error.status == 500) {
+                        swal({
+                            type: 'error',
+                            title: '¡Error!',
+                            text: App.errorsToString(error.responseText)
+                        });
+                    }
+                },
+                complete: function () {
+                    _this.guardando = false;
+                }
+            });
+        },
+
+        confirmar_quitar_telefono: function(e) {
+            e.preventDefault();
+
+            swal({
+                title: "¡Quitar Teléfono!",
+                text: "¿Esta seguro de que desea quitar el teléfono para el usuario <strong>"+this.current_checador.nombre+"</strong>?",
+                type: "warning",
+                showCancelButton: true,
+                html: true,
+                confirmButtonText: "Si, quitar",
+                cancelButtonText: "No, cancelar",
+                confirmButtonColor: "#ec6c62"
+            }, () => this.quitar_telefono());
+        },
+
+        quitar_telefono: function () {
+
+
+            var _this = this;
+            var url = App.host + '/usuarios/' + _this.current_checador.id + '?type=telefono';
+            var info = _this.current_checador.telefono.info;
+
+            $.ajax({
+                type: 'POST',
+                url: url,
+                data: {
+                    _method : 'PATCH'
+                },
+                beforeSend: function () {
+                    _this.guardando = true;
+                },
+                success: function (response) {
+                    $('#telefonos_modal').modal('hide');
+                    Vue.set(_this, 'current_user', null);
+                    swal({
+                        type : 'success',
+                        title : '¡Configuración Borrada!',
+                        text : 'El Teléfono <strong>' + info +  '</strong> se desconfiguro correctamente para el checador <br><strong>' + response.checador.nombre + '</strong>',
+                        html: true
+                    });
+                    Vue.set(_this.checadores, _this.checadores.indexOf(_this.current_checador), response.checador);
+                    _this.telefonos = response.telefonos;
+                },
+                error: function (error) {
+                    if (error.status == 422) {
                         App.setErrorsOnForm(_this.form, error.responseJSON);
                     } else if (error.status == 500) {
                         swal({
