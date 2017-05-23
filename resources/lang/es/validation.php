@@ -176,7 +176,8 @@ return [
         'imei'                  => 'IMEI',
         'id_impresora'          => 'Impresora',
         'linea'                 => 'Linea Telefónica',
-        'id_telefono'           => 'Teléfono'
+        'id_telefono'           => 'Teléfono',
+        'display_name'          => 'Nombre del Rol'
     ],
 
 ];

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Models\Telefono;
+use App\Facades\Context;
 use Illuminate\Database\Eloquent\Model;
 
 class User_1 extends User
@@ -29,5 +30,11 @@ class User_1 extends User
             ->orderby('igh.usuario.apaterno','asc');
     */
             }
+    public function scopeHabilitados($query){
+
+        return $query->join('sca_configuracion.usuarios_proyectos as scaconf','igh.usuario.idusuario','=','scaconf.id_usuario_intranet')
+            ->where('scaconf.id_proyecto','=',Context::getId())
+            ->select('igh.usuario.*');
+    }
 
 }

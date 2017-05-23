@@ -43,7 +43,7 @@ class CSV
             $csv->insertOne($this->headers);
         }
         foreach ($this->items as $item) {
-            $csv->insertOne($item->toArray());
+            $csv->insertOne(is_array($item) ? $item : $item->toArray());
         }
         $csv->setOutputBOM(Reader::BOM_UTF8);
         $csv->output("{$name}.csv");
