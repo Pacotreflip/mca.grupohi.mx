@@ -14,6 +14,7 @@ Vue.component('configuracion-diaria', {
             perfiles   : [],
             telefonos  : [],
             current_checador : null,
+            current_telefono: null,
             form: {
                 errors : []
             },
@@ -43,6 +44,17 @@ Vue.component('configuracion-diaria', {
                 }
                 return false;
             });
+        },
+
+        telefonos_select: function () {
+            var result = [];
+            this.telefonos.forEach(function (telefono) {
+                result.push(telefono);
+            });
+            if(this.current_checador.telefono) {
+                result.push(this.current_checador.telefono);
+            }
+            return result;
         }
     },
 
@@ -298,13 +310,9 @@ Vue.component('configuracion-diaria', {
                 },
                 success: function(response) {
                     if(response.has_permission) {
-                        $('#telefonos_modal').modal('show');
                         Vue.set(_this, 'current_checador', user);
-                        if(_this.current_checador.telefono) {
-                            $('select[name=id_telefono]').val(_this.current_checador.telefono.id);
-                        } else {
-                            $('select[name=id_telefono]').val('');
-                        }
+                        Vue.set(_this, 'current_telefono', user.telefono ? user.telefono : {id: '', info: '', imei: ''});
+                        $('#telefonos_modal').modal('show');
                         _this.form.errors = [];
                     } else {
                         swal({
@@ -329,6 +337,12 @@ Vue.component('configuracion-diaria', {
                             text: App.errorsToString(error.responseText)
                         });
                     }
+                },
+                complete: function (response) {
+                    if(response.status == 200) {
+                        console.log(response.has_permission);
+
+                    }
                 }
 
             });
@@ -338,6 +352,7 @@ Vue.component('configuracion-diaria', {
         /** Ocultar datos de ususario al que se le asignará un teléfono **/
         cancelar_asignacion: function () {
             Vue.set(this, 'current_checador', null);
+            Vue.set(this, 'current_telefono', null);
             $('#telefonos_modal').modal('hide');
         },
         confirmar_asignacion: function (e) {

@@ -144,16 +144,15 @@
                                             <div class="form-group">
                                                 <label>TELÉFONO</label>
                                                 <span v-if="current_checador.telefono">
-                                                    <select name="id_telefono" class="form-control">
+                                                    <select v-model="current_telefono.id" name="id_telefono" class="form-control">
                                                         <option value>-- SELECCIONE --</option>
-                                                        <option selected v-bind:value="current_checador.telefono.id">@{{ current_checador.telefono.info }}</option>
-                                                        <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ telefono.info  }}</option>
+                                                        <option v-for="telefono in telefonos_select" v-bind:value="telefono.id">@{{ telefono.info  }}</option>
                                                     </select>
                                                 </span>
                                                 <span v-else>
-                                                    <select name="id_telefono" class="form-control">
-                                                        <option selected value>-- SELECCIONE --</option>
-                                                        <option v-for="telefono in telefonos" v-bind:value="telefono.id">@{{ telefono.info }}</option>
+                                                    <select v-model="current_telefono.id" name="id_telefono" class="form-control">
+                                                        <option value>-- SELECCIONE --</option>
+                                                        <option v-for="telefono in telefonos_select" v-bind:value="telefono.id">@{{ telefono.info }}</option>
                                                     </select>
                                                 </span>
                                             </div>
