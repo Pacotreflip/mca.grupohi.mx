@@ -208,3 +208,39 @@ Route::group(['prefix' => 'csv'],function () {
     Route::get('impresoras', 'CSVController@impresoras')->name('csv.impresoras');
     Route::get('telefonos', 'CSVController@telefonos')->name('csv.telefonos');
 });
+
+/*
+ * API Routes
+ */
+$api = app('Dingo\Api\Routing\Router');
+$api->version('v1', ['middleware' => 'cors'], function($api) {
+
+    // Rutas de API
+    $api->post('authenticate', 'App\Http\Controllers\API\AuthController@authenticate');
+    $api->post('tags_nuevos/{usuario}', 'App\Http\Controllers\API\TagsController@store');
+
+    $api->get('ID/{id}',function($id){
+        echo 'ID: '.$id;
+    });
+    //Authenticate Routes
+    /*$api->post('authenticate', 'Ghi\Http\Controllers\Api\Auth\AuthController@authenticate');
+
+    $api->get('logout', 'Ghi\Http\Controllers\Api\Auth\AuthController@getLogout');
+
+
+    $api->get('test', 'Ghi\Http\Controllers\Api\TestController@index');
+
+    $api->get('almacenes', 'Ghi\Http\Controllers\Api\AlmacenesController@lists');
+    
+    /* Rutas de sincronizacion de actividad y actividades con dispositivos móviles*/
+    /*$api->post('reporte-actividades', 'Ghi\Http\Controllers\Api\ReportesActividadController@store');  // recibe la actividad 
+
+    $api->post('reporte-actividades/{idReporte}/actividades', 'Ghi\Http\Controllers\Api\ActividadesController@store'); // recibe las actividades
+
+    // Rutas para la validación de sesiones de usuarios en los dispositivos móviles
+    $api->get('sesion-movil/{usuario}', 'Ghi\Http\Controllers\Api\SesionController@show');
+
+    $api->patch('sesion-movil/{usuario}', 'Ghi\Http\Controllers\Api\SesionController@update');
+
+    $api->post('sesion-movil', 'Ghi\Http\Controllers\Api\SesionController@store');*/
+});
