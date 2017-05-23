@@ -17,7 +17,9 @@
         <div class="tab-content">
             <div id="usuario_permiso" class="tab-pane fade in active">
                 <div   style="overflow-x: scroll;">
-                    <a href="{{ route('csv.rol_permiso') }}" style="margin-right: 5px"
+                    
+                       
+                       <a href="{{ route('csv.usuario_rol') }}" style="margin-right: 5px"
                        class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>
 
                     <table class="table table-striped table-bordered small">
@@ -46,8 +48,10 @@
             </div>
             <div id="permiso_rol" class="tab-pane fade">
                 <div class="row">
-                <a href="{{ route('csv.usuario_rol') }}" style="margin-right: 5px" class="btn btn-default pull-right"><i
-                            class="fa fa-file-excel-o"></i> EXCEL</a>
+                
+                <a href="{{ route('csv.rol_permiso') }}" style="margin-right: 5px"
+                       class="btn btn-default pull-right"><i class="fa fa-file-excel-o"></i> EXCEL</a>            
+                      
                 </div>
 
                 <div style="overflow-x: scroll;">

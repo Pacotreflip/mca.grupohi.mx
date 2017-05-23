@@ -22,7 +22,7 @@ use App\Models\Tiro;
 use App\Models\Impresora;
 use App\Models\Telefono;
 use Illuminate\Support\Facades\DB;
-
+use Illuminate\Support\Facades\Auth;
 
 use App\User_1;
 use App\Models\Entrust\Permission;
@@ -363,6 +363,63 @@ class CSVController extends Controller
     }
     public function usuario_rol()
     {
+        
+         $usuarios = UsuarioPerfilesTransformer::transform(User_1::with('roles')->habilitados()->get());
+        $permisos = Permission::all();
+        $roles = Role::with('perms')->get();
+
+        $rol_usuario = array();
+        $role_usuario_vista = array();
+        $permisos_rol_vista= array();
+
+        ////////////Rol usuario
+        foreach ($usuarios as $usuario )
+        {
+            $rol_usuario = array();
+            if(Auth::user()->hasRole('administrador-sistema')){
+                array_push($rol_usuario, $usuario['id']);
+            }
+            array_push($rol_usuario, $usuario['nombre']);
+            if (count($usuario['roles']) > 0)
+            {
+                foreach ($roles as $rol) {
+                    $aux = false;
+                    foreach ($usuario['roles'] as $rolAsignado) {
+                        if ($rol->id == $rolAsignado->id) {
+                            $aux = true;
+                        }
+                    }
+                    array_push($rol_usuario, $aux);
+                }
+            } else
+            {
+                $a = 0;
+                while (count($roles) > $a) {
+                    array_push($rol_usuario, '');
+                    $a++;
+                }
+            }
+            $data =  $rol_usuario;
+            array_push($role_usuario_vista, $data);
+        }
+        $headers = [];
+         
+        if(Auth::user()->hasRole('administrador-sistema')){
+            array_push($headers, 'Id');
+        }
+        array_push($headers, 'Usuario');
+        foreach ($roles as $rol) {
+            array_push($headers, $rol->display_name);
+        }
+        $items = $role_usuario_vista;
+        $csv = new CSV($headers,$items);
+        $csv->generate('usuarios-roles');
+
+
+    }
+
+    public function rol_permiso()
+    {
         $usuarios = UsuarioPerfilesTransformer::transform(User_1::with('roles')->habilitados()->get());
         $permisos = Permission::all();
         $roles = Role::with('perms')->get();
@@ -409,59 +466,9 @@ class CSVController extends Controller
 
         $items = $permisos_rol_vista;
         $csv = new CSV($headers,$items);
-        $csv->generate('Usuarios_rol');
+        $csv->generate('roles-permisos');
 
-
-
-    }
-
-    public function rol_permiso()
-    {
-
-        $usuarios = UsuarioPerfilesTransformer::transform(User_1::with('roles')->habilitados()->get());
-        $permisos = Permission::all();
-        $roles = Role::with('perms')->get();
-
-        $rol_usuario = array();
-        $role_usuario_vista = array();
-        $permisos_rol_vista= array();
-
-        ////////////Rol usuario
-        foreach ($usuarios as $usuario )
-        {
-            $rol_usuario = array();
-
-            array_push($rol_usuario, $usuario['nombre']);
-            if (count($usuario['roles']) > 0)
-            {
-                foreach ($roles as $rol) {
-                    $aux = false;
-                    foreach ($usuario['roles'] as $rolAsignado) {
-                        if ($rol->id == $rolAsignado->id) {
-                            $aux = true;
-                        }
-                    }
-                    array_push($rol_usuario, $aux);
-                }
-            } else
-            {
-                $a = 0;
-                while (count($roles) > $a) {
-                    array_push($rol_usuario, '');
-                    $a++;
-                }
-            }
-            $data =  $rol_usuario;
-            array_push($role_usuario_vista, $data);
-        }
-        $headers = [];
-        array_push($headers, 'Usuario');
-        foreach ($roles as $rol) {
-            array_push($headers, $rol->display_name);
-        }
-        $items = $role_usuario_vista;
-        $csv = new CSV($headers,$items);
-        $csv->generate('Rol_permisos');
+       
 
     }
 
@@ -481,6 +488,9 @@ class CSVController extends Controller
 
         foreach ($usuarios as $usuario) {
             $usuario_Permisos=array();
+            if(Auth::user()->hasRole('administrador-sistema')){
+                array_push($usuario_Permisos, $usuario['id']);
+            }
             array_push($usuario_Permisos, $usuario['nombre']);
             $permisosActuales = DB::connection('sca')->select('
                            Select distinct p.id,p.display_name FROM 
@@ -518,14 +528,17 @@ class CSVController extends Controller
         }
 
         $headers = [];
-        array_push($headers, 'Rol');
+        if(Auth::user()->hasRole('administrador-sistema')){
+            array_push($headers, 'Id');
+        }
+        array_push($headers, 'Usuario');
         foreach ($permisos as $permiso) {
             array_push($headers, $permiso->display_name);
         }
 
         $items = $usuario_Permisos_vista;
         $csv = new CSV($headers,$items);
-        $csv->generate('Usuario-permiso');
+        $csv->generate('usuarios-permisos');
 
     }
 
