@@ -48,12 +48,13 @@ Vue.component('configuracion-diaria', {
 
         telefonos_select: function () {
             var result = [];
-            this.telefonos.forEach(function (telefono) {
-                result.push(telefono);
-            });
             if(this.current_checador.telefono) {
                 result.push(this.current_checador.telefono);
             }
+            this.telefonos.forEach(function (telefono) {
+                result.push(telefono);
+            });
+
             return result;
         }
     },
