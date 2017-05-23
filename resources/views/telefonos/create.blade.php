@@ -12,15 +12,15 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="imei">IMEI(*)</label>
-                <input type="number" name="imei" maxlength="20" class="form-control">
+                <input type="number" name="imei" maxlength="20" min="0" class="form-control">
             </div>
         </div>
 
         <!-- Linea Tlefónica -->
         <div class="col-md-6">
             <div class="form-group">
-                <label for="linea">LINEA TELEFÓNICA <strong>10 DÍGITOS</strong> (*)</label>
-                <input name="linea" type="number" maxlength="10" class="form-control">
+                <label for="tel">LINEA TELEFÓNICA <strong>10 DÍGITOS</strong> (*)</label>
+                <input name="linea" type="number" maxlength="10" min="0" class="form-control">
             </div>
         </div>
     </div>

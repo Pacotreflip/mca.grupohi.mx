@@ -1,7 +1,9 @@
 @extends('layout')
 @section('content')
     <h1>TELÉFONOS
+        @permission('editar-telefonos')
         <a href="{{ route('telefonos.edit', $telefono) }}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> Editar</a>
+        @endpermission
     </h1>
     {!! Breadcrumbs::render('telefonos.show', $telefono) !!}
     <hr>

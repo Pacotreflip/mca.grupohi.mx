@@ -1,7 +1,9 @@
 @extends('layout')
 @section('content')
     <h1>IMPRESORAS
+        @permission('editar-impresoras')
         <a href="{{route('impresoras.edit', $impresora)}}" class="btn btn-info pull-right"><i class="fa fa-edit"></i> Editar</a>
+    @endpermission
     </h1>
     {!! Breadcrumbs::render('impresoras.show', $impresora) !!}
     <hr>

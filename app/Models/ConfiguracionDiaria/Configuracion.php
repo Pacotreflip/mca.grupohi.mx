@@ -11,7 +11,15 @@ class Configuracion extends Model
 {
     protected $connection = 'sca';
     protected $table = 'configuracion_diaria';
-    public $timestamps = false;
+    protected $fillable = [
+        'id_usuario',
+        'tipo',
+        'id_perfil',
+        'registro',
+        'turno',
+        'id_origen',
+        'id_tiro'
+    ];
 
     public function user() {
         return $this->belongsTo(User::class, 'id_usuario');

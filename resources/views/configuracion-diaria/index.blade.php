@@ -2,9 +2,8 @@
 
 @section('content')
     <h1>CONFIGURACIÓN DIARIA
-        <a href="{{ route('csv.configuracion-checadores') }}" class="btn btn-info pull-right"><i class="fa fa-file-excel-o"></i> Descargar </a>
+        <a href="{{ route('csv.configuracion-checadores') }}" class="btn btn-success pull-right"><i class="fa fa-file-excel-o"></i> Descargar Excel </a>
         <a href="{{ route('pdf.configuracion-diaria')}}"   target="_blank" style="margin-right: 5px" class="btn btn-info pull-right"><i class="fa fa-file-pdf-o"></i> Descargar PDF</a>
-
     </h1>
     {!! Breadcrumbs::render('configuracion-diaria.index') !!}
     <hr>
@@ -33,7 +32,7 @@
                                     <th style="text-align: center">Turno</th>
                                     <th style="text-align: center">Guardar</th>
                                     <th style="text-align: center">Limpiar Configuración</th>
-                                    <th style="text-align: center">Eliminar Checador</th>
+                                    <th style="text-align: center">Quitar Permiso de Checador</th>
                                 </tr>
                                 </thead>
                                 <tbody>
@@ -41,7 +40,16 @@
                                     <td style="white-space: nowrap">@{{ index + 1 }}</td>
                                     <td style="white-space: nowrap">@{{ user.nombre  }}</td>
                                     <td style="white-space: nowrap">@{{ user.usuario }}</td>
-                                    <td style="white-space: nowrap">@{{ user.telefono }}</td>
+                                    @permission('editar-telefonos')
+                                    <td>
+                                        <span v-if="user.telefono">
+                                            <a title="Cambiar" style="text-decoration: underline" v-on:click="asignar_telefono(user)">@{{ user.telefono.info  }}</a>
+                                        </span>
+                                        <span v-else>
+                                            <a title="Asignar" style="text-decoration: underline" v-on:click="asignar_telefono(user)">ASIGNAR</a>
+                                        </span>
+                                    </td>
+                                    @endpermission
                                     <td style="white-space: nowrap">
                                         <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>
@@ -70,7 +78,7 @@
                                         </select>
                                     </td>
                                     <td style="white-space: nowrap" v-else>
-                                       <select class="form-control" disabled="disabled">
+                                       <select class="form-control input-sm" disabled="disabled">
                                            <option value>-- SELECCIONE --</option>
                                        </select>
                                     </td>
@@ -102,6 +110,62 @@
                                 </tr>
                                 </tbody>
                             </table>
+                        </div>
+                    </div>
+                </div>
+                <!-- Modal Configuración del Teléfono -->
+                <div class="modal fade" id="telefonos_modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                                <h4 class="modal-title" id="myModalLabel">
+                                    <span v-if="current_checador && current_checador.telefono">
+                                        CAMBIAR TELÉFONO
+                                    </span>
+                                    <span v-else>
+                                        ASIGNAR TELÉFONO
+                                    </span>
+                                </h4>
+                            </div>
+                            {!! Form::open(['id' => 'asignar_telefono_form']) !!}
+                            <div class="modal-body">
+                                <app-errors v-bind:form="form"></app-errors>
+                                <span v-if="current_checador">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>CHECADOR</label>
+                                                <p>@{{ current_checador.nombre }}</p>
+                                                <input type="hidden" name="id_checador" v-bind:value="current_checador.id">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label>TELÉFONO</label>
+                                                <span v-if="current_checador.telefono">
+                                                    <select v-model="current_telefono.id" name="id_telefono" class="form-control">
+                                                        <option value>-- SELECCIONE --</option>
+                                                        <option v-for="telefono in telefonos_select" v-bind:value="telefono.id">@{{ telefono.info  }}</option>
+                                                    </select>
+                                                </span>
+                                                <span v-else>
+                                                    <select v-model="current_telefono.id" name="id_telefono" class="form-control">
+                                                        <option value>-- SELECCIONE --</option>
+                                                        <option v-for="telefono in telefonos_select" v-bind:value="telefono.id">@{{ telefono.info }}</option>
+                                                    </select>
+                                                </span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </span>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" v-on:click="cancelar_asignacion">Cerrar</button>
+                                <button v-if="current_checador && current_checador.telefono" type="button" class="btn btn-warning" v-on:click="confirmar_quitar_telefono">Quitar Teléfono</button>
+                                <button type="submit" class="btn btn-success" v-on:click="confirmar_asignacion">Asignar</button>
+                            </div>
+                            {!! Form::close() !!}
                         </div>
                     </div>
                 </div>
