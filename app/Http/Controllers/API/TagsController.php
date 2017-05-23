@@ -37,7 +37,7 @@ class TagsController extends Controller
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Almacena los registros de los TAGS enviados desde el dispositivo Móvil
      *
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
