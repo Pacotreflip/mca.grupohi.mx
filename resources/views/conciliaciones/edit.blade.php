@@ -159,10 +159,9 @@
                                     <span  v-if="conciliacion.es_historico==1">
                                     <span v-if="conciliacion.volumen_sf<conciliacion.volumen_pagado_sf" class="label label-danger pull-right">Volumen pagado mayor a volumen conciliado</span>    
                                     <strong>Volúmen Pagado: </strong>@{{ conciliacion.volumen_pagado }} m<sup>3</sup><br>
-                                    </span>
-                                    <span  v-if="conciliacion.es_historico==1">
+                                    
                                     <span v-if="conciliacion.importe_sf<conciliacion.importe_pagado_sf" class="label label-danger pull-right">Importe pagado mayor a importe conciliado</span>    
-                                    <strong >Importe Pagado: </strong>$ @{{ conciliacion.importe_pagado }}<br>
+                                    <strong >Importe Pagado: </strong>$ @{{ conciliacion.importe_pagado }}<br>                                    
                                     </span>
                                     <hr>
                                     <strong>Rango de Fechas: </strong>@{{ conciliacion.rango }}<br>

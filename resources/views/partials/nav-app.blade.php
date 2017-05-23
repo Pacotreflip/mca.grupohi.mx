@@ -122,7 +122,6 @@
           <ul class="dropdown-menu" role="menu">
               <li><a href="{{ route('administracion.roles_permisos') }}">Configuración general</a></li>
               <li><a href="{{ route('detalle.configuracion') }}">Detalle configuración</a></li>
-
           </ul>
       </li>
   @endif

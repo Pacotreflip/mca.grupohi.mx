@@ -20,6 +20,8 @@ class Conciliacion extends Model
     use \Laracasts\Presenter\PresentableTrait;
     
     const FECHA_HISTORICO = 20170409;
+    const HOLGURA_IMPORTE = 50000;
+    const HOLGURA_VOLUMEN = 175;
 
     protected $connection = 'sca';
     protected $table = 'conciliacion';
@@ -312,14 +314,14 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
-            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
-                throw new \Exception("No se puede cerrar la conciliaciòn por que el importe y volumen pagados son mayores al importe y volumen conciliados");
+            if ( ($this->es_historico && ($this->ImportePagado - Conciliacion::HOLGURA_IMPORTE)>$this->importe && ($this->VolumenPagado - Conciliacion::HOLGURA_VOLUMEN)>$this->volumen)) {
+                throw new \Exception("No se puede cerrar la conciliación por que el importe y volumen pagados son mayores al importe y volumen conciliados");
             }
-            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
-                throw new \Exception("No se puede cerrar la conciliaciòn por que el importe pagado es mayor al importe conciliado");
+            if ( ($this->es_historico && ($this->ImportePagado - Conciliacion::HOLGURA_IMPORTE)>$this->importe && ($this->VolumenPagado - Conciliacion::HOLGURA_VOLUMEN)<=$this->volumen)) {
+                throw new \Exception("No se puede cerrar la conciliación por que el importe pagado es mayor al importe conciliado");
             }
-            if ( ($this->es_historico && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
-                throw new \Exception("No se puede cerrar la conciliaciòn por que el volumen pagado es mayor al volumen conciliado");
+            if ( ($this->es_historico && ($this->ImportePagado - Conciliacion::HOLGURA_IMPORTE)<=$this->importe && ($this->VolumenPagado - Conciliacion::HOLGURA_VOLUMEN)>$this->volumen)) {
+                throw new \Exception("No se puede cerrar la conciliación por que el volumen pagado es mayor al volumen conciliado");
             }
             if ($this->estado != 0) {
                 throw new \Exception("No se puede cerrar la conciliación ya que su estado actual es " . $this->estado_str);
@@ -369,13 +371,13 @@ class Conciliacion extends Model
         DB::connection('sca')->beginTransaction();
 
         try {
-            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado>$this->volumen)) {
+            if ( ($this->es_historico && ($this->ImportePagado - Conciliacion::HOLGURA_IMPORTE)>$this->importe && ($this->VolumenPagado - Conciliacion::HOLGURA_VOLUMEN)>$this->volumen)) {
                 throw new \Exception("No se puede aprobar la conciliaciòn por que el importe y volumen pagados son mayores al importe y volumen conciliados");
             }
-            if ( ($this->es_historico && $this->ImportePagado>$this->importe && $this->VolumenPagado<=$this->volumen)) {
+            if ( ($this->es_historico && ($this->ImportePagado - Conciliacion::HOLGURA_IMPORTE)>$this->importe && ($this->VolumenPagado - Conciliacion::HOLGURA_VOLUMEN)<=$this->volumen)) {
                 throw new \Exception("No se puede aprobar la conciliaciòn por que el importe pagado es mayor al importe conciliado");
             }
-            if ( ($this->es_historico && $this->ImportePagado<=$this->importe && $this->VolumenPagado>$this->volumen)) {
+            if ( ($this->es_historico && ($this->ImportePagado - Conciliacion::HOLGURA_IMPORTE)<=$this->importe && ($this->VolumenPagado - Conciliacion::HOLGURA_VOLUMEN)>$this->volumen)) {
                 throw new \Exception("No se puede aprobar la conciliaciòn por que el volumen pagado es mayor al volumen conciliado");
             }
             if ($this->estado != 1) {
