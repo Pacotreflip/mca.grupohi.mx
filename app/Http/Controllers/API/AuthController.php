@@ -12,6 +12,7 @@ use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Session;
 use Auth;
+use DB;
 
 class AuthController extends Controller
 {
@@ -59,6 +60,8 @@ class AuthController extends Controller
     public function authenticate(Request $request)
     {
         $credentials = $request->only('usuario', 'clave');
+
+        // Validacion de los datos de ingreso del usuario
         try {
             if (!$token = JWTAuth::attempt($credentials)) {
                 return response()->json(['error' => 'Error en iniciar sesion. No se encontraron los datos que especifica.', 'code' => 200], 200);
@@ -69,19 +72,29 @@ class AuthController extends Controller
 
         $user = Auth::user();
         $token = JWTAuth::fromUser($user);
-        $proyectos = Proyecto::select('id_proyecto', 'descripcion')->get();
         $usrRegistrado = collect(Auth::user()->toArray())->only('idusuario','nombre', 'apaterno', 'amaterno');
+        
+        // Validación de que el usuario tiene permisos para utilizar el proyecto de regristro de Tags
+       $permisos = DB::table('sca_configuracion.permisos_alta_tag')
+                    ->whereRaw('(TIMESTAMP(vigencia) > NOW() OR vigencia is null)')
+                    ->where('idusuario',$usrRegistrado["idusuario"] )->get();
+        if(!$permisos){
+            return response()->json(['error' => 'No tiene los privilegios para dar de alta tags en los proyectos.', 'code' => 200], 200);
+        }
+
+        // Preparación del JSON de respuesta en caso de haber pasado todas las validaciones necesarias
         $nombre = $usrRegistrado['nombre'].' '.$usrRegistrado['apaterno'].' '.$usrRegistrado['amaterno'];
         $resp = response()->json(array_merge([
             'IdUsuario' => $usrRegistrado['idusuario'],
             'Nombre'    => $nombre,
-            'proyectos' => $proyectos
+            'proyectos' => Proyecto::select('id_proyecto', 'descripcion')->get()
         ],
         compact('token')
         ));
 
         return $resp;
     }
+    
  /**
      * @api {get} /api/logout Logout
      * @apiVersion 1.0.0
