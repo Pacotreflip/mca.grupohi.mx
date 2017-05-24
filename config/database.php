@@ -55,8 +55,8 @@ return [
         'intranet' => [
             'driver'    => 'mysql',
             'host'      => env('DB_HOST_INTRANET', 'localhost'),
-            'database'  => env('DB_DATABASE_INTRANET', 'forge'),
-            'username'  => env('DB_USERNAME_INTRANET', 'forge'),
+            'database'  => env('DB_DATABASE_INTRANET', 'root'),
+            'username'  => env('DB_USERNAME_INTRANET', 'root'),
             'password'  => env('DB_PASSWORD_INTRANET', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',
@@ -67,8 +67,8 @@ return [
         'sca' => [
             'driver'    => 'mysql',
             'host'      => env('DB_HOST_SCA', 'localhost'),
-            'database'  => env('DB_DATABASE_SCA', 'forge'),
-            'username'  => env('DB_USERNAME_SCA', 'forge'),
+            'database'  => env('DB_DATABASE_SCA', 'root'),
+            'username'  => env('DB_USERNAME_SCA', 'root'),
             'password'  => env('DB_PASSWORD_SCA', ''),
             'charset'   => 'utf8',
             'collation' => 'utf8_unicode_ci',

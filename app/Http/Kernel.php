@@ -32,6 +32,10 @@ class Kernel extends HttpKernel
         'context' => \App\Http\Middleware\RedirectIfContextNotSet::class,
         'role' => \Zizaco\Entrust\Middleware\EntrustRole::class,
         'permission' => \Zizaco\Entrust\Middleware\EntrustPermission::class,
-        'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class
+        'ability' => \Zizaco\Entrust\Middleware\EntrustAbility::class,
+        'api.context'   => \App\Http\Middleware\VerifyContextApi::class,
+        'jwt.auth'      => \Tymon\JWTAuth\Middleware\GetUserFromToken::class,
+        'jwt.refresh'   => \Tymon\JWTAuth\Middleware\RefreshToken::class,
+        'cors'          => \App\Http\Middleware\Cors::class,
     ];
 }
