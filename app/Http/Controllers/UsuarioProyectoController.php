@@ -72,32 +72,21 @@ class UsuarioProyectoController extends Controller
     {
 
         $usuarios = DB::connection('sca')
-            ->select(' select
-                        up.id_usuario as idusuario,
+            ->select('select distinct
+                        u.idusuario,
                         u.apaterno,
                         u.amaterno,
                         u.nombre
                         from 
-                        igh.usuario u
-                        inner join sca_configuracion.usuarios_proyectos up
-                        on(u.idusuario=up.id_usuario_intranet)
-                        inner join sca_configuracion.proyectos p on(up.id_proyecto=p.id_proyecto)
-                        inner join igh.usuario ureg on(ureg.idusuario=up.registro)
-                        where p.nuevo_esquema=1 
-                        order by u.nombre asc,u.apaterno asc,u.amaterno asc 
-                           ');
+                        igh.usuario u where usuario_estado=2
+                        order by u.nombre asc,u.apaterno asc,u.amaterno asc');
         $user=auth()->user();
         $isAdmin=$user->hasRole('administrador-sistema');
         $proyectos = Proyecto::where('nuevo_esquema', '=', 1)->orderBy('descripcion', 'asc')->get();
         if(!$isAdmin){
-            $usuarios = User_1::with('roles')->habilitados()->orderBy('nombre')->orderBy('apaterno')->orderBy('amaterno')->get();
             $proyectos = Proyecto::where('nuevo_esquema', '=', 1)->where('id_proyecto','=',Context::getId())->orderBy('descripcion', 'asc')->get();
          }
-       
         $catalogos = ['usuarios' => $usuarios, 'proyectos' => $proyectos];
-       
-       
-       
         return view('usuarios_proyectos.create')->with("catalogos", $catalogos);
     }
 
@@ -123,15 +112,14 @@ class UsuarioProyectoController extends Controller
                 ->withInput($request->input());
         }
         $usuario = DB::connection('sca')
-            ->select('Select up.id_usuario_intranet
+            ->select('Select up.id_usuario
                       from sca_configuracion.usuarios_proyectos  up 
                       where up.id_usuario_intranet=' . $request->id_usuario . ' 
                       and id_proyecto=' . $request->id_proyecto);
 
 
         if ($usuario) {
-
-            $save = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->where('id_usuario', '=',$usuario[0]->id_usuario_intranet)->update([
+            $save = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->where('id_usuario', '=',$usuario[0]->id_usuario)->update([
                 'motivo' => "",
                 'estatus' => 1]);
         }else{
@@ -155,24 +143,14 @@ class UsuarioProyectoController extends Controller
     public function show($id)
     {
         $usuarios = DB::connection('sca')
-            ->select('
-                        select distinct
-                        up.id_usuario,
-                        up.id_usuario_intranet,
-                        up.id_proyecto, 
-                        concat (u.nombre,\' \',u.apaterno,\' \',u.amaterno) as nombre,
-                        p.descripcion as proyecto,
-                        up.created_at,
-                        up.estatus,
-                        concat (ureg.nombre,\' \',ureg.apaterno,\' \',ureg.amaterno) as registro
+            ->select('select distinct
+                        u.idusuario,
+                        u.apaterno,
+                        u.amaterno,
+                        u.nombre
                         from 
-                        igh.usuario u
-                        inner join sca_configuracion.usuarios_proyectos up
-                        on(u.idusuario=up.id_usuario_intranet)
-                        inner join sca_configuracion.proyectos p on(up.id_proyecto=p.id_proyecto)
-                        inner join igh.usuario ureg on(ureg.idusuario=up.registro)
-                        where p.nuevo_esquema=1 and up.id_usuario=' . $id . '
-                        order by p.descripcion, u.nombre asc,u.apaterno asc,u.amaterno asc 
+                        igh.usuario u where usuario_estado=2
+                        order by u.nombre asc,u.apaterno asc,u.amaterno asc
                            ');
 
 
@@ -188,26 +166,20 @@ class UsuarioProyectoController extends Controller
     public function edit($id)
     {
         $usuarios = DB::connection('sca')
-            ->select(' select distinct
+            ->select('select distinct
                         u.idusuario,
                         u.apaterno,
                         u.amaterno,
                         u.nombre
                         from 
-                        igh.usuario u
-                        inner join sca_configuracion.usuarios_proyectos up
-                        on(u.idusuario=up.id_usuario_intranet)
-                        inner join sca_configuracion.proyectos p on(up.id_proyecto=p.id_proyecto)
-                        inner join igh.usuario ureg on(ureg.idusuario=up.registro)
-                        where p.nuevo_esquema=1 
-                        order by u.nombre asc,u.apaterno asc,u.amaterno asc 
+                        igh.usuario u where usuario_estado=2
+                        order by u.nombre asc,u.apaterno asc,u.amaterno asc
                            ');
         $user=auth()->user();
         $proyectos = Proyecto::where('nuevo_esquema', '=', 1)->orderBy('descripcion', 'asc')->get();
         $isAdmin=$user->hasRole('administrador-sistema');
         if(!$isAdmin) {
-            $usuarios = User_1::with('roles')->habilitados()->orderBy('nombre')->orderBy('apaterno')->orderBy('amaterno')->get();
-            $proyectos = Proyecto::where('nuevo_esquema', '=', 1)->where('id_proyecto', '=', Context::getId())->orderBy('descripcion', 'asc')->get();
+             $proyectos = Proyecto::where('nuevo_esquema', '=', 1)->where('id_proyecto', '=', Context::getId())->orderBy('descripcion', 'asc')->get();
         }
         $actual = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->where('id_usuario', '=', $id)->get();
 

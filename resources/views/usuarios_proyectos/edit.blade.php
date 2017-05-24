@@ -14,7 +14,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="id_proyecto">Proyecto(*)</label>
-                <select name="id_proyecto" class="form-control" >
+                <select name="id_proyecto" class="form-control comboBusqueda" >
                     <option value="">[--SELECCIONE--]</option>
                     @foreach($catalogos['proyectos'] as $proyecto)
                         <option value="{{ $proyecto->id_proyecto}}"  @if($catalogos['actual'][0]->id_proyecto==$proyecto->id_proyecto)selected @endif >{{$proyecto->descripcion}}</option>
@@ -27,7 +27,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="id_usuario">Usuario (*)</label>
-                <select name="id_usuario" class="form-control select_tel_imp">
+                <select name="id_usuario" class="form-control comboBusqueda">
                     <option value="">[--SELECCIONE--]</option>
 
                     @foreach($catalogos['usuarios']  as $usuario)
@@ -67,5 +67,7 @@
                 }, () => form.submit());
             })
         });
+
+        $('.comboBusqueda').select2();
     </script>
 @endsection

@@ -13,10 +13,10 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="id_proyecto">Proyecto(*)</label>
-                <select name="id_proyecto" class="form-control"  @role('administracion-permisos') disabled="true" @endrole>
+                <select name="id_proyecto" class="form-control comboBusqueda" @if(Auth::user()->hasRole(['administrador-permisos'])) disabled="true" @endif>
                     <option value="">[--SELECCIONE--]</option>
                     @foreach($catalogos['proyectos'] as $proyecto)
-                        <option value="{{ $proyecto->id_proyecto}}"   @role('administracion-permisos') selected @endrole    @if(old('id_proyecto')==$proyecto->id_proyecto)selected @endif >{{$proyecto->descripcion}}</option>
+                        <option value="{{ $proyecto->id_proyecto}}"  @if(Auth::user()->hasRole(['administrador-permisos']))  selected @endif    @if(old('id_proyecto')==$proyecto->id_proyecto)selected @endif >{{$proyecto->descripcion}}</option>
                     @endforeach
                 </select>
             </div>
@@ -26,7 +26,7 @@
         <div class="col-md-6">
             <div class="form-group">
                 <label for="id_usuario">Usuario (*)</label>
-                <select name="id_usuario" class="form-control select_tel_imp">
+                <select name="id_usuario" class="form-control comboBusqueda" id="idSelUsuario">
                     <option value="">[--SELECCIONE--]</option>
 
                     @foreach($catalogos['usuarios']  as $usuario)
@@ -66,5 +66,7 @@
                 }, () => form.submit());
             })
         });
+
+        $('.comboBusqueda').select2();
     </script>
 @endsection

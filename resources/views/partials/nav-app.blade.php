@@ -114,7 +114,7 @@
   </li>
   @endif
 
-  @if(Auth::user()->hasRole(['administracion-permisos','auditoria','administrador-sistema']))
+  @if(Auth::user()->hasRole(['administrador-permisos','auditoria','administrador-sistema']))
 
       <li class="dropdown">
           <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
