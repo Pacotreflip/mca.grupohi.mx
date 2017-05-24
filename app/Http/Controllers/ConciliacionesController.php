@@ -46,6 +46,7 @@ class ConciliacionesController extends Controller
                     ->orWhere('sindicatos.NombreCorto', 'LIKE', '%'.$busqueda.'%')
                     ->orWhere('empresas.razonSocial', 'LIKE', '%'.$busqueda.'%')
                     ->orWhere('empresas.RFC', 'LIKE', '%'.$busqueda.'%')
+                    ->orWhere('conciliacion.idconciliacion', 'LIKE', '%'.$busqueda.'%')    
                     ;
             })
             ->select(DB::raw("conciliacion.*"))
