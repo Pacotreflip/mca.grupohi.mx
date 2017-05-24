@@ -123,23 +123,25 @@ class UsuarioProyectoController extends Controller
                 ->withInput($request->input());
         }
         $usuario = DB::connection('sca')
-            ->select('Select up.id_usuario
+            ->select('Select up.id_usuario_intranet
                       from sca_configuracion.usuarios_proyectos  up 
                       where up.id_usuario_intranet=' . $request->id_usuario . ' 
                       and id_proyecto=' . $request->id_proyecto);
+
+
         if ($usuario) {
-            Flash::Error('¡La configuracion que trata de guardar ya existe!');
-            return Redirect::back()
-                ->withErrors($validator)
-                ->withInput($request->input());
-        }
+
+            $save = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->where('id_usuario', '=',$usuario[0]->id_usuario_intranet)->update([
+                'motivo' => "",
+                'estatus' => 1]);
+        }else{
         $save = DB::connection('sca')->table('sca_configuracion.usuarios_proyectos')->insert([
                 'id_proyecto' => $request->id_proyecto,
                 'id_usuario_intranet' => $request->id_usuario,
                 'registro' => auth()->user()->idusuario,
                 'estatus'=>1
             ]
-        );
+        );}
         flash::success('¡USUARIO CONFIGURADO CORRECTAMENTE!');
         return redirect()->route('usuario_proyecto.index');
     }
@@ -154,7 +156,7 @@ class UsuarioProyectoController extends Controller
     {
         $usuarios = DB::connection('sca')
             ->select('
-                        select
+                        select distinct
                         up.id_usuario,
                         up.id_usuario_intranet,
                         up.id_proyecto, 
@@ -186,7 +188,7 @@ class UsuarioProyectoController extends Controller
     public function edit($id)
     {
         $usuarios = DB::connection('sca')
-            ->select(' select
+            ->select(' select distinct
                         u.idusuario,
                         u.apaterno,
                         u.amaterno,
@@ -240,10 +242,10 @@ class UsuarioProyectoController extends Controller
                 ->withInput($request->input());
         }
         $usuario = DB::connection('sca')
-            ->select('Select up.id_usuario
+            ->select('Select up.id_usuario_intranet
                       from sca_configuracion.usuarios_proyectos  up 
                       where up.id_usuario_intranet=' . $request->id_usuario . ' 
-                      and id_proyecto=' . $request->id_proyecto . ' and id_usuario!=' . $request->idUsuario);
+                      and id_proyecto=' . $request->id_proyecto . ' and id_usuario!=' . $request->id_usuario_intranet);
         if ($usuario) {
             Flash::Error('¡La configuracion que trata de guardar ya existe!');
             return Redirect::back()
@@ -258,6 +260,7 @@ class UsuarioProyectoController extends Controller
         );
         flash::success('¡USUARIO ACTUALIZADO CORRECTAMENTE!');
         return redirect()->route('usuario_proyecto.index');
+
     }
 
     /**
