@@ -10,7 +10,8 @@
 
 
                 <div class="row">
-                    @permission('crear-permisos','crear-roles')
+                    @permission(['crear-permisos','crear-roles'])
+                    
                     <div class="panel panel-default">
                         <div class="panel-heading">Módulo de Creación de Permisos y Roles
                         </div>
@@ -62,6 +63,7 @@
 
                             </div>
                             @endpermission
+                            
                             @permission('crear-roles')
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
@@ -110,7 +112,7 @@
                         </div>
                     </div>
                     @endpermission
-                    @permission('configuracion-permisos-rol','asignar-rol-usuario')
+                    @permission(['configuracion-permisos-rol','asignar-rol-usuario'])
                     <div class="panel panel-default">
                         <div class="panel-heading">Configuración de Roles y Perfiles
                         </div>
@@ -160,7 +162,7 @@
                                                 </span>
                                                 </button>
                                                 <button type="button" :disabled="guardando" id="btnRolLeft" value="&lt;&lt;"
-                                                        class="btn btn-default center-block add" v-on:click="add_rol_click" >
+                                                        class="btn btn-default center-block add" v-on:click="remove_rol_click" >
                                                     <span v-if="guardando">
                                                     <i class="fa fa-spinner fa-spin"></i>
                                                 </span>
@@ -176,16 +178,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <center>
-                                            <button :disabled="guardando" v-on:click="guardar_permisos_rol" class="btn btn-success">
-                                                <span v-if="guardando">
-                                                    <i class="fa fa-spinner fa-spin"></i> Guardando
-                                                </span>
-                                                <span v-else>
-                                                    <i class="fa fa-save"></i> Guardar
-                                                </span>
-                                            </button>
-                                        </center>
+                                        
                                     </div>
                                 </div>
 
