@@ -61,12 +61,23 @@ $('.mac').keyup(function (e) {
 $('.alfanum').on("keypress",function (e) {
 var tecla = (document.all) ? e.keyCode : e.which;
     if (tecla==8) return true;
-    var patron =/^[0-9a-zA-Z]+$/;
+    var patron =/^[0-9-a-zA-Z]+$/;
     var te = String.fromCharCode(tecla);
     if(!patron.test(te))
         event.returnValue = false;
 
 });
+
+$('.letras').on("keypress",function (e) {
+    var tecla = (document.all) ? e.keyCode : e.which;
+    if (tecla==8) return true;
+    var patron =/^[a-zA-Z]+$/;
+    var te = String.fromCharCode(tecla);
+    if(!patron.test(te))
+        event.returnValue = false;
+
+});
+
 
 $('.add').click(function(){
     $('.all').prop("checked",false);

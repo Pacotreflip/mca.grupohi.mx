@@ -114,7 +114,8 @@
   </li>
   @endif
 
-  @if(Auth::user()->hasRole(['administracion-permisos','auditoria']))
+  @if(Auth::user()->hasRole(['administracion-permisos','auditoria','administrador-sistema']))
+
       <li class="dropdown">
           <a tabindex="0" href="#" class="dropdown-toggle" data-toggle="dropdown" data-submenu>
               Administración<span class="caret"></span>
@@ -122,6 +123,8 @@
           <ul class="dropdown-menu" role="menu">
               <li><a href="{{ route('administracion.roles_permisos') }}">Configuración general</a></li>
               <li><a href="{{ route('detalle.configuracion') }}">Detalle configuración</a></li>
+             <!-- <li><a href="{{ route('usuarios_sistema.index') }}">Alta de usuarios</a></li> -->
+              <li><a href="{{ route('usuario_proyecto.index') }}">Asignación de Usuarios a Proyectos</a></li>
           </ul>
       </li>
   @endif

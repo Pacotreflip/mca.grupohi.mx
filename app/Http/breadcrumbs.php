@@ -390,3 +390,25 @@ Breadcrumbs::register('telefonos-impresoras.edit', function($breadcrumbs, $telef
     $breadcrumbs->parent('telefonos-impresoras.show',$telefono);
     $breadcrumbs->push('EDITAR', route('telefonos-impresoras.edit', $telefono));
 });
+
+
+//Usuarios Proyectos
+Breadcrumbs::register('usuario_proyecto.index', function ($breadcrumbs) {
+    $breadcrumbs->push('LISTA DE USUARIOS', route('usuario_proyecto.index'));
+});
+
+Breadcrumbs::register('usuario_proyecto.show', function ($breadcrumbs, $usuario) {
+    $breadcrumbs->parent('usuario_proyecto.index');
+    $breadcrumbs->push($usuario, route('usuario_proyecto.show', $usuario));
+});
+
+Breadcrumbs::register('usuario_proyecto.edit', function ($breadcrumbs) {
+    $breadcrumbs->parent('usuario_proyecto.index');
+    $breadcrumbs->push('EDITAR USUARIO', route('usuario_proyecto.edit'));
+});
+
+
+Breadcrumbs::register('usuario_proyecto.create', function ($breadcrumbs) {
+    $breadcrumbs->parent('usuario_proyecto.index');
+    $breadcrumbs->push('NUEVO USUARIO', route('usuario_proyecto.create'));
+});
