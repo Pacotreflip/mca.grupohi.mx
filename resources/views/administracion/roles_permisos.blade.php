@@ -10,12 +10,13 @@
 
 
                 <div class="row">
-                    {{dd(role('administrador-sistema'))}}
-                    @role('administrador-sistema')
+                    @permission('crear-permisos','crear-roles')
                     <div class="panel panel-default">
                         <div class="panel-heading">Módulo de Creación de Permisos y Roles
                         </div>
                         <div class="panel-body">
+
+                            @permission('crear-permisos')
                             <div class="col-sm-6">
 
                                 <div class="panel panel-default">
@@ -60,6 +61,8 @@
                                 </div>
 
                             </div>
+                            @endpermission
+                            @permission('crear-roles')
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">Creación de Roles
@@ -103,14 +106,16 @@
                                     </div>
                                 </div>
                             </div>
+                            @endpermission
                         </div>
                     </div>
-                    @endrole
+                    @endpermission
+                    @permission('configuracion-permisos-rol','asignar-rol-usuario')
                     <div class="panel panel-default">
                         <div class="panel-heading">Configuración de Roles y Perfiles
                         </div>
                         <div class="panel-body">
-                            @role('administrador-sistema')
+                            @permission('configuracion-permisos-rol')
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -186,7 +191,8 @@
 
 
                             </div>
-                            @endrole
+                            @endpermission
+                            @permission('asignar-rol-usuario')
                             <div class="col-sm-6">
                                 <div class="panel panel-default">
                                     <div class="panel-heading">
@@ -215,7 +221,7 @@
                                             <div  class="col-sm-5">
                                                 <center><b>Disponibles</b></center>
                                                 <select id="leftPermisoValues" size="20" class="form-control"   multiple>
-                                                    </select>
+                                                </select>
                                             </div>
                                             <div class="col-sm-2">
                                                 <button type="button" :disabled="guardando"  id="btnPermisoRight" value="&gt;&gt;"
@@ -249,13 +255,15 @@
 
 
                             </div>
+                            @endpermission
                         </div>
                     </div>
+                    @endpermission
                 </div>
 
 
                 <form  id="permiso_rol_form"  class="form-horizontal" action="{{route('permisos_roles.store')}}" method="POST" >
-                {{csrf_field()}}
+                    {{csrf_field()}}
                 </form>
                 <form  id="rol_usuario_form"  class="form-horizontal" action="{{route('rol_usuario.store')}}" method="POST" >
                     {{csrf_field()}}
