@@ -48,7 +48,7 @@ class ConfiguracionDiariaController extends Controller
             'tiros'    => TiroTransformer::transform(Tiro::where('tiros.Estatus', '=', 1)->orderBy('Descripcion', 'ASC')->get()),
             'esquemas' => EsquemaConfiguracionTransformer::transform(Esquema::orderBy('name', 'ASC')->get()),
             'perfiles' => Perfiles::orderBy('name', 'ASC')->get(),
-            'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->get()),
+            'checadores' => UserConfiguracionTransformer::transform(User_1::checadores()->orderBy('igh.usuario.nombre')->get()),
             'telefonos' => Telefono::NoAsignados()->get()
         ]);
     }

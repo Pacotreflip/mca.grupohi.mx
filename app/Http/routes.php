@@ -236,9 +236,6 @@ $api->version('v1', ['middleware' => 'cors'], function($api) {
     $api->post('authenticate', 'App\Http\Controllers\API\AuthController@authenticate');
     $api->post('tags_nuevos/{usuario}', 'App\Http\Controllers\API\TagsController@store');
 
-    $api->get('ID/{id}',function($id){
-        echo 'ID: '.$id;
-    });
     //Authenticate Routes
     /*$api->post('authenticate', 'Ghi\Http\Controllers\Api\Auth\AuthController@authenticate');
 

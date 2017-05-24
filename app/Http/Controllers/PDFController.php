@@ -231,11 +231,13 @@ class PDFController extends Controller
     }
 
     public function configuracion_diaria() {
-        $data= Configuracion::leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario' , '=', 'checador.idusuario')
+        $data= DB::connection('sca')->table('configuracion_diaria')
+            ->leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario' , '=', 'checador.idusuario')
             ->leftJoin('origenes', 'configuracion_diaria.id_origen', '=', 'origenes.IdOrigen')
             ->leftJoin('tiros', 'configuracion_diaria.id_tiro', '=', 'tiros.IdTiro')
             ->leftJoin('configuracion_perfiles_cat as perfiles', 'configuracion_diaria.id_perfil', '=', 'perfiles.id')
             ->leftJoin('igh.usuario as user_registro', 'configuracion_diaria.registro' , '=', 'user_registro.idusuario')
+            ->leftJoin('telefonos', 'checador.idusuario', '=', 'telefonos.id_checador')
             ->select(
                 "configuracion_diaria.id as id",
                 DB::raw("CONCAT(checador.nombre, ' ', checador.apaterno, ' ', checador.amaterno) as nombre"),
@@ -245,8 +247,10 @@ class PDFController extends Controller
                 "perfiles.name as perfil",
                 DB::raw("IF(configuracion_diaria.turno = 'M', 'Matutino', IF(configuracion_diaria.turno = 'v', 'Vespertino', 'NO ASIGNADO')) as turno"),
                 "configuracion_diaria.created_at",
-                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno) as modifico")
+                DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno) as modifico"),
+                DB::raw("IF(telefonos.id is not null, CONCAT('ID:', telefonos.id, ' ', 'IMEI:', telefonos.imei), 'SIN TELÉFONO') as telefono")
             )
+            ->orderBy('nombre')
             ->get();
 
        $pdf = new PDFConfiguracionDiaria('P', 'cm', 'Letter', $data);

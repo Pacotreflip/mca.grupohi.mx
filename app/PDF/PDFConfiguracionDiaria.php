@@ -121,48 +121,49 @@ class PDFConfiguracionDiaria extends Rotation
         $this->SetTextColors(array('255,255,255'));
         $this->CellFitScale($this->WidthTotal, 1, utf8_decode('CONFIGURACIÓN DE CHECADORES'), 0, 1, 'L');
 
-        $this->SetFont('Arial', '', 6);
-        $this->SetStyles(array('DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
-        $this->SetStyles(array('DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
+        $this->SetFont('Arial', '', 5);
+        $this->SetStyles(array('DF', 'DF', 'DF', 'DF', 'FD', 'DF', 'DF', 'DF'));
         $this->SetWidths(array(
             0.04 * $this->WidthTotal,
-            0.25 * $this->WidthTotal,
-            0.16 * $this->WidthTotal,
-            0.12 * $this->WidthTotal,
-            0.16 * $this->WidthTotal,
+            0.20 * $this->WidthTotal,
+            0.10 * $this->WidthTotal,
+            0.18 * $this->WidthTotal,
+            0.10 * $this->WidthTotal,
             0.11 * $this->WidthTotal,
             0.13 * $this->WidthTotal,
-
+            0.11 * $this->WidthTotal
         ));
-        $this->SetRounds(array('1', '', '', '', '', '', '2'));
-        $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0.2));
-        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
-        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetRounds(array('1', '',  '', '', '', '', '', '2'));
+        $this->SetRadius(array(0.2, 0,  0, 0, 0, 0, 0, 0.2));
+        $this->SetFills(array('180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180', '180,180,180'));
+        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
         $this->SetHeights(array(0.5));
-        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C'));
+        $this->SetAligns(array('C', 'C', 'C', 'C', 'C', 'C', 'C', 'C'));
         $this->Row(array(
             "#",
             "NOMBRE",
             "USUARIO INTRANET",
+            utf8_decode("TELÉFONO"),
             "ORIGEN / TIRO",
             utf8_decode("UBICACIÓN"),
             "PERFIL",
             "TURNO"));
-        $this->SetRounds(array('', '', '', '', '', '', ''));
-        $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0));
-        $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
-        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+        $this->SetRounds(array('', '', '', '', '', '', '', ''));
+        $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0));
+        $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+        $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
         $this->SetHeights(array(0.35));
-        $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L'));
+        $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L', 'L'));
 
         $this->SetWidths(array(
             0.04 * $this->WidthTotal,
-            0.25 * $this->WidthTotal,
-            0.16 * $this->WidthTotal,
-            0.12 * $this->WidthTotal,
-            0.16 * $this->WidthTotal,
+            0.20 * $this->WidthTotal,
+            0.10 * $this->WidthTotal,
+            0.18 * $this->WidthTotal,
+            0.10 * $this->WidthTotal,
             0.11 * $this->WidthTotal,
             0.13 * $this->WidthTotal,
+            0.11 * $this->WidthTotal
         ));
 
     }
@@ -212,46 +213,48 @@ class PDFConfiguracionDiaria extends Rotation
             $this->SetFont('Arial', '', 5);
             $this->SetWidths(array(
                 0.04 * $this->WidthTotal,
-                0.25 * $this->WidthTotal,
-                0.16 * $this->WidthTotal,
-                0.12 * $this->WidthTotal,
-                0.16 * $this->WidthTotal,
+                0.20 * $this->WidthTotal,
+                0.10 * $this->WidthTotal,
+                0.18 * $this->WidthTotal,
+                0.10 * $this->WidthTotal,
                 0.11 * $this->WidthTotal,
                 0.13 * $this->WidthTotal,
+                0.11 * $this->WidthTotal
             ));
 
-
             $this->encola = "items";
-            $this->SetRounds(array('', '', '', '', '', '', ''));
-            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0));
-            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
-            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
+            $this->SetRounds(array('', '', '', '', '', '', '', ''));
+            $this->SetRadius(array(0, 0, 0, 0, 0, 0, 0, 0));
+            $this->SetFills(array('255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255', '255,255,255'));
+            $this->SetTextColors(array('0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0', '0,0,0'));
             $this->SetHeights(array(0.35));
-            $this->SetAligns(array('C', 'L', 'L', 'L', 'L', 'L', 'L'));
+            $this->SetAligns(array('C', 'L',  'L', 'L', 'L', 'L', 'L', 'L'));
 
             $this->SetWidths(array(
                 0.04 * $this->WidthTotal,
-                0.25 * $this->WidthTotal,
-                0.16 * $this->WidthTotal,
-                0.12 * $this->WidthTotal,
-                0.16 * $this->WidthTotal,
+                0.20 * $this->WidthTotal,
+                0.10 * $this->WidthTotal,
+                0.18 * $this->WidthTotal,
+                0.10 * $this->WidthTotal,
                 0.11 * $this->WidthTotal,
                 0.13 * $this->WidthTotal,
+                0.11 * $this->WidthTotal
             ));
             if ($key + 1 == $numItems ) {
-                $this->SetRounds(array('4', '', '', '','', '','3'));
-                $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0.2));
+                $this->SetRounds(array('4', '',  '', '', '','', '','3'));
+                $this->SetRadius(array(0.2, 0, 0, 0, 0, 0, 0, 0.2));
             }
 
             $this->encola = "items";
             $this->Row(array(
                     $key + 1,
-                    $item->nombre,
-                    $item->usuario,
-                    $item->tipo,
-                    $item->ubicacion,
-                    $item->perfil,
-                    $item->turno
+                    strtoupper($item->nombre),
+                    strtoupper($item->usuario),
+                    strtoupper(utf8_decode($item->telefono)),
+                    strtoupper($item->tipo),
+                    strtoupper($item->ubicacion),
+                    strtoupper($item->perfil),
+                    strtoupper($item->turno)
                 )
             );
             $this->encola = "";
