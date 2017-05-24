@@ -162,6 +162,16 @@ return [
         Maatwebsite\Excel\ExcelServiceProvider::class,
         Jenssegers\Date\DateServiceProvider::class,
 
+                /*
+         * Dingo API Service Provider
+         */
+        Dingo\Api\Provider\LaravelServiceProvider::class,
+
+        /*
+         * Tymon JWT Auth Service Providers
+         */
+        Tymon\JWTAuth\Providers\JWTAuthServiceProvider::class,
+
     ],
 
     /*
@@ -221,6 +231,8 @@ return [
         'MC_Table'  => Ghidev\Fpdf\Facades\MC_Table::class,
         'Excel'     => Maatwebsite\Excel\Facades\Excel::class,
         'Date'      => Jenssegers\Date\Date::class,
+        'JWTAuth'   => Tymon\JWTAuth\Facades\JWTAuth::class,
+        'JWTFactory'=> Tymon\JWTAuth\Facades\JWTFactory::class,
 
     ],
 
