@@ -40,7 +40,7 @@
                                     <td style="white-space: nowrap">@{{ index + 1 }}</td>
                                     <td style="white-space: nowrap">@{{ user.nombre  }}</td>
                                     <td style="white-space: nowrap">@{{ user.usuario }}</td>
-                                    @permission('editar-telefonos')
+                                    
                                     <td>
                                         <span v-if="user.telefono">
                                             <a title="Cambiar" style="text-decoration: underline" v-on:click="asignar_telefono(user)">@{{ user.telefono.info  }}</a>
@@ -49,7 +49,7 @@
                                             <a title="Asignar" style="text-decoration: underline" v-on:click="asignar_telefono(user)">ASIGNAR</a>
                                         </span>
                                     </td>
-                                    @endpermission
+                                    
                                     <td style="white-space: nowrap">
                                         <select v-on:change="clear_ubicacion(user)" name="tipo" class="form-control input-sm" v-model="user.configuracion.tipo">
                                             <option value>-- SELECCIONE --</option>

@@ -319,7 +319,7 @@ Vue.component('configuracion-diaria', {
                         swal({
                             type: 'info',
                             title: '¡No es posible realizar la acción!',
-                            text: 'No cuenta con los permisos necesarios para <strong>Editar Teléfonos</strong><br> Por favor solicitelo con el asministrador de permisos',
+                            text: 'No cuenta con los permisos necesarios para <strong>Editar Teléfonos</strong><br> Por favor solicitelo con el administrador de permisos',
                             html: true
                         });
                     }
