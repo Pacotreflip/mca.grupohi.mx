@@ -38,7 +38,8 @@ class User extends Model implements AuthenticatableContract,
 
     public function proyectos() {
         return $this->belongsToMany(Models\Proyecto::class, 'sca_configuracion.usuarios_proyectos', 'id_usuario_intranet', 'id_proyecto')
-                ->where('sca_configuracion.proyectos.nuevo_esquema', '=', '1');
+            ->where('sca_configuracion.proyectos.nuevo_esquema', '=', '1')
+            ->where('sca_configuracion.usuarios_proyectos.estatus', '=', '1');
     }
     
     public function rutas() {

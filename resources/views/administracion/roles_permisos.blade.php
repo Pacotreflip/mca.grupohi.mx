@@ -10,6 +10,7 @@
 
 
                 <div class="row">
+                    {{dd(role('administrador-sistema'))}}
                     @role('administrador-sistema')
                     <div class="panel panel-default">
                         <div class="panel-heading">Módulo de Creación de Permisos y Roles
