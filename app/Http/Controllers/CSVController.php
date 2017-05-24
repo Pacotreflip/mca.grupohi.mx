@@ -298,16 +298,18 @@ class CSVController extends Controller
 
     public function configuracion_checadores()
     {
-        $headers = ['ID', 'Checador', 'Usuario Intranet', 'Origen / Tiro', 'Ubicación', 'Perfil', 'Turno', 'Fecha Y Hora de Configuración', 'Configuró'];
+        $headers = ['ID', 'Checador', 'Usuario Intranet', 'Teléfono', 'Origen / Tiro', 'Ubicación', 'Perfil', 'Turno', 'Fecha Y Hora de Configuración', 'Configuró'];
         $items = Configuracion::leftJoin('igh.usuario as checador', 'configuracion_diaria.id_usuario', '=', 'checador.idusuario')
             ->leftJoin('origenes', 'configuracion_diaria.id_origen', '=', 'origenes.IdOrigen')
             ->leftJoin('tiros', 'configuracion_diaria.id_tiro', '=', 'tiros.IdTiro')
             ->leftJoin('configuracion_perfiles_cat as perfiles', 'configuracion_diaria.id_perfil', '=', 'perfiles.id')
             ->leftJoin('igh.usuario as user_registro', 'configuracion_diaria.registro', '=', 'user_registro.idusuario')
+            ->leftJoin('telefonos', 'checador.idusuario', '=', 'telefonos.id_checador')
             ->select(
                 "configuracion_diaria.id",
                 DB::raw("CONCAT(checador.nombre, ' ', checador.apaterno, ' ', checador.amaterno)"),
                 "checador.usuario",
+                DB::raw("IF(telefonos.id is not null, CONCAT('ID:', telefonos.id, ' ', 'IMEI:', telefonos.imei), 'SIN TELÉFONO') as telefono"),
                 DB::raw("IF(configuracion_diaria.tipo = 0, 'Origen', 'Tiro')"),
                 DB::raw("IF(configuracion_diaria.id_origen is null, tiros.Descripcion, origenes.Descripcion)"),
                 "perfiles.name",
@@ -315,6 +317,7 @@ class CSVController extends Controller
                 "configuracion_diaria.created_at",
                 DB::raw("CONCAT(user_registro.nombre, ' ', user_registro.apaterno, ' ', user_registro.amaterno)")
             )
+            ->orderBy('checador.nombre')
             ->get();
         $csv = new CSV($headers, $items);
         $csv->generate('configuracion-checadores');
